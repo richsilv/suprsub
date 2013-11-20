@@ -1,0 +1,102 @@
+<head>
+	<title>SuprSub</title>
+</head>
+
+<body>
+	{{> topbar}}
+	{{> signupbox}}
+</body>
+
+<template name="topbar">
+	<div class="ui green fixed inverted main menu">
+		<a class="active item">
+			<i class="home icon"></i> Home
+		</a>
+		<a class="item">
+			<i class="mail icon"></i> Messages
+		</a>
+		<a class="item">
+			<i class="user icon"></i> Friends
+		</a>
+		<div class="item" id="toplogo"><div id="toplogo-image"></div></div>
+		<div class="right menu">
+			<div class="item">
+				<div class="ui icon input">
+					<input type="text" placeholder="Search...">
+					<i class="search link icon"></i>
+				</div>
+			</div>
+			<a class="ui item">
+				Logout
+			</a>
+		</div>
+	</div>
+</template>
+
+<template name="signupbox">
+	<div class="ui page center aligned grid" id="mainbox">
+		<div class="eight wide column">
+			<div class="ui inverted segment semitranslucent">
+				<h1>Become a SuprSub Today</h1>
+			</div>
+			<div class="ui form segment translucent">
+				<div class="field">
+					<div class="2 fluid ui buttons" id="socialbuttons">
+						<div class="ui facebook button">
+							<i class="facebook icon"></i>
+							Facebook
+						</div>
+						<div class="ui twitter button">
+							<i class="twitter icon"></i>
+							Twitter
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left labeled icon input">
+						<input type="text" placeholder="First Name">
+						<i class="user icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left labeled icon input">
+						<input type="text" placeholder="Last Name">
+						<i class="user icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left labeled icon input">
+						<input type="password" placeholder="Password">
+						<i class="lock icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left labeled icon input">
+						<input type="password" placeholder="Confirm Password">
+						<i class="lock icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="ui error message">
+					<div class="header">We noticed some issues</div>
+				</div>
+				<div class="ui blue submit button">Sign Up</div>
+			</div>
+			<div class="ui inverted segment semitranslucent">
+				<h2 class="quote">"Inspirational quote from<br>high-profile user"</h2>
+				<h3 class="quotee">-Random Bloke</h3>
+			</div>
+		</div>
+	</div>
+</template>

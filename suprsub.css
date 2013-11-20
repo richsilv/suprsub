@@ -1,0 +1,75 @@
+html { 
+  background: url(footypitch.png) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+body {
+	margin: 0;
+}
+
+.quote {
+	padding-left: 3em;
+	text-indent: -5em;
+}
+
+.quotee {
+	text-align: right;
+	margin-right: 5em;
+}
+
+.semitranslucent {
+	background-color: rgba(0, 0, 0, 0.7) !important;	
+}
+
+.translucent {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.clear {
+	background-color: rgba(0, 0, 0, 0) !important;
+}
+
+#mainbox {
+	position: absolute;
+    top: 50%;
+    width: 100%;
+    height: 500px;
+    margin-top: -250px;
+}
+
+#toplogo {
+	position:absolute;
+	left: 45%;
+	top: 0.5em;
+	padding: 0.3em;
+	height: 2em;
+}
+
+#toplogo-image {
+	background-image:url('suprsub.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	height: 100%;
+	width: 5em;
+}
+
+#socialbuttons .button {
+	text-transform: none;
+}
+
+#mainbox .column .segment {
+	border-radius: 0px;
+	margin: 0px auto;
+}
+#mainbox .column .segment:first-child {
+	border-top-left-radius: 0.5em;
+	border-top-right-radius: 0.5em;
+}
+#mainbox .column .segment:last-child {
+	border-bottom-left-radius: 0.5em;
+	border-bottom-right-radius: 0.5em;
+}

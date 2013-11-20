@@ -1,0 +1,15 @@
+{
+  "meteor": {},
+  "dependencies": {
+    "basePackages": {
+      "semantic-ui": {}
+    },
+    "packages": {
+      "semantic-ui": {
+        "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
+        "tag": "v0.9.2",
+        "commit": "770b9793900bda859875b2e6fbedaa74d5d86c52"
+      }
+    }
+  }
+}
