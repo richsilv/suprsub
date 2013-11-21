@@ -1,14 +1,25 @@
 <head>
 	<title>SuprSub</title>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3&sensor=true" />
+	<script type="text/javascript" src="https://raw.github.com/HPNeo/gmaps/master/gmaps.js" />
 </head>
 
 <body>
-	{{> topbar}}
-	{{> signupbox}}
+	{{> mainTemplate}}
 </body>
 
+<template name="mainTemplate">
+	{{> topbar}}
+	{{#if currentUser}}
+		{{> loggedIn}}
+	{{else}}
+		{{> signUpBox}}
+	{{/if}}
+</template>
+
 <template name="topbar">
-	<div class="ui green fixed inverted main menu">
+	<div class="ui darkgreen fixed inverted main menu" id="topbar">
+		{{#if currentUser}}
 		<a class="active item">
 			<i class="home icon"></i> Home
 		</a>
@@ -18,35 +29,48 @@
 		<a class="item">
 			<i class="user icon"></i> Friends
 		</a>
-		<div class="item" id="toplogo"><div id="toplogo-image"></div></div>
+		{{/if}}
+		<div id="toplogo-image"></div>
 		<div class="right menu">
+			{{#if currentUser}}
+  			<div class="item">
+    			<div class="ui button" id="logout-button">Log Out</div>
+  			</div>
+			{{else}}
 			<div class="item">
 				<div class="ui icon input">
-					<input type="text" placeholder="Search...">
-					<i class="search link icon"></i>
+					<input type="email" placeholder="Email" id="login-email">
+					<i class="user link icon"></i>
 				</div>
+				</div>
+				<div class="item">
+				<div class="ui icon input">
+					<input type="password" placeholder="Password" id="login-password">
+					<i class="lock link icon"></i>
+				</div>				
 			</div>
-			<a class="ui item">
-				Logout
-			</a>
+  			<div class="item">
+    			<div class="ui button" id="login-button">Log In</div>
+  			</div>
+  			{{/if}}
 		</div>
 	</div>
 </template>
 
-<template name="signupbox">
-	<div class="ui page center aligned grid" id="mainbox">
-		<div class="eight wide column">
+<template name="signUpBox">
+	<div class="ui page center aligned grid" id="loginBox">
+		<div class="seven wide column">
 			<div class="ui inverted segment semitranslucent">
 				<h1>Become a SuprSub Today</h1>
 			</div>
 			<div class="ui form segment translucent">
 				<div class="field">
 					<div class="2 fluid ui buttons" id="socialbuttons">
-						<div class="ui facebook button">
+						<div class="ui facebook button" id="facebook-login">
 							<i class="facebook icon"></i>
 							Facebook
 						</div>
-						<div class="ui twitter button">
+						<div class="ui twitter button" id="twitter-login">
 							<i class="twitter icon"></i>
 							Twitter
 						</div>
@@ -54,7 +78,7 @@
 				</div>
 				<div class="field">
 					<div class="ui left labeled icon input">
-						<input type="text" placeholder="First Name">
+						<input type="text" placeholder="First Name" id="firstname">
 						<i class="user icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -63,7 +87,7 @@
 				</div>
 				<div class="field">
 					<div class="ui left labeled icon input">
-						<input type="text" placeholder="Last Name">
+						<input type="text" placeholder="Last Name" id="lastname">
 						<i class="user icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -72,7 +96,16 @@
 				</div>
 				<div class="field">
 					<div class="ui left labeled icon input">
-						<input type="password" placeholder="Password">
+						<input type="email" placeholder="E-Mail" id="signup-email">
+						<i class="inbox icon"></i>
+						<div class="ui corner label">
+							<i class="icon asterisk"></i>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left labeled icon input">
+						<input type="password" placeholder="Password" id="signup-password">
 						<i class="lock icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
@@ -81,17 +114,19 @@
 				</div>
 				<div class="field">
 					<div class="ui left labeled icon input">
-						<input type="password" placeholder="Confirm Password">
+						<input type="password" placeholder="Confirm Password" id="confirm-password">
 						<i class="lock icon"></i>
 						<div class="ui corner label">
 							<i class="icon asterisk"></i>
 						</div>
 					</div>
 				</div>
-				<div class="ui error message">
-					<div class="header">We noticed some issues</div>
+				{{#if accountError}}
+				<div class="ui error message" id="errorBox">
+					<div class="header">{{accountError}}</div>
 				</div>
-				<div class="ui blue submit button">Sign Up</div>
+				{{/if}}
+				<div class="ui blue submit button" id="signup-button">Sign Up</div>
 			</div>
 			<div class="ui inverted segment semitranslucent">
 				<h2 class="quote">"Inspirational quote from<br>high-profile user"</h2>
@@ -99,4 +134,21 @@
 			</div>
 		</div>
 	</div>
+</template>
+
+<template name="loggedIn">
+	<div class="ui center aligned page grid" id="loggedInBox">
+		<div class="row">
+			<div class="ui ten wide column segment">
+				Map to find your location and local sports games.
+			</div>
+		</div>
+		<div class="row">
+			{{> pitchMap}}
+		</div>
+	</div>
+</template>
+
+<template name="pitchMap">
+	<div id="pitchMap"></div>
 </template>

@@ -9,3 +9,7 @@ insecure
 preserve-inputs
 
 semantic-ui
+accounts-base
+accounts-password
+accounts-facebook
+accounts-twitter

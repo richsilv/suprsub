@@ -2,13 +2,19 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "semantic-ui": {}
+      "semantic-ui": {},
+      "meteor-gmaps": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
         "tag": "v0.9.2",
         "commit": "770b9793900bda859875b2e6fbedaa74d5d86c52"
+      },
+      "meteor-gmaps": {
+        "git": "https://github.com/patrickocoffeyo/meteor-gmaps.git",
+        "tag": "v0.0.1",
+        "commit": "2f4423ba1cf916b96842112e79a2abeb8fc7ac8a"
       }
     }
   }
