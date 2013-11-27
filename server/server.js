@@ -1,7 +1,12 @@
 SecureData = new Meteor.Collection("securedata");
+Pitches = new Meteor.Collection("pitches");
 
 var facebooklocal = SecureData.findOne({Name: 'facebooklocal'}).Value;
 var facebookprod = SecureData.findOne({Name: 'facebookprod'}).Value;
+
+Meteor.publish('pitches', function(loc, prox) {
+	return Pitches.find({location: {$near: loc}});
+});
 
 Accounts.loginServiceConfiguration.remove({
     service: "facebook"

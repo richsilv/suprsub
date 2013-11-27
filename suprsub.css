@@ -56,10 +56,8 @@ body {
 }
 
 #loggedInBox {
-	position: absolute;
 	width: 100%;
 	height: auto;
-	margin-top: 200px;
 }
 
 #toplogo-image {

@@ -1,3 +1,5 @@
+Pitches = new Meteor.Collection("pitches");
+
 pitchMap = window.pitchMap;
 gc = null;
 myLocation = null;
@@ -6,7 +8,7 @@ initialize = function() {
 
   myLocation = new google.maps.LatLng(51.5080391, -0.12806929999999284);
   var mapOptions = {
-    zoom: 12,
+    zoom: 11,
     center: myLocation
   };
   pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
@@ -18,6 +20,14 @@ initialize = function() {
   }, function() {
     window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.")
   });
+  var pitches = Pitches.find().fetch();
+  for (var i=0; i < pitches.length; i++) {
+    var marker = new google.maps.Marker({
+      position: pitches[i].location,
+      map: pitchMap,
+      title:pitches[i].owner + " " + pitches[i].name
+    });
+  }
 }
 
 function loadScript() {
