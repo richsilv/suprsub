@@ -1,6 +1,5 @@
 {
   "packages": {
-    "semantic-ui": {},
-    "meteor-gmaps": {}
+    "semantic-ui": {}
   }
 }

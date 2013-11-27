@@ -1,0 +1,55 @@
+var uu = require('underscore');
+var async = require('async');
+var request = require('request');
+var mongoose = require('mongoose');
+var http = require('http');
+var fs = require('fs');
+var tc = require('trycatch');
+var csv = require('csv');
+var select = require('soupselect').select;
+var htmlparser = require('htmlparser2');
+
+var powerleagueCentreHandler = new htmlparser.DefaultHandler(function(error, dom) {
+    if (error)
+	console.log('Cannot parse html.');
+    else {
+	var addressElem = select(dom, '.address p');
+	var addressString = '';
+	for (var i = 0; i < addressElem[0].children.length; i++) {
+	    if (addressElem[0].children[i].data) addressString = addressElem[0].children[i].data + ', ';
+	}
+	console.log(addressString.slice(0, addressString.length-2));
+    }
+});
+
+var powerleagueMainHandler = new htmlparser.DefaultHandler(function (error, dom) {
+    if (error)
+	console.log('Cannot parse html.');
+    else {
+	var elems = select(dom, '.centre ul li a').filter(function(tag) {
+	    return tag.attribs.href.slice(0, 10) === '/5-a-side/';
+	});
+	global.centres = elems;
+	console.log('Parsed');
+    }
+});
+
+var powerleagueMainParser = new htmlparser.Parser(powerleagueMainHandler);
+var powerleagueCentreParser = new htmlparser.Parser(powerleagueCentreHandler);
+
+function powerleagueQuery() {
+    request({url: 'http://www.powerleague.co.uk/'}, function(err, resp, body) {
+	if (!err) {
+	    powerleagueMainParser.parseComplete(body);
+	}
+    });
+}
+
+function getAddress(fragment) {
+    console.log('Crawling url: http://www.powerleague.co.uk' + fragment);
+    request({url: 'http://www.powerleague.co.uk' + fragment}, function(err, resp, body) {
+	if (!err) {
+	    powerleagueCentreParser.parseComplete(body);
+	}
+    });
+}

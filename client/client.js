@@ -1,3 +1,37 @@
+pitchMap = window.pitchMap;
+gc = null;
+myLocation = null;
+
+initialize = function() {
+
+  myLocation = new google.maps.LatLng(51.5080391, -0.12806929999999284);
+  var mapOptions = {
+    zoom: 12,
+    center: myLocation
+  };
+  pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
+      mapOptions);
+  gc = new google.maps.Geocoder();
+  navigator.geolocation.getCurrentPosition(function(res) {
+    myLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
+    pitchMap.setCenter(myLocation);
+  }, function() {
+    window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.")
+  });
+}
+
+function loadScript() {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
+      'callback=initialize';
+  document.body.appendChild(script);
+}
+
+Template.pitchMap.created = function() {
+  loadScript();
+}
+
 Template.signUpBox.created = function() {
 	$('html').css('background', 'url(footypitch.png) no-repeat center center fixed')
 	.css('background-size','cover')
@@ -6,14 +40,10 @@ Template.signUpBox.created = function() {
 	.css('-webkit-background-size','cover');
 };
 
-Template.pitchMap.created = function() {
-	new GMaps({
-		div: '#pitchMap',
-		lat: -12.043333,
-		lng: -77.028333
-	});
-};
-
 Deps.autorun(function() {
 	if (Meteor.userId()) $('html').css('background', '');
 });
+Deps.autorun(function() {
+
+});
+
