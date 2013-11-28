@@ -7,6 +7,28 @@ body {
 	margin: 0;
 }
 
+#login-background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height:100vh;
+	width:100vw;
+	background: url(footypitch.png) no-repeat center center fixed;
+	background-size: cover;
+	-o-background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+}
+
+#main-background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height:100vh;
+	width:100vw;
+	background-color: #c7e5ac;
+}
+
 .quote {
 	padding-left: 3em;
 	text-indent: -5em;
@@ -56,6 +78,7 @@ body {
 }
 
 #loggedInBox {
+	padding-top: 50px;
 	width: 100%;
 	height: auto;
 }
@@ -96,6 +119,7 @@ body {
 }
 
 #pitchMap {
+	margin-top: 1em;
 	left: 50%;
 	width: 600px;
 	margin-left: -300px;

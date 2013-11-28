@@ -56,6 +56,8 @@
 </template>
 
 <template name="signUpBox">
+	<div id="login-background-image">
+	</div>
 	<div class="ui page center aligned grid" id="loginBox">
 		<div class="seven wide column">
 			<div class="ui inverted segment semitranslucent">
@@ -135,18 +137,15 @@
 </template>
 
 <template name="loggedIn">
+	<div id="main-background-image"><div>
 	<div class="ui center aligned page grid" id="loggedInBox">
 		<div class="row">
 			<div class="ui ten wide column segment">
 				Map to find your location and local sports games.
 			</div>
 		</div>
-		<div class="row">
-			<div class="ui ten wide column segment">
-				{{> pitchMap}}
-			</div>
-		</div>
 	</div>
+	{{> pitchMap}}
 </template>
 
 <template name="pitchMap">
