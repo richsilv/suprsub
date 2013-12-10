@@ -18,3 +18,13 @@ if (Meteor.absoluteUrl().slice(0,22) !== "http://localhost:3000/") {
 else {
 	Accounts.loginServiceConfiguration.insert(facebooklocal);	
 }
+
+Meteor.methods({
+	pitchesWithin: function(center, distance) {
+		console.log([[center.lat, center.lon], distance/111000]);
+		return Pitches.find({'location': {'$within' : 
+		    {'$center' : [[center.lat, center.lon], distance/111000] }}}, {
+		    limit: 100
+	  	}).fetch();
+	}
+});

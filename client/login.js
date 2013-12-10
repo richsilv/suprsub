@@ -32,11 +32,12 @@ Template.signUpBox.helpers({
 })
 Template.signUpBox.events({
     'click #signup-button' : function() {
-        if ($('#signup-password').val() !== $('#signup-confirm').val()) {
+        if ($('#signup-password').val() !== $('#confirm-password').val()) {
             accountError.set("Passwords do not match");
             $('#signup-password').val('');
-            $('#signup-confirm').val('');
+            $('#confirm-password').val('');
             $('#signup-password').focus();
+            return;
         }
         Accounts.createUser({
             email: $('#signup-email').val(), 
