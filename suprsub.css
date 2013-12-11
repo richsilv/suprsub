@@ -1,10 +1,24 @@
 html {
 	font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-	font-size: 14px;	
+	font-size: 14px;
+	height: 100%;
 }
 
 body {
 	margin: 0;
+	height: 100%;
+}
+
+.darkgreen,
+.ui.darkgreen.active.item {
+  border-color: #4C7627 !important;
+  color: #4C7627 !important;
+}
+.ui.inverted.darkgreen {
+  background-color: #4C7627;
+}
+.ui.inverted.darkgreen .active.item:after {
+  background-color: #4C7627;
 }
 
 #login-background-image {
@@ -118,13 +132,38 @@ body {
 	display: block;
 }
 
+.ui.maingrid {
+	margin-top: 50px;
+}
+
 #pitchMap {
 	margin-top: 1em;
 	left: 50%;
-	width: 600px;
-	margin-left: -300px;
-	height: 400px;
+	width: 800px;
+	margin-left: -400px;
+	height: 450px;
 	background: #fff;
 	box-shadow: 0 0 20px #999;
 	border-radius: 2px;
+}
+
+#areaDetails {
+	height: 475px;
+}
+
+#areaDetails fieldset p {
+	height: 350px;
+	width: 200px;
+}
+
+#areaDetails h3 {
+	text-align: center;
+}
+
+#distanceWrite {
+	width: 300px;
+	margin-top: 150px;
+	transform:rotate(270deg);
+	-ms-transform:rotate(270deg); /* IE 9 */
+	-webkit-transform:rotate(270deg); /* Safari and Chrome */	
 }

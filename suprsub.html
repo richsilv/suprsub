@@ -9,7 +9,7 @@
 <template name="mainTemplate">
 	{{> topbar}}
 	{{#if currentUser}}
-		{{> loggedIn}}
+		{{> playerDetails}}
 	{{else}}
 		{{> signUpBox}}
 	{{/if}}
@@ -18,14 +18,14 @@
 <template name="topbar">
 	<div class="ui darkgreen fixed inverted main menu" id="topbar">
 		{{#if currentUser}}
-		<a class="active item">
+		<a class="{{#if mainOption "home"}}active {{/if}}item">
 			<i class="home icon"></i> Home
 		</a>
-		<a class="item">
-			<i class="mail icon"></i> Messages
+		<a class="{{#if mainOption "player"}}active {{/if}}item">
+			<i class="user icon"></i> Player
 		</a>
-		<a class="item">
-			<i class="user icon"></i> Friends
+		<a class="{{#if mainOption "team"}}active {{/if}}item">
+			<i class="users icon"></i> Team
 		</a>
 		{{/if}}
 		<div id="toplogo-image"></div>
@@ -136,39 +136,54 @@
 	</div>
 </template>
 
-<template name="loggedIn">
+<template name="playerDetails">
 	<div id="main-background-image"><div>
-	<div class="ui center aligned page grid" id="loggedInBox">
-		{{> defineBounds}}
+	<div class="ui page grid maingrid">
+		<div class="row">
+			<div class="ui twelve wide column">
+				{{> pitchMap}}
+			</div>
+			<div class="ui four wide column">
+				{{> defineBounds}}
+			</div>
+		</div>
+		<div class="row">
+			{{> pitchData}}
+		</div>
 	</div>
-	{{> pitchMap}}
-	{{> pitchData}}
 </template>
 
 <template name="pitchMap">
-	<div id="pitchMap"></div>
+	<div class="ui row" id="pitchMap"></div>
 </template>
 
 <template name="pitchData">
-	<div class="row">
-		<div class="ui ten wide column segment">
-			<p>Map Center: {{center}}</p>
-			<p>Included Venues: </p>
-			{{#each venues}}
-			<p>{{this.owner}} {{this.name}}</p>
-			{{/each}}
+	<div class="ui column">
+		<div class="ui segment content">
+			<h3>Included Venues: </h3>
+			{{#if venues}}
+				<table class="ui darkgreen inverted table segment pitchTable">
+					<tr><th>Provider</th><th>Location</th></tr>
+					{{#each venues}}
+						<tr><td>{{this.owner}}</td><td>{{this.name}}</td></tr>
+					{{/each}}
+				</table>
+			{{else}}
+			<p>None</p>
+			{{/if}}
 		</div>
-	</div>	
+	</div>
 </template>
 
 <template name="defineBounds">
-	<div class="row">
-		<div class="ui ten wide column segment">
-			Map to find your location and local sports games.
-			<form id="areaDetails">
+	<form class="ui segment content" id="areaDetails">
+		<fieldset>
+			<legend>Neighbourhood size</legend>
+			<p>
 				<input id="distanceWrite" type="range" min="0" max="250" />
-				<div id="distanceRead"></div>
-			</form>
-		</div>
-	</div>
+				<label for="distanceWrite">Area size</label>
+			</p>
+			<h3><output for="distanceWrite" id="distanceRead"></output></h3>
+		</fieldset>
+	</form>
 </template>

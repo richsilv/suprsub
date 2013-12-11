@@ -1,9 +1,10 @@
 Pitches = new Meteor.Collection("pitches");
 
 pitchMap = window.pitchMap;
-gc = null;
-myLocation = null;
-liveCircle = null;
+var gc = null;
+var myLocation = null;
+var liveCircle = null;
+var mainOption = 'player';
 
 myDep = function(initial) {
   this.value = initial;
@@ -25,8 +26,8 @@ myDep.prototype = {
 };
 
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
-circleSize = new myDep(1);
-venues = [];
+circleSize = new myDep(800);
+venues = new myDep([]);
 
 initialize = function() {
 
@@ -41,6 +42,10 @@ initialize = function() {
   navigator.geolocation.getCurrentPosition(function(res) {
     myLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
     pitchMap.setCenter(myLocation);
+    Meteor.call('pitchesWithin', {"lat": res.coords.latitude, "lng": res.coords.longitude}, 8000, function(err, res) {
+      if (err) console.log(err);
+      else venues.set(res);
+    });
   }, function() {
     window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.")
   });
@@ -52,8 +57,9 @@ initialize = function() {
       title:pitches[i].owner + " " + pitches[i].name
     });
   }
+  mapCenter.set(pitchMap.getCenter());
   google.maps.event.addListener(pitchMap, 'center_changed', function() {
-    mapCenter.set(pitchMap.getCenter());
+//    mapCenter.set(pitchMap.getCenter());
   });
 }
 
@@ -65,12 +71,18 @@ function loadScript() {
   document.body.appendChild(script);
 }
 
+Template.topbar.helpers({
+  mainOption: function(option) {
+    return mainOption === option;
+  }
+})
+
 Template.pitchData.helpers({
-  center: function() {
+/*  center: function() {
     return [mapCenter.get(), mapCenter.get().ob, mapCenter.get().nb];
-  },
+  },*/
   venues: function() {
-    return venues; 
+    return venues.get(); 
   }
 });
 
@@ -80,37 +92,65 @@ Template.pitchMap.created = function() {
 
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
-    $('#distanceRead').html(parseInt(event.target.value, 10) / 10);
+    $('#distanceRead').html(parseInt(event.target.value, 10) / 10 + 'km');
     circleSize.set(parseInt($('#distanceWrite').val(), 10) * 100);
+    if (liveCircle) liveCircle.setMap(null);
+    liveCircle = null;
+    var populationOptions = {
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+      map: pitchMap,
+      draggable: true,
+      center: mapCenter.get(),
+      radius: circleSize.get()
+    };
+    if (window.google) {
+      liveCircle = new google.maps.Circle(populationOptions);
+      google.maps.event.addListener(liveCircle, 'center_changed', function() {
+        mapCenter.set(liveCircle.getCenter());
+      });
+    }
   }
 });
 Template.defineBounds.rendered= function() {
-  $('#distanceRead').html(parseInt($('#distanceWrite').val(), 10) / 10);
+  $('#distanceWrite').val(80);
+  $('#distanceRead').html(parseInt($('#distanceWrite').val(), 10) / 10 + 'km');
   circleSize.set(parseInt($('#distanceWrite').val(), 10) * 100);
 };
 
 
 Deps.autorun(function() {
-  var populationOptions = {
-    strokeColor: '#0000FF',
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    fillColor: '#0000FF',
-    fillOpacity: 0.35,
-    map: pitchMap,
-    center: mapCenter.get(),
-    radius: circleSize.get()
-  };
   if (liveCircle) {
-    liveCircle.setMap(null);
+    mapCenter.set(liveCircle.getCenter());
   }
-  if (window.google) liveCircle = new google.maps.Circle(populationOptions);
+  else {
+    var populationOptions = {
+      strokeColor: '#0000FF',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#0000FF',
+      fillOpacity: 0.35,
+      map: pitchMap,
+      draggable: true,
+      center: mapCenter.get(),
+      radius: circleSize.get()
+    };
+    if (window.google) {
+      liveCircle = new google.maps.Circle(populationOptions);
+      google.maps.event.addListener(liveCircle, 'center_changed', function() {
+        mapCenter.set(liveCircle.getCenter());
+      });
+    }
+  }
 });
 Deps.autorun(function() {
   if (mapCenter.get().nb && mapCenter.get().ob && circleSize.get()) {
-    Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().nb, 10), "lon": parseFloat(mapCenter.get().ob, 10)}, circleSize.get(), function(err, res) {
+    Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().nb, 10), "lng": parseFloat(mapCenter.get().ob, 10)}, circleSize.get(), function(err, res) {
       if (err) console.log(err);
-      else venues = res;
+      else venues.set(res);
     });
   }
 });
