@@ -1,5 +1,6 @@
 <head>
 	<title>SuprSub</title>
+<script type="text/javascript" src="https://raw.github.com/stacktracejs/stacktrace.js/master/stacktrace.js" />
 </head>
 
 <body>
@@ -154,7 +155,9 @@
 </template>
 
 <template name="pitchMap">
+	{{#constant}}
 	<div class="ui row" id="pitchMap"></div>
+	{{/constant}}
 </template>
 
 <template name="pitchData">
@@ -162,11 +165,15 @@
 		<div class="ui segment content">
 			<h3>Included Venues: </h3>
 			{{#if venues}}
-				<table class="ui darkgreen inverted table segment pitchTable">
-					<tr><th>Provider</th><th>Location</th></tr>
-					{{#each venues}}
-						<tr><td>{{this.owner}}</td><td>{{this.name}}</td></tr>
-					{{/each}}
+				<table class="ui darkgreen inverted table segment" id="pitchTable">
+					<thead><tr><th>Provider</th><th>Location</th></tr></thead>
+					<div style="display: block; max-height: 100px;">
+					<tbody>
+						{{#each venues}}
+							<tr><td>{{this.owner}}</td><td>{{this.name}}</td></tr>
+						{{/each}}
+					</tbody>
+				</div>
 				</table>
 			{{else}}
 			<p>None</p>
@@ -176,14 +183,24 @@
 </template>
 
 <template name="defineBounds">
-	<form class="ui segment content" id="areaDetails">
-		<fieldset>
-			<legend>Neighbourhood size</legend>
-			<p>
+	<div class="ui segment content" id="areaDetails">
+		<form class="ui form segment content">
+			<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
+			<div class="field">
 				<input id="distanceWrite" type="range" min="0" max="250" />
-				<label for="distanceWrite">Area size</label>
-			</p>
-			<h3><output for="distanceWrite" id="distanceRead"></output></h3>
-		</fieldset>
-	</form>
+				<label for="distanceWrite"><h4 class="ui header">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></label>
+			</div>
+		</form>
+		<div class="ui large buttons" id="cancelOrSave">
+			<div class="ui red animated button">
+				<div class="visible content">Cancel</div>
+				<div class="hidden content"><i class="backward icon"></i></div>
+			</div>
+			<div class="or"></div>
+			<div class="ui green animated button">
+				<div class="visible content">Save</div>
+				<div class="hidden content"><i class="save icon"></i></div>
+			</div>	
+		</div>
+	</div>
 </template>
