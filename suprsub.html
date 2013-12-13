@@ -1,62 +1,4 @@
-<head>
-	<title>SuprSub</title>
-<script type="text/javascript" src="https://raw.github.com/stacktracejs/stacktrace.js/master/stacktrace.js" />
-</head>
-
-<body>
-	{{> mainTemplate}}
-</body>
-
-<template name="mainTemplate">
-	{{> topbar}}
-	{{#if currentUser}}
-		{{> playerDetails}}
-	{{else}}
-		{{> signUpBox}}
-	{{/if}}
-</template>
-
-<template name="topbar">
-	<div class="ui darkgreen fixed inverted main menu" id="topbar">
-		{{#if currentUser}}
-		<a class="{{#if mainOption "home"}}active {{/if}}item">
-			<i class="home icon"></i> Home
-		</a>
-		<a class="{{#if mainOption "player"}}active {{/if}}item">
-			<i class="user icon"></i> Player
-		</a>
-		<a class="{{#if mainOption "team"}}active {{/if}}item">
-			<i class="users icon"></i> Team
-		</a>
-		{{/if}}
-		<div id="toplogo-image"></div>
-		<div class="right menu">
-			{{#if currentUser}}
-  			<div class="item">
-    			<div class="ui button" id="logout-button">Log Out</div>
-  			</div>
-			{{else}}
-			<div class="item">
-				<div class="ui icon input">
-					<input type="email" placeholder="Email" id="login-email">
-					<i class="user link icon"></i>
-				</div>
-				</div>
-				<div class="item">
-				<div class="ui icon input">
-					<input type="password" placeholder="Password" id="login-password">
-					<i class="lock link icon"></i>
-				</div>				
-			</div>
-  			<div class="item">
-    			<div class="ui button" id="login-button">Log In</div>
-  			</div>
-  			{{/if}}
-		</div>
-	</div>
-</template>
-
-<template name="signUpBox">
+<template name="loginScreen">
 	<div id="login-background-image">
 	</div>
 	<div class="ui page center aligned grid" id="loginBox">
@@ -142,7 +84,7 @@
 	<div class="ui page grid maingrid">
 		<div class="row">
 			<div class="ui twelve wide column">
-				{{> pitchMap}}
+				{{> pitchMapLarge}}
 			</div>
 			<div class="ui four wide column">
 				{{> defineBounds}}
@@ -154,9 +96,15 @@
 	</div>
 </template>
 
-<template name="pitchMap">
+<template name="pitchMapLarge">
 	{{#constant}}
-	<div class="ui row" id="pitchMap"></div>
+	<div class="ui row large" id="pitchMap" style="display: none;"></div>
+	{{/constant}}
+</template>
+
+<template name="pitchMapSmall">
+	{{#constant}}
+	<div class="ui row small" id="pitchMap" style="display: none;"></div>
 	{{/constant}}
 </template>
 
@@ -203,4 +151,43 @@
 			</div>	
 		</div>
 	</div>
+</template>
+
+<template name="teamDetails">
+	<div id="main-background-image"><div>
+	<div class="ui page grid maingrid">
+		<div class="row">
+			<div class="ui eight wide column">
+				{{> otherInfo}}
+			</div>
+			<div class="ui eight wide column">
+				{{> pitchMapSmall}}
+			</div>
+		</div>
+		<div class="row">
+			{{> pitchDetails}}
+		</div>
+	</div>
+</template>
+
+<template name="otherInfo">
+	<div class="ui segment content" id="otherInfo">
+		<form class="ui form segment content">
+			<div class="field">
+				<label>Home Ground</label>
+				<div class="ui left labeled icon input">
+					<input type="text" placeholder="Type a description or address">
+					<i class="globe icon"></i>
+				</div>
+			</div>
+		</form>
+	</div>
+</template>
+
+<template name="pitchDetails">
+
+</template>
+
+<template name="home">
+	Home
 </template>

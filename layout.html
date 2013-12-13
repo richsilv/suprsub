@@ -1,0 +1,48 @@
+<head>
+	<title>SuprSub</title>
+</head>
+
+<template name="mainTemplate">
+	{{> topbar}}
+	{{yield "mainSection"}}
+</template>
+
+<template name="topbar">
+	<div class="ui darkgreen fixed inverted main menu" id="topbar">
+		{{#if currentUser}}
+		<a class="{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
+			<i class="home icon"></i> Home
+		</a>
+		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
+			<i class="user icon"></i> Player
+		</a>
+		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'teamDetails'}}">
+			<i class="users icon"></i> Team
+		</a>
+		{{/if}}
+		<div id="toplogo-image"></div>
+		<div class="right menu">
+			{{#if currentUser}}
+  			<div class="item">
+    			<div class="ui button" id="logout-button">Log Out</div>
+  			</div>
+			{{else}}
+			<div class="item">
+				<div class="ui icon input">
+					<input type="email" placeholder="Email" id="login-email">
+					<i class="user link icon"></i>
+				</div>
+				</div>
+				<div class="item">
+				<div class="ui icon input">
+					<input type="password" placeholder="Password" id="login-password">
+					<i class="lock link icon"></i>
+				</div>				
+			</div>
+  			<div class="item">
+    			<div class="ui button" id="login-button">Log In</div>
+  			</div>
+  			{{/if}}
+		</div>
+	</div>
+</template>

@@ -29,7 +29,7 @@ body {
 	left: 0;
 	height:100vh;
 	width:100vw;
-	background: url(footypitch.png) no-repeat center center fixed;
+	background: url('images/footypitch.png') no-repeat center center fixed;
 	background-size: cover;
 	-o-background-size: cover;
 	-moz-background-size: cover;
@@ -102,15 +102,16 @@ body {
 #toplogo-image {
 	position:absolute;
 	left: 50%;
-	top: 5px;
-	padding: 0.3em;
-	height: 2em;
-	background-image:url('suprsub.png');
-	background-size:contain;
-	background-repeat:no-repeat;
-	height: 100%;
-	width: 100px;
-	margin-left: -50px;
+	top: 4px;
+    background: url('images/SuprSubLogo_NameSmall.jpeg');
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+	border-radius: 4px;
+	height: 29px;
+	width: 125px;
+	margin-left: -72px;
 }
 
 #socialbuttons .button {
@@ -141,12 +142,21 @@ body {
 #pitchMap {
 	margin-top: 1em;
 	left: 50%;
-	width: 800px;
-	margin-left: -400px;
-	height: 450px;
 	background: #fff;
 	box-shadow: 0 0 20px #999;
 	border-radius: 2px;
+}
+
+#pitchMap.large {
+	width: 800px;
+	margin-left: -400px;
+	height: 450px;
+}
+
+#pitchMap.small {
+	width: 500px;
+	margin-left: -250px;	
+	height: 300px;
 }
 
 #areaDetails {

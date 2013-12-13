@@ -2,13 +2,19 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "semantic-ui": {}
+      "semantic-ui": {},
+      "iron-router": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.9.3",
-        "commit": "419bb0296a2f61919d8525e49c72a9afce0bb06c"
+        "tag": "v0.10.0",
+        "commit": "96198e081d974fb67b9a5992f7e74ff1f736322f"
+      },
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.6.1",
+        "commit": "4e1ee0581d68bff422a915dacb0bd30eae10fe08"
       }
     }
   }

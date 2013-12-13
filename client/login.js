@@ -25,12 +25,12 @@ Template.topbar.events({
     }
 });
 
-Template.signUpBox.helpers({
+Template.loginScreen.helpers({
     accountError: function() {
         return accountError.get();
     }
 })
-Template.signUpBox.events({
+Template.loginScreen.events({
     'click #signup-button' : function() {
         if ($('#signup-password').val() !== $('#confirm-password').val()) {
             accountError.set("Passwords do not match");
