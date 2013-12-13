@@ -37,7 +37,6 @@ initialize = function(circle) {
     zoom: 11,
     center: defaultLocation
   };
-  console.log(mapOptions);
   pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
       mapOptions);
   if (!gc) gc = new google.maps.Geocoder();
@@ -148,11 +147,30 @@ Template.defineBounds.events({
     Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.player': {center: mapCenter.get(), size: circleSize.get(), venues: venues.get().map(function(v) {return v._id;})}}});
   }
 });
-Template.defineBounds.rendered= function() {
+Template.defineBounds.rendered = function() {
   $('#distanceWrite').val(circleSize.get()/100);
   $('#distanceRead').html(parseInt($('#distanceWrite').val(), 10)/10 + 'km');
 };
 
+Template.otherInfo.events({
+  'keyup #homeGround': function(event, template) {
+    console.log(event.target.value.length);
+    if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
+      template.lastUpdate = new Date().getTime();
+      var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
+      var pitchElement = "<ul>";
+      pitchCursor.forEach(function(pitch) {pitchElement += '<li class="pitchEntry" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</li>'});
+      $('#matches').html(pitchElement);
+   }
+  },
+  'click #homeGround': function(event, template) {
+  },
+  'click .pitchEntry': function(event) {
+    console.log(event);
+    var pitch = Pitches.findOne({'_id._str': event.target.id});
+    if (pitch) pitchMap.setCenter(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
+  }
+});
 
 Deps.autorun(function(c) {
   if (mainOption === '/player') {

@@ -141,13 +141,13 @@
 		</form>
 		<div class="ui large buttons" id="cancelOrSave">
 			<div class="ui red animated button">
-				<div class="visible content">Cancel</div>
-				<div class="hidden content"><i class="backward icon"></i></div>
+				<div class="hidden content">Cancel</div>
+				<div class="visible content"><i class="backward icon"></i></div>
 			</div>
 			<div class="or"></div>
 			<div class="ui green animated button">
-				<div class="visible content">Save</div>
-				<div class="hidden content"><i class="save icon"></i></div>
+				<div class="hidden content">Save</div>
+				<div class="visible content"><i class="save icon"></i></div>
 			</div>	
 		</div>
 	</div>
@@ -173,12 +173,21 @@
 <template name="otherInfo">
 	<div class="ui segment content" id="otherInfo">
 		<form class="ui form segment content">
-			<div class="field">
-				<label>Home Ground</label>
-				<div class="ui left labeled icon input">
-					<input type="text" placeholder="Type a description or address">
-					<i class="globe icon"></i>
+				<div class="ui grid">
+					<div class="field fourteen wide column">
+						<label>Home Ground</label>
+						<div class="ui left labeled icon input">
+							<input type="text" placeholder="Type a description or address" id="homeGround">
+							<i class="globe icon"></i>
+						</div>
+					</div>
+					<div class="ui right attached animated fade button two wide column" style="vertical-align: bottom;">
+						<div class="hidden content">Search</div>
+						<div class="visible content"><i class="search icon"></i></div>
+					</div>
 				</div>
+			<div class="field">
+				<div id="matches"><div>
 			</div>
 		</form>
 	</div>
