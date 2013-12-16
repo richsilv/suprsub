@@ -191,12 +191,10 @@
 									<div class="visible content"><i class="search icon"></i></div>
 								</div>
 							</div>
-						<div class="field">
-							<div id="matches"></div>
-						</div>
 					</form>
+					<div id="matches"></div>
 				</div>
-				<div class="ui vertical divider"><i class="star icon"></i></div>
+				<div class="ui vertical divider"><i class="map icon"></i></div>
 				<div class="ui eight wide column">
 					{{> pitchMapSmall}}
 				</div>
@@ -207,7 +205,7 @@
 
 <template name="teamDetails">
 	<div class="ui segment content">
-		<form class="ui form segment content">
+		<form class="ui form segment content" id="teamForm">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>Team Name</label>
@@ -217,37 +215,50 @@
 		    	</div>
 			    <div class="field">
 			      	<label>Home Ground</label>
-			      	<div class="ui input">
-			      		<input placeholder="Use the dialogue box below to select" type="text" disabled />
+			      	<div class="ui input" id="homePitch">
+			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
 			      	</div>
 			    </div>
 		  	</div>
-		  	<div class="four fields">
-		    	<div class="field">
+		  	<div class="four fields" style="height: 75px;">
+		    	<div class="field" id="weeklyCheckBox">
 		      		<div class="ui toggle checkbox">
 		      			<input type="checkbox" name="weekly" />
-			      		<label>Weekly fixtures?</label>
+			      		<label>Regular weekly fixtures?</label>
 			      	</div>
-		    	</div>
-			    <div class="field">
-			      	<label>Day</label>
-					<div class="ui dropdown">
+			    </div>
+			    <div class="field" id="daySection" style="display: none;">
+				  	<label>Day</label>
+					<div class="ui selection dropdown">
+						<input type="hidden" name="day">
 					  	<div class="text">Select</div>
 					  	<i class="dropdown icon"></i>
 					  	<div class="menu">
-					    	{{#each days}}<div class="item">{{this.name}}</div>{{/each}}
+					    	{{#each days}}<div class="item" data-value="{{this.code}}">{{this.name}}</div>{{/each}}
 					  	</div>
 					</div>
-			    </div>
-		    	<div class="field">
+		    	</div>
+		    	<div class="field" id="timeCheckBox" style="display: none;">
 		    		<div class="ui toggle checkbox">
 			      		<input type="checkbox" name="sametime" />
 			      		<label>Same time each week?</label>
 		      		</div>
 		    	</div>
-			    <div class="field">
+			    <div class="field" id="timeSection" style="display: none;">
 			      	<label>Kick-off</label>
-			      	<input placeholder="Use the dialogue box below to select" type="time" />
+			      	<div class="ui grid">
+			      		<div class="six wide column" style="margin: 0;">
+        					<div class="ui left icon input">
+            					<input id="timepicker1" type="text" class="input-small">
+								<i class="time icon"></i>
+        					</div>
+        				</div>
+        				<div class="four wide column" style="margin: 0;">
+        					<div class="ui input">
+            					<input id="timepicker2" type="text" class="input-small">
+        					</div>
+        				</div>
+        			</div>
 			    </div>
 		  	</div>
 		  	<div class="ui blue submit button">Submit</div>

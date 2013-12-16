@@ -77,11 +77,16 @@ initialize = function(circle) {
       position: pitches[i].location,
       map: pitchMap,
       title:pitches[i].owner + " " + pitches[i].name,
-      icon: 'images/soccerv2.png'
+      icon: 'images/soccerv2.png',
+      pitch_ID: pitches[i]._id._str
     });
+    if (!circle) {
+      attachMarkerEvent(marker, function(m) {
+        $('#homePitch input').val(m.title);
+        $('#homePitch input').attr('id', m.pitch_ID);
+      });
+    }
   }
-  google.maps.event.addListener(pitchMap, 'center_changed', function() {
-  });
   document.getElementById("pitchMap").style.display = "block";
   google.maps.event.trigger(pitchMap, 'resize');
   pitchMap.setCenter(defaultLocation);
@@ -91,6 +96,11 @@ initialize = function(circle) {
         venues.set(res);
       }
   });
+}
+
+function attachMarkerEvent(marker, callback) {
+  var simpleCallBack = function() {callback(marker);};
+  google.maps.event.addListener(marker, 'click', simpleCallBack);
 }
 
 function loadScript(circle) {
@@ -167,10 +177,12 @@ Template.otherInfo.events({
   'keyup #homeGround': function(event, template) {
     if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
       template.lastUpdate = new Date().getTime();
-      var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
-      var pitchElement = '<div class="ui link list">';
-      pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>'});
-      $('#matches').html(pitchElement + '</div>');
+      if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
+        var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
+        var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>'});
+        $('#matches').html(pitchElement + '</div></div></div>');
+      }
    }
   },
   'click #homeGround': function(event, template) {
@@ -187,7 +199,11 @@ Template.otherInfo.events({
   },
   'click .pitchEntry': function(event) {
     var pitch = Pitches.findOne({'_id._str': event.target.id});
-    if (pitch) pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
+    if (pitch) {
+      pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
+      $('#homePitch input').val(pitch.owner + ' - ' + pitch.name);
+      $('#homePitch input').attr('id', pitch._id._str);      
+    }
   }
 });
 
@@ -196,8 +212,24 @@ Template.teamDetails.helpers({
     return days;
   }
 });
+Template.teamDetails.events({
+  'click #homePitch': function() {
+    location.href = "#";
+    location.href = "#otherInfo";
+  },
+  'click #weeklyCheckBox .checkbox': function(event) {
+    if ($('#timeSection').is(":visible")) {
+      $('#timeCheckBox .checkbox').click();
+    }
+    $('#daySection, #timeCheckBox').toggle({easing: 'swing', direction: 'right', duration: 500});
+  },
+  'click #timeCheckBox .checkbox': function(event) {
+    $('#timeSection').toggle({easing: 'swing', direction: 'right', duration: 500});
+  }
+});
 Template.teamDetails.rendered = function() {
   $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
+  $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false});
 }
 
 Deps.autorun(function(c) {
