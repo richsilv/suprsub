@@ -43,6 +43,7 @@ body {
 	height:100vh;
 	width:100vw;
 	background-color: #c7e5ac;
+	overflow-y: scroll;
 }
 
 .quote {
@@ -140,7 +141,7 @@ body {
 }
 
 #pitchMap {
-	margin-top: 1em;
+	margin-top: 0em;
 	left: 50%;
 	background: #fff;
 	box-shadow: 0 0 20px #999;
@@ -150,13 +151,13 @@ body {
 #pitchMap.large {
 	width: 800px;
 	margin-left: -400px;
-	height: 450px;
+	height: 480px;
 }
 
 #pitchMap.small {
 	width: 500px;
 	margin-left: -250px;	
-	height: 300px;
+	height: 325px;
 }
 
 #areaDetails {
@@ -251,7 +252,30 @@ input[type=range]:active::-moz-range-thumb {
 	text-align: center;
 }
 
+#pitchTable {
+	width: 100%;
+}
+
+#pitchTable thead {
+	display: block;
+	width: 100%;
+}
+
 #pitchTable tbody {
-	height: 10em;
-	overflow-y: scroll
+	display: block;
+	height: 150px;
+	overflow-y: scroll;
+	width: 100%;
+}
+
+.tableProvider {
+	width: 280px;
+}
+.tableLocation {
+	width: 280px;
+}
+
+#matches {
+	max-height: 13em;
+	overflow-y: scroll;
 }

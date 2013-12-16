@@ -1,8 +1,9 @@
 Router.configure({
   	layout: 'mainTemplate',
- 	before: function () {
+ 	  before: function () {
       	if (!Meteor.user() && this.path !== '/home') {
         	// render the login template but keep the url in the browser the same
+          this.render();
         	this.render('loginScreen', {to: 'mainSection'});
 
 	        // stop the rest of the before hooks and the action function 
@@ -33,7 +34,7 @@ Router.map(function() {
 
 Router.map(function() {
   	this.route('home', {
-    	path: '/home',
+    	path: '/',
     	template: 'mainTemplate',
     	yieldTemplates: {
       		'homePage': {to: 'mainSection'}

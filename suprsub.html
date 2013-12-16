@@ -91,7 +91,12 @@
 			</div>
 		</div>
 		<div class="row">
-			{{> pitchData}}
+			<div class="ui eight wide column">
+				{{> pitchData}}
+			</div>
+			<div class="ui eight wide column">
+				Placeholder
+			</div>
 		</div>
 	</div>
 </template>
@@ -114,11 +119,11 @@
 			<h3>Included Venues: </h3>
 			{{#if venues}}
 				<table class="ui darkgreen inverted table segment" id="pitchTable">
-					<thead><tr><th>Provider</th><th>Location</th></tr></thead>
+					<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
 					<div style="display: block; max-height: 100px;">
 					<tbody>
 						{{#each venues}}
-							<tr><td>{{this.owner}}</td><td>{{this.name}}</td></tr>
+							<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
 						{{/each}}
 					</tbody>
 				</div>
@@ -141,13 +146,13 @@
 		</form>
 		<div class="ui large buttons" id="cancelOrSave">
 			<div class="ui red animated button">
-				<div class="hidden content">Cancel</div>
-				<div class="visible content"><i class="backward icon"></i></div>
+				<div class="visible content">Cancel</div>
+				<div class="hidden content"><i class="backward icon"></i></div>
 			</div>
 			<div class="or"></div>
 			<div class="ui green animated button">
-				<div class="hidden content">Save</div>
-				<div class="visible content"><i class="save icon"></i></div>
+				<div class="visible content">Save</div>
+				<div class="hidden content"><i class="save icon"></i></div>
 			</div>	
 		</div>
 	</div>
@@ -177,11 +182,11 @@
 					<div class="field fourteen wide column">
 						<label>Home Ground</label>
 						<div class="ui left labeled icon input">
-							<input type="text" placeholder="Type a description or address" id="homeGround">
+							<input type="text" placeholder="Type a description or address" id="homeGround" href="javascript:return false;">
 							<i class="globe icon"></i>
 						</div>
 					</div>
-					<div class="ui right attached animated fade button two wide column" style="vertical-align: bottom;">
+					<div class="ui right attached animated fade button two wide column" style="vertical-align: bottom;" id="teamSearchButton">
 						<div class="hidden content">Search</div>
 						<div class="visible content"><i class="search icon"></i></div>
 					</div>

@@ -1,12 +1,14 @@
 Pitches = new Meteor.Collection("pitches");
 
 pitchMap = window.pitchMap;
-var gc = null;
+gc = null;
 var myLocation = null;
 var liveCircle = null;
+App = {subs: null};
 
 myDep = function(initial) {
   this.value = initial;
+  this.count = 0;
 };
 
 myDep.prototype = {
@@ -19,13 +21,16 @@ myDep.prototype = {
     if (this.value !== newValue) {
       this.value = newValue;
       this.dep.changed();
+      this.count++;
     }
     return this.value;
   }
 };
 
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
-mainOption = '/home';
+mainOption = '/';
+
+App.subs = {pitches: Meteor.subscribe('allpitches', {onReady: function() {}})};
 
 initializeCircle = function() {
   initialize(true);
@@ -79,6 +84,12 @@ initialize = function(circle) {
   document.getElementById("pitchMap").style.display = "block";
   google.maps.event.trigger(pitchMap, 'resize');
   pitchMap.setCenter(defaultLocation);
+  if (circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().nb, 10), "lng": parseFloat(mapCenter.get().ob, 10)}, circleSize.get(), function(err, res) {
+      if (err) console.log(err);
+      else if (venues) {
+        venues.set(res);
+      }
+  });
 }
 
 function loadScript(circle) {
@@ -88,7 +99,6 @@ function loadScript(circle) {
       'callback=initialize';
   if (circle) script.src += 'Circle'
   if (window.google && window.google.maps) {
-    console.log(document.getElementById('pitchMap'), pitchMap);
     initialize(circle);
   }
   else document.body.appendChild(script);
@@ -154,19 +164,27 @@ Template.defineBounds.rendered = function() {
 
 Template.otherInfo.events({
   'keyup #homeGround': function(event, template) {
-    console.log(event.target.value.length);
     if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
       template.lastUpdate = new Date().getTime();
       var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
-      var pitchElement = "<ul>";
-      pitchCursor.forEach(function(pitch) {pitchElement += '<li class="pitchEntry" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</li>'});
-      $('#matches').html(pitchElement);
+      var pitchElement = '<div class="ui link list">';
+      pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>'});
+      $('#matches').html(pitchElement + '</div>');
    }
   },
   'click #homeGround': function(event, template) {
   },
+  'click #teamSearchButton': function(event, template) {
+    gc.geocode({
+      address: $('#homeGround').val(),
+      region: 'uk'
+      },
+      function(res) {
+        if (res.length) pitchMap.setCenter(res[0].geometry.location);
+      }
+    )
+  },
   'click .pitchEntry': function(event) {
-    console.log(event);
     var pitch = Pitches.findOne({'_id._str': event.target.id});
     if (pitch) pitchMap.setCenter(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
   }
@@ -199,10 +217,14 @@ Deps.autorun(function(c) {
   }
 });
 Deps.autorun(function() {
-  if (mapCenter.get().nb && mapCenter.get().ob && circleSize && circleSize.get()) {
+  if (mapCenter.get().nb && mapCenter.get().ob && circleSize && circleSize.get() && App.subs.pitches.ready()) {
+    if (!this.count) this.count = 1;
+    else this.count++;
     Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().nb, 10), "lng": parseFloat(mapCenter.get().ob, 10)}, circleSize.get(), function(err, res) {
       if (err) console.log(err);
-      else if (venues) venues.set(res);
+      else if (venues) {
+        venues.value = res;
+      }
     });
   }
 });
