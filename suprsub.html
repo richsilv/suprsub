@@ -83,11 +83,19 @@
 	<div id="main-background-image"></div>
 	<div class="ui page grid maingrid">
 		<div class="row">
-			<div class="ui twelve wide column">
-				{{> pitchMapLarge}}
-			</div>
-			<div class="ui four wide column">
-				{{> defineBounds}}
+			<div class="ui column">
+				<div class="ui segment content" id="areaDetails">
+					<div class="ui grid">
+						<div class="row">
+							<div class="ui twelve wide column">
+								{{> pitchMapLarge}}
+							</div>
+							<div class="ui four wide column">
+								{{> defineBounds}}
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -136,25 +144,23 @@
 </template>
 
 <template name="defineBounds">
-	<div class="ui segment content" id="areaDetails">
-		<form class="ui form segment content">
-			<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
-			<div class="field">
-				<input id="distanceWrite" type="range" min="0" max="250" />
-				<label for="distanceWrite"><h4 class="ui header">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></label>
-			</div>
-		</form>
-		<div class="ui large buttons" id="cancelOrSave">
-			<div class="ui red animated button">
-				<div class="visible content">Cancel</div>
-				<div class="hidden content"><i class="backward icon"></i></div>
-			</div>
-			<div class="or"></div>
-			<div class="ui green animated button">
-				<div class="visible content">Save</div>
-				<div class="hidden content"><i class="save icon"></i></div>
-			</div>	
+	<form class="ui form segment content">
+		<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
+		<div class="field">
+			<input id="distanceWrite" type="range" min="0" max="250" />
+			<label for="distanceWrite"><h4 class="ui header">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></label>
 		</div>
+	</form>
+	<div class="ui large buttons" id="cancelOrSave">
+		<div class="ui red animated button">
+			<div class="visible content">Cancel</div>
+			<div class="hidden content"><i class="backward icon"></i></div>
+		</div>
+		<div class="or"></div>
+		<div class="ui green animated button">
+			<div class="visible content">Save</div>
+			<div class="hidden content"><i class="save icon"></i></div>
+		</div>	
 	</div>
 </template>
 
