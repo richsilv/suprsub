@@ -27,7 +27,7 @@ Router.map(function() {
     	path: '/team',
     	template: 'mainTemplate',
     	yieldTemplates: {
-      		'teamDetails': {to: 'mainSection'}
+      		'teamSettings': {to: 'mainSection'}
     	}
   	});
 });

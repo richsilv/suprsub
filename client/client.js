@@ -29,6 +29,7 @@ myDep.prototype = {
 
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
 mainOption = '/';
+var days = [{name: "Sunday", code: 0}, {name: "Monday", code: 1}, {name: "Tuesday", code: 2}, {name: "Wednesday", code: 3}, {name: "Thursday", code: 4}, {name: "Friday", code: 5}, {name: "Saturday", code: 6}];
 
 App.subs = {pitches: Meteor.subscribe('allpitches', {onReady: function() {}})};
 
@@ -180,15 +181,24 @@ Template.otherInfo.events({
       region: 'uk'
       },
       function(res) {
-        if (res.length) pitchMap.setCenter(res[0].geometry.location);
+        if (res.length) pitchMap.panTo(res[0].geometry.location);
       }
     )
   },
   'click .pitchEntry': function(event) {
     var pitch = Pitches.findOne({'_id._str': event.target.id});
-    if (pitch) pitchMap.setCenter(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
+    if (pitch) pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
   }
 });
+
+Template.teamDetails.helpers({
+  days: function() {
+    return days;
+  }
+});
+Template.teamDetails.rendered = function() {
+  $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
+}
 
 Deps.autorun(function(c) {
   if (mainOption === '/player') {

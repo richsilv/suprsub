@@ -80,7 +80,7 @@
 </template>
 
 <template name="playerDetails">
-	<div id="main-background-image"><div>
+	<div id="main-background-image"></div>
 	<div class="ui page grid maingrid">
 		<div class="row">
 			<div class="ui twelve wide column">
@@ -158,48 +158,101 @@
 	</div>
 </template>
 
-<template name="teamDetails">
-	<div id="main-background-image"><div>
+<template name="teamSettings">
+	<div id="main-background-image"></div>
 	<div class="ui page grid maingrid">
 		<div class="row">
-			<div class="ui eight wide column">
-				{{> otherInfo}}
-			</div>
-			<div class="ui eight wide column">
-				{{> pitchMapSmall}}
+			<div class="ui column">
+				{{> teamDetails}}
 			</div>
 		</div>
 		<div class="row">
-			{{> pitchDetails}}
+			{{> otherInfo}}
 		</div>
 	</div>
 </template>
 
 <template name="otherInfo">
-	<div class="ui segment content" id="otherInfo">
-		<form class="ui form segment content">
-				<div class="ui grid">
-					<div class="field fourteen wide column">
-						<label>Home Ground</label>
-						<div class="ui left labeled icon input">
-							<input type="text" placeholder="Type a description or address" id="homeGround" href="javascript:return false;">
-							<i class="globe icon"></i>
+	<div class="ui column">
+		<div class="ui segment content" id="otherInfo">
+			<div class="ui grid">
+				<div class="ui eight wide column">
+					<form class="ui form segment content">
+							<div class="ui grid">
+								<div class="field fourteen wide column">
+									<label>Home Ground</label>
+									<div class="ui left labeled icon input">
+										<input type="text" placeholder="Type a description or address" id="homeGround" href="javascript:return false;">
+										<i class="globe icon"></i>
+									</div>
+								</div>
+								<div class="ui right attached animated fade button two wide column" style="vertical-align: bottom;" id="teamSearchButton">
+									<div class="hidden content">Search</div>
+									<div class="visible content"><i class="search icon"></i></div>
+								</div>
+							</div>
+						<div class="field">
+							<div id="matches"></div>
 						</div>
-					</div>
-					<div class="ui right attached animated fade button two wide column" style="vertical-align: bottom;" id="teamSearchButton">
-						<div class="hidden content">Search</div>
-						<div class="visible content"><i class="search icon"></i></div>
-					</div>
+					</form>
 				</div>
-			<div class="field">
-				<div id="matches"><div>
+				<div class="ui vertical divider"><i class="star icon"></i></div>
+				<div class="ui eight wide column">
+					{{> pitchMapSmall}}
+				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 </template>
 
-<template name="pitchDetails">
-
+<template name="teamDetails">
+	<div class="ui segment content">
+		<form class="ui form segment content">
+		  	<div class="two fields">
+		    	<div class="field">
+		      		<label>Team Name</label>
+		      		<div class="ui input">
+		      			<input placeholder="Team Name" type="text" />
+		      		</div>
+		    	</div>
+			    <div class="field">
+			      	<label>Home Ground</label>
+			      	<div class="ui input">
+			      		<input placeholder="Use the dialogue box below to select" type="text" disabled />
+			      	</div>
+			    </div>
+		  	</div>
+		  	<div class="four fields">
+		    	<div class="field">
+		      		<div class="ui toggle checkbox">
+		      			<input type="checkbox" name="weekly" />
+			      		<label>Weekly fixtures?</label>
+			      	</div>
+		    	</div>
+			    <div class="field">
+			      	<label>Day</label>
+					<div class="ui dropdown">
+					  	<div class="text">Select</div>
+					  	<i class="dropdown icon"></i>
+					  	<div class="menu">
+					    	{{#each days}}<div class="item">{{this.name}}</div>{{/each}}
+					  	</div>
+					</div>
+			    </div>
+		    	<div class="field">
+		    		<div class="ui toggle checkbox">
+			      		<input type="checkbox" name="sametime" />
+			      		<label>Same time each week?</label>
+		      		</div>
+		    	</div>
+			    <div class="field">
+			      	<label>Kick-off</label>
+			      	<input placeholder="Use the dialogue box below to select" type="time" />
+			    </div>
+		  	</div>
+		  	<div class="ui blue submit button">Submit</div>
+	  	</form>
+	</div>
 </template>
 
 <template name="home">

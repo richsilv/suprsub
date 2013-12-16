@@ -44,6 +44,11 @@ body {
 	width:100vw;
 	background-color: #c7e5ac;
 	overflow-y: scroll;
+	background: url('images/grass.png') no-repeat center center fixed;
+	background-size: cover;
+	-o-background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
 }
 
 .quote {
@@ -69,9 +74,14 @@ body {
 }
 
 #topbar {
+	top: 0;
     -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
     -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+}
+
+#topbar+div+div {
+	margin-top: 50px;
 }
 
 .ui.menu .darkgreen.active.item,
@@ -137,7 +147,7 @@ body {
 }
 
 .ui.maingrid {
-	margin-top: 50px;
+
 }
 
 #pitchMap {
