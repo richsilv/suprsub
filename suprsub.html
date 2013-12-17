@@ -83,6 +83,31 @@
 	<div id="main-background-image"></div>
 	<div class="ui page grid maingrid">
 		<div class="row">
+			<div class="ui eight wide column">
+				{{> playerForm}}
+			</div>
+			<div class="ui eight wide column">
+				<div class="ui column">
+					<div class="ui segment content" id="tabSpace">
+						<div class="ui tabular menu">
+						  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
+						    Selected Venues
+						  </a>
+						  <a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability">
+						    Availability
+						  </a>
+						</div>
+						{{#if tabChoice 'playerTab' 'pitchData'}}
+							{{> pitchData}}
+						{{/if}}
+						{{#if tabChoice 'playerTab' 'availability'}}
+							{{> availability}}
+						{{/if}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
 			<div class="ui column">
 				<div class="ui segment content" id="areaDetails">
 					<div class="ui grid">
@@ -96,14 +121,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="ui eight wide column">
-				{{> pitchData}}
-			</div>
-			<div class="ui eight wide column">
-				Placeholder
 			</div>
 		</div>
 	</div>
@@ -122,24 +139,60 @@
 </template>
 
 <template name="pitchData">
-	<div class="ui column">
-		<div class="ui segment content">
-			<h3>Included Venues: </h3>
-			{{#if venues}}
-				<table class="ui darkgreen inverted table segment" id="pitchTable">
-					<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
-					<div style="display: block; max-height: 100px;">
-					<tbody>
-						{{#each venues}}
-							<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
-						{{/each}}
-					</tbody>
-				</div>
-				</table>
-			{{else}}
-			<p>None</p>
-			{{/if}}
+	{{#if getVenues}}
+		<table class="ui darkgreen inverted table segment" id="pitchTable">
+			<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
+			<div style="display: block; max-height: 100px;">
+			<tbody>
+				{{#each getVenues}}
+					<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
+				{{/each}}
+			</tbody>
 		</div>
+		</table>
+	{{else}}
+	<p>None</p>
+	{{/if}}
+</template>
+
+<template name="availability">
+	<form class="ui form segment content">
+
+	</form>
+</template>
+
+<template name="playerForm">
+	<div class="ui column">
+		<form class="ui form segment content">
+		  	<div class="two fields">
+		    	<div class="field">
+		      		<label>First Name</label>
+		      		<div class="ui input" id="firstname">
+		      			<input placeholder="First Name" type="text" />
+		      		</div>
+		    	</div>
+			    <div class="field">
+			      	<label>Surname</label>
+			      	<div class="ui input" id="surname">
+			      		<input placeholder="Surname" type="text" />
+			      	</div>
+			    </div>
+		  	</div>
+		  	<div class="two fields">
+			    <div class="field">
+			      	<label>Preferred Contact</label>
+			      	<div class="ui input" id="contact">
+			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
+			      	</div>
+			    </div>
+			    <div class="field">
+			      	<label>Twitter Handle</label>
+			      	<div class="ui input" id="twitterHandle">
+			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
+			      	</div>
+			    </div>		  		
+		  	</div>
+		</form>
 	</div>
 </template>
 
@@ -255,19 +308,34 @@
 			      	<div class="ui grid">
 			      		<div class="six wide column" style="margin: 0;">
         					<div class="ui left icon input">
-            					<input id="timepicker1" type="text" class="input-small">
+            					<input id="timepicker1" type="number" value="19" min="0" max="23" step="1" class="input-small">
 								<i class="time icon"></i>
         					</div>
         				</div>
-        				<div class="four wide column" style="margin: 0;">
+        				<div class="five wide column" style="margin: 0;">
         					<div class="ui input">
-            					<input id="timepicker2" type="text" class="input-small">
+            					<input id="timepicker2" type="number" value="00" min="00" max="59" step="5" class="input-small">
         					</div>
         				</div>
         			</div>
 			    </div>
 		  	</div>
-		  	<div class="ui blue submit button">Submit</div>
+		  	<div class="ui grid">
+		  		<div class="ui six wide column"></div>
+		  		<div class="ui four wide column">
+					<div class="ui large buttons" id="cancelOrSave">
+						<div class="ui red animated button">
+							<div class="visible content">Cancel</div>
+							<div class="hidden content"><i class="backward icon"></i></div>
+						</div>
+						<div class="or"></div>
+						<div class="ui green animated button">
+							<div class="visible content">Save</div>
+							<div class="hidden content"><i class="save icon"></i></div>
+						</div>	
+					</div>
+				</div>
+			</div>
 	  	</form>
 	</div>
 </template>

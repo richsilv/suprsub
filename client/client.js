@@ -4,6 +4,7 @@ pitchMap = window.pitchMap;
 gc = null;
 var myLocation = null;
 var liveCircle = null;
+
 App = {subs: null};
 
 myDep = function(initial) {
@@ -24,10 +25,25 @@ myDep.prototype = {
       this.count++;
     }
     return this.value;
+  },
+  getKey: function(key) {
+    this.dep.depend();
+    if (key in this.value) return this.value[key];
+    else return undefined;
+  },
+  setKey: function(key, newValue) {
+    if (key in this.value && this.value[key] !== newValue) {
+      this.value[key] = newValue;
+      this.dep.changed();
+      this.count++;
+    }
+    return this.value[key];
   }
 };
 
+venues = new myDep([]);
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
+tabChoices = new myDep({playerTab: 'pitchData'});
 mainOption = '/';
 var days = [{name: "Sunday", code: 0}, {name: "Monday", code: 1}, {name: "Tuesday", code: 2}, {name: "Wednesday", code: 3}, {name: "Thursday", code: 4}, {name: "Friday", code: 5}, {name: "Saturday", code: 6}];
 
@@ -116,19 +132,30 @@ function loadScript(circle) {
 }
 
 Handlebars.registerHelper("option", function(option) {
-    if (mainOption) return Router.current(true).path === option;
-    else return false;
+  if (mainOption) return Router.current(true).path === option;
+  else return false;
+});
+
+Handlebars.registerHelper("tabChoice", function(key, value) {
+  if (tabChoices) return tabChoices.get()[key] === value;
+  else return false;  
 });
 
 Template.pitchData.helpers({
-  venues: function() {
-    return venues.get(); 
+  getVenues: function() {
+    if (venues && venues.get()) return venues.get();
+    else return []; 
+  }
+});
+
+Template.playerDetails.events({
+  'click #tabSpace div a': function(event, target) {
+    tabChoices.setKey('playerTab', event.target.name);
   }
 });
 
 Template.pitchMapLarge.created = function() {
   window.circleSize = new myDep(8000);
-  window.venues = new myDep([]);
   var intv = setInterval(function(){
     var $el = $("#pitchMap");
 
@@ -171,6 +198,9 @@ Template.defineBounds.events({
 Template.defineBounds.rendered = function() {
   $('#distanceWrite').val(circleSize.get()/100);
   $('#distanceRead').html(parseInt($('#distanceWrite').val(), 10)/10 + 'km');
+  var newWidth = parseInt($('#areaDetails').css('width'), 10) * 0.7;
+  $('#pitchMap').css('width', newWidth);
+  $('#pitchMap').css('margin-left', -newWidth/2);
 };
 
 Template.otherInfo.events({
@@ -225,6 +255,9 @@ Template.teamDetails.events({
   },
   'click #timeCheckBox .checkbox': function(event) {
     $('#timeSection').toggle({easing: 'swing', direction: 'right', duration: 500});
+  },
+  'keydown #timeSection input[type="number"]': function(event) {
+    if (event.keyCode > 57) return false;
   }
 });
 Template.teamDetails.rendered = function() {

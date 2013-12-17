@@ -278,6 +278,10 @@ input[type=range]:active::-moz-range-thumb {
 	width: 100%;
 }
 
+#tabSpace {
+	min-height: 265px;
+}
+
 .tableProvider {
 	width: 280px;
 }
