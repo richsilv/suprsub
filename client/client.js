@@ -141,6 +141,23 @@ Handlebars.registerHelper("tabChoice", function(key, value) {
   else return false;  
 });
 
+Handlebars.registerHelper("service", function(network) {
+  return Meteor.user() ? network in Meteor.user().services : false;
+});
+
+Handlebars.registerHelper("email", function(level) {
+  switch (level) {
+    case 'verified':
+      return Meteor.user().emails ? Meteor.user().emails[0].verified : false;
+      break;
+    case 'unverified':
+      return Meteor.user().emails ? !Meteor.user().emails[0].verified : false;
+      break;
+    default:
+      return Meteor.user().emails ? Meteor.user().emails[0].address : false;
+  }
+});
+
 Template.pitchData.helpers({
   getVenues: function() {
     if (venues && venues.get()) return venues.get();
@@ -263,7 +280,14 @@ Template.teamDetails.events({
 Template.teamDetails.rendered = function() {
   $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false});
-}
+};
+
+Template.playerForm.events({
+  'click #emailButton': function() {
+    console.log("hi");
+    $('#linkModal').modal('show');
+  }
+});
 
 Deps.autorun(function(c) {
   if (mainOption === '/player') {

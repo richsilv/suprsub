@@ -186,13 +186,46 @@
 			      	</div>
 			    </div>
 			    <div class="field">
-			      	<label>Twitter Handle</label>
+			      	<label>Placeholder</label>
 			      	<div class="ui input" id="twitterHandle">
 			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
 			      	</div>
-			    </div>		  		
+			    </div>
+		  	</div>
+		  	<div class="small fluid ui buttons">
+		  		<div class="ui {{#if service 'facebook'}}facebook {{/if}}button">
+		  			<i class="facebook icon"></i>
+		  			{{#if service 'facebook'}}
+			  			Facebook Account Linked
+			  		{{else}}
+			  			Link Facebook Account
+			  		{{/if}}
+		  		</div>
+		  		<div class="ui {{#if service 'twitter'}}twitter {{/if}}button">
+		  			<i class="twitter icon"></i>
+		  			{{#if service 'twitter'}}
+			  			Twitter Account Linked
+		  			{{else}}
+			  			Link Twitter Account
+		  			{{/if}}
+		  		</div>
+		  		<div class="ui {{#if email 'verified'}}primary {{/if}}button"{{#if email}} title="{{email}}"{{/if}} id="emailButton">
+		  			<i class="mail icon"></i>
+		  			{{#if email 'verified'}}
+			  			Email address verified
+		  			{{else}}
+		  				{{#if email 'unverified'}}
+			  				Waiting for email verification
+			  			{{else}}
+			  				Link Email Account
+		  				{{/if}}
+		  			{{/if}}
+		  		</div>
 		  	</div>
 		</form>
+	</div>
+	<div class="ui modal" id="linkModal">
+		<p> Contacting Facebook... </p>
 	</div>
 </template>
 
