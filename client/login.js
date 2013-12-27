@@ -60,6 +60,14 @@ Template.loginScreen.events({
                     accountError.set('Cannot login with Facebook');                    
                 }
             });
+    },
+    'click #twitter-login': function(event) {
+        Meteor.loginWithTwitter({},
+            function(error) {
+                if (error) {
+                    accountError.set('Cannot login with Twitter');
+                }
+            });
     }
 });
 

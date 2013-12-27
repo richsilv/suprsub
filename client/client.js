@@ -77,9 +77,10 @@ initialize = function(circle) {
       var defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
       if (circle) {
         mapCenter.set(defaultLocation);
-        if (liveCircle) liveCircle.setCenter(defaultLocation);
+        pitchMap.setCenter(defaultLocation);
+        updateCircle();
         Meteor.call('pitchesWithin', {"lat": res.coords.latitude, "lng": res.coords.longitude}, 8000, function(err, res) {
-          if (err) console.log(err);
+          if (err || !venues) console.log(err);
           else venues.set(res);
         });
       }
@@ -284,8 +285,26 @@ Template.teamDetails.rendered = function() {
 
 Template.playerForm.events({
   'click #emailButton': function() {
-    console.log("hi");
     $('#linkModal').modal('show');
+  },
+  'click #facebookButton': function() {
+    if (!('facebook' in Meteor.user().services)) {
+      Meteor.loginWithFacebook({}, function (err) {
+        if (err)
+          Session.set('errorMessage', err.reason || 'Unknown error');
+      });
+    }
+  },
+  'click #twitterButton': function() {
+    if (!('twitter' in Meteor.user().services)) {
+      Meteor.loginWithTwitter({}, function (err) {
+        if (err)
+          Session.set('errorMessage', err.reason || 'Unknown error');
+      });
+    }
+  },
+  'click #emailSubmit': function() {
+    
   }
 });
 
