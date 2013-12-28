@@ -86,6 +86,7 @@ var twitterconfig = SecureData.findOne({Name: 'twitterconfig'}).Value;
 
 Meteor.startup(function() {
 	Pitches._ensureIndex({ location : "2d" });
+	Future = Npm.require('fibers/future');
 });
 
 Meteor.publish('pitches', function(loc, prox) {
@@ -124,6 +125,30 @@ Meteor.methods({
 		    {'$center' : [[center.lat, center.lon], distance/111000] }}}, {
 		    limit: 100
 	  	}).fetch();*/
+	},
+	addEmailCredentials: function(details) {
+		if (Meteor.users.findOne({'emails.address': details.email})) {
+			return 'Email already exists in database';
+		}
+		var loggedInUser = Meteor.user(),
+			passwordService = {srp: details.srp},
+			fut = new Future();;
+		Meteor.users.update(loggedInUser._id, {
+			$set: {
+				'emails': [{
+					address: details.email,
+					verified: false
+				}],
+				'services.password' : passwordService
+			}
+		}, function(err, num) {
+			if (err) fut['return'](err);
+			else fut['return']([null, num]);
+		});
+		return fut.wait();
+	},
+	emailExists: function(email) {
+		return !!Meteor.users.findOne({'emails.address': email});
 	},
 	evaluate: function(string) {
 		return eval(string);

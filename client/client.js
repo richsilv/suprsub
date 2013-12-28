@@ -62,7 +62,7 @@ initialize = function(circle) {
   pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
       mapOptions);
   if (!gc) gc = new google.maps.Geocoder();
-  if (Meteor.user() && Meteor.user().profile.player) {
+  if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player) {
     defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.nb, Meteor.user().profile.player.center.ob);
     mapCenter.set(defaultLocation);
     if (circle) {
@@ -285,6 +285,8 @@ Template.teamDetails.rendered = function() {
 
 Template.playerForm.events({
   'click #emailButton': function() {
+    $('#linkModal').html(Template.linkModal());
+    attachLinkModalEvents();
     $('#linkModal').modal('show');
   },
   'click #facebookButton': function() {
@@ -302,11 +304,42 @@ Template.playerForm.events({
           Session.set('errorMessage', err.reason || 'Unknown error');
       });
     }
-  },
-  'click #emailSubmit': function() {
-    
   }
 });
+
+Template.linkModal.events({
+  'click #emailCancel': function() {
+    $('#linkModal').modal('hide');
+    $('#emailButton').click(function() {
+      $('#linkModal').modal('hide');
+    });
+  },
+  'click #emailSubmit': function() {
+    Meteor.call('emailExists', $('#emailEntry').val(), function(err, res) {
+      if (res) {
+        $('#linkModal').html(Template.duplicateEmail());
+      }
+      else {
+        $('#linkModal').modal('hide');
+        Meteor.call('addEmailCredentials', {
+          email: $('#emailEntry').val(), 
+          srp: Package.srp.SRP.generateVerifier($('#passwordEntry').val())
+        }, function(err, res) {
+          console.log(err, res);
+        });        
+      }
+    });
+  }
+});
+Template.linkModal.rendered = function() {
+  console.log('rendered');
+};
+
+attachLinkModalEvents = function() {
+  $('#emailCancel').click(function() {
+    $('#linkModal').modal('hide');
+  });
+}
 
 Deps.autorun(function(c) {
   if (mainOption === '/player') {

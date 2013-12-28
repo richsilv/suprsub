@@ -225,21 +225,53 @@
 		</form>
 	</div>
 	<div class="ui small modal" id="linkModal">
-		<div class="ui row">
-			<div class="ui column">
-				<form class="ui form segment content grid">
-			  		<div class="ui twelve wide column field">
-			      		<label>Email Address</label>
-			      		<div class="ui input" id="email">
-			      			<input placeholder="Type email here" type="text" />
-			      		</div>
-			    	</div>
-    		  		<div class="ui four wide column orange submit button" id="emailSubmit">
+	</div>
+</template>
+
+<template name="linkModal">
+	<div class="ui row">
+		<div class="ui column">
+			<form class="ui form segment content grid">
+		  		<div class="inline field row">
+		      		<div class="ui input" id="email">
+		      			<input placeholder="Email Address" type="email" id="emailEntry" />
+		      		</div>
+		    	</div>
+				<div class="inline field row">
+		      		<div class="ui input" id="password">
+		      			<input placeholder="Password" type="password" id="passwordEntry" />
+		      		</div>
+		    	</div>
+		    	<div class="two fluid ui buttons row">
+    		  		<div class="ui negative button" id="emailCancel">
+			  			<i class="remove icon"></i>
+			  			Cancel
+			  		</div>
+    		  		<div class="ui orange button" id="emailSubmit">
 			  			<i class="mail icon"></i>
 			  			Submit
 			  		</div>
-		    	</form>
-			</div>    			
+			  	</div>
+	    	</form>
+		</div>    			
+	</div>
+</template>
+
+<template name="duplicateEmail">
+	<div class="ui row">
+		<div class="ui column">
+			<h3 class="ui dividing header">
+				E-mail already registered
+			</h3>
+			<p>That e-mail address is already registered on the system as a separate user.</p>
+			<p>If you would like to link it to this profile, you will need to do the following:</p>
+			<ul>
+				<li>Log out of this account.</li>
+				<li>Log in as using the e-mail {{enteredEmail}}</li>
+				<li>Select <strong><em>Close this Account</em></strong> from the system menu.</li>
+				<li>Log back into this account, from which you will now be able to link that e-mail address.</li>
+			</ul>
+			<p>Sorry about that, but this is necessary to prevent accounts being hijacked.</p>
 		</div>
 	</div>
 </template>
