@@ -285,9 +285,38 @@ Template.teamDetails.rendered = function() {
 
 Template.playerForm.events({
   'click #emailButton': function() {
-    $('#linkModal').html(Template.linkModal());
-    attachLinkModalEvents();
+    var frag = Meteor.render(function() {
+      return Template.linkModal();
+    });
+//    $('#linkModal').html(Template.linkModal());
+//    attachLinkModalEvents();
+    $('#linkModal').modal({
+      onShow: function() {
+        $('body').dimmer({
+          debug: false,
+          performance: false,
+          verbose: false,
+          onHide: function() {
+            console.log("hidden");
+            Spark.finalize($('linkModal')[0]);
+            document.getElementById('linkModal').innerHTML = "";
+            venues.dep.changed();
+          }
+        });
+      },
+      onHide: function() {
+        console.log("hidden");
+        Spark.finalize($('linkModal')[0]);
+        document.getElementById('linkModal').innerHTML = "";    
+        venues.dep.changed();
+      },
+      debug: false,
+      performance: false,
+      verbose: false,
+      closable: false
+    });
     $('#linkModal').modal('show');
+    document.getElementById('linkModal').appendChild(frag);
   },
   'click #facebookButton': function() {
     if (!('facebook' in Meteor.user().services)) {
@@ -306,13 +335,15 @@ Template.playerForm.events({
     }
   }
 });
+Template.playerForm.created = function() {
+}
 
 Template.linkModal.events({
   'click #emailCancel': function() {
     $('#linkModal').modal('hide');
-    $('#emailButton').click(function() {
-      $('#linkModal').modal('hide');
-    });
+//    $('#emailButton').click(function() {
+//      $('#linkModal').modal('hide');
+//    });
   },
   'click #emailSubmit': function() {
     Meteor.call('emailExists', $('#emailEntry').val(), function(err, res) {
