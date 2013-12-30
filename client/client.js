@@ -41,6 +41,14 @@ myDep.prototype = {
   }
 };
 
+Template.constructor.created = function() {
+  console.log("created", this);
+};
+Template.constructor.destroyed = function() {
+  console.log("destroyed", this);
+};
+
+
 venues = new myDep([]);
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
 tabChoices = new myDep({playerTab: 'pitchData'});
@@ -297,23 +305,24 @@ Template.playerForm.events({
           performance: false,
           verbose: false,
           onHide: function() {
-            console.log("hidden");
-            Spark.finalize($('linkModal')[0]);
-            document.getElementById('linkModal').innerHTML = "";
+            console.log("hidden2");
+            var linkModal = $('#linkModal')[0] 
+            Spark.finalize(linkModal.firstChild, linkModal.lastChild);
+            $(linkModal).empty();
             venues.dep.changed();
           }
         });
       },
       onHide: function() {
         console.log("hidden");
-        Spark.finalize($('linkModal')[0]);
-        document.getElementById('linkModal').innerHTML = "";    
+        var linkModal = $('#linkModal')[0] 
+        Spark.finalize(linkModal.firstChild, linkModal.lastChild);
+        $(linkModal).empty();
         venues.dep.changed();
       },
       debug: false,
       performance: false,
-      verbose: false,
-      closable: false
+      verbose: false
     });
     $('#linkModal').modal('show');
     document.getElementById('linkModal').appendChild(frag);
