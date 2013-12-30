@@ -22,6 +22,9 @@ Template.topbar.events({
     },
     'click #logout-button' : function() {
         Meteor.logout();
+    },
+    'click #delete-button' : function() {
+        Meteor.call('removeCurrentUser');
     }
 });
 
@@ -43,8 +46,9 @@ Template.loginScreen.events({
             email: $('#signup-email').val(), 
             password: $('#signup-password').val(), 
             profile: {
-                FirstName: $('#firstname').val(), 
-                LastName: $('#lastname').val()
+                first_name: $('#firstname').val(), 
+                last_name: $('#lastname').val(),
+                name: $('#firstname').val() + ' ' + $('#lastname').val()
             }
         }, function(err) {
             if (err) {

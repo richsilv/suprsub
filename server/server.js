@@ -74,6 +74,11 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
   }
   return orig_updateOrCreateUserFromExternalService.apply(this, arguments);
 };
+
+Accounts.config({
+  sendVerificationEmail: true,
+  forbidClientAccountCreation: false
+});
 /* End of Accounts Section */
 
 
@@ -87,6 +92,33 @@ var twitterconfig = SecureData.findOne({Name: 'twitterconfig'}).Value;
 Meteor.startup(function() {
 	Pitches._ensureIndex({ location : "2d" });
 	Future = Npm.require('fibers/future');
+});
+
+Accounts.onCreateUser(function(options, user) {
+//	console.log(user);
+	if ('facebook' in user.services) {
+		if (options.profile) user.profile = _.extend(options.profile, {
+			first_name: user.services.facebook.first_name,
+			last_name : user.services.facebook.last_name
+			});
+		else user.profile = {
+			first_name: user.services.facebook.first_name,
+			last_name : user.services.facebook.last_name
+			};			
+	}
+	else if ('twitter' in user.services) {
+		if (options.profile && 'name' in options.profile) {
+			names = divideName(options.profile.name);
+			user.profile = _.extend(options.profile, {
+				first_name: names[0],
+				last_name: names[1]
+			});
+		}
+	}
+	else {
+		user.profile = options.profile;
+	}
+	return user;
 });
 
 Meteor.publish('pitches', function(loc, prox) {
@@ -150,7 +182,52 @@ Meteor.methods({
 	emailExists: function(email) {
 		return !!Meteor.users.findOne({'emails.address': email});
 	},
+	sendVerificationEmail: function() {
+		Accounts.sendVerificationEmail(Meteor.userId());
+	},
+	removeCurrentUser: function() {
+        Meteor.users.remove(Meteor.userId());
+	},
+	appendNameFromTwitter: function() {
+		return twitterNameFromId(function(name) {
+			return divideName(updateNames, name);
+		});
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}
 });
+
+function twitterNameFromId(callback, id) {
+	var thisUser = Meteor.user()
+	if (!'twitter' in thisUser.services) return null;
+	if (!id) id = thisUser.services.twitter.id;
+	Twit = new TwitMaker({
+	    consumer_key:         twitterconfig.consumerKey,
+	    consumer_secret:      twitterconfig.secret,
+	    access_token:         thisUser.services.twitter.accessToken,
+	    access_token_secret:  thisUser.services.twitter.accessTokenSecret
+	});
+	Twit.get('users/show', { 'user_id': id }, function(err, res) {
+		if (!err) {
+			console.log("Splitting " + res.name);
+			callback(res.name);
+		}
+		else return err;
+	});
+}
+
+function divideName(name, callback) {
+	if (callback) callback([name.substring(0, name.indexOf(' ')), name.substring(name.indexOf(' ')+1)]);
+	else return [name.substring(0, name.indexOf(' ')), name.substring(name.indexOf(' ')+1)];
+}
+
+function updateNames(names) {
+	var thisUser = Meteor.user();
+	if (user.profile.first_name && user.profile.last_name) return false;
+	Meteor.users.update(thisUser._id, {$set: {'profile.first_name': names[0], 'profile.last_name': names[1]}}, function(err, num) {
+		console.log(err, num);
+		if (err) return err;
+		if (num) return true;
+	});
+}

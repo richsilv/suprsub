@@ -2,8 +2,7 @@ Pitches = new Meteor.Collection("pitches");
 
 pitchMap = window.pitchMap;
 gc = null;
-var myLocation = null;
-var liveCircle = null;
+var myLocation, liveCircle, defaultLocation;
 
 App = {subs: null};
 
@@ -41,17 +40,32 @@ myDep.prototype = {
   }
 };
 
-Template.constructor.created = function() {
-  console.log("created", this);
-};
-Template.constructor.destroyed = function() {
-  console.log("destroyed", this);
-};
+function logTemplateEvents() {
+  _.each(Template, function(template, name) {
+    var oldCreated = template.created,
+        oldDestroyed = template.destroyed;
+        oldRendered = template.rendered;
+    template.created = function() {
+      console.log("Created: ", this); //_.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
+      oldCreated && oldCreated.apply(this, arguments);
+    };
+    template.rendered = function() {
+      // console.log("Rendered: ", _.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
+      console.log("Rendering: ", Deps.active);
+      oldRendered && oldRendered.apply(this, arguments);
+    };
+    template.destroyed = function() {
+      console.log("Destroyed: ", this);
+      oldDestroyed && oldDestroyed.apply(this, arguments);
+    };    
+  });
+}
 
 
 venues = new myDep([]);
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
 tabChoices = new myDep({playerTab: 'pitchData'});
+circleChanged = new myDep(false);
 mainOption = '/';
 var days = [{name: "Sunday", code: 0}, {name: "Monday", code: 1}, {name: "Tuesday", code: 2}, {name: "Wednesday", code: 3}, {name: "Thursday", code: 4}, {name: "Friday", code: 5}, {name: "Saturday", code: 6}];
 
@@ -62,13 +76,14 @@ initializeCircle = function() {
 }
 
 initialize = function(circle) {
-  var defaultLocation = new google.maps.LatLng(51, 0);
+  defaultLocation = new google.maps.LatLng(51, 0);
   var mapOptions = {
     zoom: 11,
     center: defaultLocation
   };
   pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
       mapOptions);
+  circleChanged.set(false);
   if (!gc) gc = new google.maps.Geocoder();
   if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player) {
     defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.nb, Meteor.user().profile.player.center.ob);
@@ -95,6 +110,7 @@ initialize = function(circle) {
     }, function() {
       window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.")
     });
+    circleChanged.set(true);
   }
   var pitches = Pitches.find().fetch();
   for (var i=0; i < pitches.length; i++) {
@@ -151,7 +167,7 @@ Handlebars.registerHelper("tabChoice", function(key, value) {
 });
 
 Handlebars.registerHelper("service", function(network) {
-  return Meteor.user() ? network in Meteor.user().services : false;
+  return Meteor.user() && 'services' in Meteor.user() ? network in Meteor.user().services : false;
 });
 
 Handlebars.registerHelper("email", function(level) {
@@ -184,7 +200,6 @@ Template.pitchMapLarge.created = function() {
   window.circleSize = new myDep(8000);
   var intv = setInterval(function(){
     var $el = $("#pitchMap");
-
     if ( $el.length > 0 ) {
       clearInterval(intv);
       loadScript(true);
@@ -200,7 +215,6 @@ Template.pitchMapSmall.created = function() {
   window.venues = null;
   var intv = setInterval(function(){
     var $el = $("#pitchMap");
-
     if ( $el.length > 0 ) {
       clearInterval(intv);
       loadScript(false);
@@ -211,14 +225,35 @@ Template.pitchMapSmall.created = function() {
   }, 5000);
 };
 
+Template.defineBounds.helpers({
+  unmoved: function() {
+    return !circleChanged.get();
+  }
+});
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
+    circleChanged.set(true);
     $('#distanceRead').html(parseInt(event.target.value, 10) / 10 + 'km');
     circleSize.set(parseInt($('#distanceWrite').val(), 10) * 100);
     updateCircle();
   },
-  'click #cancelOrSave .green.button': function() {
+  'click #saveBoundsButton': function() {
+    circleChanged.set(false);
     Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.player': {center: mapCenter.get(), size: circleSize.get(), venues: venues.get().map(function(v) {return v._id;})}}});
+    liveCircle.setOptions({ strokeColor: '#78db1c', fillColor: '#78db1c' });
+  },
+  'click #revertBoundsButton': function() {
+    circleChanged.set(false);
+    var thisUser = Meteor.user();
+    if (thisUser && thisUser.profile && thisUser.profile.player) {
+      circleSize.set(thisUser.profile.player.size);
+      mapCenter.set(new google.maps.LatLng(Meteor.user().profile.player.center.nb, Meteor.user().profile.player.center.ob));
+    }
+    else {
+      circleSize.set(8000);
+      mapCenter.set(defaultLocation);            
+    }
+    updateCircle();
   }
 });
 Template.defineBounds.rendered = function() {
@@ -291,41 +326,21 @@ Template.teamDetails.rendered = function() {
   $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false});
 };
 
+Template.playerForm.helpers({
+  first_name: function() {
+    return (Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.first_name : null;
+  },
+  last_name: function() {
+    return (Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.last_name : null;
+  }
+})
 Template.playerForm.events({
   'click #emailButton': function() {
     var frag = Meteor.render(function() {
       return Template.linkModal();
     });
-//    $('#linkModal').html(Template.linkModal());
-//    attachLinkModalEvents();
-    $('#linkModal').modal({
-      onShow: function() {
-        $('body').dimmer({
-          debug: false,
-          performance: false,
-          verbose: false,
-          onHide: function() {
-            console.log("hidden2");
-            var linkModal = $('#linkModal')[0] 
-            Spark.finalize(linkModal.firstChild, linkModal.lastChild);
-            $(linkModal).empty();
-            venues.dep.changed();
-          }
-        });
-      },
-      onHide: function() {
-        console.log("hidden");
-        var linkModal = $('#linkModal')[0] 
-        Spark.finalize(linkModal.firstChild, linkModal.lastChild);
-        $(linkModal).empty();
-        venues.dep.changed();
-      },
-      debug: false,
-      performance: false,
-      verbose: false
-    });
+    document.getElementById('linkModalHolder').appendChild(frag);
     $('#linkModal').modal('show');
-    document.getElementById('linkModal').appendChild(frag);
   },
   'click #facebookButton': function() {
     if (!('facebook' in Meteor.user().services)) {
@@ -349,37 +364,61 @@ Template.playerForm.created = function() {
 
 Template.linkModal.events({
   'click #emailCancel': function() {
-    $('#linkModal').modal('hide');
-//    $('#emailButton').click(function() {
-//      $('#linkModal').modal('hide');
-//    });
+    $('.modal').filter(':visible').modal('hide');
+/*    var linkModal = $('#linkModal')[0]
+    Spark.finalize(linkModal);
+    $(linkModal).empty();
+    Deps.flush();
+    venues.dep.changed();*/
   },
   'click #emailSubmit': function() {
     Meteor.call('emailExists', $('#emailEntry').val(), function(err, res) {
       if (res) {
-        $('#linkModal').html(Template.duplicateEmail());
+        var duplicateEmail = $('#emailEntry').val();
+        $('#linkModal').html(Template.duplicateEmail({email: duplicateEmail}));
       }
       else {
-        $('#linkModal').modal('hide');
         Meteor.call('addEmailCredentials', {
           email: $('#emailEntry').val(), 
           srp: Package.srp.SRP.generateVerifier($('#passwordEntry').val())
         }, function(err, res) {
-          console.log(err, res);
-        });        
+          if (!err) Meteor.call('sendVerificationEmail');
+        });
+        $('.modal').filter(':visible').modal('hide');
       }
     });
   }
 });
 Template.linkModal.rendered = function() {
-  console.log('rendered');
+  $('#linkModal').modal({
+    onShow: function() {
+      $('body').dimmer({
+        debug: false,
+        performance: false,
+        verbose: false,
+        onHide: function() {
+          var linkModal = $('#linkModal')[0]
+          Spark.finalize(linkModal);
+          $(linkModal).empty();
+          Deps.flush();
+          venues.dep.changed();
+        }
+      });
+    },
+    onHide: function() {
+      var linkModal = $('#linkModal')[0] 
+      Spark.finalize(linkModal);
+      $(linkModal).empty();
+      Deps.flush();
+      venues.dep.changed();
+    },
+    debug: false,
+    performance: false,
+    verbose: false
+  });
 };
 
-attachLinkModalEvents = function() {
-  $('#emailCancel').click(function() {
-    $('#linkModal').modal('hide');
-  });
-}
+//logTemplateEvents();
 
 Deps.autorun(function(c) {
   if (mainOption === '/player') {
@@ -402,6 +441,8 @@ Deps.autorun(function(c) {
         liveCircle = new google.maps.Circle(populationOptions);
         google.maps.event.addListener(liveCircle, 'center_changed', function() {
           mapCenter.set(liveCircle.getCenter());
+          liveCircle.setOptions({ strokeColor: '#db781c', fillColor: '#db781c' });
+          circleChanged.set(true);
         });
       }
     }
@@ -437,10 +478,20 @@ function updateCircle() {
     center: mapCenter.get(),
     radius: circleSize.get()
   };
+  if (circleChanged.get()) {
+    populationOptions.strokeColor = '#db781c';
+    populationOptions.fillColor = '#db781c';
+  }
   if (window.google) {
     liveCircle = new google.maps.Circle(populationOptions);
     google.maps.event.addListener(liveCircle, 'center_changed', function() {
       mapCenter.set(liveCircle.getCenter());
+      liveCircle.setOptions({ strokeColor: '#db781c', fillColor: '#db781c' });
+      circleChanged.set(true);
     });
   }
+}
+
+getData = function() {
+  console.log(circleChanged.get());
 }
