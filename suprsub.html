@@ -88,7 +88,7 @@
 			</div>
 			<div class="ui eight wide column">
 				<div class="ui column">
-					<div class="ui segment content" id="tabSpace">
+					<div class="ui segment content whitetranslucent" id="tabSpace">
 						<div class="ui tabular menu">
 						  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
 						    Selected Venues
@@ -109,12 +109,13 @@
 		</div>
 		<div class="row">
 			<div class="ui column">
-				<div class="ui segment content" id="areaDetails">
+				<div class="ui segment content whitetranslucent" id="areaDetails">
 					<div class="ui grid">
 						<div class="row">
 							<div class="ui twelve wide column">
 								{{> pitchMapLarge}}
 							</div>
+							<div class="ui vertical divider" style="left: 75%"><i class="map icon"></i></div>
 							<div class="ui four wide column">
 								{{> defineBounds}}
 							</div>
@@ -139,31 +140,48 @@
 </template>
 
 <template name="pitchData">
-	{{#if getVenues}}
-		<table class="ui darkgreen inverted table segment" id="pitchTable">
-			<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
-			<div style="display: block; max-height: 100px;">
+	<table class="ui darkgreen inverted table segment" id="pitchTable">
+		<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
+		<div style="display: block; max-height: 100px;">
 			<tbody>
 				{{#each getVenues}}
 					<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
 				{{/each}}
 			</tbody>
 		</div>
-		</table>
-	{{else}}
-	<p>None</p>
-	{{/if}}
+	</table>
 </template>
 
 <template name="availability">
-	<form class="ui form segment content">
+	<table class="ui green table segment" id="availabilityTable">
+		<thead><tr><td class="tableSpaceBlock"></td>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
+		<div style="display: block; max-height: 100px;">
+			<tbody>
+				{{#each periods}}
+					<tr>
+						<td class="tablePeriod">{{this.name}}</td>
+						{{> availabilityDays extendedData}}
+					</tr>
+				{{/each}}
+			</tbody>
+		</div>
+	</table>
+</template>
 
-	</form>
+<template name="availabilityDays">
+	{{#each days}}
+		<td class="tableCheckboxHolder">
+			<div class="ui checkbox">
+				<input type="checkbox" id="{{../periodCode}}/{{dayCode}}">
+				<label for="{{../periodCode}}/{{dayCode}}"></label>
+			</div>
+		</td>
+	{{/each}}
 </template>
 
 <template name="playerForm">
 	<div class="ui column">
-		<form class="ui form segment content">
+		<form class="ui form segment content whitetranslucent" id="playerFormFieldSpace">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>First Name</label>
@@ -178,19 +196,28 @@
 			      	</div>
 			    </div>
 		  	</div>
-		  	<div class="two fields">
-			    <div class="field">
+		  	<div class="ui grid">
+			    <div class="ui eleven wide column field" style="margin-top: 0;">
 			      	<label>Preferred Contact</label>
-			      	<div class="ui input" id="contact">
-			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
-			      	</div>
+					<div class="ui fluid selection dropdown">
+						<input type="hidden" name="contact">
+						<div class="text" id="selectedContact">None</div>
+						<i class="dropdown icon"></i>
+					  	<div class="menu">
+					  		{{#if email 'verified'}}<div class="item active" data-value="2">Email{{#if contactActive 2}} (selected){{/if}}</div>{{/if}}
+					    	{{#if service 'facebook'}}<div class="item" data-value="1">Facebook{{#if contactActive 1}} (selected){{/if}}</div>{{/if}}
+					    	{{#if service 'twitter'}}<div class="item" data-value="0">Twitter{{#if contactActive 0}} (selected){{/if}}</div>{{/if}}
+					  	</div>
+					</div>
 			    </div>
-			    <div class="field">
-			      	<label>Placeholder</label>
-			      	<div class="ui input" id="twitterHandle">
-			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
-			      	</div>
-			    </div>
+			    <div class="ui five wide column" style="margin-top: 0; vertical-align: bottom">
+			    	<div class="ui animated fluid positive button" id="saveButton">
+					  	<div class="visible content">Save</div>
+					  	<div class="hidden content">
+					    	<i class="save icon"></i>
+					  	</div>
+					</div>
+				</div>
 		  	</div>
 		  	<div class="small fluid ui buttons">
 		  		<div class="ui {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
@@ -279,7 +306,7 @@
 </template>
 
 <template name="defineBounds">
-	<form class="ui form segment content">
+	<form class="ui form segment content whitetranslucent">
 		<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
 		<div class="field">
 			<input id="distanceWrite" type="range" min="0" max="250" />
@@ -315,7 +342,7 @@
 
 <template name="otherInfo">
 	<div class="ui column">
-		<div class="ui segment content" id="otherInfo">
+		<div class="ui segment content whitetranslucent" id="otherInfo">
 			<div class="ui grid">
 				<div class="ui eight wide column">
 					<form class="ui form segment content">
@@ -323,7 +350,7 @@
 								<div class="field fourteen wide column">
 									<label>Home Ground</label>
 									<div class="ui left labeled icon input">
-										<input type="text" placeholder="Type a description or address" id="homeGround" href="javascript:return false;">
+										<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
 										<i class="globe icon"></i>
 									</div>
 								</div>
@@ -345,18 +372,18 @@
 </template>
 
 <template name="teamDetails">
-	<div class="ui segment content">
+	<div class="ui segment content whitetranslucent">
 		<form class="ui form segment content" id="teamForm">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>Team Name</label>
 		      		<div class="ui input">
-		      			<input placeholder="Team Name" type="text" />
+		      			<input placeholder="Team Name" type="text" id="teamName" />
 		      		</div>
 		    	</div>
 			    <div class="field">
 			      	<label>Home Ground</label>
-			      	<div class="ui input" id="homePitch">
+			      	<div class="ui input" id="homeGround">
 			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
 			      	</div>
 			    </div>
@@ -364,24 +391,24 @@
 		  	<div class="four fields" style="height: 75px;">
 		    	<div class="field" id="weeklyCheckBox">
 		      		<div class="ui toggle checkbox">
-		      			<input type="checkbox" name="weekly" />
+		      			<input type="checkbox" id="weekly" />
 			      		<label>Regular weekly fixtures?</label>
 			      	</div>
 			    </div>
 			    <div class="field" id="daySection" style="display: none;">
 				  	<label>Day</label>
 					<div class="ui selection dropdown">
-						<input type="hidden" name="day">
+						<input type="hidden" id="day">
 					  	<div class="text">Select</div>
 					  	<i class="dropdown icon"></i>
 					  	<div class="menu">
-					    	{{#each days}}<div class="item" data-value="{{this.code}}">{{this.name}}</div>{{/each}}
+					    	{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
 					  	</div>
 					</div>
 		    	</div>
 		    	<div class="field" id="timeCheckBox" style="display: none;">
 		    		<div class="ui toggle checkbox">
-			      		<input type="checkbox" name="sametime" />
+			      		<input type="checkbox" id="sameTime" />
 			      		<label>Same time each week?</label>
 		      		</div>
 		    	</div>
@@ -390,13 +417,13 @@
 			      	<div class="ui grid">
 			      		<div class="six wide column" style="margin: 0;">
         					<div class="ui left icon input">
-            					<input id="timepicker1" type="number" value="19" min="0" max="23" step="1" class="input-small">
+            					<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
 								<i class="time icon"></i>
         					</div>
         				</div>
         				<div class="five wide column" style="margin: 0;">
         					<div class="ui input">
-            					<input id="timepicker2" type="number" value="00" min="00" max="59" step="5" class="input-small">
+            					<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
         					</div>
         				</div>
         			</div>
@@ -406,12 +433,12 @@
 		  		<div class="ui six wide column"></div>
 		  		<div class="ui four wide column">
 					<div class="ui large buttons" id="cancelOrSave">
-						<div class="ui red animated button">
-							<div class="visible content">Cancel</div>
+						<div class="ui red animated button" id="resetButton">
+							<div class="visible content">Reset</div>
 							<div class="hidden content"><i class="backward icon"></i></div>
 						</div>
 						<div class="or"></div>
-						<div class="ui green animated button">
+						<div class="ui green animated button" id="saveButton">
 							<div class="visible content">Save</div>
 							<div class="hidden content"><i class="save icon"></i></div>
 						</div>	
@@ -422,6 +449,85 @@
 	</div>
 </template>
 
-<template name="home">
-	Home
+<template name="homePage">
+	<div id="main-background-image"></div>
+	<div class="ui page grid maingrid">
+		<div class="ui eight wide column">
+			<div class="row">
+				<div class="suprsubFont suprsubHeader backgroundShadow">SuprSub</div>
+				<div class="ui divider" style="position: relative"></div>
+				<ul class="ui backgroundShadow rightList">
+				  	<li class="item">Find your own <span class="suprsubFont">SuprSub</span> to complete your team</li>
+				  	<li class="shortDivider"></li>
+				  	<li class="item">Get recruited wherever and whenever suits you</li>
+				  	<li class="shortDivider"></li>
+				  	<li class="item">Ideally something else</li>
+				</ul>
+			</div>
+			<div class="row">
+				{{> postBox}}
+			</div>
+		</div>
+		<div class="ui eight wide column">
+			<div class="ui feed segment whitetranslucent">
+		      	<h2 class="ui header">Latest Activity</h2>
+				<div class="event">
+				    <div class="label">
+				      	<i class="red mobile icon"></i>
+				    </div>
+				    <div class="content">
+				      	<div class="date">
+				        7 minutes ago
+				      	</div>
+				      	<div class="summary">
+				         	<a>Catford Tigers:</a>
+				      	</div>
+				      	<div class="extra text">
+				      		Need two players 8pm today at PowerLeague Beckenham.
+				      	</div>
+				    </div>
+				</div>
+				<div class="event">
+				    <div class="label">
+				      	<i class="green thumbs up icon"></i>
+				    </div>
+				    <div class="content">
+				      	<div class="date">
+				        18 minutes ago
+				      	</div>
+				      	<div class="summary">
+				         	<a>Dave Walters</a> is going to be a <strong><em>SuprSub</em></strong>:
+				      	</div>
+				      	<div class="extra text">
+				      		<a>Locomotive Brockley</a> at 7pm today, PowerLeague Croydon.
+				      	</div>
+				    </div>
+				</div>
+				<div class="event">
+				    <div class="label">
+				      	<i class="facebook sign icon"></i>
+				    </div>
+				    <div class="content">
+				      	<div class="date">
+				        32 minutes ago
+				      	</div>
+				      	<div class="summary">
+				         	<a>Old Smithy Old Boys:</a>
+				      	</div>
+				      	<div class="extra text">
+				      		Looking for 1 player 18:30 tomorrow Goals Wembley.
+				      	</div>
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="activityFeed">
+
+</template>
+
+<template name="postBox">
+
 </template>

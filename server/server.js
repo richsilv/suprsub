@@ -99,24 +99,28 @@ Accounts.onCreateUser(function(options, user) {
 	if ('facebook' in user.services) {
 		if (options.profile) user.profile = _.extend(options.profile, {
 			first_name: user.services.facebook.first_name,
-			last_name : user.services.facebook.last_name
+			last_name : user.services.facebook.last_name,
+			contact: [1]
 			});
 		else user.profile = {
 			first_name: user.services.facebook.first_name,
-			last_name : user.services.facebook.last_name
-			};			
+			last_name : user.services.facebook.last_name,
+			contact: [1]
+			};
 	}
 	else if ('twitter' in user.services) {
 		if (options.profile && 'name' in options.profile) {
 			names = divideName(options.profile.name);
 			user.profile = _.extend(options.profile, {
 				first_name: names[0],
-				last_name: names[1]
+				last_name: names[1],
+				contact: [0]
 			});
 		}
+		else user.profile = {contact: [0]};
 	}
 	else {
-		user.profile = options.profile;
+		user.profile = _.extend(options.profile, {contact: [2]});
 	}
 	return user;
 });

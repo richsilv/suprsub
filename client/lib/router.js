@@ -41,3 +41,13 @@ Router.map(function() {
     	}
   	});
 });
+
+Router.map(function() {
+    this.route('home', {
+      path: '/home',
+      template: 'mainTemplate',
+      yieldTemplates: {
+          'homePage': {to: 'mainSection'}
+      }
+    });
+});

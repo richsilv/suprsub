@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Collegiate';
+  src: url('fonts/SF_Collegiate.ttf');
+}
+
 html {
 	font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 	font-size: 14px;
@@ -9,18 +14,92 @@ body {
 	height: 100%;
 }
 
+.suprsubFont {
+	font-family: 'Collegiate';
+}
+
+.suprsubHeader {
+	position: relative;
+	font-size: 100px;
+	top: 0px;
+}
+
+.backgroundShadow {
+	color: ghostwhite;
+	text-shadow: rgba(0, 50, 0, .9) 0.1em 0.1em 0.1em, rgba(0, 100, 0, 0.7) -0.05em -0.05em 0.05em;	
+}
+
+.rightList {
+	text-align: right;
+	font-size: 1.6em;
+	list-style: none;
+	list-style-type: none;
+	margin-bottom: 0px;
+	margin-left: 1.5em;
+	margin-right: 0px;
+	margin-top: 1em;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+}
+
+.rightList li {
+	display: list-item;
+	position: relative;
+	line-height: 1.25em;
+	padding: 0.3em 0;
+}
+
+.shortDivider {
+	position: relative;
+	margin: 1rem 0rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+	height: 0;
+	padding: 0 !important;
+	width: 25%;
+	margin-left: 75%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 .ui.darkgreen.active.item {
-  border-color: #4C7627 !important;
-  color: #4C7627 !important;
+  	border-color: #4C7627 !important;
+  	color: #4C7627 !important;
 }
 .ui.inverted.darkgreen {
-  background-color: #4C7627;
+  	background-color: #4C7627;
 }
 .ui.inverted.darkgreen .active.item:after {
-  background-color: #4C7627;
+  	background-color: #4C7627;
 }
 .ui.inverted.darkgreen {
 	color: #ffffff;
+}
+
+.whitetranslucent {
+	background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.rotate {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+	margin-top:-25px;
+}
+.rotated_cell {
+	height:90px;
+	vertical-align:bottom
 }
 
 #login-background-image {
@@ -147,6 +226,17 @@ body {
 
 .ui.maingrid {
 
+}
+
+#mainLogo {
+	position: relative;
+	width: 100%;
+	background: url('images/SuprSubLogo_Name.jpeg') no-repeat center center;
+	background-size: contain;
+	-o-background-size: contain;
+	-moz-background-size: contain;
+	-webkit-background-size: contain;
+	padding-top: 60%;
 }
 
 #pitchMap {
@@ -300,4 +390,42 @@ input[type=range]:active::-moz-range-thumb {
 #linkModal {
 	padding: 1em;
 	max-width: 600px;
+}
+
+#availabilityTable {
+	width: 525.5px;
+	table-layout: fixed;
+}
+
+#availabilityTable tr {
+	line-height: 1.4em;
+}
+
+.tableSpaceBlock {
+	width: 80px;
+}
+
+.tablePeriod {
+	font-weight: bold;
+}
+
+.tableCheckboxHolder {
+	text-align: center;
+}
+
+.tableCheckboxHolder>div {
+	margin: auto;
+	left: 5px;
+}
+
+#playerFormFieldSpace {
+	min-height: 265px;
+}
+
+.ui.feed .content a {
+	color: #009FDA;
+}
+
+.facebook.sign.icon {
+	color: rgb(51, 79, 149);
 }
