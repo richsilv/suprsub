@@ -186,6 +186,17 @@ Handlebars.registerHelper("email", function(level) {
   }
 });
 
+Template.postBox.events({
+  'submit #postingForm, click #postingButton': function() {
+    Meteor.call('analysePosting', $('#postingArea').val(), function(err, res) {
+      console.log(err, res);
+    })
+  }
+});
+
+Template.postBox.rendered = function() {
+};
+
 Template.pitchData.helpers({
   getVenues: function() {
     if (venues && venues.get()) return venues.get();

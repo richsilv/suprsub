@@ -88,10 +88,16 @@ Pitches = new Meteor.Collection("pitches");
 var facebooklocal = SecureData.findOne({Name: 'facebooklocal'}).Value;
 var facebookprod = SecureData.findOne({Name: 'facebookprod'}).Value;
 var twitterconfig = SecureData.findOne({Name: 'twitterconfig'}).Value;
+var dictionary = JSON.parse(Assets.getText("dictionary.json"));
+var stateMap = JSON.parse(Assets.getText("statemap.json"));
+var uselessTokens = JSON.parse(Assets.getText("uselesstokens.json"));
 
 Meteor.startup(function() {
 	Pitches._ensureIndex({ location : "2d" });
-	Future = Npm.require('fibers/future');
+	Future = Npm.require('fibers/future'),
+	Natural = Npm.require('natural'),
+	Tokenizer = new Natural.WordTokenizer();
+
 });
 
 Accounts.onCreateUser(function(options, user) {
@@ -197,6 +203,10 @@ Meteor.methods({
 			return divideName(updateNames, name);
 		});
 	},
+	analysePosting: function(string) {
+		var tokens = _.map(Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
+		return (null, tokens);
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}
@@ -234,4 +244,103 @@ function updateNames(names) {
 		if (err) return err;
 		if (num) return true;
 	});
+}
+
+function categoriseToken(token) {
+	var output = {code: -1};
+	var currentMatch = fuzzyMatch(token, dictionary);
+	output.code = currentMatch ? currentMatch : -1;
+	if (output.code > 0) {
+		if (output.code < 5) return output;
+		switch (output.code) {
+			case 5:
+			output.data = fuzzyMatch(token, dayDictionary);
+			return output;
+			break;
+			default:
+			output.data = fuzzyMatch(token, numberDictionary);
+			return output;
+		}
+	}
+}
+
+function fuzzyMatch(token, dict) {
+	var bestMatch = 0, match = null;
+	for (var currentKey in dict) {
+		var thisDistance = Natural.JaroWinklerDistance(token, currentKey);
+		if (thisDistance >= 0.9 && thisDistance > bestMatch) match = dictionary[currentKey];
+	}
+	return match;	
+}
+
+function stripUseless(tokens) {
+	return _.filter(tokens, function(token) {return !uselessTokens[token.code]});
+}
+
+function parseRequest(tokens) {
+	var richToken = [],
+		requestData = {
+			players: null,
+			date: null,
+			time: null,
+			location: null
+		},
+		state = 0;
+	for (var i = 0, l = tokens.length; i < l; i++) {
+		var k = categoriseToken(tokens[i]);
+		if (k.code < 0) return "cannot parse token " + tokens[i];
+		else {
+			richTokens[i].code = k.code;
+			richTokens[i].data = k.data;
+		}
+	}
+	for (var i = 0, l = richTokens.codes.length; i < l; i++) {
+		if (richTokens[i].code in stateMap[state]) state = stateMap[state][richTokens[i].codes];
+		else return "cannot move from state " + state + " with token code " + richTokens[i].code;
+	};
+	if (!'-1' in stateMap[state]) return "cannot end in state " + state;
+	richTokens = stripUseless(richTokens);
+	switch(state) {
+		case 1:
+
+		break;
+		case 2:
+
+		break;
+		case 4:
+
+		break;
+		case 5:
+
+		break;
+		case 6:
+
+		break;
+		case 7:
+
+		break;
+		case 8:
+
+		break;
+		case 9:
+
+		break;
+		case 10:
+
+		break;
+		case 11:
+
+		break;
+		case 12:
+
+		break;
+		case 13:
+
+		break;
+		case 14:
+
+		break;
+		default:
+		break;
+	}
 }

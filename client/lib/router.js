@@ -1,7 +1,7 @@
 Router.configure({
   	layout: 'mainTemplate',
  	  before: function () {
-      	if (!Meteor.user() && this.path !== '/home') {
+      	if (!Meteor.user()) {
         	// render the login template but keep the url in the browser the same
           this.render();
         	this.render('loginScreen', {to: 'mainSection'});

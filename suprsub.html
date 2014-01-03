@@ -462,13 +462,20 @@
 				  	<li class="item">Get recruited wherever and whenever suits you</li>
 				  	<li class="shortDivider"></li>
 				  	<li class="item">Ideally something else</li>
+				  	<li class="shortDivider"></li>
 				</ul>
 			</div>
 			<div class="row">
-				{{> postBox}}
+				<div class="ui grid">
+					<div class="ui two wide column"></div>
+					<div class="ui twelve wide column">
+						{{> postBox}}
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="ui eight wide column">
+		<div class="ui one wide column"></div>
+		<div class="ui seven wide column">
 			<div class="ui feed segment whitetranslucent">
 		      	<h2 class="ui header">Latest Activity</h2>
 				<div class="event">
@@ -529,5 +536,17 @@
 </template>
 
 <template name="postBox">
-
+	<div class="ui segment whitetranslucent">
+		<form class="ui reply form" id="#postingForm">
+			<div class="field">
+				<textarea id="postingArea" placeholder="Need * player(s) at *:**pm tomorrow at XXXXXXXXX"></textarea>
+			</div>
+			<div class="ui button teal submit labeled icon" id="postingButton">
+				<i class="icon edit"></i> Make a Posting Now!
+			</div>
+			<div class="ui orange button icon">
+				<i class="question icon link" title="Posting Guidelines"></i>
+			</div>
+		</form>
+	</div>
 </template>

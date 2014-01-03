@@ -13,7 +13,7 @@
 <template name="topbar">
 	<div class="ui darkgreen fixed inverted main menu" id="topbar">
 		{{#if currentUser}}
-		<a class="{{#if option "/"}}active {{/if}}item" href="{{pathFor 'home'}}">
+		<a class="{{#if option "/"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
 		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
