@@ -478,53 +478,42 @@
 		<div class="ui seven wide column">
 			<div class="ui feed segment whitetranslucent">
 		      	<h2 class="ui header">Latest Activity</h2>
-				<div class="event">
-				    <div class="label">
-				      	<i class="red mobile icon"></i>
-				    </div>
-				    <div class="content">
-				      	<div class="date">
-				        7 minutes ago
-				      	</div>
-				      	<div class="summary">
-				         	<a>Catford Tigers:</a>
-				      	</div>
-				      	<div class="extra text">
-				      		Need two players 8pm today at PowerLeague Beckenham.
-				      	</div>
-				    </div>
+		      	{{> activityFeed}}
+			</div>
+		</div>
+	</div>
+	<div class="modalHolder">
+		{{> postingModal}}
+	</div>
+</template>
+
+<template name="postingModal">
+	<div class="ui small modal">
+		<div class="header">
+			New Posting
+		</div>
+		<div class="content">
+			<div class="ui raised segment">
+				<div class="ui teal ribbon label">
+					Number of Players needed
 				</div>
-				<div class="event">
-				    <div class="label">
-				      	<i class="green thumbs up icon"></i>
-				    </div>
-				    <div class="content">
-				      	<div class="date">
-				        18 minutes ago
-				      	</div>
-				      	<div class="summary">
-				         	<a>Dave Walters</a> is going to be a <strong><em>SuprSub</em></strong>:
-				      	</div>
-				      	<div class="extra text">
-				      		<a>Locomotive Brockley</a> at 7pm today, PowerLeague Croydon.
-				      	</div>
-				    </div>
+				<p>{{posting.players}}</p>
+				<div class="ui teal ribbon label">
+					Time and Date
 				</div>
-				<div class="event">
-				    <div class="label">
-				      	<i class="facebook sign icon"></i>
-				    </div>
-				    <div class="content">
-				      	<div class="date">
-				        32 minutes ago
-				      	</div>
-				      	<div class="summary">
-				         	<a>Old Smithy Old Boys:</a>
-				      	</div>
-				      	<div class="extra text">
-				      		Looking for 1 player 18:30 tomorrow Goals Wembley.
-				      	</div>
-				    </div>
+				<p>{{posting.dateTime}}</p>
+				<div class="ui teal ribbon label">
+					Location
+				</div>
+				<p>{{posting.location}}</p>
+				<div class="ui grid">
+					<div class="five wide column"></div>
+					<div class="six wide column">
+						<div class="2 ui fluid buttons">
+						  	<div class="ui positive button" id="makePosting">Post</div>
+						  	<div class="ui negative button" id="cancelPosting">Cancel</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -532,7 +521,24 @@
 </template>
 
 <template name="activityFeed">
-
+	{{#each events}}
+		<div class="event">
+		    <div class="label">
+		      	<i class="{{eventIcon}} icon"></i>
+		    </div>
+		    <div class="content">
+		      	<div class="date">
+		        	{{timeAgo}}
+		      	</div>
+		      	<div class="summary">
+		         	<a>{{teamName}}:</a>
+		      	</div>
+		      	<div class="extra text">
+		      		{{message}}
+		      	</div>
+		    </div>
+		</div>
+	{{/each}}
 </template>
 
 <template name="postBox">
@@ -541,7 +547,7 @@
 			<div class="field">
 				<textarea id="postingArea" placeholder="Need * player(s) at *:**pm tomorrow at XXXXXXXXX"></textarea>
 			</div>
-			<div class="ui button teal submit labeled icon" id="postingButton">
+			<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton">
 				<i class="icon edit"></i> Make a Posting Now!
 			</div>
 			<div class="ui orange button icon">

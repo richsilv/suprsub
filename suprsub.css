@@ -387,7 +387,7 @@ input[type=range]:active::-moz-range-thumb {
 	overflow-y: scroll;
 }
 
-#linkModal {
+.modal {
 	padding: 1em;
 	max-width: 600px;
 }

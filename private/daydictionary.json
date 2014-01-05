@@ -13,5 +13,8 @@
 	"fri": 5,
 	"friday": 5,
 	"sat": 6,
-	"saturday": 6
+	"saturday": 6,
+	"today": 7,
+	"tomorrow": 8,
+	"tom": 8
 }

@@ -1,4 +1,5 @@
 Pitches = new Meteor.Collection("pitches");
+Events = new Meteor.Collection("events");
 
 pitchMap = window.pitchMap;
 gc = null;
@@ -66,6 +67,7 @@ venues = new myDep([]);
 mapCenter = new myDep([51.5080391, -0.12806929999999284]);
 tabChoices = new myDep({playerTab: 'pitchData'});
 circleChanged = new myDep(false);
+newPosting = new myDep(null);
 mainOption = '/';
 var contactNames = ['Twitter', 'Facebook', 'Email'],
     days = [{name: "Sunday", dayCode: 0}, {name: "Monday", dayCode: 1}, {name: "Tuesday", dayCode: 2}, {name: "Wednesday", dayCode: 3}, {name: "Thursday", dayCode: 4}, {name: "Friday", dayCode: 5}, {name: "Saturday", dayCode: 6}];
@@ -186,16 +188,77 @@ Handlebars.registerHelper("email", function(level) {
   }
 });
 
+Template.postBox.helpers({
+  teamRegistered: function() {
+    var thisUser = Meteor.user();
+    return (thisUser && thisUser.profile && thisUser.profile.team);
+  }
+})
 Template.postBox.events({
   'submit #postingForm, click #postingButton': function() {
     Meteor.call('analysePosting', $('#postingArea').val(), function(err, res) {
-      console.log(err, res);
+      if (err) console.log(err);
+      else {
+        newPosting.set(res);
+        Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
+      }
     })
   }
 });
-
 Template.postBox.rendered = function() {
-};
+  console.log(this);
+}
+
+Template.postingModal.helpers({
+  posting: function(){
+    postingData = newPosting.get();
+    if (!postingData) return {};
+    output = {
+      players: postingData.players + ' player',
+      dateTime: prettyDateTime(postingData.dateTime),
+      location: prettyLocation(postingData.location)
+    };
+    if (postingData.players > 1) output.players += 's';
+    return output;
+  }
+});
+Template.postingModal.events({
+  'click #makePosting': function() {
+    Meteor.call('makePosting', newPosting.get(), {source: 'web'}, function(err, res) {
+      if (err) alert("Could not make posting!");
+      $('.dimmer').dimmer('hide');
+    });
+  },
+  'click #cancelPosting': function() {
+    newPosting.set(null);
+    $('.dimmer').dimmer('hide');
+  }  
+})
+
+Template.activityFeed.helpers({
+  events: function() {
+    return Events.find({}, {limit: 10, sort: {createdAt: -1}});
+  },
+  eventIcon: function() {
+    console.log(this);
+    if (this.source === 'web') return "red browser";
+    else return "question";
+  },
+  teamName: function() {
+    var user = Meteor.users.findOne({_id: this.userId});
+    if (user && user.profile && user.profile.team) return user.profile.team.name;
+    else return 'Unknown Team';
+  },
+  message: function() {
+    var mess = "Looking for " + this.players + " player";
+    if (this.players > 1) mess += "s";
+    mess += ", " + colloquialDateTime(this.dateTime) + " at " + prettyLocation(this.location) + ".";
+    return mess;
+  },
+  timeAgo: function() {
+    return moment(this.createdAt).fromNow();
+  }
+})
 
 Template.pitchData.helpers({
   getVenues: function() {
@@ -637,4 +700,29 @@ function setTeamData() {
     return true;
   }
   return false
+}
+
+function prettyDateTime(dateTime) {
+  return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
+}
+
+function colloquialDateTime(dateTime) {
+  var today = new Date();
+  if (today.getFullYear() === dateTime.getFullYear() && today.getMonth() === dateTime.getMonth()) {
+    if (today.getDate() === dateTime.getDate()) return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' today';
+    else if (today.getDate() + 1 === dateTime.getDate()) return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' tomorrow';
+  }
+  return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
+}
+
+function prettyLocation(locationId) {
+  var location = Pitches.findOne({'_id._str': locationId})
+  if (!location) return '';
+  else return location.owner + ' - ' + location.name;
+}
+
+function padNum(number, digits) {
+  var n = number.toString();
+  for (var i = n.length; i < digits; i++) n = '0' + n;
+  return n;
 }

@@ -2,6 +2,7 @@
   "packages": {
     "semantic-ui": {},
     "iron-router": {},
-    "twit": {}
+    "twit": {},
+    "moment": {}
   }
 }
