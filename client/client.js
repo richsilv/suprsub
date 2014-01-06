@@ -206,7 +206,6 @@ Template.postBox.events({
   }
 });
 Template.postBox.rendered = function() {
-  console.log(this);
 }
 
 Template.postingModal.helpers({
@@ -240,7 +239,6 @@ Template.activityFeed.helpers({
     return Events.find({}, {limit: 10, sort: {createdAt: -1}});
   },
   eventIcon: function() {
-    console.log(this);
     if (this.source === 'web') return "red browser";
     else return "question";
   },

@@ -89,6 +89,8 @@ Events = new Meteor.Collection("events");
 var facebooklocal = SecureData.findOne({Name: 'facebooklocal'}).Value;
 var facebookprod = SecureData.findOne({Name: 'facebookprod'}).Value;
 var twitterconfig = SecureData.findOne({Name: 'twitterconfig'}).Value;
+var twitterAccountId = SecureData.findOne({Name: 'twitterconfig'}).AccountId;
+var twitterToken = SecureData.findOne({Name: 'twitterconfig'}).Token;
 var dictionary = JSON.parse(Assets.getText("dictionary.json"));
 var dayDictionary = JSON.parse(Assets.getText("daydictionary.json"));
 var numberDictionary = JSON.parse(Assets.getText("numberdictionary.json"));
@@ -217,6 +219,57 @@ Meteor.methods({
 	makePosting: function(posting, data) {
 		_.extend(posting, data, {createdAt: new Date(), userId: Meteor.userId()});
 		Events.insert(posting);
+	},
+	fbSendRequest: function(string) {
+		var user = Meteor.user().services.facebook, fut = new Future();
+		if (!user) return new Meteor.Error(500, "User has not linked their Facebook account.");
+		HTTP.call('POST', 'https://graph.facebook.com/' + user.id + '/apprequests', {params: 
+			{
+				access_token: user.accessToken,
+				message: string,
+				data: 'string_data',
+				method: 'post'
+			}
+		}, function(err, res) {fut.return({err: err, res: res});});
+		return fut.wait()
+	},
+	twitterSendMessage: function(string) {
+		var user = Meteor.user().services.twitter, fut = new Future();
+		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
+		Twit = new TwitMaker({
+		    consumer_key:         twitterconfig.consumerKey,
+	    	consumer_secret:      twitterconfig.secret,
+	    	access_token:         twitterToken.token,
+	    	access_token_secret:  twitterToken.secret
+		});
+		Twit.post('direct_messages/new', 
+			{
+				user_id: user.id,
+				text: string
+			}, function(err, res) {fut.return({err: err, res: res});});
+		return fut.wait();
+	},
+	twitterBefriendSuprSub: function() {
+		var user = Meteor.user().services.twitter, fut = new Future();
+		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
+		Twit = new TwitMaker({
+		    consumer_key:         twitterconfig.consumerKey,
+	    	consumer_secret:      twitterconfig.secret,
+	    	access_token:         user.accessToken,
+	    	access_token_secret:  user.accessTokenSecret
+		});
+		Twit.post('friendships/create', {user_id: twitterAccountId, follow: true}, function(errOne, resOne) {
+			Twit = new TwitMaker({
+			    consumer_key:         twitterconfig.consumerKey,
+		    	consumer_secret:      twitterconfig.secret,
+		    	access_token:         twitterToken.token,
+		    	access_token_secret:  twitterToken.secret
+			});
+			Twit.post('friendships/create', {user_id: user.id, follow: true}, function(errTwo, resTwo) {
+				fut.return({err: [errOne, errTwo], res: [resOne, resTwo]});
+			});
+		});
+		return fut.wait()
 	},
 	evaluate: function(string) {
 		return eval(string);
