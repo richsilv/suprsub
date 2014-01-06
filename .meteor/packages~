@@ -16,6 +16,7 @@ accounts-twitter
 iron-router
 
 twit
+nlp
 
 moment
 http

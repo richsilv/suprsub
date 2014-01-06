@@ -102,7 +102,7 @@ var timeRegex = /^([0-9]{1,2})(?:[:.]([0-5][0-9]))?([ap]m)?$/;
 Meteor.startup(function() {
 	Pitches._ensureIndex({ location : "2d" });
 	Future = Npm.require('fibers/future'),
-	Natural = Npm.require('natural'),
+	Natural = Meteor.require('natural'),
 	Tokenizer = new Natural.RegexpTokenizer({pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/});
 });
 
@@ -154,7 +154,7 @@ Accounts.loginServiceConfiguration.remove({
 if (Meteor.absoluteUrl().slice(0,22) !== "http://localhost:3000/") {
 //	Accounts.config({sendVerificationEmail: false, forbidClientAccountCreation: false});
 	Accounts.loginServiceConfiguration.insert(facebookprod);
-	Accounts.loginServiceConfiguration.insert(twitterconfig);	
+	Accounts.loginServiceConfiguration.insert(twitterconfig);
 }
 else {
 	Accounts.loginServiceConfiguration.insert(facebooklocal);
