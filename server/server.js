@@ -152,8 +152,9 @@ Accounts.loginServiceConfiguration.remove({
     service: "twitter"
 });
 if (Meteor.absoluteUrl().slice(0,22) !== "http://localhost:3000/") {
-	Accounts.config({sendVerificationEmail: false, forbidClientAccountCreation: false});
+//	Accounts.config({sendVerificationEmail: false, forbidClientAccountCreation: false});
 	Accounts.loginServiceConfiguration.insert(facebookprod);
+	Accounts.loginServiceConfiguration.insert(twitterconfig);	
 }
 else {
 	Accounts.loginServiceConfiguration.insert(facebooklocal);
