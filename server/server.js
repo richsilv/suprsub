@@ -273,6 +273,12 @@ Meteor.methods({
 		});
 		return fut.wait()
 	},
+	addRandomPlayer: function(n) {
+		addRandomPlayer(n);
+	},
+	addRandomEvent: function(n) {
+		addRandomEvent(n);
+	},	
 	evaluate: function(string) {
 		return eval(string);
 	}
