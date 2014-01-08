@@ -90,7 +90,7 @@ initialize = function(circle) {
       mapOptions);
   circleChanged.set(false);
   if (!gc) gc = new google.maps.Geocoder();
-  if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player) {
+  if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
     defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.nb, Meteor.user().profile.player.center.ob);
     mapCenter.set(defaultLocation);
     if (circle) {
@@ -124,7 +124,7 @@ initialize = function(circle) {
       map: pitchMap,
       title:pitches[i].owner + " " + pitches[i].name,
       icon: 'images/soccerv2.png',
-      pitch_ID: pitches[i]._id._str
+      pitch_ID: pitches[i]._id
     });
     if (!circle) {
       attachMarkerEvent(marker, function(m) {
@@ -364,11 +364,11 @@ Template.otherInfo.events({
     return false;
   },
   'click .pitchEntry': function(event) {
-    var pitch = Pitches.findOne({'_id._str': event.target.id});
+    var pitch = Pitches.findOne({'_id': event.target.id});
     if (pitch) {
       pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
       $('#homeGround input').val(pitch.owner + ' - ' + pitch.name);
-      $('#homeGround input').attr('id', pitch._id._str);      
+      $('#homeGround input').attr('id', pitch._id);      
     }
   }
 });
@@ -443,10 +443,10 @@ Template.playerForm.helpers({
 })
 Template.playerForm.events({
   'click #saveButton': function() {
-    var availability = [],
+    var availability = {},
         tableElements = $('#availabilityTable input');
     for (var i = 0, l = tableElements.length; i < l; i++) {
-      availability.push({period: tableElements[i].id, checked: tableElements[i].checked});
+      if (tableElements[i].checked) availability[tableElements[i].id] = true;
     }
     Meteor.users.update(Meteor.userId(), {$set: {'profile.first_name': $('#firstname input').val(), 
                                                  'profile.last_name': $('#surname input').val(),
@@ -513,8 +513,8 @@ Template.availability.helpers({
 Template.availability.rendered = function() {
   var thisUser = Meteor.user();
   if (thisUser && thisUser.profile && thisUser.profile.player && thisUser.profile.player.availability) {
-    for (var i = 0, l = thisUser.profile.player.availability.length; i < l; i++) {
-      if (thisUser.profile.player.availability[i].checked) document.getElementById(thisUser.profile.player.availability[i].period).checked = true;
+    for (var i in thisUser.profile.player.availability) {
+      if (thisUser.profile.player.availability[i]) document.getElementById(i).checked = true;
     }
   }
 };
@@ -665,7 +665,7 @@ function setTeamData() {
     var teamData = thisUser.profile.team;
     $('#teamName').val(teamData.name);
     $('#homeGround>input').attr('id', teamData.homeGround);
-    var ground = Pitches.findOne({'_id._str': teamData.homeGround});
+    var ground = Pitches.findOne({'_id': teamData.homeGround});
     if (ground) {
       $('#homeGround>input').val(ground.owner + ' ' + ground.name);
       var googleCallback = Meteor.setInterval(function() {
@@ -700,27 +700,13 @@ function setTeamData() {
   return false
 }
 
-function prettyDateTime(dateTime) {
-  return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
-}
-
-function colloquialDateTime(dateTime) {
-  var today = new Date();
-  if (today.getFullYear() === dateTime.getFullYear() && today.getMonth() === dateTime.getMonth()) {
-    if (today.getDate() === dateTime.getDate()) return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' today';
-    else if (today.getDate() + 1 === dateTime.getDate()) return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' tomorrow';
+reIndexDatabase = function(collection) {
+  oldIndexes = collection.find({}, {fields: {_id: true}}).fetch();
+  for (var i = 0, l = oldIndexes.length; i < l; i++) {
+    var thisItem = collection.findOne({_id: oldIndexes[i]._id});
+    delete thisItem._id;
+    delete thisItem.__v;
+    collection.insert(thisItem);
+    collection.remove({_id: oldIndexes[i]._id});
   }
-  return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
-}
-
-function prettyLocation(locationId) {
-  var location = Pitches.findOne({'_id._str': locationId})
-  if (!location) return '';
-  else return location.owner + ' - ' + location.name;
-}
-
-function padNum(number, digits) {
-  var n = number.toString();
-  for (var i = n.length; i < digits; i++) n = '0' + n;
-  return n;
 }

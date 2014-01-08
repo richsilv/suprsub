@@ -218,7 +218,8 @@ Meteor.methods({
 		return categoriseToken(token);
 	},
 	makePosting: function(posting, data) {
-		_.extend(posting, data, {createdAt: new Date(), userId: Meteor.userId()});
+		var sentence = describePosting(posting);
+		_.extend(posting, data, {createdAt: new Date(), userId: Meteor.userId(), sentence: sentence});
 		Events.insert(posting);
 	},
 	fbSendRequest: function(string) {
@@ -323,7 +324,7 @@ function categoriseToken(token) {
 			case 5:
 			output.data = fuzzyMatch(token, dayDictionary);
 			if (output.data === 7) output.data = new Date().getDay();
-			else if (output.data === 8) output.data = (new Date().getDay() + 1) % 7;
+			else if (output.data === 8) output.data = (((new Date().getDay() + 1) % 7) + 7) % 7;
 			return output;
 			break;
 			default:
@@ -345,13 +346,13 @@ function categoriseToken(token) {
 	var currentMatch = fuzzyMatch(token, pitchSurnames);
 	if (currentMatch !== -1) return {code: 10};
 	var pitchData = Pitches.find({}, {fields: {name: true, owner: true}}).fetch();
-	var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id._str; return dict;}, {});
+	var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 	var match = fuzzyMatch(token, currentLookup, 0.75);
 	if (match !== -1) return {code: 9, data: match};
-	currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase() + ' ' + pitch.owner.toLowerCase()] = pitch._id._str; return dict;}, {});
+	currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase() + ' ' + pitch.owner.toLowerCase()] = pitch._id; return dict;}, {});
 	match = fuzzyMatch(token, currentLookup, 0.75);
 	if (match !== -1) return {code: 9, data: match};
-	currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id._str; return dict;}, {});
+	currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 	match = fuzzyMatch(token, currentLookup, 0.75);
 	if (match !== -1) return {code: 9, data: match};
 	return {code: -1};
@@ -416,7 +417,7 @@ function parseRequest(tokens) {
 	if (dayTokens.length > 1) return new Meteor.Error(500, "Only specify day once.");
 	else if (dayTokens.length === 1) {
 		requestData.dateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-		requestData.dateTime.setDate(requestData.dateTime.getDate() + ((dayTokens[0].data - today.getDay()) % 7));
+		requestData.dateTime.setDate(requestData.dateTime.getDate() + (((dayTokens[0].data - today.getDay()) % 7) + 7) % 7);
 	}
 	else {
 		requestData.dateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -440,4 +441,157 @@ function parseRequest(tokens) {
 	if (placeTokens.length > 1) return new Meteor.Error(500, "Only specify one location.");
 	if (placeTokens.length) requestData.location = placeTokens[0].data;
 	return requestData;
+}
+
+function describePosting(posting) {
+	var sentence = '', startPhrases = ['Looking for', 'We need', 'I need', 'Need', "We're looking for", "I'm looking for"];
+	sentence += startPhrases[Math.floor(Math.random() * startPhrases.length)] + ' ';
+	if (Math.random() > 0.5) sentence += posting.players;
+	else sentence += ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][posting.players];
+	if (Math.random() > 0.25) {
+		sentence += ' player';
+		if (posting.players > 1) sentence += 's';
+	}
+	if (Math.random() > 0.66) sentence += ', ';
+	else if (Math.random() > 0.5) sentence += ' at ';
+	else sentence += ' ';
+	if (Math.random() > 0.5) {
+		sentence += prettyLocation(posting.location);
+		if (Math.random() > 0.66) sentence += ', ';
+		else if (Math.random() > 0.5) sentence += ' at ';
+		else sentence += ' ';
+		sentence += colloquialDateTime(posting.dateTime);
+	}
+	else {
+		sentence += colloquialDateTime(posting.dateTime);
+		if (Math.random() > 0.66) sentence += ', ';
+		else if (Math.random() > 0.5) sentence += ' at ';
+		else sentence += ' ';
+		sentence += prettyLocation(posting.location);				
+	}
+	return sentence;
+}
+
+function matchingEvents(userId) {
+	var user = userId ? Meteor.users.findOne({_id: userId}) : Meteor.user(),
+		query = {dateTime: {$gt: new Date()}},
+		results = [];
+	if (!user || !user.profile || user.profile.player) return [];
+	query.location = {$in: Meteor.user().profile.player.venues};
+	for (periodCode in user.profile.player.availability) {
+		var bounds = timeBounds(periodCode),
+			fullquery = _.extend(query, {dateTime: {$gte: bounds.start, $lt: bounds.end}});
+		results.append(Events.find(fullquery, {fields: {_id: true}}).fetch());
+	}
+	return results;
+}
+
+function matchingPlayers(event) {
+	if (typeof event === "string") event = Events.findOne({_id: event});
+	if (!event || !event.dateTime || !event.location) return [];
+	var periodCode = Math.floor((event.dateTime.getHours() - 6) / 6)+ '/' + event.dateTime.getDay(),
+		query = {'profile.player.venues': event.location};
+	query['profile.player.availability.' + periodCode] = {$exists: true};
+	return Meteor.users.find(query, {fields: {_id: true}}).fetch();
+}
+
+function allMatches() {
+	var events = Events.find(), output = {}
+	events.forEach(function(e) {
+		var matches = matchingPlayers(e);
+		if (matches.length) output[e._id] = matches;
+	});
+	return output;
+}
+
+function timeBounds(periodCode) {
+	var day = parseInt(periodCode.slice(2)),
+		time = parseInt(periodCode.slice(0,1)),
+		today = new Date();
+	baseBounds = new Date(today.getFullYear(), today.getMonth(), today.getDate() + ((((day - today.getDay()) % 7) + 7) % 7));
+	startTime = [21600000, 43200000, 64800000][time];
+	return {start: new Date(baseBounds.getTime() + startTime), end: new Date(baseBounds.getTime() + startTime + 21600000)};
+}
+
+function randomword(n) {
+	if (!n) n = 3 + Math.floor(Math.random() * 7);
+	var vowels = ['a', 'e', 'i', 'o', 'u'];
+	var consts =  ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'qu', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z', 'th', 'ch', 'sh'];
+	var word = '';
+	var vownext = false;
+	for (var i = 0; i < n; i++) {
+		arr = vownext ? vowels : consts;
+		word += arr[Math.floor(Math.random()*(arr.length))];
+		if (Math.random() > 0.15) vownext = !vownext;
+	}
+	return word.slice(0,1).toUpperCase() + word.slice(1);
+}
+
+function addRandomPlayer(n) {
+	if (!n) n = 1;
+	for (; n; n--) {
+		var newUser = {
+			profile: {
+				"first_name" : randomword(),
+				"last_name" : randomword()
+			},
+			services : {
+				twitter : {
+					twitterId : "2278917338",
+					screenName : "linkrop",
+					accessToken : "2278917338-bBZJpAOKpRaJdDmUSOUOHxMqlUIJ7hlaJkVXZYJ",
+					accessTokenSecret : "uKL4ZRv9rjxbFOoFbOdewCORjBAbtvhnUBOAoYzuCtWYI",
+					profile_image_url : "http://abs.twimg.com/sticky/default_profile_images/default_profile_5_normal.png",
+					profile_image_url_https : "https://abs.twimg.com/sticky/default_profile_images/default_profile_5_normal.png",
+					lang : "en"
+				}
+			}
+		};
+		newUser.profile.name = newUser.profile.first_name + ' ' + newUser.profile.last_name;
+		var venues = [], availability = {}, center = {}, size = null;;
+		for (var i = 0; i < 3; i++) for (var j = 0; j < 7; j++) if (Math.random() > 0.66) {availability[i + '/' + j] = true;}
+		while (venues.length === 0) {	
+			center = {
+				nb : 51 + (Math.random() * 5),
+				ob : -4.5 + (Math.random() * 4.75)
+			};
+			size = 5000 + Math.floor(Math.random() * 20000)
+			venues = Meteor.call('pitchesWithin', {"lat": center.nb, "lng": center.ob}, size);
+		}
+		newUser.profile.player = {
+			availability: availability,
+			center: center,
+			size: size,
+			venues: _.map(venues, function(v) {return v._id;})
+		}
+		var teamName = randomword();
+		while (Math.random() < 0.4) teamName += ' ' + randomword();
+		newUser.profile.team = {name: teamName}
+		Meteor.users.insert(newUser);
+	}
+}
+
+function addRandomEvent(n) {
+	var userNum = Meteor.users.find().count(), pitchNum = Pitches.find().count(), now = new Date(), 
+		baseTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours()).getTime();
+	var someTime = function() {
+		var output = new Date(0, 0, 0, 0);
+		while (output.getHours() < 6) {
+			output = new Date(baseTime + Math.floor(Math.random() * 2016) * 300000)
+		}
+		return output;
+	}
+	if (!n) n = 1;
+	for (; n; n--) {
+		var newEvent = {
+			userId: Meteor.users.findOne({}, {skip: Math.floor(Math.random() * userNum), fields: {_id: true}})._id,
+			location: Pitches.findOne({}, {skip: Math.floor(Math.random() * pitchNum), fields: {_id: true}})._id,
+			createdAt: new Date(now.getTime() - (Math.random() * 86400000)),
+			dateTime: someTime(),
+			players: 1 + Math.floor(Math.random() * 3),
+			source: 'web'
+		}
+		newEvent.sentence = describePosting(newEvent);
+		Events.insert(newEvent);
+	}
 }
