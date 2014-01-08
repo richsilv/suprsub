@@ -64,7 +64,7 @@ function logTemplateEvents() {
 
 
 venues = new myDep([]);
-mapCenter = new myDep([51.5080391, -0.12806929999999284]);
+mapCenter = new myDep({b: 51.5080391, d: -0.12806929999999284, lat: function() {return this.b;}, lng: function() {return this.d;}});
 tabChoices = new myDep({playerTab: 'pitchData'});
 circleChanged = new myDep(false);
 newPosting = new myDep(null);
@@ -91,7 +91,7 @@ initialize = function(circle) {
   circleChanged.set(false);
   if (!gc) gc = new google.maps.Geocoder();
   if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
-    defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.nb, Meteor.user().profile.player.center.ob);
+    defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat(), Meteor.user().profile.player.center.lng());
     mapCenter.set(defaultLocation);
     if (circle) {
       circleSize.set(Meteor.user().profile.player.size);
@@ -136,7 +136,7 @@ initialize = function(circle) {
   document.getElementById("pitchMap").style.display = "block";
   google.maps.event.trigger(pitchMap, 'resize');
   pitchMap.setCenter(defaultLocation);
-  if (circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().nb, 10), "lng": parseFloat(mapCenter.get().ob, 10)}, circleSize.get(), function(err, res) {
+  if (circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().lat(), 10), "lng": parseFloat(mapCenter.get().lng(), 10)}, circleSize.get(), function(err, res) {
       if (err) console.log(err);
       else if (venues) {
         venues.set(res);
@@ -333,7 +333,7 @@ Template.defineBounds.events({
     var thisUser = Meteor.user();
     if (thisUser && thisUser.profile && thisUser.profile.player) {
       circleSize.set(thisUser.profile.player.size);
-      mapCenter.set(new google.maps.LatLng(Meteor.user().profile.player.center.nb, Meteor.user().profile.player.center.ob));
+      mapCenter.set(new google.maps.LatLng(Meteor.user().profile.player.center.lat(), Meteor.user().profile.player.center.d));
     }
     else {
       circleSize.set(8000);
@@ -448,7 +448,9 @@ Template.playerForm.helpers({
   return cString.substr(0, cString.length - 2);
   },
   contactActive: function(num) {
-    return (Meteor.user().profile.contact.indexOf(num) > -1);
+    if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.contact) 
+      return (Meteor.user().profile.contact.indexOf(num) > -1);
+    else return false;
   }
 })
 Template.playerForm.events({
@@ -502,7 +504,7 @@ Template.playerForm.rendered = function() {
   $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false, action: 'nothing'});
   $(this.findAll('.ui.dropdown')).dropdown('set text', contactString());
   $(this.findAll('.ui.dropdown')).find('.item').each(function(i, elem) {
-    if (thisUser.profile.contact.indexOf(parseInt(elem.attributes['data-value'].nodeValue, 10)) > -1)
+    if (thisUser.profile.contact && thisUser.profile.contact.indexOf(parseInt(elem.attributes['data-value'].nodeValue, 10)) > -1)
       $(elem).addClass('active');
     else
       $(elem).removeClass('active');
@@ -616,10 +618,8 @@ Deps.autorun(function(c) {
   }
 });
 Deps.autorun(function() {
-  if (mapCenter.get().nb && mapCenter.get().ob && circleSize && circleSize.get() && App.subs.pitches.ready()) {
-    if (!this.count) this.count = 1;
-    else this.count++;
-    Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().nb, 10), "lng": parseFloat(mapCenter.get().ob, 10)}, circleSize.get(), function(err, res) {
+  if (mapCenter.get() && typeof circleSize != 'undefined' && circleSize.get() && App.subs.pitches.ready()) {  
+    Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().lat(), 10), "lng": parseFloat(mapCenter.get().lng(), 10)}, circleSize.get(), function(err, res) {
       if (err) console.log(err);
       else if (venues) {
         venues.value = res;
@@ -661,7 +661,7 @@ function updateCircle() {
 
 function contactString() {
     var cString = '', contactArray = Meteor.user().profile.contact;
-    if (!contactArray.length) return "None";
+    if (!contactArray || !contactArray.length) return "None";
     else {
       for (var i = 0; i < contactArray.length; i++) cString += contactNames[contactArray[i]] + ", ";
     }
