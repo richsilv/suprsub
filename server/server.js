@@ -312,6 +312,16 @@ function twitterNameFromId(callback, id) {
 	});
 }
 
+function pollTwitter() {
+	Twit = new TwitMaker({
+	    consumer_key:         twitterconfig.consumerKey,
+	    consumer_secret:      twitterconfig.secret,
+	    access_token:         twitterToken.token,
+	    access_token_secret:  twitterToken.secret
+	});
+	Twit.get('user', {}, function(err, res) {return [err, res];})
+}
+
 function divideName(name, callback) {
 	if (callback) callback([name.substring(0, name.indexOf(' ')), name.substring(name.indexOf(' ')+1)]);
 	else return [name.substring(0, name.indexOf(' ')), name.substring(name.indexOf(' ')+1)];
