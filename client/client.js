@@ -256,7 +256,17 @@ Template.activityFeed.helpers({
   timeAgo: function() {
     return moment(this.createdAt).fromNow();
   }
-})
+});
+Template.activityFeed.rendered = function() {
+  var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
+  var frag = Template.fadeBox({
+    height: lastEvent.offsetHeight,
+    width: lastEvent.offsetWidth,
+    left: lastEvent.offsetLeft,
+    top: lastEvent.offsetTop,
+  });
+  $('#activityFeed').append(frag);
+}
 
 Template.pitchData.helpers({
   getVenues: function() {

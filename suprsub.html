@@ -476,7 +476,7 @@
 		</div>
 		<div class="ui one wide column"></div>
 		<div class="ui seven wide column">
-			<div class="ui feed segment whitetranslucent">
+			<div class="ui feed segment whitetranslucent" id="activityFeed">
 		      	<h2 class="ui header">Latest Activity</h2>
 		      	{{> activityFeed}}
 			</div>
@@ -539,6 +539,11 @@
 		    </div>
 		</div>
 	{{/each}}
+</template>
+
+<template name="fadeBox">
+	<div class="fadeBox" style="top: {{top}}px; left: {{left}}px; width: {{width}}px; height: {{height}}px">
+	</div>
 </template>
 
 <template name="postBox">
