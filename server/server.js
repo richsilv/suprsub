@@ -278,7 +278,16 @@ Meteor.methods({
 	},
 	addRandomEvent: function(n) {
 		addRandomEvent(n);
-	},	
+	},
+	matchingEvents: function(id) {
+		return matchingEvents(id);
+	},
+	matchingPlayers: function(id) {
+		return matchingPlayers(id);
+	},
+	allMatches: function() {
+		return allMatches();
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}

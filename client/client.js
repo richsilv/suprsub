@@ -69,6 +69,8 @@ tabChoices = new myDep({playerTab: 'pitchData'});
 circleChanged = new myDep(false);
 newPosting = new myDep(null);
 mainOption = '/';
+TimeKeeper = {};
+TimeKeeper._dep = new Deps.Dependency;
 var contactNames = ['Twitter', 'Facebook', 'Email'],
     days = [{name: "Sunday", dayCode: 0}, {name: "Monday", dayCode: 1}, {name: "Tuesday", dayCode: 2}, {name: "Wednesday", dayCode: 3}, {name: "Thursday", dayCode: 4}, {name: "Friday", dayCode: 5}, {name: "Saturday", dayCode: 6}];
     periods = [{name: "Morning", periodCode: 0}, {name: "Afternoon", periodCode: 1}, {name: "Evening", periodCode: 2}];
@@ -232,7 +234,7 @@ Template.postingModal.events({
     newPosting.set(null);
     $('.dimmer').dimmer('hide');
   }  
-})
+});
 
 Template.activityFeed.helpers({
   events: function() {
@@ -254,6 +256,7 @@ Template.activityFeed.helpers({
     return mess;
   },
   timeAgo: function() {
+    TimeKeeper._dep.depend();
     return moment(this.createdAt).fromNow();
   }
 });
@@ -266,6 +269,14 @@ Template.activityFeed.rendered = function() {
     top: lastEvent.offsetTop,
   });
   $('#activityFeed').append(frag);
+};
+Template.activityFeed.created = function() {
+  this.rerender = Meteor.setInterval(function() {
+    TimeKeeper._dep.changed();
+  }, 15000);
+};
+Template.activityFeed.destroyed = function() {
+  Meteor.clearInterval(this.rerender);
 }
 
 Template.pitchData.helpers({
