@@ -85,12 +85,19 @@ Accounts.config({
 SecureData = new Meteor.Collection("securedata");
 Pitches = new Meteor.Collection("pitches");
 Events = new Meteor.Collection("events");
+Tweets = new Meteor.Collection("tweets");
+
+Future = Npm.require('fibers/future'),
+Natural = Meteor.require('natural'),
+Tokenizer = new Natural.RegexpTokenizer({pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/});
 
 var facebooklocal = SecureData.findOne({Name: 'facebooklocal'}).Value;
 var facebookprod = SecureData.findOne({Name: 'facebookprod'}).Value;
 var twitterconfig = SecureData.findOne({Name: 'twitterconfig'}).Value;
 var twitterAccountId = SecureData.findOne({Name: 'twitterconfig'}).AccountId;
 var twitterToken = SecureData.findOne({Name: 'twitterconfig'}).Token;
+// DELETE THIS TO POST AS SUPRSUB
+var twitterToken = SecureData.findOne({Name: 'Claudio'}).Value.service.twitter;
 var dictionary = JSON.parse(Assets.getText("dictionary.json"));
 var dayDictionary = JSON.parse(Assets.getText("daydictionary.json"));
 var numberDictionary = JSON.parse(Assets.getText("numberdictionary.json"));
@@ -101,9 +108,7 @@ var timeRegex = /^([0-9]{1,2})(?:[:.]([0-5][0-9]))?([ap]m)?$/;
 
 Meteor.startup(function() {
 	Pitches._ensureIndex({ location : "2d" });
-	Future = Npm.require('fibers/future'),
-	Natural = Meteor.require('natural'),
-	Tokenizer = new Natural.RegexpTokenizer({pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/});
+	streamTwitter();
 });
 
 Accounts.onCreateUser(function(options, user) {
@@ -217,10 +222,12 @@ Meteor.methods({
 	categoriseToken: function(token) {
 		return categoriseToken(token);
 	},
-	makePosting: function(posting, data) {
+	makePosting: function(posting, data, user) {
+		if (!user) user = Meteor.userId(); 
 		var sentence = describePosting(posting);
-		_.extend(posting, data, {createdAt: new Date(), userId: Meteor.userId(), sentence: sentence});
+		_.extend(posting, data, {createdAt: new Date(), userId: user, sentence: sentence});
 		Events.insert(posting);
+		return posting;
 	},
 	fbSendRequest: function(string) {
 		var user = Meteor.user().services.facebook, fut = new Future();
@@ -238,7 +245,7 @@ Meteor.methods({
 	twitterSendMessage: function(string) {
 		var user = Meteor.user().services.twitter, fut = new Future();
 		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
-		Twit = new TwitMaker({
+		var Twit = new TwitMaker({
 		    consumer_key:         twitterconfig.consumerKey,
 	    	consumer_secret:      twitterconfig.secret,
 	    	access_token:         twitterToken.token,
@@ -251,17 +258,44 @@ Meteor.methods({
 			}, function(err, res) {fut.return({err: err, res: res});});
 		return fut.wait();
 	},
+	twitterSendTweet: function(string) {
+		console.log("sending tweet: " + string);
+		var fut = new Future(), Twit = new TwitMaker({
+		    consumer_key:         twitterconfig.consumerKey,
+	    	consumer_secret:      twitterconfig.secret,
+	    	access_token:         twitterToken.token,
+	    	access_token_secret:  twitterToken.secret
+		});
+		Twit.post('statuses/update', { status: string }, function(err, res) {
+			console.log("probably sent: " + string)
+			fut.return({err: err, res: res});
+		});
+		fut.wait();
+	},
+	twitterReplyTweet: function(tweetId, string) {
+		console.log("sending reply: " + string + " to tweetId" + tweetId);
+		var fut = new Future(), Twit = new TwitMaker({
+		    consumer_key:         twitterconfig.consumerKey,
+	    	consumer_secret:      twitterconfig.secret,
+	    	access_token:         twitterToken.token,
+	    	access_token_secret:  twitterToken.secret
+		});
+		Twit.post('statuses/update', { status: string, in_reply_to_status_id: tweetId }, function(err, res) {
+			fut.return({err: err, res: res});
+		});
+		fut.wait();
+	},
 	twitterBefriendSuprSub: function() {
 		var user = Meteor.user().services.twitter, fut = new Future();
 		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
-		Twit = new TwitMaker({
+		var Twit = new TwitMaker({
 		    consumer_key:         twitterconfig.consumerKey,
 	    	consumer_secret:      twitterconfig.secret,
 	    	access_token:         user.accessToken,
 	    	access_token_secret:  user.accessTokenSecret
 		});
 		Twit.post('friendships/create', {user_id: twitterAccountId, follow: true}, function(errOne, resOne) {
-			Twit = new TwitMaker({
+			var Twit = new TwitMaker({
 			    consumer_key:         twitterconfig.consumerKey,
 		    	consumer_secret:      twitterconfig.secret,
 		    	access_token:         twitterToken.token,
@@ -293,11 +327,18 @@ Meteor.methods({
 	}
 });
 
+Tweets.find({consumed: {$exists: false}}).observe({
+	added: function(tweet) {
+		consumeTweet(tweet);
+		Tweets.update(tweet, {$set: {consumed: true}});
+	}
+});
+
 function twitterNameFromId(callback, id) {
-	var thisUser = Meteor.user()
+	var thisUser = Meteor.user();
 	if (!'twitter' in thisUser.services) return null;
 	if (!id) id = thisUser.services.twitter.id;
-	Twit = new TwitMaker({
+	var Twit = new TwitMaker({
 	    consumer_key:         twitterconfig.consumerKey,
 	    consumer_secret:      twitterconfig.secret,
 	    access_token:         thisUser.services.twitter.accessToken,
@@ -312,14 +353,50 @@ function twitterNameFromId(callback, id) {
 	});
 }
 
-function pollTwitter() {
-	Twit = new TwitMaker({
+function streamTwitter() {
+	var Twit = new TwitMaker({
 	    consumer_key:         twitterconfig.consumerKey,
 	    consumer_secret:      twitterconfig.secret,
 	    access_token:         twitterToken.token,
 	    access_token_secret:  twitterToken.secret
 	});
-	Twit.get('user', {}, function(err, res) {return [err, res];})
+	var stream = Twit.stream('user', {with: 'user'});
+	stream.on('tweet', Meteor.bindEnvironment(
+		function (tweet) {
+	  		console.log(tweet);
+			Tweets.insert({
+	  			twitterCreated: tweet.created_at,
+	  			twitterId: tweet.id,
+	  			source: tweet.source,
+	  			userTwitterId: tweet.user.id,
+	  			userName: tweet.user.screen_name,
+	  			text: tweet.text,
+	  			refUser: tweet.in_reply_to_user_id
+	  		});
+	  	},
+	  	function (e) {
+	  		console.log("Bind Error!");
+	  		console.trace();
+	  		console.log(e);
+	  	}
+	));
+	stream.on('connect', function(request) {
+		console.log("Connected to Twitter.");
+		console.log(request);
+	});
+	stream.on('disconnect', function(disconnectMessage) {
+		console.log("Disconnected from Twitter.");
+		console.log(disconnectMessage);
+	});
+	stream.on('reconnect', function(request, response, connectInterval) {
+		console.log("Reconnecting to Twitter.");
+		console.log(request, response, connectInterval);		
+	});
+	stream.on('warning', function(warning) {
+		console.log("Warning from Twitter.");
+		console.log(warning);		
+	});
+	return stream;
 }
 
 function divideName(name, callback) {
@@ -619,4 +696,30 @@ function addRandomEvent(n) {
 		newEvent.sentence = describePosting(newEvent);
 		Events.insert(newEvent);
 	}
+}
+
+function consumeTweet(tweet) {
+	var thisUser, posting, results,
+		mainText = removeHandles(tweet.text);
+	if (tweet.userTwitterId === twitterToken.id || tweet.refUser !== twitterToken.id) {
+		console.log("Ignoring tweet as not directed TO SuprSub");
+		return false;
+	}
+	thisUser = Meteor.users.findOne({'services.twitter.id': (tweet.userTwitterId).toString()});
+	if (!thisUser) {
+		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, but you are not yet registered on SuprSub. If you'd like to play more football, visit suprsub.com today!");
+		return false;
+	}
+	tokens = _.map(Tokenizer.tokenize(mainText), function(token) {return token.toLowerCase();});
+	posting = parseRequest(tokens);
+	if ('error' in posting) {
+		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " there was a problem with your request: " + posting.message);
+		return false;
+	}
+	var newPosting = Meteor.call('makePosting', posting, {source: 'twitter'}, thisUser._id);
+	Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
+}
+
+function removeHandles(text) {
+	return text.split(/@[0-9A-Za-x]+/).join('');
 }
