@@ -266,6 +266,7 @@ Meteor.methods({
 	    	access_token:         twitterToken.token,
 	    	access_token_secret:  twitterToken.secret
 		});
+		console.log(twitterToken);
 		Twit.post('statuses/update', { status: string }, function(err, res) {
 			console.log("probably sent: " + string)
 			fut.return({err: err, res: res});
@@ -273,7 +274,7 @@ Meteor.methods({
 		fut.wait();
 	},
 	twitterReplyTweet: function(tweetId, string) {
-		console.log("sending reply: " + string + " to tweetId" + tweetId);
+		console.log("sending reply: " + string + " to tweetId " + tweetId);
 		var fut = new Future(), Twit = new TwitMaker({
 		    consumer_key:         twitterconfig.consumerKey,
 	    	consumer_secret:      twitterconfig.secret,
@@ -365,12 +366,13 @@ function streamTwitter() {
 		function (tweet) {
 	  		console.log(tweet);
 			Tweets.insert({
-	  			twitterCreated: tweet.created_at,
-	  			twitterId: tweet.id,
-	  			source: tweet.source,
+	  			twitterCreated: new Date(tweet.created_at),
+	  			twitterId: parseInt(tweet.id_str, 10),
+	  			source: tweet.source === '<a href=\"http://suprsub.meteor.com\" rel=\"nofollow\">SuprSub</a>' ? 'suprsub' : tweet.source,
 	  			userTwitterId: tweet.user.id,
 	  			userName: tweet.user.screen_name,
 	  			text: tweet.text,
+	  			replyTo: parseInt(tweet.in_reply_to_status_id_str, 10),
 	  			refUser: tweet.in_reply_to_user_id
 	  		});
 	  	},
@@ -424,14 +426,16 @@ function categoriseToken(token) {
 		else if (output.code < 5) return output;
 		switch (output.code) {
 			case 5:
-			output.data = fuzzyMatch(token, dayDictionary);
-			if (output.data === 7) output.data = new Date().getDay();
-			else if (output.data === 8) output.data = (((new Date().getDay() + 1) % 7) + 7) % 7;
-			return output;
-			break;
+				output.data = fuzzyMatch(token, dayDictionary);
+				if (output.data === 7) output.data = new Date().getDay();
+				else if (output.data === 8) output.data = (((new Date().getDay() + 1) % 7) + 7) % 7;
+				return output;
+				break;
+			case 11:
+				return output;
 			default:
-			output.data = fuzzyMatch(token, numberDictionary);
-			return output;
+				output.data = fuzzyMatch(token, numberDictionary);
+				return output;
 		}
 	}
 	var time = timeRegex.exec(token);
@@ -503,12 +507,8 @@ function parseRequest(tokens) {
 			i += n - 1;
 		}
 	}
-/*	for (var i = 0, l = richTokens.codes.length; i < l; i++) {
-		if (richTokens[i].code in stateMap[state]) state = stateMap[state][richTokens[i].codes];
-		else return "cannot move from state " + state + " with token code " + richTokens[i].code;
-	};
-	if (!'-1' in stateMap[state]) return "cannot end in state " + state;*/
 	richTokens = stripUseless(richTokens);
+	if (_.some(richTokens, function(token) {return token.code === 11;})) return {cancel: true};
 	if (richTokens[0].code !== 6) return new Meteor.Error(500, "Number of players must come first.");
 	requestData.players = richTokens[0].data;
 	richTokens.shift();
@@ -716,10 +716,51 @@ function consumeTweet(tweet) {
 		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " there was a problem with your request: " + posting.message);
 		return false;
 	}
-	var newPosting = Meteor.call('makePosting', posting, {source: 'twitter'}, thisUser._id);
+	else if ('cancel' in posting) {
+		var replyPosting = Tweets.findOne({twitterId: tweet.replyTo});
+		if (!replyPosting) {
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, I don't know what you're trying to cancel.  Please reply to the confirmation tweet I sent you.");
+			return false;
+		}
+		var origPosting = Tweets.findOne({twitterId: replyPosting.replyTo});
+		if (!origPosting) {
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, I don't know what you're trying to cancel.  Please reply to the confirmation tweet I sent you.");
+			return false;
+		}
+		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " cancelling this tweet: " + removeHandles(origPosting.text));
+		Events.update({twitterId: origPosting.twitterId}, {$set: {cancelled: true}});
+		return false;
+	}
+	var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
 	Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
 }
 
 function removeHandles(text) {
 	return text.split(/@[0-9A-Za-x]+/).join('');
 }
+
+function prettyDateTime(dateTime) {
+	return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
+};
+
+function colloquialDateTime(dateTime) {
+	var today = new Date();
+	if (today.getFullYear() === dateTime.getFullYear() && today.getMonth() === dateTime.getMonth()) {
+		if (today.getDate() === dateTime.getDate()) return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' today';
+		else if (today.getDate() + 1 === dateTime.getDate()) return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' tomorrow';
+	}
+	return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
+};
+
+function prettyLocation(locationId) {
+	var location;
+	location = Pitches.findOne({_id: locationId});
+	if (!location) return '';
+	else return location.owner + ' - ' + location.name;
+};
+
+function padNum(number, digits) {
+	var n = number.toString();
+	for (var i = n.length; i < digits; i++) n = '0' + n;
+		return n;
+};

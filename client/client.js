@@ -238,7 +238,7 @@ Template.postingModal.events({
 
 Template.activityFeed.helpers({
   events: function() {
-    return Events.find({}, {limit: 10, sort: {createdAt: -1}});
+    return Events.find({cancelled: {$exists: false}}, {limit: 10, sort: {createdAt: -1}});
   },
   eventIcon: function() {
     if (this.source === 'web') return "red browser";
