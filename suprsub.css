@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Collegiate';
-  src: url('fonts/SF_Collegiate.ttf');
+	font-family: "Collegiate";
+	src: url('fonts/SF_Collegiate.ttf');
 }
 
 html {
@@ -15,7 +15,7 @@ body {
 }
 
 .suprsubFont {
-	font-family: 'Collegiate';
+	font-family: "Collegiate";
 }
 
 .suprsubHeader {

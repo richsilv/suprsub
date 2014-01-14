@@ -93,7 +93,7 @@ initialize = function(circle) {
   circleChanged.set(false);
   if (!gc) gc = new google.maps.Geocoder();
   if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
-    defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat(), Meteor.user().profile.player.center.lng());
+    defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.b, Meteor.user().profile.player.center.d);
     mapCenter.set(defaultLocation);
     if (circle) {
       circleSize.set(Meteor.user().profile.player.size);
@@ -629,7 +629,7 @@ Deps.autorun(function(c) {
   }
 });
 Deps.autorun(function() {
-  if (mapCenter.get() && typeof circleSize != 'undefined' && circleSize.get() && App.subs.pitches.ready()) {  
+  if (mapCenter.get() && typeof(circleSize) !== 'undefined' && circleSize !== null && circleSize.get() && App.subs.pitches.ready()) {  
     Meteor.call('pitchesWithin', {"lat": parseFloat(mapCenter.get().lat(), 10), "lng": parseFloat(mapCenter.get().lng(), 10)}, circleSize.get(), function(err, res) {
       if (err) console.log(err);
       else if (venues) {

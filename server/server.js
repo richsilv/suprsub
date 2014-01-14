@@ -334,6 +334,13 @@ Tweets.find({consumed: {$exists: false}}).observe({
 		Tweets.update(tweet, {$set: {consumed: true}});
 	}
 });
+Events.find({posted: {$exists: false}}).observe({
+	added: function(event) {
+		var players = matchingPlayers(event._id);
+		if (players.length)	distributeEvent(players, event);
+		Events.update(event, {$set: {consumed: true}});
+	}
+})
 
 function twitterNameFromId(callback, id) {
 	var thisUser = Meteor.user();
@@ -364,15 +371,17 @@ function streamTwitter() {
 	var stream = Twit.stream('user', {with: 'user'});
 	stream.on('tweet', Meteor.bindEnvironment(
 		function (tweet) {
-	  		console.log(tweet);
+			var thisString = "Received " + tweet.id_str;
+	  		if (tweet.in_reply_to_status_id) thisString += ", reply to " + tweet.in_reply_to_status_id_str
+	  		console.log(thisString + ", sent by " + tweet.user.screen_name);
 			Tweets.insert({
 	  			twitterCreated: new Date(tweet.created_at),
-	  			twitterId: parseInt(tweet.id_str, 10),
+	  			twitterId: tweet.id_str,
 	  			source: tweet.source === '<a href=\"http://suprsub.meteor.com\" rel=\"nofollow\">SuprSub</a>' ? 'suprsub' : tweet.source,
 	  			userTwitterId: tweet.user.id,
 	  			userName: tweet.user.screen_name,
 	  			text: tweet.text,
-	  			replyTo: parseInt(tweet.in_reply_to_status_id_str, 10),
+	  			replyTo: tweet.in_reply_to_status_id_str,
 	  			refUser: tweet.in_reply_to_user_id
 	  		});
 	  	},
@@ -473,7 +482,7 @@ function fuzzyMatch(token, dict, threshold) {
 //		console.log(token + " => " + currentKey + " : " + thisDistance);
 		if (thisDistance <= maxScore && thisDistance < bestMatch) {
 			match = dict[currentKey];
-			console.log(currentKey, thisDistance, match);
+//			console.log(currentKey, thisDistance, match);
 			bestMatch = thisDistance;
 		}
 	}
@@ -733,6 +742,30 @@ function consumeTweet(tweet) {
 	}
 	var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
 	Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
+}
+
+function distributeEvent(players, event) {
+	var team = Meteor.users.findOne({_id: event.userId});
+	for (var i = 0, l = players.length; i < l; i++) {
+		var thisPlayer = Meteor.users.findOne({_id: players[i]._id});
+		for (var j = 0, m = thisPlayer.profile.contact.length; j < m; j++) {
+			switch (thisPlayer.profile.contact[j]) {
+				case 0:
+					var tweetText = "@" + thisPlayer.services.twitter.screenName + " * " + team.profile.team.name + ": " + event.sentence;
+					console.log("Tweeting: " + tweetText);
+					Meteor.call('twitterSendTweet', tweetText);
+					break;
+
+				case 1:
+
+					break;
+
+				case 2: 
+
+					break;
+			}
+		}
+	}
 }
 
 function removeHandles(text) {
