@@ -44,5 +44,7 @@
 	"fifteen": 6,
 	"thirty": 6,
 	"forty-five": 6,
-	"cancel": 11
+	"cancel": 11,
+	"*": 12,
+	"_comment": "Twitter handles are 20, eventIds are 19, pitch names are 9, pitch surnames (goals, powerleague) are 10"
 }

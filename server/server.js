@@ -105,6 +105,11 @@ var pitchSurnames = JSON.parse(Assets.getText("pitchsurnames.json"));
 var stateMap = JSON.parse(Assets.getText("statemap.json"));
 var uselessTokens = JSON.parse(Assets.getText("uselesstokens.json"));
 var timeRegex = /^([0-9]{1,2})(?:[:.]([0-5][0-9]))?([ap]m)?$/;
+var regexDict = [
+	{name: 'number', regex: /^[0-9]+$/, code: 6, transform: function(token) {return parseInt(token, 10);}},
+	{name: 'twitterHandle', regex: /^@[A-Za-z0-9_]+$/, code: 20, transform: function(token) {return token;}},
+	{name: 'eventId', regex: /^_id[A-Za-z0-9]+$/, code: 19, transform: function(token) {return token.substr(3);}}	
+];
 
 Meteor.startup(function() {
 	Pitches._ensureIndex({ location : "2d" });
@@ -218,6 +223,10 @@ Meteor.methods({
 	analysePosting: function(string) {
 		var tokens = _.map(Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
 		return (null, parseRequest(tokens));
+	},
+	analyseText: function(string) {
+		var tokens = _.map(Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
+		return (null, parseTokens(tokens));
 	},
 	categoriseToken: function(token) {
 		return categoriseToken(token);
@@ -427,7 +436,8 @@ function updateNames(names) {
 
 function categoriseToken(token) {
 	var output = {code: -1};
-	if (/^[0-9]+$/.exec(token)) return {code: 6, data: parseInt(token, 10)};
+	for (i = 0, l = regexDict.length; i < l; i++)
+		if (regexDict[i].regex.exec(token)) return {code: regexDict[i].code, data: regexDict[i].transform(token)}
 	var currentMatch = fuzzyMatch(token, dictionary);
 	output.code = currentMatch;
 	if (output.code >= 0) {
@@ -441,6 +451,7 @@ function categoriseToken(token) {
 				return output;
 				break;
 			case 11:
+			case 12:
 				return output;
 			default:
 				output.data = fuzzyMatch(token, numberDictionary);
@@ -491,6 +502,30 @@ function fuzzyMatch(token, dict, threshold) {
 
 function stripUseless(tokens) {
 	return _.filter(tokens, function(token) {return token && !uselessTokens[token.code]});
+}
+
+function parseTokens(tokens) {
+	var richTokens = [],
+		state = 0;
+	for (var i = 0, l = tokens.length; i < l; i++) {
+		var k = {code: -1}, n = 0, thisToken;
+		while (k.code < 0 && i + n < l) {
+			thisToken = tokens[i];
+			for (var j = 1; j <= n; j++) thisToken += " " + tokens[i + j];
+			var k = categoriseToken(thisToken);
+			if (i + n + 1 < l && categoriseToken(tokens[i + n + 1], pitchSurnames) === 10) k.code === -1; // Force reassesment if there's still a word left in the location description.
+			n++;
+		}
+		if (k.code < 0) {
+			richTokens[i] = {code: -1, data: tokens[i]};
+		}
+		else {
+			richTokens[i] = {code: k.code, data: k.data};
+			i += n - 1;
+		}
+	}
+	richTokens = stripUseless(richTokens);
+	return richTokens;	
 }
 
 function parseRequest(tokens) {
@@ -707,10 +742,21 @@ function addRandomEvent(n) {
 	}
 }
 
+function hasCode(keyCode, richTokens) {
+	return _.any(richTokens, function(token) {return token.code === keyCode;});
+}
+
 function consumeTweet(tweet) {
 	var thisUser, posting, results,
 		mainText = removeHandles(tweet.text);
-	if (tweet.userTwitterId === twitterToken.id || tweet.refUser !== twitterToken.id) {
+	if (tweet.userTwitterId === twitterToken.id) {
+		console.log("Tweet sent by SuprSub");
+		var outGoing = parseTokens(tweet),
+			idToken = _.find(outGoing, function(token) {return token.code === 19;});
+		if (idToken) Events.update(idToken.data, {$push: {tweetedTo: {refUser: tweet.refUser, twitterId: tweet.twitterId}}});
+		return false;
+	}
+	if (tweet.refUser !== twitterToken.id) {
 		console.log("Ignoring tweet as not directed TO SuprSub");
 		return false;
 	}
@@ -722,7 +768,7 @@ function consumeTweet(tweet) {
 	tokens = _.map(Tokenizer.tokenize(mainText), function(token) {return token.toLowerCase();});
 	posting = parseRequest(tokens);
 	if ('error' in posting) {
-		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " there was a problem with your request: " + posting.message);
+		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " there was a problem with your request: " + posting.reason);
 		return false;
 	}
 	else if ('cancel' in posting) {
@@ -751,7 +797,7 @@ function distributeEvent(players, event) {
 		for (var j = 0, m = thisPlayer.profile.contact.length; j < m; j++) {
 			switch (thisPlayer.profile.contact[j]) {
 				case 0:
-					var tweetText = "@" + thisPlayer.services.twitter.screenName + " * " + team.profile.team.name + ": " + event.sentence;
+					var tweetText = "@" + thisPlayer.services.twitter.screenName + ' ' + team.profile.team.name + ": " + event.sentence + ' _id' + event._id;
 					console.log("Tweeting: " + tweetText);
 					Meteor.call('twitterSendTweet', tweetText);
 					break;
