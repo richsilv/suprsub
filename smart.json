@@ -3,6 +3,7 @@
     "semantic-ui": {},
     "iron-router": {},
     "twit": {},
-    "moment": {}
+    "moment": {},
+    "zurb-foundation": {}
   }
 }

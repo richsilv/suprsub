@@ -51,6 +51,31 @@ body {
 	padding: 0.3em 0;
 }
 
+#socialBox {
+	position:fixed;
+	z-index: 1;
+	-webkit-box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4) inset;
+	box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4) inset;
+	background-color: rgb(76, 118, 39);
+	color: brown;
+	top: 50%;
+	margin-top: -100px;
+	right: 5px;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+#socialBox>div {
+	border-radius: 3px;
+	background-color: antiquewhite;
+	box-shadow: 0px 0px 2px 1px rgba(0, 0 0, 0.4);
+	height: 100%;
+}
+
+#socialBox .webicon {
+	margin: 5px;
+}
+
 .shortDivider {
 	position: relative;
 	margin: 1rem 0rem;
@@ -175,6 +200,10 @@ body {
 	margin-top: 50px;
 }
 
+.darkgreen {
+  color: #4C7627 !important;
+}
+
 .ui.menu .darkgreen.active.item,
 .ui.darkgreen.menu .active.item {
   border-color: #4C7627 !important;
@@ -185,6 +214,12 @@ body {
 }
 .ui.inverted.darkgreen.pointing.menu .active.item:after {
   background-color: #4C7627;
+}
+
+i.suprsub.icon:before{
+	content: "S";
+	font-family: "Collegiate";
+	font-size: 125%;
 }
 
 #loginBox {

@@ -452,6 +452,7 @@ function categoriseToken(token) {
 				break;
 			case 11:
 			case 12:
+			case 13:
 				return output;
 			default:
 				output.data = fuzzyMatch(token, numberDictionary);
@@ -553,6 +554,7 @@ function parseRequest(tokens) {
 	}
 	richTokens = stripUseless(richTokens);
 	if (_.some(richTokens, function(token) {return token.code === 11;})) return {cancel: true};
+	else if (_.some(richTokens, function(token) {return token.code === 13;})) return {suprsub: true};
 	if (richTokens[0].code !== 6) return new Meteor.Error(500, "Number of players must come first.");
 	requestData.players = richTokens[0].data;
 	richTokens.shift();
@@ -638,6 +640,7 @@ function matchingPlayers(event) {
 	var periodCode = Math.floor((event.dateTime.getHours() - 6) / 6)+ '/' + event.dateTime.getDay(),
 		query = {'profile.player.venues': event.location};
 	query['profile.player.availability.' + periodCode] = {$exists: true};
+	query['_id'] = {$ne: event.userId};
 	return Meteor.users.find(query, {fields: {_id: true}}).fetch();
 }
 
@@ -751,8 +754,9 @@ function consumeTweet(tweet) {
 		mainText = removeHandles(tweet.text);
 	if (tweet.userTwitterId === twitterToken.id) {
 		console.log("Tweet sent by SuprSub");
-		var outGoing = parseTokens(tweet),
+		var outGoing = parseTokens(Tokenizer.tokenize(tweet.text)),
 			idToken = _.find(outGoing, function(token) {return token.code === 19;});
+		console.log("Sent tweet:", tweet, "about event", idToken);
 		if (idToken) Events.update(idToken.data, {$push: {tweetedTo: {refUser: tweet.refUser, twitterId: tweet.twitterId}}});
 		return false;
 	}
@@ -786,8 +790,55 @@ function consumeTweet(tweet) {
 		Events.update({twitterId: origPosting.twitterId}, {$set: {cancelled: true}});
 		return false;
 	}
+	else if ('suprsub' in posting) {
+		var replyPosting = Tweets.findOne({twitterId: tweet.replyTo});
+		console.log("replyPosting:", replyPosting);
+		if (!replyPosting) {
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, I don't understand.  Please reply to the posting I sent you, or connect with it online.");
+			return false;
+		}
+		var thisEvent = Events.findOne({'tweetedTo.twitterId': replyPosting.twitterId});
+		console.log("thisEvent:", thisEvent);
+		if (!thisEvent) {
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, I can't find this posting any more - maybe it's been cancelled.");
+			return false;
+		}
+		if (thisEvent.players === 0) {
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, that posting has already been filled. Thanks for responding though!");
+			return false;
+		}
+		else {
+			var teamCaptain = Meteor.users.findOne(thisEvent.userId);
+			console.log("teamCaptain:", teamCaptain);
+			if (!teamCaptain) {
+				Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, the user that made that posting appears to have left Suprsub!");
+				return false;
+			}
+			thisEvent = Events.update(thisEvent, {$push: {matched: thisUser._id}, $inc: {players: -1}});
+			if (thisEvent.players > 0) Events.update(thisEvent._id, {$set: {sentence: describePosting(thisEvent)}});
+			var playerContactDeets, teamCaptContactDeets
+			if (thisUser.profile.contact.indexOf(0) > -1) playerContactDeets = '@' + thisUser.services.twitter.screenName;
+			else if (thisUser.profile.contact.indexOf(1) > -1) playerContactDeets = thisUser.services.facebook.link;
+			else playerContactDeets = thisUser.services.emails[0].address;
+			if (teamCaptain.profile.contact.indexOf(0) > -1) {
+				teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
+				Meteor.call('twitterReplyTweet', tweet.twitterId, teamCaptContactDeets + " your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets);		
+			}
+			else if (teamCaptain.profile.contact.indexOf(1) > -1) {
+				teamCaptContactDeets = teamCaptain.services.facebook.link;
+				// INSERT FACEBOOK CONTACT UPDATE //
+			}
+			else {
+				teamCaptContactDeets = teamCaptain.services.emails[0].address;
+				var fullUpText = (thisEvent.players === 0) ? ' Your posting is now filled.' : ''
+				Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "Your have a SuprSub!" + fullupText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
+			}
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets);
+		}
+	}
 	var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
 	Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
+	return false;
 }
 
 function distributeEvent(players, event) {
@@ -812,6 +863,7 @@ function distributeEvent(players, event) {
 			}
 		}
 	}
+	Events.update(event, {$set: {posted: true}});
 }
 
 function removeHandles(text) {

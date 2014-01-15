@@ -1,5 +1,7 @@
 Pitches = new Meteor.Collection("pitches");
 Events = new Meteor.Collection("events");
+// DISABLE THIS
+Tweets = new Meteor.Collection("tweets");
 
 pitchMap = window.pitchMap;
 gc = null;
@@ -241,8 +243,9 @@ Template.activityFeed.helpers({
     return Events.find({cancelled: {$exists: false}}, {limit: 10, sort: {createdAt: -1}});
   },
   eventIcon: function() {
-    if (this.source === 'web') return "red browser";
-    else return "question";
+    if (this.players === 0) return "darkgreen suprsub" 
+    else if (this.source === 'web') return "red browser";
+    else return "teal twitter";
   },
   teamName: function() {
     var user = Meteor.users.findOne({_id: this.userId});
@@ -250,10 +253,16 @@ Template.activityFeed.helpers({
     else return 'Unknown Team';
   },
   message: function() {
-    var mess = "Looking for " + this.players + " player";
-    if (this.players > 1) mess += "s";
-    mess += ", " + colloquialDateTime(this.dateTime) + " at " + prettyLocation(this.location) + ".";
-    return mess;
+    if (this.players > 0) return this.sentence;
+    var subNum = this.matched.length,
+        suprsubNames = _.map(this.matched, function(x) {return Meteor.users.findOne(x).profile.name}),
+        nameString = suprsubNames[0];
+    if (subNum > 2) for (i = 1, l = subNum - 1; i < l; i++) nameString += ', ' + suprsubNames[i];
+    if (subNum > 1) nameString += " and " + suprsubNames[subNum - 1] + " are ";
+    else nameString += " is ";
+    nameString += "going to be ";
+    if (subNum > 1) return nameString + "SuprSubs!";
+    else return nameString + "a SuprSub!"
   },
   timeAgo: function() {
     TimeKeeper._dep.depend();
@@ -262,13 +271,15 @@ Template.activityFeed.helpers({
 });
 Template.activityFeed.rendered = function() {
   var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
-  var frag = Template.fadeBox({
-    height: lastEvent.offsetHeight,
-    width: lastEvent.offsetWidth,
-    left: lastEvent.offsetLeft,
-    top: lastEvent.offsetTop,
-  });
-  $('#activityFeed').append(frag);
+  if (eventDivs.length) {
+    var frag = Template.fadeBox({
+      height: lastEvent.offsetHeight,
+      width: lastEvent.offsetWidth,
+      left: lastEvent.offsetLeft,
+      top: lastEvent.offsetTop,
+    });
+//    $('#activityFeed').append(frag);
+  }
 };
 Template.activityFeed.created = function() {
   this.rerender = Meteor.setInterval(function() {
@@ -471,10 +482,10 @@ Template.playerForm.events({
     for (var i = 0, l = tableElements.length; i < l; i++) {
       if (tableElements[i].checked) availability[tableElements[i].id] = true;
     }
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.first_name': $('#firstname input').val(), 
-                                                 'profile.last_name': $('#surname input').val(),
-                                                 'profile.player.availability': availability
-    }});
+    var update = {'profile.first_name': $('#firstname input').val(), 
+                  'profile.last_name': $('#surname input').val()};
+    if (tabChoices.value.playerTab === 'availability') update['profile.player.availability'] = availability;
+    Meteor.users.update(Meteor.userId(), {$set: update});
   },
   'click #emailButton': function() {
     var frag = Meteor.render(function() {

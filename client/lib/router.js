@@ -5,7 +5,6 @@ Router.configure({
         	// render the login template but keep the url in the browser the same
           this.render();
         	this.render('loginScreen', {to: 'mainSection'});
-
 	        // stop the rest of the before hooks and the action function 
 	        this.stop();
       	}
@@ -17,7 +16,8 @@ Router.map(function() {
     	path: '/player',
     	template: 'mainTemplate',
     	yieldTemplates: {
-      		'playerDetails': {to: 'mainSection'}
+      		'playerDetails': {to: 'mainSection'},
+          'socialBox': {to: 'socialBox'}
     	}
   	});
 });
@@ -27,7 +27,8 @@ Router.map(function() {
     	path: '/team',
     	template: 'mainTemplate',
     	yieldTemplates: {
-      		'teamSettings': {to: 'mainSection'}
+      		'teamSettings': {to: 'mainSection'},
+          'socialBox': {to: 'socialBox'}
     	}
   	});
 });
@@ -37,7 +38,8 @@ Router.map(function() {
     	path: '/',
     	template: 'mainTemplate',
     	yieldTemplates: {
-      		'homePage': {to: 'mainSection'}
+      		'homePage': {to: 'mainSection'},
+          'socialBox': {to: 'socialBox'}
     	}
   	});
 });
@@ -47,7 +49,8 @@ Router.map(function() {
       path: '/home',
       template: 'mainTemplate',
       yieldTemplates: {
-          'homePage': {to: 'mainSection'}
+          'homePage': {to: 'mainSection'},
+          'socialBox': {to: 'socialBox'}
       }
     });
 });

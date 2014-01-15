@@ -5,18 +5,19 @@
       "semantic-ui": {},
       "iron-router": {},
       "twit": {},
-      "moment": {}
+      "moment": {},
+      "zurb-foundation": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.10.2",
-        "commit": "e114917e23b857ad0dfb4f8877a923880552753f"
+        "tag": "v0.12.0",
+        "commit": "ea58778393ec4cf509d44a7d8fb906549f46fce7"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.1",
-        "commit": "4e1ee0581d68bff422a915dacb0bd30eae10fe08"
+        "tag": "v0.6.2",
+        "commit": "ce56e58b45624dce992490f3a1c10f10d3948bae"
       },
       "twit": {
         "git": "https://github.com/subhog/meteor-twit.git",
@@ -27,6 +28,11 @@
         "git": "https://github.com/acreeger/meteor-moment.git",
         "tag": "v2.2.1",
         "commit": "9ee12e714afe56b189f53076447b7b54f3012065"
+      },
+      "zurb-foundation": {
+        "git": "https://github.com/MixinLabs/meteor-foundation.git",
+        "tag": "v0.1.10",
+        "commit": "545234bc38f7a747a5d69b48f75c5cc77ca8382f"
       }
     }
   }
