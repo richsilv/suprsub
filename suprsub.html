@@ -81,45 +81,41 @@
 
 <template name="playerDetails">
 	<div id="main-background-image"></div>
-	<div class="ui page grid maingrid">
-		<div class="row">
-			<div class="ui eight wide column">
-				{{> playerForm}}
-			</div>
-			<div class="ui eight wide column">
-				<div class="ui column">
-					<div class="ui segment content whitetranslucent" id="tabSpace">
-						<div class="ui tabular menu">
-						  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
-						    Selected Venues
-						  </a>
-						  <a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability">
-						    Availability
-						  </a>
-						</div>
-						{{#if tabChoice 'playerTab' 'pitchData'}}
-							{{> pitchData}}
-						{{/if}}
-						{{#if tabChoice 'playerTab' 'availability'}}
-							{{> availability}}
-						{{/if}}
+	<div class="gap row">
+		<div class="large-8 columns">
+			{{> playerForm}}
+		</div>
+		<div class="large-8 columns">
+			<div class="large-16 columns">
+				<div class="ui segment content whitetranslucent" id="tabSpace">
+					<div class="ui tabular menu">
+					  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
+					    Selected Venues
+					  </a>
+					  <a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability">
+					    Availability
+					  </a>
 					</div>
+					{{#if tabChoice 'playerTab' 'pitchData'}}
+						{{> pitchData}}
+					{{/if}}
+					{{#if tabChoice 'playerTab' 'availability'}}
+						{{> availability}}
+					{{/if}}
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="ui column">
-				<div class="ui segment content whitetranslucent" id="areaDetails">
-					<div class="ui grid">
-						<div class="row">
-							<div class="ui twelve wide column">
-								{{> pitchMapLarge}}
-							</div>
-							<div class="ui vertical divider" style="left: 75%"><i class="map icon"></i></div>
-							<div class="ui four wide column">
-								{{> defineBounds}}
-							</div>
-						</div>
+	</div>
+	<div class="row">
+		<div class="large-16 columns">
+			<div class="ui segment content whitetranslucent" id="areaDetails">
+				<div class="row">
+					<div class="large-12 columns">
+						{{> pitchMapLarge}}
+					</div>
+					<div class="ui vertical divider" style="left: 75%"><i class="map icon"></i></div>
+					<div class="large-4 columns">
+						{{> defineBounds}}
 					</div>
 				</div>
 			</div>
@@ -180,7 +176,7 @@
 </template>
 
 <template name="playerForm">
-	<div class="ui column">
+	<div class="large-16 columns">
 		<form class="ui form segment content whitetranslucent" id="playerFormFieldSpace">
 		  	<div class="two fields">
 		    	<div class="field">
@@ -328,23 +324,21 @@
 
 <template name="teamSettings">
 	<div id="main-background-image"></div>
-	<div class="ui page grid maingrid">
-		<div class="row">
-			<div class="ui column">
-				{{> teamDetails}}
-			</div>
+	<div class="gap row">
+		<div class="large-16 columns">
+			{{> teamDetails}}
 		</div>
-		<div class="row">
-			{{> otherInfo}}
-		</div>
+	</div>
+	<div class="row">
+		{{> otherInfo}}
 	</div>
 </template>
 
 <template name="otherInfo">
-	<div class="ui column">
+	<div class="large-16 columns">
 		<div class="ui segment content whitetranslucent" id="otherInfo">
-			<div class="ui grid">
-				<div class="ui eight wide column">
+			<div class="row">
+				<div class="large-8 columns">
 					<form class="ui form segment content">
 							<div class="ui grid">
 								<div class="field fourteen wide column">
@@ -363,7 +357,7 @@
 					<div id="matches"></div>
 				</div>
 				<div class="ui vertical divider"><i class="map icon"></i></div>
-				<div class="ui eight wide column">
+				<div class="large-8 columns">
 					{{> pitchMapSmall}}
 				</div>
 			</div>
@@ -451,12 +445,12 @@
 
 <template name="homePage">
 	<div id="main-background-image"></div>
-	<div class="ui page grid maingrid">
-		<div class="ui eight wide column">
+	<div class="row">
+		<div class="large-8 gap columns">
 			<div class="row">
-				<div class="suprsubFont suprsubHeader backgroundShadow">SuprSub</div>
+				<div class="suprsubFont suprsubHeader backgroundShadowBig">SuprSub</div>
 				<div class="ui divider" style="position: relative"></div>
-				<ul class="ui backgroundShadow rightList">
+				<ul class="ui backgroundShadowSmall rightList">
 				  	<li class="item">The best way to play more football</li>
 				  	<li class="shortDivider"></li>
 				  	<li class="item">Find a SuprSub in seconds if your team is short</li>
@@ -466,16 +460,14 @@
 				</ul>
 			</div>
 			<div class="row">
-				<div class="ui grid">
-					<div class="ui two wide column"></div>
-					<div class="ui twelve wide column">
-						{{> postBox}}
-					</div>
+				<div class="large-2 columns"></div>
+				<div class="large-14 columns">
+					{{> postBox}}
 				</div>
 			</div>
 		</div>
-		<div class="ui one wide column"></div>
-		<div class="ui seven wide column">
+		<div class="large-1 columns"></div>
+		<div class="large-7 columns">
 			<div class="ui feed segment whitetranslucent" id="activityFeed">
 		      	<h2 class="ui header">Latest Activity</h2>
 		      	{{> activityFeed}}

@@ -13,6 +13,9 @@
 <template name="topbar">
 	<div class="ui darkgreen fixed inverted main menu" id="topbar">
 		{{#if currentUser}}
+		<span class="item" href="{{pathFor 'home'}}">
+			<i class="suprsub icon"></i>
+		</span>		
 		<a class="{{#if option "/"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
@@ -23,7 +26,7 @@
 			<i class="users icon"></i> Team
 		</a>
 		{{/if}}
-		<div id="toplogo-image"></div>
+		<div id="toplogo-image-temp" style="display: none;">SuprSub</div>
 		<div class="right menu">
 			{{#if currentUser}}
   			<div class="item">

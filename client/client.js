@@ -255,7 +255,7 @@ Template.activityFeed.helpers({
   message: function() {
     if (this.players > 0) return this.sentence;
     var subNum = this.matched.length,
-        suprsubNames = _.map(this.matched, function(x) {return Meteor.users.findOne(x).profile.name}),
+        suprsubNames = _.map(this.matched, function(x) {return Meteor.users.findOne(x) ? Meteor.users.findOne(x).profile.name : "Unknown Player"}),
         nameString = suprsubNames[0];
     if (subNum > 2) for (i = 1, l = subNum - 1; i < l; i++) nameString += ', ' + suprsubNames[i];
     if (subNum > 1) nameString += " and " + suprsubNames[subNum - 1] + " are ";
