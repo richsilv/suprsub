@@ -66,10 +66,10 @@ img {
 .map_canvas object {
   max-width: none !important; }
 
-.left {
+.leftF {
   float: left !important; }
 
-.right {
+.rightF {
   float: right !important; }
 
 .clearfix {

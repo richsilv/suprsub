@@ -18,6 +18,8 @@ body {
 }
 
 .suprsubFont {
+	vertical-align: text-bottom;
+	font-weight: normal;
 	font-family: "Collegiate";
 }
 
@@ -195,13 +197,14 @@ body {
 }
 
 .quote {
-	padding-left: 3em;
+	font-size: 1.75em;
+	padding-left: 5em;
 	text-indent: -5em;
 }
 
 .quotee {
 	text-align: right;
-	margin-right: 5em;
+	margin-right: 2em;
 }
 
 .semitranslucent {
@@ -229,6 +232,10 @@ body {
 
 .darkgreen {
   color: hsl(120, 75%, 43%); !important;
+}
+
+.darkgreenshadow {
+	text-shadow: 0 0 10px rgba(63, 255, 63, 0.4), 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .ui.menu .darkgreen.active.item,

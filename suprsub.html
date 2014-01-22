@@ -2,78 +2,80 @@
 	<div id="login-background-image">
 	</div>
 	<div class="ui page center aligned gridF" id="loginBox">
-		<div class="large-7 large-centered column">
-			<div class="ui inverted segment semitranslucent">
-				<h1>Become a SuprSub Today</h1>
-			</div>
-			<div class="ui form segment translucent">
-				<div class="field">
-					<div class="2 fluid ui buttons" id="socialbuttons">
-						<div class="ui facebook button" id="facebook-login">
-							<i class="facebook icon"></i>
-							Facebook
-						</div>
-						<div class="ui twitter button" id="twitter-login">
-							<i class="twitter icon"></i>
-							Twitter
-						</div>
-					</div>
+		<div class="row">
+			<div class="large-7 large-centered column">
+				<div class="ui inverted segment semitranslucent">
+					<h1>Become a <span class="darkgreen suprsubFont darkgreenshadow">SuprSub</span> Today</h1>
 				</div>
-				<div class="field">
-					<div class="ui left labeled icon input">
-						<input type="text" placeholder="First Name" id="firstname">
-						<i class="user icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
+				<div class="ui form segment translucent">
+					<div class="field">
+						<div class="2 fluid ui buttons" id="socialbuttons">
+							<div class="ui facebook button" id="facebook-login">
+								<i class="facebook icon"></i>
+								Facebook
+							</div>
+							<div class="ui twitter button" id="twitter-login">
+								<i class="twitter icon"></i>
+								Twitter
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="field">
-					<div class="ui left labeled icon input">
-						<input type="text" placeholder="Last Name" id="lastname">
-						<i class="user icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="text" placeholder="First Name" id="firstname">
+							<i class="user icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="field">
-					<div class="ui left labeled icon input">
-						<input type="email" placeholder="E-Mail" id="signup-email">
-						<i class="inbox icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="text" placeholder="Last Name" id="lastname">
+							<i class="user icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="field">
-					<div class="ui left labeled icon input">
-						<input type="password" placeholder="Password" id="signup-password">
-						<i class="lock icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="email" placeholder="E-Mail" id="signup-email">
+							<i class="inbox icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="field">
-					<div class="ui left labeled icon input">
-						<input type="password" placeholder="Confirm Password" id="confirm-password">
-						<i class="lock icon"></i>
-						<div class="ui corner label">
-							<i class="icon asterisk"></i>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="password" placeholder="Password" id="signup-password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
 						</div>
 					</div>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="password" placeholder="Confirm Password" id="confirm-password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					{{#if accountError}}
+					<div class="ui error message" id="errorBox">
+						<div class="header">{{accountError}}</div>
+					</div>
+					{{/if}}
+					<div class="ui rightF blue submit button" id="signup-button">Sign Up</div>
 				</div>
-				{{#if accountError}}
-				<div class="ui error message" id="errorBox">
-					<div class="header">{{accountError}}</div>
+				<div class="ui inverted segment semitranslucent">
+					<h2 class="quote">"Inspirational quote from<br>high-profile user"</h2>
+					<h3 class="quotee">-Random Bloke</h3>
 				</div>
-				{{/if}}
-				<div class="ui blue submit button" id="signup-button">Sign Up</div>
-			</div>
-			<div class="ui inverted segment semitranslucent">
-				<h2 class="quote">"Inspirational quote from<br>high-profile user"</h2>
-				<h3 class="quotee">-Random Bloke</h3>
 			</div>
 		</div>
 	</div>
