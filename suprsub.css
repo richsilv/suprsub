@@ -4,7 +4,6 @@
 }
 
 html {
-	font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 	font-size: 14px;
 	height: 100%;
 }
@@ -12,6 +11,10 @@ html {
 body {
 	margin: 0;
 	height: 100%;
+}
+
+#wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
+	font-family: 'Molengo', sans-serif;
 }
 
 .suprsubFont {
@@ -62,6 +65,11 @@ body {
 	position: relative;
 	line-height: 1.25em;
 	padding: 0.3em 0;
+}
+
+.ui.attached.button.label {
+	top: 0.875em;
+	display: inline-table;
 }
 
 #socialBox {
@@ -120,6 +128,13 @@ body {
 }
 .ui.inverted.darkgreen {
 	color: #ffffff;
+}
+
+.ui.positive.button {
+	background-color: hsl(120, 75%, 43%) !important;
+}
+.ui.positive.button:hover {
+	background-color: hsl(120, 80%, 48%) !important;	
 }
 
 .whitetranslucent {

@@ -98,6 +98,7 @@ var twitterAccountId = SecureData.findOne({Name: 'twitterconfig'}).AccountId;
 var twitterToken = SecureData.findOne({Name: 'twitterconfig'}).Token;
 // DELETE THIS TO POST AS SUPRSUB
 var twitterToken = SecureData.findOne({Name: 'Claudio'}).Value.service.twitter;
+// ==============================
 var dictionary = JSON.parse(Assets.getText("dictionary.json"));
 var dayDictionary = JSON.parse(Assets.getText("daydictionary.json"));
 var numberDictionary = JSON.parse(Assets.getText("numberdictionary.json"));
@@ -108,7 +109,8 @@ var timeRegex = /^([0-9]{1,2})(?:[:.]([0-5][0-9]))?([ap]m)?$/;
 var regexDict = [
 	{name: 'number', regex: /^[0-9]+$/, code: 6, transform: function(token) {return parseInt(token, 10);}},
 	{name: 'twitterHandle', regex: /^@[A-Za-z0-9_]+$/, code: 20, transform: function(token) {return token;}},
-	{name: 'eventId', regex: /^_id[A-Za-z0-9]+$/, code: 19, transform: function(token) {return token.substr(3);}}	
+	{name: 'eventId', regex: /^_id[A-Za-z0-9]+$/, code: 19, transform: function(token) {return token.substr(3);}},
+	{name: 'teamSize', regex: /^(\d+)(?:as|-a-side)$/, code: 18, transform: function(token) {return parseInt(/^(\d+)(?:as|-a-side)$/.exec(token)[1], 10);}}
 ];
 
 Meteor.startup(function() {
@@ -439,13 +441,13 @@ function categoriseToken(token) {
 	for (i = 0, l = regexDict.length; i < l; i++)
 		if (regexDict[i].regex.exec(token)) return {code: regexDict[i].code, data: regexDict[i].transform(token)}
 	var currentMatch = fuzzyMatch(token, dictionary);
-	output.code = currentMatch;
+	output = currentMatch;
 	if (output.code >= 0) {
-		if (output.code === 3) return {code: 3, data: (token === "pm" ? 1 : 0)}
+		if (output.code === 3) return {code: 3, data: (ouput.term === "pm" ? 1 : 0)}
 		else if (output.code < 5) return output;
 		switch (output.code) {
 			case 5:
-				output.data = fuzzyMatch(token, dayDictionary);
+				output.data = fuzzyMatch(token, dayDictionary).code;
 				if (output.data === 7) output.data = new Date().getDay();
 				else if (output.data === 8) output.data = (((new Date().getDay() + 1) % 7) + 7) % 7;
 				return output;
@@ -454,8 +456,12 @@ function categoriseToken(token) {
 			case 12:
 			case 13:
 				return output;
+			case 14:
+				return {code: 14, data: (output.term.substr(0, 1) === "m") ? 0 : 1}
+			case 15:
+				return {code: 15, data: (output.term.substr(0, 4) === "comp") ? 1 : 0}				
 			default:
-				output.data = fuzzyMatch(token, numberDictionary);
+				output.data = fuzzyMatch(token, numberDictionary).code;
 				return output;
 		}
 	}
@@ -471,33 +477,33 @@ function categoriseToken(token) {
 		return output;
 	}
 	var currentMatch = fuzzyMatch(token, pitchSurnames);
-	if (currentMatch !== -1) return {code: 10};
+	if (currentMatch.code !== -1) return {code: 10};
 	var pitchData = Pitches.find({}, {fields: {name: true, owner: true}}).fetch();
 	var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 	var match = fuzzyMatch(token, currentLookup, 0.75);
-	if (match !== -1) return {code: 9, data: match};
+	if (match.code !== -1) return {code: 9, data: match.code};
 	currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase() + ' ' + pitch.owner.toLowerCase()] = pitch._id; return dict;}, {});
 	match = fuzzyMatch(token, currentLookup, 0.75);
-	if (match !== -1) return {code: 9, data: match};
+	if (match.code !== -1) return {code: 9, data: match.code};
 	currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 	match = fuzzyMatch(token, currentLookup, 0.75);
-	if (match !== -1) return {code: 9, data: match};
+	if (match.code !== -1) return {code: 9, data: match.code};
 	return {code: -1};
 }
 
 function fuzzyMatch(token, dict, threshold) {
-	var bestMatch = 99, match = -1;
+	var bestMatch = 99, match = {code: -1};
 	var maxScore = threshold ? token.length * (1.0 - threshold) : (token.length * 0.2);
 //	console.log("max score is " + maxScore);
 	for (var currentKey in dict) {
 		var thisDistance = Natural.LevenshteinDistance(token, currentKey, {insertion_cost: 0.66, deletion_cost: 0.66, substitution_cost: 1});
 //		console.log(token + " => " + currentKey + " : " + thisDistance);
 		if (thisDistance <= maxScore && thisDistance < bestMatch) {
-			match = dict[currentKey];
+			match = {code: dict[currentKey], term: currentKey};
 //			console.log(currentKey, thisDistance, match);
 			bestMatch = thisDistance;
 		}
-	}
+	}	
 	return match;	
 }
 
@@ -534,7 +540,8 @@ function parseRequest(tokens) {
 		requestData = {
 			players: null,
 			dateTime: null,
-			location: null
+			location: null,
+			gender: 0
 		},
 		state = 0;
 	for (var i = 0, l = tokens.length; i < l; i++) {
@@ -588,6 +595,12 @@ function parseRequest(tokens) {
 	var placeTokens = _.filter(richTokens, function(k) {return k.code === 9;});
 	if (placeTokens.length > 1) return new Meteor.Error(500, "Only specify one location.");
 	if (placeTokens.length) requestData.location = placeTokens[0].data;
+	var genderTokens = _.filter(richTokens, function(k) {return k.code === 14;});
+	if (genderTokens.length) requestData.gender = genderTokens[0].data;
+	var gameTypeTokens = _.filter(richTokens, function(k) {return k.code === 15;});
+	if (gameTypeTokens.length) requestData.gameType = gameTypeTokens[0].data;
+	var teamSizeTokens = _.filter(richTokens, function(k) {return k.code === 18;});
+	if (teamSizeTokens.length) requestData.teamSize = teamSizeTokens[0].data;
 	return requestData;
 }
 
@@ -608,15 +621,18 @@ function describePosting(posting) {
 		if (Math.random() > 0.66) sentence += ', ';
 		else if (Math.random() > 0.5) sentence += ' at ';
 		else sentence += ' ';
-		sentence += colloquialDateTime(posting.dateTime);
+		sentence += moment(posting.dateTime).format('HH:mm on ddd, Mo MMM');
 	}
 	else {
 		sentence += colloquialDateTime(posting.dateTime);
 		if (Math.random() > 0.66) sentence += ', ';
 		else if (Math.random() > 0.5) sentence += ' at ';
 		else sentence += ' ';
-		sentence += prettyLocation(posting.location);				
+		sentence += moment(posting.dateTime).format('HH:mm on ddd, Mo MMM');;				
 	}
+	sentence += ". " + ['Male', 'Female'][posting.gender]
+	if (posting.teamSize) sentence += ", " + posting.teamSize + "-a-side"
+	if (posting.gameType) sentence += ", " + ["friendly", "competitive"][posting.gameType]
 	return sentence;
 }
 

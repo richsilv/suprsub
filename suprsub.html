@@ -1,8 +1,8 @@
 <template name="loginScreen">
 	<div id="login-background-image">
 	</div>
-	<div class="ui page center aligned grid" id="loginBox">
-		<div class="seven wide column">
+	<div class="ui page center aligned gridF" id="loginBox">
+		<div class="large-7 large-centered column">
 			<div class="ui inverted segment semitranslucent">
 				<h1>Become a SuprSub Today</h1>
 			</div>
@@ -136,7 +136,7 @@
 </template>
 
 <template name="pitchData">
-	<table class="ui darkgreen inverted table segment" id="pitchTable">
+	<table class="ui darkgreen table segment" id="pitchTable">
 		<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
 		<div style="display: block; max-height: 100px;">
 			<tbody>
@@ -193,7 +193,7 @@
 			    </div>
 		  	</div>
 		  	<div class="ui grid">
-			    <div class="ui eleven wide column field" style="margin-top: 0;">
+			    <div class="ui eleven wide column field">
 			      	<label>Preferred Contact</label>
 					<div class="ui fluid selection dropdown">
 						<input type="hidden" name="contact">
@@ -206,8 +206,8 @@
 					  	</div>
 					</div>
 			    </div>
-			    <div class="ui five wide column" style="margin-top: 0; vertical-align: bottom">
-			    	<div class="ui animated fluid positive button" id="saveButton">
+			    <div class="ui five wide column">
+			    	<div class="ui animated fluid positive attached label button" id="saveButton">
 					  	<div class="visible content">Save</div>
 					  	<div class="hidden content">
 					    	<i class="save icon"></i>
@@ -348,7 +348,7 @@
 										<i class="globe icon"></i>
 									</div>
 								</div>
-								<div class="ui right attached animated fade button two wide column" style="position: absolute; bottom: 14px;" id="teamSearchButton">
+								<div class="ui right attached animated fade button two wide column" id="teamSearchButton">
 									<div class="hidden content">Search</div>
 									<div class="visible content"><i class="search icon"></i></div>
 								</div>
@@ -498,6 +498,22 @@
 					Location
 				</div>
 				<p>{{posting.location}}</p>
+				<div class="ui teal ribbon label">
+					Gender
+				</div>
+				<p>{{posting.gender}}</p>
+				{{#if posting.gameType}}
+					<div class="ui teal ribbon label">
+						Game Type
+					</div>
+					<p>{{posting.gameType}}</p>
+				{{/if}}
+				{{#if posting.teamSize}}
+					<div class="ui teal ribbon label">
+						Players per side
+					</div>
+					<p>{{posting.teamSize}}</p>
+				{{/if}}
 				<div class="ui grid">
 					<div class="four wide column"></div>
 					<div class="eight wide column">

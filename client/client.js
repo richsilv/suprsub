@@ -219,9 +219,12 @@ Template.postingModal.helpers({
     output = {
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),
-      location: prettyLocation(postingData.location)
+      location: prettyLocation(postingData.location),
+      gender: postingData.gender ? "Female" : "Male"
     };
     if (postingData.players > 1) output.players += 's';
+    if ('gameType' in postingData) output.gameType = ['Friendly', 'Competitive'][postingData.gameType];
+    if ('teamSize' in postingData) output.teamSize = postingData.teamSize + '-a-side';    
     return output;
   }
 });
