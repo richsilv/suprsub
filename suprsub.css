@@ -44,7 +44,7 @@ body {
 }
 
 .gap.row {
-	margin-bottom: 0.9375em;	
+	margin-top: 0.9375em;	
 }
 
 .rightList {
@@ -58,7 +58,7 @@ body {
 	margin-top: 1em;
 	padding-bottom: 0px;
 	padding-left: 0px;
-	padding-right: 0px;
+	padding-right: 0.5em;
 	padding-top: 0px;
 }
 
@@ -69,9 +69,15 @@ body {
 	padding: 0.3em 0;
 }
 
-.ui.attached.button.label {
-	top: 0.875em;
-	display: inline-table;
+.ui.attached.button {
+	width: 100%;
+}
+.ui.right.attached.button .content {
+	width: 80%;
+	margin-left: 10%;
+}
+.ui.attached.withLabel.button {
+	margin-top: 1em;
 }
 
 .ui.toggle.checkbox.neutral .box:after, .ui.toggle.checkbox.neutral label:after ,
@@ -99,6 +105,10 @@ body {
 }
 .checkboxLabel:first-child {
 	margin-left: 0.5em;
+}
+
+label > br {
+	line-height: 1.5em;
 }
 
 .ui.form .centered.field {
@@ -375,6 +385,10 @@ i.suprsub.icon:before{
 	padding-top: 60%;
 }
 
+.cleared.row {
+	clear: both;
+}
+
 #pitchMap {
 	margin-top: 0em;
 	left: 50%;
@@ -482,11 +496,6 @@ input[type=range]:active::-moz-range-thumb {
   box-shadow: 0 0 0 2px ##4c7627;
 }
 
-#cancelOrSave {
-	margin-left: 10px;
-	text-align: center;
-}
-
 #pitchTable {
 	width: 100%;
 }
@@ -516,6 +525,10 @@ input[type=range]:active::-moz-range-thumb {
 
 #teamForm .ui.toggle.checkbox {
 	margin-top: 1.5em;
+}
+
+#matches {
+	margin-bottom: 1.5em;
 }
 
 #matches div div div {
@@ -554,6 +567,18 @@ input[type=range]:active::-moz-range-thumb {
 	left: 5px;
 }
 
+.height225 {
+	min-height: 225px;
+}
+
+#linkTriple {
+	margin: 0 0.875em;
+}
+#linkTriple li {
+	margin: 0;
+	padding: 0;
+	white-space: nowrap;
+}
 #playerFormFieldSpace {
 	min-height: 265px;
 }
@@ -565,3 +590,22 @@ input[type=range]:active::-moz-range-thumb {
 .facebook.sign.icon {
 	color: rgb(51, 79, 149);
 }
+
+@media only screen and (max-width: 40em) {
+	.columns {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.ui.segment {
+		border-radius: 0;
+	}
+ 	.titleSection {
+ 		padding: 1em;
+ 	}
+ 	.height225 {
+ 		min-height: 0;
+ 	}
+}
+
+
+ 

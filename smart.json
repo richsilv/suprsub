@@ -4,6 +4,7 @@
     "iron-router": {},
     "twit": {},
     "moment": {},
-    "zurb-foundation": {}
+    "zurb-foundation": {},
+    "houston": {}
   }
 }

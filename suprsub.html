@@ -3,7 +3,7 @@
 	</div>
 	<div class="ui page center aligned gridF" id="loginBox">
 		<div class="row">
-			<div class="large-7 large-centered column">
+			<div class="large-7 large-centered medium-11 medium-centered column">
 				<div class="ui inverted segment semitranslucent">
 					<h1>Become a <span class="darkgreen suprsubFont darkgreenshadow">SuprSub</span> Today</h1>
 				</div>
@@ -84,7 +84,7 @@
 <template name="playerDetails">
 	<div id="main-background-image"></div>
 	<div class="gap row">
-		<div class="large-8 columns">
+		<div class="large-8 gap columns">
 			{{> playerForm}}
 		</div>
 		<div class="large-8 columns">
@@ -108,7 +108,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="gap row">
 		<div class="large-16 columns">
 			<div class="ui segment content whitetranslucent" id="areaDetails">
 				<div class="row">
@@ -209,7 +209,7 @@
 					</div>
 			    </div>
 			    <div class="ui five wide column">
-			    	<div class="ui animated fluid positive attached label button" id="saveButton">
+			    	<div class="ui animated fluid positive attached withLabel button" id="saveButton">
 					  	<div class="visible content">Save</div>
 					  	<div class="hidden content">
 					    	<i class="save icon"></i>
@@ -217,35 +217,43 @@
 					</div>
 				</div>
 		  	</div>
-		  	<div class="small fluid ui buttons">
-		  		<div class="ui {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
-		  			<i class="facebook icon"></i>
-		  			{{#if service 'facebook'}}
-			  			Facebook Account Linked
-			  		{{else}}
-			  			Link Facebook Account
-			  		{{/if}}
-		  		</div>
-		  		<div class="ui {{#if service 'twitter'}}twitter {{/if}}button" id="twitterButton">
-		  			<i class="twitter icon"></i>
-		  			{{#if service 'twitter'}}
-			  			Twitter Account Linked
-		  			{{else}}
-			  			Link Twitter Account
-		  			{{/if}}
-		  		</div>
-		  		<div class="ui {{#if email 'verified'}}orange {{/if}}button"{{#if email}} title="{{email}}"{{/if}} id="emailButton">
-		  			<i class="mail icon"></i>
-		  			{{#if email 'verified'}}
-			  			Email address verified
-		  			{{else}}
-		  				{{#if email 'unverified'}}
-			  				Waiting for email verification
-			  			{{else}}
-			  				Link Email Account
-		  				{{/if}}
-		  			{{/if}}
-		  		</div>
+		  	<div class="row">
+		  		<ul class="small-block-grid-1 medium-block-grid-3 large-block-grid-1" id="linkTriple">
+			  		<li>
+				  		<div class="small ui fluid {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
+				  			<i class="facebook icon"></i>
+				  			{{#if service 'facebook'}}
+					  			Facebook Account Linked
+					  		{{else}}
+					  			Link Facebook Account
+					  		{{/if}}
+				  		</div>
+			  		</li>
+			  		<li>
+				  		<div class="small ui fluid {{#if service 'twitter'}}twitter {{/if}}button" id="twitterButton">
+				  			<i class="twitter icon"></i>
+				  			{{#if service 'twitter'}}
+					  			Twitter Account Linked
+				  			{{else}}
+					  			Link Twitter Account
+				  			{{/if}}
+				  		</div>
+		  			</li>
+			  		<li>
+				  		<div class="small ui fluid {{#if email 'verified'}}orange {{/if}}button"{{#if email}} title="{{email}}"{{/if}} id="emailButton">
+				  			<i class="mail icon"></i>
+				  			{{#if email 'verified'}}
+					  			Email address verified
+				  			{{else}}
+				  				{{#if email 'unverified'}}
+					  				Waiting for email verification
+					  			{{else}}
+					  				Link Email Account
+				  				{{/if}}
+				  			{{/if}}
+				  		</div>
+			  		</li>
+			  	</ul>
 		  	</div>
 		</form>
 	</div>
@@ -331,7 +339,7 @@
 			{{> teamDetails}}
 		</div>
 	</div>
-	<div class="row">
+	<div class="gap row">
 		{{> otherInfo}}
 	</div>
 </template>
@@ -350,15 +358,17 @@
 										<i class="globe icon"></i>
 									</div>
 								</div>
-								<div class="ui right attached animated fade button two wide column" id="teamSearchButton">
-									<div class="hidden content">Search</div>
-									<div class="visible content"><i class="search icon"></i></div>
+								<div class="two wide column">
+									<div class="ui right attached animated fade button withLabel" id="teamSearchButton">
+										<div class="hidden content">Search</div>
+										<div class="visible content"><i class="search icon"></i></div>
+									</div>
 								</div>
 							</div>
 					</form>
 					<div id="matches"></div>
 				</div>
-				<div class="ui vertical divider"><i class="map icon"></i></div>
+				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
 				<div class="large-8 columns">
 					{{> pitchMapSmall}}
 				</div>
@@ -371,7 +381,7 @@
 	<div class="row">
 		<div class="medium-8 columns">
 			<div class="ui segment content whitetranslucent">
-				<form class="ui form segment content" id="teamForm">
+				<form class="ui form segment content height225" id="teamForm">
 					<div class="field">
 						<label>Team Name</label>
 						<div class="ui input">
@@ -422,7 +432,7 @@
 		</div>
 		<div class="medium-8 columns">
 			<div class="ui segment content whitetranslucent">
-				<form class="ui form segment content" id="teamForm">
+				<form class="ui form segment content height225" id="teamForm">
 					<div class="field">
 						<label>Home Ground</label>
 						<div class="ui input" id="homeGround">
@@ -433,7 +443,7 @@
 						<div class="field" id="weeklyCheckBox">
 							<div class="ui toggle checkbox">
 								<input type="checkbox" id="weekly">
-								<label>Regular weekly fixtures?</label>
+								<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
 							</div>
 						</div>
 						<div class="field" id="dayChoiceSection">
@@ -452,7 +462,7 @@
 						<div class="field" id="timeCheckBox" style="display: none;">
 							<div class="ui toggle checkbox">
 								<input type="checkbox" id="sameTime">
-								<label>Same time each week?</label>
+								<label>Same time<br class="show-for-medium-only"> each week?</label>
 							</div>
 						</div>
 						<div class="field" id="timeSection" style="display: none;">
@@ -474,9 +484,12 @@
 					</div>
 				</form>
 			</div>
-			<div class="row">
-				<div class="large-4 large-centered columns">
-					<div class="ui large buttons" id="cancelOrSave">
+		</div>
+		<div class="cleared row"></div>
+		<div class="gap row">
+			<div class="medium-4 medium-centered columns">
+				<div class="ui segment content whitetranslucent">
+					<div class="ui two fluid large buttons" id="cancelOrSave">
 						<div class="ui red animated button" id="resetButton">
 							<div class="visible content">Reset</div>
 							<div class="hidden content"><i class="backward icon"></i></div>
@@ -490,16 +503,17 @@
 			</div>
 		</div>
 	</div>
+	<div class="cleared row"></div>
 </template>
 
 <template name="homePage">
 	<div id="main-background-image"></div>
 	<div class="row">
 		<div class="large-8 gap columns">
-			<div class="row">
+			<div class="row titleSection">
 				<div class="suprsubFont suprsubHeader backgroundShadowBig">SuprSub</div>
 				<div class="ui divider" style="position: relative"></div>
-				<ul class="ui backgroundShadowSmall rightList">
+				<ul class="ui backgroundShadowSmall rightList show-for-medium-up">
 				  	<li class="item">The best way to play more football</li>
 				  	<li class="shortDivider"></li>
 				  	<li class="item">Find a SuprSub in seconds if your team is short</li>

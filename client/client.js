@@ -47,8 +47,8 @@ function logTemplateEvents() {
   _.each(Template, function(template, name) {
     var oldCreated = template.created,
         oldDestroyed = template.destroyed;
-        oldRendered = template.rendered,
-        template.renders = 0;
+        oldRendered = template.rendered;
+    template.renders = 0;
     template.created = function() {
       console.log("Created: ", this); //_.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
       oldCreated && oldCreated.apply(this, arguments);
@@ -71,7 +71,7 @@ circleChanged = new myDep(false);
 newPosting = new myDep(null);
 mainOption = '/';
 TimeKeeper = {};
-TimeKeeper._dep = new Deps.Dependency;
+TimeKeeper._dep = new Deps.Dependency();
 var contactNames = ['Twitter', 'Facebook', 'Email'],
     days = [{name: "Sunday", dayCode: 0}, {name: "Monday", dayCode: 1}, {name: "Tuesday", dayCode: 2}, {name: "Wednesday", dayCode: 3}, {name: "Thursday", dayCode: 4}, {name: "Friday", dayCode: 5}, {name: "Saturday", dayCode: 6}];
     periods = [{name: "Morning", periodCode: 0}, {name: "Afternoon", periodCode: 1}, {name: "Evening", periodCode: 2}];
@@ -81,7 +81,7 @@ App.subs = {pitches: Meteor.subscribe('allpitches', {onReady: function() {}})};
 
 initializeCircle = function() {
   initialize(true);
-}
+};
 
 initialize = function(circle) {
   defaultLocation = new google.maps.LatLng(51, 0);
@@ -116,7 +116,7 @@ initialize = function(circle) {
         });
       }
     }, function() {
-      window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.")
+      window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.");
     });
     circleChanged.set(true);
   }
@@ -133,6 +133,8 @@ initialize = function(circle) {
       attachMarkerEvent(marker, function(m) {
         $('#homeGround input').val(m.title);
         $('#homeGround input').attr('id', m.pitch_ID);
+        location.href = "#homeGround";
+        window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
       });
     }
   }
@@ -145,7 +147,7 @@ initialize = function(circle) {
         venues.set(res);
       }
   });
-}
+};
 
 function attachMarkerEvent(marker, callback) {
   var simpleCallBack = function() {callback(marker);};
@@ -157,7 +159,7 @@ function loadScript(circle) {
   script.type = 'text/javascript';
   script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' +
       'callback=initialize';
-  if (circle) script.src += 'Circle'
+  if (circle) script.src += 'Circle';
   if (window.google && window.google.maps) {
     initialize(circle);
   }
@@ -182,10 +184,8 @@ Handlebars.registerHelper("email", function(level) {
   switch (level) {
     case 'verified':
       return Meteor.user().emails ? Meteor.user().emails[0].verified : false;
-      break;
     case 'unverified':
       return Meteor.user().emails ? !Meteor.user().emails[0].verified : false;
-      break;
     default:
       return Meteor.user().emails ? Meteor.user().emails[0].address : false;
   }
@@ -196,7 +196,7 @@ Template.postBox.helpers({
     var thisUser = Meteor.user();
     return (thisUser && thisUser.profile && thisUser.profile.team);
   }
-})
+});
 Template.postBox.events({
   'submit #postingForm, click #postingButton': function() {
     Meteor.call('analysePosting', $('#postingArea').val(), function(err, res) {
@@ -205,11 +205,11 @@ Template.postBox.events({
         newPosting.set(res);
         Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
       }
-    })
+    });
   }
 });
 Template.postBox.rendered = function() {
-}
+};
 
 Template.postingModal.helpers({
   posting: function(){
@@ -245,7 +245,7 @@ Template.activityFeed.helpers({
     return Events.find({cancelled: {$exists: false}}, {limit: 10, sort: {createdAt: -1}});
   },
   eventIcon: function() {
-    if (this.players === 0) return "darkgreen suprsub" 
+    if (this.players === 0) return "darkgreen suprsub";
     else if (this.source === 'web') return "red browser";
     else return "teal twitter";
   },
@@ -257,14 +257,14 @@ Template.activityFeed.helpers({
   message: function() {
     if (this.players > 0) return this.sentence;
     var subNum = this.matched.length,
-        suprsubNames = _.map(this.matched, function(x) {return Meteor.users.findOne(x) ? Meteor.users.findOne(x).profile.name : "Unknown Player"}),
+        suprsubNames = _.map(this.matched, function(x) {return Meteor.users.findOne(x) ? Meteor.users.findOne(x).profile.name : "Unknown Player";}),
         nameString = suprsubNames[0];
     if (subNum > 2) for (i = 1, l = subNum - 1; i < l; i++) nameString += ', ' + suprsubNames[i];
     if (subNum > 1) nameString += " and " + suprsubNames[subNum - 1] + " are ";
     else nameString += " is ";
     nameString += "going to be ";
     if (subNum > 1) return nameString + "SuprSubs!";
-    else return nameString + "a SuprSub!"
+    else return nameString + "a SuprSub!";
   },
   timeAgo: function() {
     TimeKeeper._dep.depend();
@@ -290,7 +290,7 @@ Template.activityFeed.created = function() {
 };
 Template.activityFeed.destroyed = function() {
   Meteor.clearInterval(this.rerender);
-}
+};
 
 Template.pitchData.helpers({
   getVenues: function() {
@@ -381,7 +381,7 @@ Template.otherInfo.events({
       if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
         var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
-        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>'});
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>';});
         $('#matches').html(pitchElement + '</div></div></div>');
       }
    }
@@ -394,7 +394,7 @@ Template.otherInfo.events({
       function(res) {
         if (res.length) pitchMap.panTo(res[0].geometry.location);
       }
-    )
+    );
     return false;
   },
   'click .pitchEntry': function(event) {
@@ -402,10 +402,15 @@ Template.otherInfo.events({
     if (pitch) {
       pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
       $('#homeGround input').val(pitch.owner + ' - ' + pitch.name);
-      $('#homeGround input').attr('id', pitch._id);      
+      $('#homeGround input').attr('id', pitch._id);
+      location.href = "#homeGround";
+      window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
     }
   }
 });
+Template.otherInfo.rendered = function() {
+  if (window.innerWidth > 640) $('#otherInfo').hide();
+};
 
 Template.teamDetails.helpers({
   days: function() {
@@ -414,8 +419,9 @@ Template.teamDetails.helpers({
 });
 Template.teamDetails.events({
   'click #homeGround': function() {
-    location.href = "#";
     location.href = "#otherInfo";
+    $('#otherInfo').show({duration: 500});
+    google.maps.event.trigger(pitchMap, 'resize');
   },
   'click #weeklyCheckBox .checkbox': function(event) {
     if ($('#timeSection').is(":visible")) {
@@ -445,7 +451,7 @@ Template.teamDetails.events({
     }
     Meteor.users.update(Meteor.userId(), {$set: 
       {'profile.team': teamProfile}
-    })
+    });
   },
   'click #resetButton': function() {
     setTeamData();
@@ -478,7 +484,7 @@ Template.playerForm.helpers({
       return (Meteor.user().profile.contact.indexOf(num) > -1);
     else return false;
   }
-})
+});
 Template.playerForm.events({
   'click #saveButton': function() {
     var availability = {},
@@ -592,7 +598,7 @@ Template.linkModal.rendered = function() {
         performance: false,
         verbose: false,
         onHide: function() {
-          var linkModal = $('#linkModal')[0]
+          var linkModal = $('#linkModal')[0];
           Spark.finalize(linkModal);
           $(linkModal).empty();
           Deps.flush();
@@ -601,7 +607,7 @@ Template.linkModal.rendered = function() {
       });
     },
     onHide: function() {
-      var linkModal = $('#linkModal')[0] 
+      var linkModal = $('#linkModal')[0];
       Spark.finalize(linkModal);
       $(linkModal).empty();
       Deps.flush();
@@ -655,7 +661,7 @@ Deps.autorun(function() {
 });
 Deps.autorun(function() {
   if (Router && Router.current(true)) mainOption = Router.current(true).path;
-})
+});
 
 function updateCircle() {
   if (liveCircle) liveCircle.setMap(null);
@@ -733,7 +739,7 @@ function setTeamData() {
     else $('#dayChoiceSection, #timeCheckBox').hide();
     return true;
   }
-  return false
+  return false;
 }
 
 reIndexDatabase = function(collection) {
@@ -745,4 +751,4 @@ reIndexDatabase = function(collection) {
     collection.insert(thisItem);
     collection.remove({_id: oldIndexes[i]._id});
   }
-}
+};
