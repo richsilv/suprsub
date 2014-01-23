@@ -16,6 +16,7 @@
 	<title>SuprSub</title>
   	<meta name=”description” content=”Find football players or teams at short notice to fill the gaps in your team or calendar”>
   	<link rel="icon" sizes="16x16 24x24 32x32 48x48 64x64" href="/suprsubS.ico?v=3">
+  	<meta name="viewport" content="width=640px, user-scalable=no">
 </head>
 
 <template name="mainTemplate">
@@ -46,7 +47,7 @@
 		<div class="right menu">
 			{{#if currentUser}}
   			<div class="item">
-    			<div class="ui red button" id="delete-button">Delete Account</div>
+    			<div class="ui red button show-for-large-up" id="delete-button">Delete Account</div>
   			</div>
   			<div class="item">
     			<div class="ui button" id="logout-button">Log Out</div>
@@ -73,7 +74,7 @@
 </template>
 
 <template name="socialBox">
-	<div id="socialBox">
+	<div id="socialBox" class="show-for-large-up">
 		<div class="svg">
 			<div><a target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Surbsub+-+Play+more+football.+Find+a+SuprSub+in+seconds.+Be+a+SuprSub+wherever+and+whenever+suits+you.&url=http://supsub.com" class="webicon twitter large" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a></div>
 			<div><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook large" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></div>	

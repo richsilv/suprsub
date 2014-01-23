@@ -64,7 +64,6 @@ function logTemplateEvents() {
   });
 }
 
-
 venues = new myDep([]);
 mapCenter = new myDep({b: 51.5080391, d: -0.12806929999999284, lat: function() {return this.b;}, lng: function() {return this.d;}});
 tabChoices = new myDep({playerTab: 'pitchData'});
@@ -422,7 +421,8 @@ Template.teamDetails.events({
     if ($('#timeSection').is(":visible")) {
       $('#timeCheckBox .checkbox').click();
     }
-    $('#daySection, #timeCheckBox').toggle({easing: 'swing', direction: 'right', duration: 500});
+    $('#dayChoiceSection').toggle();
+    $('#timeCheckBox').slideToggle();
   },
   'click #timeCheckBox .checkbox': function(event) {
     $('#timeSection').toggle({easing: 'swing', direction: 'right', duration: 500});
@@ -454,6 +454,7 @@ Template.teamDetails.events({
 Template.teamDetails.rendered = function() {
   $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false});
+  suprsubPlugins('checkboxLabel', '.checkboxLabel');
   setTeamData();
 };
 
@@ -704,7 +705,7 @@ function setTeamData() {
     if (ground) {
       $('#homeGround>input').val(ground.owner + ' ' + ground.name);
       var googleCallback = Meteor.setInterval(function() {
-        if (google) {
+        if (typeof google !== 'undefined' && pitchMap && 'panTo' in pitchMap) {
           pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));
           Meteor.clearInterval(googleCallback);
         }
@@ -716,12 +717,12 @@ function setTeamData() {
     document.getElementById('weekly').checked = teamData.regular ? true : false;
     if (teamData.regular) {
       document.getElementById('day').nextElementSibling.textContent = days[teamData.day].name;
-      $('#daySection .item').each(function(ind, item) {
+      $('#dayChoiceSection .item').each(function(ind, item) {
         if (parseInt(item.attributes['data-value'].value, 10) === teamData.day) $(item).addClass("active");
         else $(item).removeClass("active");
       });
       document.getElementById('sameTime').checked = teamData.sameTime ? true : false;
-      $('#daySection, #timeCheckBox').show({easing: 'swing', direction: 'right', duration: 500});
+      $('#dayChoiceSection, #timeCheckBox').show();
       if (teamData.sameTime) {
         document.getElementById('timePickerHour').value = teamData.time.getHours();
         document.getElementById('timePickerMinute').value = teamData.time.getMinutes();
@@ -729,7 +730,7 @@ function setTeamData() {
       }
       else $('#timeSection').hide({easing: 'swing', direction: 'right', duration: 500});
     }
-    else $('#daySection, #timeCheckBox').hide({easing: 'swing', direction: 'right', duration: 500});
+    else $('#dayChoiceSection, #timeCheckBox').hide();
     return true;
   }
   return false

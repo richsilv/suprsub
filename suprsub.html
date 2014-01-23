@@ -368,72 +368,119 @@
 </template>
 
 <template name="teamDetails">
-	<div class="ui segment content whitetranslucent">
-		<form class="ui form segment content" id="teamForm">
-		  	<div class="two fields">
-		    	<div class="field">
-		      		<label>Team Name</label>
-		      		<div class="ui input">
-		      			<input placeholder="Team Name" type="text" id="teamName" />
-		      		</div>
-		    	</div>
-			    <div class="field">
-			      	<label>Home Ground</label>
-			      	<div class="ui input" id="homeGround">
-			      		<input placeholder="Use the dialogue box below to select" type="text" readonly />
-			      	</div>
-			    </div>
-		  	</div>
-		  	<div class="four fields" style="height: 75px;">
-		    	<div class="field" id="weeklyCheckBox">
-		      		<div class="ui toggle checkbox">
-		      			<input type="checkbox" id="weekly" />
-			      		<label>Regular weekly fixtures?</label>
-			      	</div>
-			    </div>
-			    <div class="field" id="daySection" style="display: none;">
-				  	<label>Day</label>
-					<div class="ui selection dropdown">
-						<input type="hidden" id="day">
-					  	<div class="text">Select</div>
-					  	<i class="dropdown icon"></i>
-					  	<div class="menu">
-					    	{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
-					  	</div>
+	<div class="row">
+		<div class="medium-8 columns">
+			<div class="ui segment content whitetranslucent">
+				<form class="ui form segment content" id="teamForm">
+					<div class="field">
+						<label>Team Name</label>
+						<div class="ui input">
+							<input placeholder="Team Name" type="text" id="teamName">
+						</div>
 					</div>
-		    	</div>
-		    	<div class="field" id="timeCheckBox" style="display: none;">
-		    		<div class="ui toggle checkbox">
-			      		<input type="checkbox" id="sameTime" />
-			      		<label>Same time each week?</label>
-		      		</div>
-		    	</div>
-			    <div class="field" id="timeSection" style="display: none;">
-			      	<label>Kick-off</label>
-			      	<div class="ui grid">
-			      		<div class="six wide column" style="margin: 0;">
-        					<div class="ui left icon input">
-            					<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
-								<i class="time icon"></i>
-        					</div>
-        				</div>
-        				<div class="five wide column" style="margin: 0;">
-        					<div class="ui input">
-            					<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
-        					</div>
-        				</div>
-        			</div>
-			    </div>
-		  	</div>
-		  	<div class="ui grid">
-		  		<div class="ui six wide column"></div>
-		  		<div class="ui four wide column">
+					<div class="row">
+						<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
+							<div class="field">
+								<div class="checkboxLabel">Male</div>
+								<div class="ui toggle checkbox neutral">
+									<input type="checkbox" id="maleFemale">
+									<label></label>
+								</div>
+								<div class="checkboxLabel">Female</div>
+							</div>
+						</div>
+						<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
+							<div class="field">
+								<div class="checkboxLabel">Friendly</div>
+								<div class="ui toggle checkbox neutral">
+									<input type="checkbox" id="friendlyCompetitive">
+									<label></label>
+								</div>
+								<div class="checkboxLabel">Competitive</div>
+							</div>
+						</div>
+						<div class="centered field">
+							<label>Game Format</label>
+							<div class="ui selection dropdown">
+								<input type="hidden" id="format">
+								<div class="default text">Select</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									<div class="item" data-value="5">5-a-side</div>
+									<div class="item" data-value="6">6-a-side</div>
+									<div class="item" data-value="7">7-a-side</div>
+									<div class="item" data-value="8">8-a-side</div>
+									<div class="item" data-value="9">9-a-side</div>
+									<div class="item" data-value="10">10-a-side</div>
+									<div class="item" data-value="11">11-a-side</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="medium-8 columns">
+			<div class="ui segment content whitetranslucent">
+				<form class="ui form segment content" id="teamForm">
+					<div class="field">
+						<label>Home Ground</label>
+						<div class="ui input" id="homeGround">
+							<input placeholder="Use the dialogue box below to select" type="text" readonly>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field" id="weeklyCheckBox">
+							<div class="ui toggle checkbox">
+								<input type="checkbox" id="weekly">
+								<label>Regular weekly fixtures?</label>
+							</div>
+						</div>
+						<div class="field" id="dayChoiceSection">
+							<label>Day</label>
+							<div class="ui selection dropdown">
+								<input type="hidden" id="day">
+								<div class="default text">Select</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field" id="timeCheckBox" style="display: none;">
+							<div class="ui toggle checkbox">
+								<input type="checkbox" id="sameTime">
+								<label>Same time each week?</label>
+							</div>
+						</div>
+						<div class="field" id="timeSection" style="display: none;">
+							<label>Kick-off</label>
+							<div class="row">
+								<div class="small-9 columns" style="margin: 0;">
+									<div class="ui left icon input">
+										<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+										<i class="time icon"></i>
+									</div>
+								</div>
+								<div class="small-7 columns" style="margin: 0;">
+									<div class="ui input">
+										<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="row">
+				<div class="large-4 large-centered columns">
 					<div class="ui large buttons" id="cancelOrSave">
 						<div class="ui red animated button" id="resetButton">
 							<div class="visible content">Reset</div>
 							<div class="hidden content"><i class="backward icon"></i></div>
 						</div>
-						<div class="or"></div>
 						<div class="ui green animated button" id="saveButton">
 							<div class="visible content">Save</div>
 							<div class="hidden content"><i class="save icon"></i></div>
@@ -441,7 +488,7 @@
 					</div>
 				</div>
 			</div>
-	  	</form>
+		</div>
 	</div>
 </template>
 
