@@ -88,7 +88,7 @@
 			{{> playerForm}}
 		</div>
 		<div class="large-8 columns">
-			<div class="large-16 columns">
+			<div class="large-16 columns height270">
 				<div class="ui segment content whitetranslucent" id="tabSpace">
 					<div class="ui tabular menu">
 					  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
@@ -112,12 +112,12 @@
 		<div class="large-16 columns">
 			<div class="ui segment content whitetranslucent" id="areaDetails">
 				<div class="row">
-					<div class="large-12 columns">
-						{{> pitchMapLarge}}
-					</div>
-					<div class="ui vertical divider" style="left: 75%"><i class="map icon"></i></div>
+					<div class="ui vertical divider show-for-large-only" style="left: 25%"><i class="map icon"></i></div>
 					<div class="large-4 columns">
 						{{> defineBounds}}
+					</div>
+					<div class="large-12 columns">
+						{{> pitchMapLarge}}
 					</div>
 				</div>
 			</div>
@@ -179,7 +179,7 @@
 
 <template name="playerForm">
 	<div class="large-16 columns">
-		<form class="ui form segment content whitetranslucent" id="playerFormFieldSpace">
+		<form class="ui form segment content whitetranslucent height270">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>First Name</label>
@@ -314,9 +314,9 @@
 <template name="defineBounds">
 	<form class="ui form segment content whitetranslucent">
 		<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
+		<div id="distanceWriteLabel"><h4 class="ui header">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></div>
 		<div class="field">
 			<input id="distanceWrite" type="range" min="0" max="250" />
-			<label for="distanceWrite"><h4 class="ui header">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></label>
 		</div>
 	</form>
 	<div class="ui large buttons" id="cancelOrSave">
