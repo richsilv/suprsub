@@ -88,8 +88,8 @@
 			{{> playerForm}}
 		</div>
 		<div class="large-8 columns">
-			<div class="large-16 columns height270">
-				<div class="ui segment content whitetranslucent" id="tabSpace">
+			<div class="large-16 columns">
+				<div class="ui segment content whitetranslucent  height275" id="tabSpace">
 					<div class="ui tabular menu">
 					  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
 					    Selected Venues
@@ -120,6 +120,7 @@
 						{{> pitchMapLarge}}
 					</div>
 				</div>
+				{{> playerAreaButtons}}
 			</div>
 		</div>
 	</div>
@@ -140,7 +141,7 @@
 <template name="pitchData">
 	<table class="ui darkgreen table segment" id="pitchTable">
 		<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
-		<div style="display: block; max-height: 100px;">
+		<div id="pitchTableDiv">
 			<tbody>
 				{{#each getVenues}}
 					<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
@@ -169,7 +170,7 @@
 <template name="availabilityDays">
 	{{#each days}}
 		<td class="tableCheckboxHolder">
-			<div class="ui checkbox">
+			<div class="ui">
 				<input type="checkbox" id="{{../periodCode}}/{{dayCode}}">
 				<label for="{{../periodCode}}/{{dayCode}}"></label>
 			</div>
@@ -179,7 +180,7 @@
 
 <template name="playerForm">
 	<div class="large-16 columns">
-		<form class="ui form segment content whitetranslucent height270">
+		<form class="ui form segment content whitetranslucent height275">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>First Name</label>
@@ -319,12 +320,14 @@
 			<input id="distanceWrite" type="range" min="0" max="250" />
 		</div>
 	</form>
-	<div class="ui large buttons" id="cancelOrSave">
+</template>
+
+<template name="playerAreaButtons">
+	<div class="ui two large buttons cancelOrSave" id="cancelOrSave">
 		<div class="ui red animated{{#if unmoved}} disabled{{/if}} button" id="revertBoundsButton">
 			<div class="visible content">Reset</div>
 			<div class="hidden content"><i class="backward icon"></i></div>
 		</div>
-		<div class="or"></div>
 		<div class="ui green animated{{#if unmoved}} disabled{{/if}} button" id="saveBoundsButton">
 			<div class="visible content">Save</div>
 			<div class="hidden content"><i class="save icon"></i></div>

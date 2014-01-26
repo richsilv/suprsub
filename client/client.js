@@ -90,7 +90,7 @@ initialize = function(circle) {
     center: defaultLocation
   };
   pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
-      mapOptions);
+     mapOptions);
   circleChanged.set(false);
   if (!gc) gc = new google.maps.Geocoder();
   if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
@@ -298,6 +298,12 @@ Template.pitchData.helpers({
     else return []; 
   }
 });
+Template.pitchData.rendered = function() {
+  var widths = $('#pitchTable > thead > tr:first-child') .children().map(function(i, e) {return e.offsetWidth;});
+  $('#pitchTable > tbody > tr').each(function(j, f) {
+    $(f).children().each(function(i, e) {e.setAttribute("style","width:" + widths[i] + "px !important;");});
+  });
+};
 
 Template.playerDetails.events({
   'click #tabSpace div a': function(event, target) {
@@ -369,7 +375,7 @@ Template.defineBounds.events({
 Template.defineBounds.rendered = function() {
   $('#distanceWrite').val(circleSize.get()/100);
   $('#distanceRead').html(parseInt($('#distanceWrite').val(), 10)/10 + 'km');
-  var newWidth = parseInt($('#areaDetails').css('width'), 10) * 0.7;
+  var newWidth = (window.innerWidth < 641) ? window.innerWidth : parseInt($('#areaDetails').css('width'), 10) * 0.7;
   $('#pitchMap').css('width', newWidth);
   $('#pitchMap').css('margin-left', -newWidth/2);
 };

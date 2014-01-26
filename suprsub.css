@@ -389,8 +389,12 @@ i.suprsub.icon:before{
 	clear: both;
 }
 
+.cancelOrSave {
+	margin-top: -2em;
+	margin-left: calc(12.5% - 87px);
+}
+
 #pitchMap {
-	margin-top: 0em;
 	left: 50%;
 	background: #fff;
 	box-shadow: 0 0 20px #999;
@@ -407,10 +411,6 @@ i.suprsub.icon:before{
 	width: 470px;
 	margin-left: -235px;	
 	height: 325px;
-}
-
-#areaDetails {
-	height: 475px;
 }
 
 #areaDetails form {
@@ -502,10 +502,6 @@ input[type=range]:active::-moz-range-thumb {
   box-shadow: 0 0 0 2px ##4c7627;
 }
 
-#pitchTable {
-	width: 100%;
-}
-
 #pitchTable thead {
 	display: block;
 	width: 100%;
@@ -513,13 +509,9 @@ input[type=range]:active::-moz-range-thumb {
 
 #pitchTable tbody {
 	display: block;
-	height: 150px;
+	height: 165px;
 	overflow-y: scroll;
 	width: 100%;
-}
-
-#tabSpace {
-	min-height: 265px;
 }
 
 .tableProvider {
@@ -547,13 +539,17 @@ input[type=range]:active::-moz-range-thumb {
 	max-width: 600px;
 }
 
-#availabilityTable {
-	width: 525.5px;
+.ui.table.segment {
+	width: 100%;
 	table-layout: fixed;
 }
 
-#availabilityTable tr {
-	line-height: 1.4em;
+.ui.table.segment tr {
+	line-height: 1.4em
+}
+
+.dayHeader {
+	display: table-cell;
 }
 
 .tableSpaceBlock {
@@ -576,8 +572,8 @@ input[type=range]:active::-moz-range-thumb {
 .height225 {
 	min-height: 225px;
 }
-.height270 {
-	min-height: 265px;
+.height275 {
+	min-height: 275px;
 }
 
 #linkTriple {
@@ -587,6 +583,7 @@ input[type=range]:active::-moz-range-thumb {
 	margin: 0;
 	padding: 0;
 	white-space: nowrap;
+	overflow-x: hidden;
 }
 
 .ui.feed .content a {
@@ -599,7 +596,7 @@ input[type=range]:active::-moz-range-thumb {
 
 /*For small and medium width screens*/
 @media only screen and (max-width: 64em) {
- 	.height270 {
+ 	.height275 {
  		min-height: 0;
  	}
  	#distanceWrite {
@@ -627,6 +624,16 @@ input[type=range]:active::-moz-range-thumb {
 	#areaDetails form {
 		height: auto;
 	}
+	#pitchMap.large {
+		margin-top: 1em;
+	}
+	.cancelOrSave {
+		margin-left: calc(50% - 87px);
+		margin-top: 1em;
+	}
+	.rotate {
+		margin-top: 0;
+	}
 }
 
 /*For small width screens only*/
@@ -644,7 +651,40 @@ input[type=range]:active::-moz-range-thumb {
  	.height225 {
  		min-height: 0;
  	}
+ 	#pitchMap.large {
+	width: 100%;
+	margin-left: 0;
+	}
 }
 
+/*For medium width screens only*/
+@media only screen and (min-width: 40.1em) and (max-width: 64em) {
+	#linkTriple li div {
+		font-size: 0.75em;
+	}
+}
 
- 
+/*Correct Semantic-UI small-screen table nonsense*/
+@media only screen and (max-width: 768px) {
+	.ui.table.segment {
+		display: table;
+	}
+	.ui.table.segment tr {
+		display: table-row;
+	}
+	.ui.table.segment tr > td {
+		display: table-cell;
+		width: auto !important;
+	}
+	.ui.table.segment td:last-child {
+		padding-bottom: 0.25em;
+		box-shadow: rgba(0, 0, 0, 0.0470588) 0px 0.800000011920929px 0px 0px !important;
+		-webkit-box-shadow: rgba(0, 0, 0, 0.0470588) 0px 0.800000011920929px 0px 0px !important;
+	}
+	.ui.table.segment thead {
+		display: table-header-group;
+	}
+	.ui.table.segment tbody {
+		display: table-row-group;
+	}	
+}
