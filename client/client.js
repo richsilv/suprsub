@@ -1,8 +1,3 @@
-Pitches = new Meteor.Collection("pitches");
-Events = new Meteor.Collection("events");
-// DISABLE THIS
-Tweets = new Meteor.Collection("tweets");
-
 pitchMap = window.pitchMap;
 gc = null;
 var myLocation, liveCircle, defaultLocation;
@@ -515,6 +510,7 @@ Template.playerForm.events({
       Meteor.loginWithFacebook({}, function (err) {
         if (err)
           Session.set('errorMessage', err.reason || 'Unknown error');
+          console.log(err);
       });
     }
   },
@@ -523,6 +519,7 @@ Template.playerForm.events({
       Meteor.loginWithTwitter({}, function (err) {
         if (err)
           Session.set('errorMessage', err.reason || 'Unknown error');
+          console.log(err);
       });
     }
   },
