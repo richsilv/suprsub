@@ -1,0 +1,181 @@
+<template name="teamSettings">
+	<div id="main-background-image"></div>
+	<div class="gap row">
+		<div class="large-16 columns">
+			{{> teamDetails}}
+		</div>
+	</div>
+	<div class="gap row">
+		{{> otherInfo}}
+	</div>
+</template>
+
+<template name="teamDetails">
+	<div class="row">
+		<div class="medium-8 columns">
+			<div class="ui segment content whitetranslucent">
+				<form class="ui form segment content height225" id="teamForm">
+					<div class="field">
+						<label>Team Name</label>
+						<div class="ui input">
+							<input placeholder="Team Name" type="text" id="teamName">
+						</div>
+					</div>
+					<div class="row">
+						<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
+							<div class="field">
+								<div class="checkboxLabel">Male</div>
+								<div class="ui toggle checkbox neutral">
+									<input type="checkbox" id="maleFemale">
+									<label></label>
+								</div>
+								<div class="checkboxLabel">Female</div>
+							</div>
+						</div>
+						<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
+							<div class="field">
+								<div class="checkboxLabel">Friendly</div>
+								<div class="ui toggle checkbox neutral">
+									<input type="checkbox" id="friendlyCompetitive">
+									<label></label>
+								</div>
+								<div class="checkboxLabel">Competitive</div>
+							</div>
+						</div>
+						<div class="centered field">
+							<label>Game Format</label>
+							<div class="ui selection dropdown">
+								<input type="hidden" id="format">
+								<div class="default text">Select</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									<div class="item" data-value="5">5-a-side</div>
+									<div class="item" data-value="6">6-a-side</div>
+									<div class="item" data-value="7">7-a-side</div>
+									<div class="item" data-value="8">8-a-side</div>
+									<div class="item" data-value="9">9-a-side</div>
+									<div class="item" data-value="10">10-a-side</div>
+									<div class="item" data-value="11">11-a-side</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="medium-8 columns">
+			<div class="ui segment content whitetranslucent">
+				<form class="ui form segment content height225" id="teamForm">
+					<div class="field">
+						<label>Home Ground</label>
+						{{#constant}}
+						<div class="ui input" id="homeGround">
+							<input placeholder="Use the dialogue box below to select" type="text" readonly>
+						</div>
+						{{/constant}}
+					</div>
+					<div class="two fields">
+						<div class="field" id="weeklyCheckBox">
+							<div class="ui toggle checkbox">
+								<input type="checkbox" id="weekly">
+								<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
+							</div>
+						</div>
+						<div class="field" id="dayChoiceSection">
+							<label>Day</label>
+							<div class="ui selection dropdown">
+								<input type="hidden" id="day">
+								<div class="default text">Select</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="two fields">
+						<div class="field" id="timeCheckBox" style="display: none;">
+							<div class="ui toggle checkbox">
+								<input type="checkbox" id="sameTime">
+								<label>Same time<br class="show-for-medium-only"> each week?</label>
+							</div>
+						</div>
+						<div class="field" id="timeSection" style="display: none;">
+							<label>Kick-off</label>
+							<div class="row">
+								<div class="small-9 columns" style="margin: 0;">
+									<div class="ui left icon input">
+										<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+										<i class="time icon"></i>
+									</div>
+								</div>
+								<div class="small-7 columns" style="margin: 0;">
+									<div class="ui input">
+										<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="cleared row"></div>
+		<div class="gap row">
+			<div class="medium-4 medium-centered columns">
+				<div class="ui segment content whitetranslucent">
+					<div class="ui two fluid large buttons" id="cancelOrSave">
+						<div class="ui red animated button" id="resetButton">
+							<div class="visible content">Reset</div>
+							<div class="hidden content"><i class="backward icon"></i></div>
+						</div>
+						<div class="ui green animated{{#if disableSave}} disabled{{/if}} button" id="saveButton">
+							<div class="visible content">Save</div>
+							<div class="hidden content"><i class="save icon"></i></div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="cleared row"></div>
+</template>
+
+<template name="otherInfo">
+	<div class="large-16 columns">
+		<div class="ui segment content whitetranslucent" id="otherInfo">
+			<div class="row">
+				<div class="large-8 columns">
+					<form class="ui form segment content">
+							<div class="ui grid">
+								<div class="field fourteen wide column">
+									<label>Home Ground</label>
+									<div class="ui left labeled icon input">
+										<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
+										<i class="globe icon"></i>
+									</div>
+								</div>
+								<div class="two wide column">
+									<div class="ui right attached animated fade button withLabel" id="teamSearchButton">
+										<div class="hidden content">Search</div>
+										<div class="visible content"><i class="search icon"></i></div>
+									</div>
+								</div>
+							</div>
+					</form>
+					<div id="matches"></div>
+				</div>
+				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
+				<div class="large-8 columns">
+					{{> pitchMapSmall}}
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="pitchMapSmall">
+	{{#constant}}
+	<div class="ui row small" id="pitchMap" style="display: none;"></div>
+	{{/constant}}
+</template>

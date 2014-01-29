@@ -1,0 +1,298 @@
+@font-face {
+	font-family: "Collegiate";
+	src: url('/fonts/SF_Collegiate.ttf');
+}
+
+html {
+	font-size: 14px;
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+}
+
+#wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
+	font-family: 'Molengo', sans-serif;
+}
+
+.suprsubFont {
+	vertical-align: text-bottom;
+	font-weight: normal;
+	font-family: "Collegiate";
+}
+
+.suprsubHeader {
+	position: relative;
+	font-size: 100px;
+	top: 0px;
+}
+
+.backgroundShadowBig {
+	color: ghostwhite;
+	text-shadow: rgba(0, 0, 0, .9) 0.01em 0.01em 0.01em, rgba(0, 0, 0, 0.7) -0.01em -0.01em 0.01em;	
+}
+
+.backgroundShadowSmall {
+	color: ghostwhite;
+	text-shadow: rgba(0, 0, 0, .9) 0.05em 0.05em 0.05em, rgba(0, 0, 0, 0.7) -0.05em -0.05em 0.05em;	
+}
+
+.gap.columns {
+	margin-bottom: 0.9375em;
+}
+
+.gap.row {
+	margin-top: 0.9375em;	
+}
+
+.rightList {
+	text-align: right;
+	font-size: 1.5em;
+	list-style: none;
+	list-style-type: none;
+	margin-bottom: 0px;
+	margin-left: 1.5em;
+	margin-right: 0px;
+	margin-top: 1em;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0.5em;
+	padding-top: 0px;
+}
+
+.rightList li {
+	display: list-item;
+	position: relative;
+	line-height: 1.25em;
+	padding: 0.3em 0;
+}
+
+.ui.attached.button {
+	width: 100%;
+}
+.ui.right.attached.button .content {
+	width: 80%;
+	margin-left: 10%;
+}
+.ui.attached.withLabel.button {
+	margin-top: 1em;
+}
+
+.ui.toggle.checkbox.neutral .box:after, .ui.toggle.checkbox.neutral label:after ,
+.ui.toggle.checkbox.neutral input:checked + .box:after, .ui.toggle.checkbox.neutral input:checked + label:after {
+	background-color: rgb(45, 131, 131);
+}
+
+.checkboxLabel {
+	margin-top: 1.5em !important;
+	display: inline-block;
+	color: rgba(0, 0, 0, 0.6);
+	cursor: pointer;
+	-webkit-transition: color 0.2s ease;
+	transition: color 0.2s ease;
+}
+.checkboxLabel + .checkbox {
+	vertical-align: text-bottom;
+	margin-left: 10px;
+}
+.checkboxLabel:hover {
+	color: rgba(0, 0, 0, 0.8);	
+}
+.checkboxLabel:focus + label {
+	color: rgba(0, 0, 0, 0.8);	
+}
+.checkboxLabel:first-child {
+	margin-left: 0.5em;
+}
+
+label > br {
+	line-height: 1.5em;
+}
+
+.ui.form .centered.field {
+	margin-left: calc(50% - 50px);
+}
+
+.darkgreen {
+  color: hsl(120, 75%, 43%); !important;
+}
+
+.darkgreenshadow {
+	text-shadow: 0 0 10px rgba(63, 255, 63, 0.4), 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.ui.darkgreen.active.item {
+  	border-color: hsl(120, 75%, 43%); !important;
+  	color: hsl(120, 75%, 43%); !important;
+}
+.ui.inverted.darkgreen {
+  	background-color: hsl(120, 75%, 43%);
+}
+.ui.inverted.darkgreen .active.item:after {
+  	background-color: hsl(120, 75%, 43%);
+}
+.ui.inverted.darkgreen {
+	color: #ffffff;
+}
+
+.ui.menu .darkgreen.active.item,
+.ui.darkgreen.menu .active.item {
+  border-color: hsl(120, 75%, 43%); !important;
+  color: hsl(120, 75%, 43%); !important;
+}
+.ui.inverted.darkgreen.menu {
+  background-color: hsl(120, 75%, 43%);
+}
+.ui.inverted.darkgreen.pointing.menu .active.item:after {
+  background-color: hsl(120, 75%, 43%);
+}
+
+i.suprsub.icon {
+	vertical-align: sub;
+	margin-top: -0.25em;
+	margin-bottom: -0.25em;
+}
+
+i.suprsub.icon:before{
+	content: "S";
+	font-family: "Collegiate";
+	font-size: 175%;
+}
+
+.facebook.sign.icon {
+	color: rgb(51, 79, 149);
+}
+
+.ui.positive.button {
+	background-color: hsl(120, 75%, 43%) !important;
+}
+.ui.positive.button:hover {
+	background-color: hsl(120, 80%, 48%) !important;	
+}
+
+.whitetranslucent {
+	background-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.rotate {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
+	margin-top:-25px;
+}
+.rotated_cell {
+	height:90px;
+	vertical-align:bottom
+}
+
+.semitranslucent {
+	background-color: rgba(0, 0, 0, 0.7) !important;	
+}
+
+.translucent {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.clear {
+	background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.cleared.row {
+	clear: both;
+}
+
+.modal {
+	padding: 1em;
+	max-width: 600px;
+}
+
+.ui.table.segment {
+	width: 100%;
+	table-layout: fixed;
+}
+
+.ui.table.segment tr {
+	line-height: 1.4em
+}
+
+.cancelOrSave {
+	margin-top: -2em;
+	margin-left: calc(12.5% - 87px);
+}
+
+#pitchMap {
+	left: 50%;
+	background: #fff;
+	box-shadow: 0 0 20px #999;
+	border-radius: 2px;
+}
+
+.glowBase {
+	transition: text-shadow 0.5s, box-shadow 0.5s;
+    -webkit-transition: -webkit-text-shadow 0.5s, -webkit-box-shadow 0.5s;
+    -moz-transition: -moz-text-shadow 0.5s, -moz-box-shadow 0.5s;
+    -o-transition: text-shadow 0.5s, box-shadow 0.5s;
+}
+
+.fontGlow {
+	text-shadow: 0 0 5px rgba(255, 255, 255, 1);
+	-webkit-text-shadow: 0 0 5px rgba(255, 255, 255, 1);
+	-moz-text-shadow: 0 0 5px rgba(255, 255, 255, 1);
+}
+
+.boxGlow {
+	box-shadow: 0 0 10px rgba(0, 255, 0, 1) !important;
+	-webkit-box-shadow: 0 0 10px rgba(0, 255, 0, 1) !important;
+	-moz-box-shadow: 0 0 10px rgba(0, 255, 0, 1) !important;	
+}
+
+/*For small and medium width screens*/
+@media only screen and (max-width: 64em) {
+	.rotate {
+		margin-top: 0;
+	}
+	.cancelOrSave {
+		margin-left: calc(50% - 87px);
+		margin-top: 1em;
+	}
+}
+
+/*For small width screens only*/
+@media only screen and (max-width: 40em) {
+	.columns {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.ui.segment {
+		border-radius: 0;
+	}
+}
+
+/*Correct Semantic-UI small-screen table nonsense*/
+@media only screen and (max-width: 768px) {
+	.ui.table.segment {
+		display: table;
+	}
+	.ui.table.segment tr {
+		display: table-row;
+	}
+	.ui.table.segment tr > td {
+		display: table-cell;
+		width: auto !important;
+	}
+	.ui.table.segment td:last-child {
+		padding-bottom: 0.25em;
+		box-shadow: rgba(0, 0, 0, 0.0470588) 0px 0.800000011920929px 0px 0px !important;
+		-webkit-box-shadow: rgba(0, 0, 0, 0.0470588) 0px 0.800000011920929px 0px 0px !important;
+	}
+	.ui.table.segment thead {
+		display: table-header-group;
+	}
+	.ui.table.segment tbody {
+		display: table-row-group;
+	}	
+}

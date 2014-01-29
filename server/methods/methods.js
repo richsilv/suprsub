@@ -1,7 +1,7 @@
 Meteor.methods({
 	pitchesWithin: function(center, distance) {
 		var ratio = 6.283184 / 360;
-		var lon = center.lon * ratio;
+		var lng = center.lng * ratio;
 		var lat = center.lat * ratio;
 		var width = Math.acos(Math.pow(Math.cos(lat), 2) * Math.cos(ratio) + Math.pow(Math.sin(lat), 2)) * 6371 / 111;
 		var d2 = Math.pow(distance/111000, 2);
@@ -43,11 +43,11 @@ Meteor.methods({
 		});
 	},
 	analysePosting: function(string) {
-		var tokens = _.map(Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
+		var tokens = _.map(appConfig.Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
 		return (null, serverFunctions.parseRequest(tokens));
 	},
 	analyseText: function(string) {
-		var tokens = _.map(Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
+		var tokens = _.map(appConfig.Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
 		return (null, serverFunctions.parseTokens(tokens));
 	},
 	categoriseToken: function(token) {

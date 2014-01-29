@@ -1,0 +1,126 @@
+<template name="homePage">
+	<div id="main-background-image"></div>
+	<div class="row">
+		<div class="large-8 gap columns">
+			<div class="row titleSection">
+				<div class="suprsubFont suprsubHeader backgroundShadowBig">SuprSub</div>
+				<div class="ui divider" style="position: relative"></div>
+				<ul class="ui backgroundShadowSmall rightList show-for-medium-up">
+				  	<li class="item">The best way to play more football</li>
+				  	<li class="shortDivider"></li>
+				  	<li class="item">Find a SuprSub in seconds if your team is short</li>
+				  	<li class="shortDivider"></li>
+				  	<li class="item">Be a SuprSub wherever and whenever suits you</li>
+				  	<li class="shortDivider"></li>
+				</ul>
+			</div>
+			<div class="row">
+				<div class="large-2 columns"></div>
+				<div class="large-14 columns">
+					{{> postBox}}
+				</div>
+			</div>
+		</div>
+		<div class="large-1 columns"></div>
+		<div class="large-7 columns">
+			<div class="ui feed segment whitetranslucent" id="activityFeed">
+		      	<h2 class="ui header">Latest Activity</h2>
+		      	{{> activityFeed}}
+			</div>
+		</div>
+	</div>
+	<div class="modalHolder">
+		{{> postingModal}}
+	</div>
+</template>
+
+<template name="postBox">
+	<div class="ui segment whitetranslucent">
+		<form class="ui reply form" id="#postingForm">
+			<div class="field">
+				<textarea id="postingArea" placeholder="Need * player(s) at *:**pm tomorrow at XXXXXXXXX"></textarea>
+			</div>
+			<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton">
+				<i class="icon edit"></i> Make a Posting Now!
+			</div>
+			<div class="ui orange button icon">
+				<i class="question icon link" title="Posting Guidelines"></i>
+			</div>
+		</form>
+	</div>
+</template>
+
+<template name="postingModal">
+	<div class="ui small modal">
+		<div class="header">
+			New Posting
+		</div>
+		<div class="content">
+			<div class="ui raised segment">
+				<div class="ui teal ribbon label">
+					Number of Players needed
+				</div>
+				<p>{{posting.players}}</p>
+				<div class="ui teal ribbon label">
+					Time and Date
+				</div>
+				<p>{{posting.dateTime}}</p>
+				<div class="ui teal ribbon label">
+					Location
+				</div>
+				<p>{{posting.location}}</p>
+				<div class="ui teal ribbon label">
+					Gender
+				</div>
+				<p>{{posting.gender}}</p>
+				{{#if posting.gameType}}
+					<div class="ui teal ribbon label">
+						Game Type
+					</div>
+					<p>{{posting.gameType}}</p>
+				{{/if}}
+				{{#if posting.teamSize}}
+					<div class="ui teal ribbon label">
+						Players per side
+					</div>
+					<p>{{posting.teamSize}}</p>
+				{{/if}}
+				<div class="ui grid">
+					<div class="four wide column"></div>
+					<div class="eight wide column">
+						<div class="2 ui fluid buttons">
+						  	<div class="ui positive button" id="makePosting">Post</div>
+						  	<div class="ui negative button" id="cancelPosting">Cancel</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="activityFeed">
+	{{#each events}}
+		<div class="event">
+		    <div class="label">
+		      	<i class="{{eventIcon}} icon"></i>
+		    </div>
+		    <div class="content">
+		      	<div class="date">
+		        	{{timeAgo}}
+		      	</div>
+		      	<div class="summary">
+		         	<a>{{teamName}}:</a>
+		      	</div>
+		      	<div class="extra text">
+		      		{{message}}
+		      	</div>
+		    </div>
+		</div>
+	{{/each}}
+</template>
+
+<template name="fadeBox">
+	<div class="fadeBox" style="top: {{top}}px; left: {{left}}px; width: {{width}}px; height: {{height}}px">
+	</div>
+</template>

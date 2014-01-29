@@ -1,0 +1,30 @@
+#pitchMap.small {
+	width: 470px;
+	margin-left: -235px;	
+	height: 325px;
+}
+
+#teamForm .ui.toggle.checkbox {
+	margin-top: 1.5em;
+}
+
+#matches {
+	margin-bottom: 1.5em;
+}
+
+#matches div div div {
+	max-height: 13em;
+	overflow-y: scroll;
+}
+
+.height225 {
+	min-height: 225px;
+}
+
+/*For small width screens only*/
+@media only screen and (max-width: 40em) {
+
+ 	.height225 {
+ 		min-height: 0;
+ 	}
+}

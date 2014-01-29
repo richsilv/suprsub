@@ -166,7 +166,7 @@ serverFunctions = (function() {
 				thisToken = tokens[i];
 				for (var j = 1; j <= n; j++) thisToken += " " + tokens[i + j];
 				k = categoriseToken(thisToken);
-				if (i + n + 1 < l && categoriseToken(tokens[i + n + 1], pitchSurnames) === 10)
+				if (i + n + 1 < l && categoriseToken(tokens[i + n + 1], appConfig.pitchSurnames) === 10)
 					k.code = -1; // Force reassesment if there's still a word left in the location description.
 				n++;
 			}
@@ -197,7 +197,7 @@ serverFunctions = (function() {
 				thisToken = tokens[i];
 				for (var j = 1; j <= n; j++) thisToken += " " + tokens[i + j];
 				k = categoriseToken(thisToken);
-				if (i + n + 1 < l && categoriseToken(tokens[i + n + 1], pitchSurnames) === 10)
+				if (i + n + 1 < l && categoriseToken(tokens[i + n + 1], appConfig.pitchSurnames) === 10)
 					k.code = -1; // Force reassesment if there's still a word left in the location description.
 				n++;
 			}
@@ -370,7 +370,7 @@ serverFunctions = (function() {
 					ob : -4.5 + (Math.random() * 4.75)
 				};
 				size = 5000 + Math.floor(Math.random() * 20000);
-				venues = Meteor.call('pitchesWithin', {"lat": center.nb, "lng": center.ob}, size);
+				venues = Meteor.call('pitchesWithin', {"lat": center.lat(), "lng": center.lng()}, size);
 			}
 			newUser.profile.player = {
 				availability: availability,

@@ -1,0 +1,195 @@
+#pitchMap.large {
+	width: 800px;
+	margin-left: -400px;
+	height: 440px;
+}
+
+#areaDetails form {
+	height: 400px;
+}
+
+#areaDetails fieldset div {
+	height: 300px;
+	width: 200px;
+}
+
+#areaDetails h3, #areaDetails label {
+	text-align: center;
+}
+
+#areaDetails label {
+	margin-left: -50px;
+	margin-top: -25px;
+}
+
+#distanceWrite {
+	width: 250px;
+	margin-top: 125px;
+	margin-left: 50px;
+	transform:rotate(270deg);
+	-ms-transform:rotate(270deg); /* IE 9 */
+	-webkit-transform:rotate(270deg); /* Safari and Chrome */
+	-webkit-appearance: none;
+}
+
+#distanceWrite::-webkit-slider-thumb {
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+#distanceWrite::-moz-range-thumb {
+  cursor: pointer;
+}
+
+#distanceWrite {
+  border-radius: 6px;
+  border: 1px solid #a5a8a8;
+  background: #d3d7d7;
+  height: 1rem;
+  border-radius: 30px;
+}
+
+#distanceWrite::-moz-range-track {
+  border-radius: 6px;
+  border: 1px solid #a5a8a8;
+  background: #d3d7d7;
+  height: 1rem;
+  border-radius: 30px;
+}
+
+#distanceWrite::-webkit-slider-thumb {
+  height: 3rem;
+  width: 2rem;
+  border: 1px solid rgba(0,0,0,0.36);
+  border-radius: 6px;
+  background:url("http://db.tt/q5LHtPKx") center center no-repeat #e5e9e8;
+  background-size: 7px 18px;
+  box-shadow: inset 0 1px white;
+}
+
+#distanceWrite::-moz-range-thumb {
+  height: 3rem;
+  width: 2rem;
+  border: 1px solid rgba(0,0,0,0.36);
+  border-radius: 6px; background:url("http://db.tt/q5LHtPKx") center center no-repeat #e5e9e8;
+  background-size: 7px 18px;
+  box-shadow: inset 0 1px white;
+}
+
+#distanceWrite:active::-webkit-slider-thumb {
+  border: 1px solid ##567d33;
+  box-shadow: 0 0 0 2px #4c7627;
+}
+
+#distanceWriteLabel {
+	display: inline;
+	position: absolute;
+	top: 50%;
+	left: 25%;
+}
+
+input[type=range]:active::-moz-range-thumb {
+  border: 1px solid ##567d33;
+  box-shadow: 0 0 0 2px ##4c7627;
+}
+
+#pitchTable thead {
+	display: block;
+	width: 100%;
+}
+
+#pitchTable tbody {
+	display: block;
+	height: 165px;
+	overflow-y: scroll;
+	width: 100%;
+}
+
+.height280 {
+	min-height: 280px;
+}
+
+#linkTriple {
+	margin: 0 0.875em;
+}
+#linkTriple li {
+	margin: 0;
+	padding: 0;
+	white-space: nowrap;
+	overflow-x: hidden;
+}
+
+.tableProvider {
+	width: 280px;
+}
+
+.tableLocation {
+	width: 280px;
+}
+
+.tableSpaceBlock {
+	width: 80px;
+}
+
+.tablePeriod {
+	font-weight: bold;
+}
+
+.tableCheckboxHolder {
+	text-align: center;
+}
+	
+.tableCheckboxHolder>div {
+	margin: auto;
+	left: 5px;
+}
+
+/*For small and medium width screens*/
+@media only screen and (max-width: 64em) {
+ 	.height280 {
+ 		min-height: 0;
+ 	}
+ 	#distanceWrite {
+ 		width: 90%;
+		margin-top: 1em;
+		margin-left: 5%;
+		transform:rotate(0);
+		-ms-transform:rotate(0); /* IE 9 */
+		-webkit-transform:rotate(0); /* Safari and Chrome */
+		-webkit-appearance: none;
+	}
+	#distanceWriteLabel {
+		margin-left: 5em;
+		left: 50%;
+		right: 50%;
+		top: 2em;
+		width: 15em;
+	}
+	#distanceWriteLabel h3, #distanceWriteLabel h4 {
+		display: inline;
+	}
+	#distanceWriteLabel h3 {
+		margin-left: 1em;
+	}
+	#areaDetails form {
+		height: auto;
+	}
+	#pitchMap.large {
+		margin-top: 1em;
+	}
+}
+
+/*For small width screens only*/
+@media only screen and (max-width: 40em) {
+ 	#pitchMap.large {
+	width: 100%;
+	margin-left: 0;
+	}
+}
+
+/*For medium width screens only*/
+@media only screen and (min-width: 40.1em) and (max-width: 64em) {
+	#linkTriple li div {
+		font-size: 0.75em;
+	}
+}
