@@ -80,3 +80,12 @@
 	-moz-background-size: cover;
 	-webkit-background-size: cover;
 }
+
+/*For small width screens only*/
+@media only screen and (max-width: 40em) {
+
+	#main-background-image {
+		background: url('/images/footygame2small.jpeg') no-repeat center center fixed;
+	}
+
+}

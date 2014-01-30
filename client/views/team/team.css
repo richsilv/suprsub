@@ -1,7 +1,16 @@
+#pitchMapContainerSmall {
+	width: 470px;
+	height: 325px;
+}
+
 #pitchMap.small {
 	width: 470px;
 	margin-left: -235px;	
 	height: 325px;
+}
+
+#newVenueBox {
+	min-height: 325px;
 }
 
 #teamForm .ui.toggle.checkbox {
@@ -17,12 +26,18 @@
 	overflow-y: scroll;
 }
 
+#newVenueBox .ui.input {
+	margin-bottom: 0.5em;
+}
+
 .height225 {
 	min-height: 225px;
 }
 
-.bottomRight {
+.ui.button.bottomRight, .ui.buttons.bottomRight {
 	float: right;
+	margin-left: 1em;
+	margin-bottom: 1em;
 }
 
 /*For small width screens only*/
@@ -31,4 +46,14 @@
  	.height225 {
  		min-height: 0;
  	}
+
+}
+
+/*For small and medium width screens*/
+@media only screen and (max-width: 64em) {
+
+	#newVenueBox {
+		min-height: 0;
+	}
+
 }

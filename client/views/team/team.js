@@ -1,3 +1,12 @@
+var tabChoices = new suprsubDep({
+  newVenue: false,
+  venueSearch: false
+});
+
+Handlebars.registerHelper("tabChoices", function(key) {
+  return tabChoices.getKey(key);
+});
+
 Template.teamSettings.events({
   'keyup input, click div': function() {
     var homeGroundId = $('#homeGround>input').attr('id'),
@@ -55,10 +64,13 @@ Template.otherInfo.events({
       location.href = "#homeGround";
       window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
     }
+  },
+  'click #addVenue': function() {
+    tabChoices.setKey('newVenue', true);
   }
 });
 Template.otherInfo.rendered = function() {
-  if (window.innerWidth > 640) $('#otherInfo').hide();
+  if (window.innerWidth > 640  && !tabChoices.getKey('venueSearch')) $('#otherInfo').hide();
 };
 
 Template.teamDetails.helpers({
@@ -73,7 +85,12 @@ Template.teamDetails.helpers({
 Template.teamDetails.events({
   'click #homeGround': function() {
     location.href = "#otherInfo";
-    $('#otherInfo').show({duration: 500});
+    $('#otherInfo').show({
+      duration: 500, 
+      complete: function() {
+        tabChoices.setKey('venueSearch', true);
+      }
+    });
     google.maps.event.trigger(pitchMap, 'resize');
   },
   'click #weeklyCheckBox .checkbox': function(event) {
@@ -111,10 +128,8 @@ Template.teamDetails.events({
           var icon = $(event.target);
           if (icon.prop("tagName") != "I") icon = icon.children('i');
           icon.removeClass("save").addClass("checkmark fontGlow");
-          icon.parents('#saveButton').addClass('boxGlow');
           Meteor.setTimeout(function() {
             icon.addClass("save").removeClass("checkmark fontGlow")
-            icon.parents('#saveButton').removeClass('boxGlow');
           }, 1000);
         }
         else console.log(err);
@@ -133,3 +148,19 @@ Template.teamDetails.rendered = function() {
 Template.teamDetails.created = function() {
   this.data.disableSave = new suprsubDep(true);
 }
+
+Template.newVenueBox.events({
+  'click #cancelVenue': function() {
+    tabChoices.setKey('newVenue', false);
+  },
+  'click #submitVenue': function() {
+    var locationName = $('#locationName').val(),
+        locationAddress = $('#locationAddress').val();
+    if (locationName && locationAddress && !NewVenues.findOne({name: locationName, address: locationAddress})) {
+      NewVenues.insert({name: locationName, address: locationAddress});
+      var newdiv = DIV({cls: "ui purple label"}, ["Your location has been added to the approval queue!"]);
+      $('#newVenueBox .ui.grid .column')[0].appendChild(newdiv);
+      Meteor.setTimeout(function() {tabChoices.setKey('newVenue', false);}, 2000);
+    }
+  }
+});

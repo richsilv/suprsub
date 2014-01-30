@@ -42,3 +42,12 @@
 #errorBox {
 	display: block;
 }
+
+/*For small width screens only*/
+@media only screen and (max-width: 40em) {
+
+	#login-background-image {
+		background: url('/images/footygoalsmall.jpeg') no-repeat center center fixed;
+	}
+
+}
