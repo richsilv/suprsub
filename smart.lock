@@ -7,7 +7,12 @@
       "twit": {},
       "moment": {},
       "zurb-foundation": {},
-      "houston": {}
+      "houston": {},
+      "smart-collections": {},
+      "jquery-transit": {
+        "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
+        "branch": "master"
+      }
     },
     "packages": {
       "semantic-ui": {
@@ -39,6 +44,16 @@
         "git": "https://github.com/gterrono/meteor-admin-ui.git",
         "tag": "v1.0.0",
         "commit": "e98660af09cb3e4e90848abfe943a06e7068cccc"
+      },
+      "smart-collections": {
+        "git": "https://github.com/arunoda/meteor-smart-collections.git",
+        "tag": "v0.4.0",
+        "commit": "da25a5e88c3b5e3c1cb3bd44fd7fdc3234448526"
+      },
+      "jquery-transit": {
+        "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
+        "branch": "master",
+        "commit": "d3b8a4149ab40b14b125edd473c3850177895fb5"
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",

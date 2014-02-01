@@ -168,15 +168,15 @@ clientFunctions = (function() {
 	        else $(item).removeClass("active");
 	      });
 	      document.getElementById('sameTime').checked = teamData.sameTime ? true : false;
-	      $('#dayChoiceSection, #timeCheckBox').show();
+	      $('#dayChoiceSection, #timeCheckBox').transition({opacity: 1});
 	      if (teamData.sameTime) {
 	        document.getElementById('timePickerHour').value = teamData.time.getHours();
 	        document.getElementById('timePickerMinute').value = teamData.time.getMinutes();
-	        $('#timeSection').show({easing: 'swing', direction: 'right', duration: 500});
+	        $('#timeSection').transition({opacity: 1});
 	      }
-	      else $('#timeSection').hide({easing: 'swing', direction: 'right', duration: 500});
+	      else $('#timeSection').transition({opacity: 0.1});
 	    }
-	    else $('#dayChoiceSection, #timeCheckBox').hide();
+	    else $('#dayChoiceSection, #timeCheckBox').transition({opacity: 0.1});
 	    return true;
 	  }
 	  return false;

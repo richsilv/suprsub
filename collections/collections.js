@@ -1,5 +1,5 @@
-Pitches = new Meteor.Collection("pitches");
-Events = new Meteor.Collection("events");
-NewVenues = new Meteor.Collection("newvenues");
+Pitches = new Meteor.SmartCollection("pitches");
+Events = new Meteor.SmartCollection("events");
+NewVenues = new Meteor.SmartCollection("newvenues");
 // DISABLE THIS FOR CLIENT
-Tweets = new Meteor.Collection("tweets");
+Tweets = new Meteor.SmartCollection("tweets");

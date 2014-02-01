@@ -96,13 +96,13 @@
 						</div>
 					</div>
 					<div class="two fields">
-						<div class="field" id="timeCheckBox" style="display: none;">
+						<div class="field" id="timeCheckBox">
 							<div class="ui toggle checkbox">
 								<input type="checkbox" id="sameTime">
 								<label>Same time<br class="show-for-medium-only"> each week?</label>
 							</div>
 						</div>
-						<div class="field" id="timeSection" style="display: none;">
+						<div class="field" id="timeSection">
 							<label>Kick-off</label>
 							<div class="row">
 								<div class="small-9 columns" style="margin: 0;">
@@ -123,6 +123,7 @@
 			</div>
 		</div>
 		<div class="cleared row"></div>
+		{{#isolate}}
 		<div class="gap row">
 			<div class="medium-4 medium-centered columns">
 				<div class="ui segment content whitetranslucent">
@@ -139,6 +140,7 @@
 				</div>
 			</div>
 		</div>
+		{{/isolate}}
 	</div>
 	<div class="cleared row"></div>
 </template>

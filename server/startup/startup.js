@@ -1,17 +1,17 @@
 Meteor.startup(function() {
 
 	// COLLECTION OBSERVERS
-	Tweets.find({consumed: {$exists: false}}).observe({
-		added: function(tweet) {
-			serverFunctions.consumeTweet(tweet);
+	Tweets.find({consumed: {$exists: false}}).observeChanges({
+		added: function(tweetId) {
+			serverFunctions.consumeTweet(Tweets.findOne(tweetId));
 			Tweets.update(tweet, {$set: {consumed: true}});
 		}
 	});
-	Events.find({posted: {$exists: false}}).observe({
-		added: function(event) {
-			var players = serverFunctions.matchingPlayers(event._id);
-			if (players.length)	serverFunctions.distributeEvent(players, event);
-			Events.update(event, {$set: {consumed: true}});
+	Events.find({posted: {$exists: false}}).observeChanges({
+		added: function(eventId) {
+			var players = serverFunctions.matchingPlayers(eventId);
+			if (players.length)	serverFunctions.distributeEvent(players, Events.findOne(eventId));
+			Events.update(eventId, {$set: {consumed: true}});
 		}
 	});
 

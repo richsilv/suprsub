@@ -30,6 +30,22 @@
 	margin-bottom: 0.5em;
 }
 
+#dayChoiceSection {
+
+}
+
+#dayChoiceSection .ui.selection {
+	width: 125px;
+}
+
+#timeSection {
+
+}
+
+#timeCheckBox {
+
+}
+
 .height225 {
 	min-height: 225px;
 }

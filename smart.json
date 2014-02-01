@@ -5,6 +5,8 @@
     "twit": {},
     "moment": {},
     "zurb-foundation": {},
-    "houston": {}
+    "houston": {},
+    "smart-collections": {},
+    "jquery-transit": {"git": "https://github.com/noorderstorm/meteor-jquery-transit.git"}
   }
 }

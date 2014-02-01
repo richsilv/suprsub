@@ -1,1 +1,1 @@
-SecureData = new Meteor.Collection("securedata");
+SecureData = new Meteor.SmartCollection("securedata");

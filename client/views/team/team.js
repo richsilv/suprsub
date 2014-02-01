@@ -97,11 +97,11 @@ Template.teamDetails.events({
     if ($('#timeSection').is(":visible")) {
       $('#timeCheckBox .checkbox').click();
     }
-    $('#dayChoiceSection').toggle();
-    $('#timeCheckBox').slideToggle();
+    $('#dayChoiceSection').toggleTransition("opacity", "0.1", "1");
+    $('#timeCheckBox').toggleTransition("opacity", "0.1", "1");
   },
   'click #timeCheckBox .checkbox': function(event) {
-    $('#timeSection').toggle({easing: 'swing', direction: 'right', duration: 500});
+    $('#timeSection').toggleTransition("opacity", "0.1", "1");
   },
   'keydown #timeSection input[type="number"]': function(event) {
     if (event.keyCode > 57) return false;
@@ -136,14 +136,14 @@ Template.teamDetails.events({
       });
   },
   'click #resetButton': function() {
-    setTeamData();
+    clientFunctions.setTeamData();
   }
 });
 Template.teamDetails.rendered = function() {
   $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false});
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-  setTeamData();
+  clientFunctions.setTeamData();
 };
 Template.teamDetails.created = function() {
   this.data.disableSave = new suprsubDep(true);
