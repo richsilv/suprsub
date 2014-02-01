@@ -140,48 +140,6 @@ clientFunctions = (function() {
 	  }
 	}
 
-	setTeamData = function() {
-	  thisUser = Meteor.user();
-	  if (!thisUser) return false;
-	  if (thisUser.profile && thisUser.profile.team) {
-	    var teamData = thisUser.profile.team;
-	    $('#teamName').val(teamData.name);
-	    $('#homeGround>input').attr('id', teamData.homeGround);
-	    var ground = Pitches.findOne({'_id': teamData.homeGround});
-	    if (ground) {
-	      $('#homeGround>input').val(ground.owner + ' ' + ground.name);
-	      var googleCallback = Meteor.setInterval(function() {
-	        if (typeof google !== 'undefined' && pitchMap && 'panTo' in pitchMap) {
-	          pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));
-	          Meteor.clearInterval(googleCallback);
-	        }
-	      }, 200);
-	      Meteor.setTimeout(function(){
-	        Meteor.clearInterval(googleCallback);
-	      }, 5000);
-	    }
-	    document.getElementById('weekly').checked = teamData.regular ? true : false;
-	    if (teamData.regular) {
-	      document.getElementById('day').nextElementSibling.textContent = days[teamData.day].name;
-	      $('#dayChoiceSection .item').each(function(ind, item) {
-	        if (parseInt(item.attributes['data-value'].value, 10) === teamData.day) $(item).addClass("active");
-	        else $(item).removeClass("active");
-	      });
-	      document.getElementById('sameTime').checked = teamData.sameTime ? true : false;
-	      $('#dayChoiceSection, #timeCheckBox').transition({opacity: 1});
-	      if (teamData.sameTime) {
-	        document.getElementById('timePickerHour').value = teamData.time.getHours();
-	        document.getElementById('timePickerMinute').value = teamData.time.getMinutes();
-	        $('#timeSection').transition({opacity: 1});
-	      }
-	      else $('#timeSection').transition({opacity: 0.1});
-	    }
-	    else $('#dayChoiceSection, #timeCheckBox').transition({opacity: 0.1});
-	    return true;
-	  }
-	  return false;
-	}
-
 	var logTemplateEvents = function() {
 	  _.each(Template, function(template, name) {
 	    var oldCreated = template.created,
@@ -236,7 +194,6 @@ clientFunctions = (function() {
 		initialize: initialize,
 		initializeCircle: initializeCircle,
 		updateCircle: updateCircle,
-		setTeamData: setTeamData,
 		logTemplateEvents: logTemplateEvents,
 		suprsubPlugins: suprsubPlugins
 	}

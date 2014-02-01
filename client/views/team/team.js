@@ -94,14 +94,8 @@ Template.teamDetails.events({
     google.maps.event.trigger(pitchMap, 'resize');
   },
   'click #weeklyCheckBox .checkbox': function(event) {
-    if ($('#timeSection').is(":visible")) {
-      $('#timeCheckBox .checkbox').click();
-    }
-    $('#dayChoiceSection').toggleTransition("opacity", "0.1", "1");
-    $('#timeCheckBox').toggleTransition("opacity", "0.1", "1");
   },
   'click #timeCheckBox .checkbox': function(event) {
-    $('#timeSection').toggleTransition("opacity", "0.1", "1");
   },
   'keydown #timeSection input[type="number"]': function(event) {
     if (event.keyCode > 57) return false;
@@ -136,14 +130,20 @@ Template.teamDetails.events({
       });
   },
   'click #resetButton': function() {
-    clientFunctions.setTeamData();
+    setTeamData();
   }
 });
 Template.teamDetails.rendered = function() {
-  $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
-  $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false});
-  clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-  clientFunctions.setTeamData();
+  if (!this.renderedOnce) {
+    console.log("rendered");
+    $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
+    $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
+    $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
+//    $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false});
+    clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
+//    setTeamData();
+    this.renderedOnce = true;
+  }
 };
 Template.teamDetails.created = function() {
   this.data.disableSave = new suprsubDep(true);
@@ -164,3 +164,62 @@ Template.newVenueBox.events({
     }
   }
 });
+
+var regularDayCheckboxEnable = function() {
+  $('#dayChoiceSection').transition({ opacity: 1 });
+  $('#timeCheckbox').transition({ opacity: 1 });
+};
+var regularDayCheckboxDisable = function() {
+  $('#sameTime').checkbox('disable');
+  $('#dayChoiceSection').transition({ opacity: 0.1 });
+  $('#timeCheckbox').transition({ opacity: 0.1 });  
+};
+
+
+var regularTimeCheckboxEnable = function() {
+  $('#timeSection').transition({ opacity: 1 });
+};
+var regularTimeCheckboxDisable = function() {
+  $('#timeSection').transition({ opacity: 0.1 });
+};
+
+var setTeamData = function() {
+  thisUser = Meteor.user();
+  if (!thisUser) return false;
+  if (thisUser.profile && thisUser.profile.team) {
+    var teamData = thisUser.profile.team;
+    $('#teamName').val(teamData.name);
+    $('#homeGround>input').attr('id', teamData.homeGround);
+    var ground = Pitches.findOne({'_id': teamData.homeGround});
+    if (ground) {
+      $('#homeGround>input').val(ground.owner + ' ' + ground.name);
+      var googleCallback = Meteor.setInterval(function() {
+        if (typeof google !== 'undefined' && pitchMap && 'panTo' in pitchMap) {
+          pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));
+          Meteor.clearInterval(googleCallback);
+        }
+      }, 200);
+      Meteor.setTimeout(function(){
+        Meteor.clearInterval(googleCallback);
+      }, 5000);
+    }
+    document.getElementById('weekly').checked = teamData.regular ? true : false;
+    if (teamData.regular) {
+      $('#dayChoiceSection>.ui.dropdown').dropdown('set value', days[teamData.day].name);
+      $('#dayChoiceSection>.ui.udropdown').dropdown('set text', days[teamData.day].name);
+      document.getElementById('sameTime').checked = teamData.sameTime ? true : false;
+      $('#dayChoiceSection, #timeCheckbox').css({opacity: 1});
+      if (teamData.sameTime) {
+        document.getElementById('timePickerHour').value = teamData.time.getHours();
+        document.getElementById('timePickerMinute').value = teamData.time.getMinutes();
+        $('#timeSection').css({opacity: 1});
+      }
+      else {
+        $('#timeSection').css({opacity: 0.1});
+      }
+    }
+    else $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});
+    return true;
+  }
+  return false;
+};
