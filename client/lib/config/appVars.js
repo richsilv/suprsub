@@ -13,20 +13,21 @@ appVars = (function() {
 		mainOption: '/',
 		TimeKeeper: TimeKeeper,
 		contactNames: ['Twitter', 'Facebook', 'Email'],
-    	days: [
-    		{name: "Sunday", dayCode: 0}, 
-    		{name: "Monday", dayCode: 1}, 
-    		{name: "Tuesday", dayCode: 2}, 
-    		{name: "Wednesday", dayCode: 3}, 
-    		{name: "Thursday", dayCode: 4}, 
-    		{name: "Friday", dayCode: 5}, 
-    		{name: "Saturday", dayCode: 6}
+		days: [
+		{name: "Sunday", dayCode: 0}, 
+		{name: "Monday", dayCode: 1}, 
+		{name: "Tuesday", dayCode: 2}, 
+		{name: "Wednesday", dayCode: 3}, 
+		{name: "Thursday", dayCode: 4}, 
+		{name: "Friday", dayCode: 5}, 
+		{name: "Saturday", dayCode: 6}
 		],
-    	periods: [
-    		{name: "Morning", periodCode: 0}, 
-    		{name: "Afternoon", periodCode: 1}, 
-    		{name: "Evening", periodCode: 2}
-		]
-	}
+		periods: [
+		{name: "Morning", periodCode: 0}, 
+		{name: "Afternoon", periodCode: 1}, 
+		{name: "Evening", periodCode: 2}
+		],
+		_libs: {}
+	};
 }
 )();
