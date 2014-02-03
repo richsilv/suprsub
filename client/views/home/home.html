@@ -27,9 +27,9 @@
 		      	<h2 class="ui header" id="activityHeader">Latest Activity</h2>
 		      	<span id="toggleBox">
 		      		<div class="ui breadcrumb">
-					  <a class="active section">All</a>
+					  <a class="{{#unless filter}}active {{/unless}}section" id="allFilter">All</a>
 					  <div class="divider"> / </div>
-					  <a class="section">Mine</a>
+					  <a class="{{#if filter}}active {{/if}}section" id="userFilter">Mine</a>
 					</div>
 		      	</span>
 		      	{{> activityFeed}}

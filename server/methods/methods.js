@@ -153,6 +153,13 @@ Meteor.methods({
 	allMatches: function() {
 		return allMatches();
 	},
+	updateEventPeriods: function() {
+		Events.find().forEach(function(e) {
+			var period = serverFunctions.getPeriodCode(e.dateTime);
+			Events.update(e, {$set: {periodCode: period}});
+		});
+		return "done";
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}

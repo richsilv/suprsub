@@ -1,3 +1,17 @@
+Template.homePage.helpers({
+  filter: function() {
+    return Router.routes['home'].postingsChoice.get();
+  }
+});
+Template.homePage.events({
+  'click #allFilter': function() {
+    Router.routes['home'].postingsChoice.set('');
+  },
+  'click #userFilter': function() {
+    Router.routes['home'].postingsChoice.set(Meteor.userId());
+  }
+})
+
 Template.postBox.helpers({
   teamRegistered: function() {
     var thisUser = Meteor.user();

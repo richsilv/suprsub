@@ -8,7 +8,7 @@ Meteor.publish('allpitches', function() {
 
 Meteor.publish('postings', function(id) {
 	if (id) {
-		var thisUser = Meteor.users.find(id);
+		var thisUser = Meteor.users.findOne(id);
 		if (!thisUser)
 			return Events.find({}, {sort: {createdAt: -1}, limit: 20});
 		return Events.find({periodCode: {$in: Object.keys(thisUser.profile.player.availability)}}, {sort: {createdAt: -1}, limit: 20});

@@ -65,11 +65,8 @@ Router.map(function() {
       'homePage': {to: 'mainSection'},
       'socialBox': {to: 'socialBox'}
     },
-    waitOn: function() {
-      return [Meteor.subscribe('allpitches'), Meteor.subscribe('postings')];
-    },
-    before: function() {
-      console.log(this);
+    action: function() {
+      this.redirect('/home');
     }
   });
 });
@@ -83,10 +80,12 @@ Router.map(function() {
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      return [Meteor.subscribe('allpitches'), Meteor.subscribe('postings')];
+      return [Meteor.subscribe('allpitches')];
     },
     before: function() {
-      console.log(this);
+      if (!('postingsChoice' in Router.routes['home']))
+        Router.routes['home'].postingsChoice = new suprsubDep('');
+      Meteor.subscribe('postings', Router.routes['home'].postingsChoice.get());
     }
   });
 });
