@@ -64,6 +64,12 @@ Router.map(function() {
     yieldTemplates: {
       'homePage': {to: 'mainSection'},
       'socialBox': {to: 'socialBox'}
+    },
+    waitOn: function() {
+      return [Meteor.subscribe('allpitches'), Meteor.subscribe('postings')];
+    },
+    before: function() {
+      console.log(this);
     }
   });
 });
@@ -75,6 +81,12 @@ Router.map(function() {
     yieldTemplates: {
       'homePage': {to: 'mainSection'},
       'socialBox': {to: 'socialBox'}
+    },
+    waitOn: function() {
+      return [Meteor.subscribe('allpitches'), Meteor.subscribe('postings')];
+    },
+    before: function() {
+      console.log(this);
     }
   });
 });

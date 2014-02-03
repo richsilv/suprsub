@@ -24,7 +24,14 @@
 		<div class="large-1 columns"></div>
 		<div class="large-7 columns">
 			<div class="ui feed segment whitetranslucent" id="activityFeed">
-		      	<h2 class="ui header">Latest Activity</h2>
+		      	<h2 class="ui header" id="activityHeader">Latest Activity</h2>
+		      	<span id="toggleBox">
+		      		<div class="ui breadcrumb">
+					  <a class="active section">All</a>
+					  <div class="divider"> / </div>
+					  <a class="section">Mine</a>
+					</div>
+		      	</span>
 		      	{{> activityFeed}}
 			</div>
 		</div>
@@ -40,11 +47,13 @@
 			<div class="field">
 				<textarea id="postingArea" placeholder="Need * player(s) at *:**pm tomorrow at XXXXXXXXX"></textarea>
 			</div>
-			<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton">
-				<i class="icon edit"></i> Make a Posting Now!
-			</div>
-			<div class="ui orange button icon">
-				<i class="question icon link" title="Posting Guidelines"></i>
+			<div class="ui buttons">
+				<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton">
+					<i class="icon edit"></i> Make a Posting Now!
+				</div>
+				<div class="ui orange button icon" id="postingGuidelines">
+					<i class="question icon link"></i>
+				</div>
 			</div>
 		</form>
 	</div>

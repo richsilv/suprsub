@@ -17,6 +17,18 @@ body {
 	font-family: 'Molengo', sans-serif;
 }
 
+.pageCenter {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 150px;
+    height: 100px;
+    text-shadow: rgba(200, 200, 200, .7) 0.5em 0.5em 0.5em;
+}
+
 .suprsubFont {
 	vertical-align: text-bottom;
 	font-weight: normal;

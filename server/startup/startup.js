@@ -9,9 +9,11 @@ Meteor.startup(function() {
 	});
 	Events.find({posted: {$exists: false}}).observeChanges({
 		added: function(eventId) {
+			var thisEvent = Events.findOne(eventId);
+			Events.update(thisEvent, {$set: {period: serverFunctions.getPeriodCode(thisEvent.dateTime)}});
 			var players = serverFunctions.matchingPlayers(eventId);
 			if (players.length)	serverFunctions.distributeEvent(players, Events.findOne(eventId));
-			Events.update(eventId, {$set: {consumed: true}});
+			Events.update(eventId, {$set: {posted: true}});
 		}
 	});
 
@@ -21,19 +23,19 @@ Meteor.startup(function() {
 
 	// ACCOUNTS INJECTION ON SERVER STARTUP
 	Accounts.loginServiceConfiguration.remove({
-	    service: "facebook"
+		service: "facebook"
 	});
 	Accounts.loginServiceConfiguration.remove({
-	    service: "twitter"
+		service: "twitter"
 	});
 	if (Meteor.absoluteUrl().slice(0,22) !== "http://localhost:3000/") {
 	//	Accounts.config({sendVerificationEmail: false, forbidClientAccountCreation: false});
-		Accounts.loginServiceConfiguration.insert(appConfig.facebookprod);
-		Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);
-	}
-	else {
-		Accounts.loginServiceConfiguration.insert(appConfig.facebooklocal);
-		Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);	
-	}
+	Accounts.loginServiceConfiguration.insert(appConfig.facebookprod);
+	Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);
+}
+else {
+	Accounts.loginServiceConfiguration.insert(appConfig.facebooklocal);
+	Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);	
+}
 
 });

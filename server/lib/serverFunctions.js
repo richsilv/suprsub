@@ -301,7 +301,7 @@ serverFunctions = (function() {
 	function matchingPlayers(event) {
 		if (typeof event === "string") event = Events.findOne({_id: event});
 		if (!event || !event.dateTime || !event.location) return [];
-		var periodCode = Math.floor((event.dateTime.getHours() - 6) / 6)+ '/' + event.dateTime.getDay(),
+		var periodCode = getPeriodCode(event.dateTime),
 			query = {'profile.player.venues': event.location};
 		query['profile.player.availability.' + periodCode] = {$exists: true};
 		query._id = {$ne: event.userId};
@@ -370,7 +370,7 @@ serverFunctions = (function() {
 					ob : -4.5 + (Math.random() * 4.75)
 				};
 				size = 5000 + Math.floor(Math.random() * 20000);
-				venues = Meteor.call('pitchesWithin', {"lat": center.lat(), "lng": center.lng()}, size);
+				venues = Meteor.call('pitchesWithin', {"lat": center.nb, "lng": center.ob}, size);
 			}
 			newUser.profile.player = {
 				availability: availability,
@@ -561,6 +561,10 @@ serverFunctions = (function() {
 			return n;
 	}
 
+	function getPeriodCode(dateTime) {
+		return Math.floor((dateTime.getHours() - 6) / 6)+ '/' + dateTime.getDay();
+	}
+
 	return {
 		twitterNameFromId: twitterNameFromId,
 		streamTwitter: streamTwitter,
@@ -585,7 +589,8 @@ serverFunctions = (function() {
 		prettyDateTime: prettyDateTime,
 		colloquialDateTime: colloquialDateTime,
 		prettyLocation: prettyLocation,
-		padNum: padNum
-	}
+		padNum: padNum,
+		getPeriodCode: getPeriodCode
+	};
 
 })();
