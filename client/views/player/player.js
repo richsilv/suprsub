@@ -25,20 +25,6 @@ Template.playerDetails.events({
   }
 });
 
-Template.pitchMapLarge.created = function() {
-  appVars.circleSize = new suprsubDep(8000);
-  var intv = setInterval(function(){
-    var $el = $("#pitchMap");
-    if ( $el.length > 0 ) {
-      clearInterval(intv);
-      clientFunctions.loadGoogleMaps(true);
-    }
-  }, 200);
-  setTimeout(function(){
-    clearInterval(intv);
-  }, 5000);
-};
-
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
     appVars.circleChanged.set(true);
