@@ -123,7 +123,7 @@ Template.teamDetails.events({
           if (icon.prop("tagName") != "I") icon = icon.children('i');
           icon.removeClass("save").addClass("checkmark fontGlow");
           Meteor.setTimeout(function() {
-            icon.addClass("save").removeClass("checkmark fontGlow")
+            icon.addClass("save").removeClass("checkmark fontGlow");
           }, 1000);
         }
         else console.log(err);
@@ -139,15 +139,15 @@ Template.teamDetails.rendered = function() {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
     $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
-//    $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false});
+    $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false});
     clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-//    setTeamData();
+    setTeamData();
     this.renderedOnce = true;
   }
 };
 Template.teamDetails.created = function() {
   this.data.disableSave = new suprsubDep(true);
-}
+};
 
 Template.newVenueBox.events({
   'click #cancelVenue': function() {
@@ -166,21 +166,21 @@ Template.newVenueBox.events({
 });
 
 var regularDayCheckboxEnable = function() {
-  $('#dayChoiceSection').transition({ opacity: 1 });
-  $('#timeCheckbox').transition({ opacity: 1 });
+  $('#dayChoiceSection').css({ opacity: 1 });
+  $('#timeCheckbox').css({ opacity: 1 });
 };
 var regularDayCheckboxDisable = function() {
   $('#sameTime').checkbox('disable');
-  $('#dayChoiceSection').transition({ opacity: 0.1 });
-  $('#timeCheckbox').transition({ opacity: 0.1 });  
+  $('#dayChoiceSection').css({ opacity: 0.1 });
+  $('#timeCheckbox').css({ opacity: 0.1 });  
 };
 
 
 var regularTimeCheckboxEnable = function() {
-  $('#timeSection').transition({ opacity: 1 });
+  $('#timeSection').css({ opacity: 1 });
 };
 var regularTimeCheckboxDisable = function() {
-  $('#timeSection').transition({ opacity: 0.1 });
+  $('#timeSection').css({ opacity: 0.1 });
 };
 
 var setTeamData = function() {

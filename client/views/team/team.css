@@ -46,6 +46,14 @@
 
 }
 
+.opacity {
+	-webkit-transition: opacity 1s ease;
+    -moz-transition: opacity 1s ease;
+    -ms-transition: opacity 1s ease;
+    -o-transition : opacity 1s ease;
+    transition: opacity 1s ease;
+}
+
 .height225 {
 	min-height: 225px;
 }
