@@ -59,6 +59,11 @@ body {
 	margin-top: 0.9375em;	
 }
 
+.noMargin {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
 .rightList {
 	text-align: right;
 	font-size: 1.5em;

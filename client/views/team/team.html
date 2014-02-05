@@ -17,22 +17,16 @@
 		<div class="medium-8 columns">
 			<div class="ui segment content whitetranslucent">
 				<form class="ui form segment content height225" id="teamForm">
-					<div class="field">
-						<label>Team Name</label>
-						<div class="ui input">
-							<input placeholder="Team Name" type="text" id="teamName">
-						</div>
+					<div class="small-12 columns">
+						{{> teamName}}
+					</div>
+					<div class="small-4 columns ui two buttons noMargin">
+						<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam"><i class="add icon"></i></div>
+						<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam"><i class="minus icon"></i></div>
 					</div>
 					<div class="row">
 						<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
-							<div class="field">
-								<div class="checkboxLabel">Male</div>
-								<div class="ui toggle checkbox neutral">
-									<input type="checkbox" id="maleFemale">
-									<label></label>
-								</div>
-								<div class="checkboxLabel">Female</div>
-							</div>
+							<div class="checkboxLabel">{{gender}} Team</div>
 						</div>
 						<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
 							<div class="field">
@@ -44,20 +38,35 @@
 								<div class="checkboxLabel">Competitive</div>
 							</div>
 						</div>
-						<div class="centered field">
-							<label>Game Format</label>
-							<div class="ui selection dropdown">
-								<input type="hidden" id="format">
-								<div class="default text">Select</div>
-								<i class="dropdown icon"></i>
-								<div class="menu">
-									<div class="item" data-value="5">5-a-side</div>
-									<div class="item" data-value="6">6-a-side</div>
-									<div class="item" data-value="7">7-a-side</div>
-									<div class="item" data-value="8">8-a-side</div>
-									<div class="item" data-value="9">9-a-side</div>
-									<div class="item" data-value="10">10-a-side</div>
-									<div class="item" data-value="11">11-a-side</div>
+						<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
+							<div class="field">
+								<label>Game Format</label>
+								<div class="ui fluid selection dropdown">
+									<input type="hidden" id="format">
+									<div class="default text">Select</div>
+									<i class="dropdown icon"></i>
+									<div class="menu">
+										<div class="item" data-value="5">5-a-side</div>
+										<div class="item" data-value="6">6-a-side</div>
+										<div class="item" data-value="7">7-a-side</div>
+										<div class="item" data-value="8">8-a-side</div>
+										<div class="item" data-value="9">9-a-side</div>
+										<div class="item" data-value="10">10-a-side</div>
+										<div class="item" data-value="11">11-a-side</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="small-1 columns show-for-small-only"></div>
+						<div class="large-9 medium-14 small-7 medium-centered large-uncentered columns">
+							<div class="ui two fluid icon buttons">
+								<div class="ui icon button attached withLabel" id="joinTeam">
+									<i class="right icon"></i>
+									<i class="users icon"></i>
+								</div>
+								<div class="ui icon button attached withLabel" id="sendInvitation">
+									<i class="mail icon"></i>
+									<i class="right icon"></i>
 								</div>
 							</div>
 						</div>
@@ -143,6 +152,28 @@
 		{{/isolate}}
 	</div>
 	<div class="cleared row"></div>
+</template>
+
+<template name="teamName">
+	<div class="field" id="teamNameHolder">
+		<label>Team Name</label>
+		{{#if dropdownTeams}}
+		<div class="ui fluid selection dropdown" id="teamChoice">
+			<input type="hidden">
+			<div class="default text">Select Team</div>
+			<i class="dropdown icon"></i>
+			<div class="menu">
+				{{#each teams}}
+				<div class="item" data-value="{{_id}}">{{name}}</div>
+				{{/each}}
+			</div>
+		</div>
+		{{else}}
+		<div class="ui input">
+			<input placeholder="Team Name" type="text" id="teamName">
+		</div>
+		{{/if}}
+	</div>
 </template>
 
 <template name="otherInfo">

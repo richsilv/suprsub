@@ -20,7 +20,13 @@ Meteor.publish('postings', function(id) {
 
 Meteor.publish('teams', function(ids) {
 	if (ids) return Teams.find({_id: {$in: ids}});
-	else return Teams.find({_id: 'nullid'});
+	else {
+		var thisUser = Meteor.user();
+		if (thisUser && thisUser.profile && thisUser.profile.team)
+			return Teams.find({_id: {$in: thisUser.profile.team._ids}});
+		else
+			return Teams.find({_id: 'nullId'});
+	}
 })
 
 Meteor.publish("userData", function () {

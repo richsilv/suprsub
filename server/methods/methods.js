@@ -7,6 +7,10 @@ Meteor.methods({
 		var d2 = Math.pow(distance/111000, 2);
 		return Pitches.find().fetch().filter(function(p) {return (Math.pow(p.location.lat - center.lat, 2) + Math.pow((p.location.lng - center.lng) * width, 2) < d2);});
 	},
+	deleteTeam: function(teamId) {
+		Meteor.users.update({'profile.team._ids': teamId}, {$pull: {'profile.team._ids': teamId}}, {multi: true});
+		Teams.remove(teamId);
+	},
 	addEmailCredentials: function(details) {
 		if (Meteor.users.findOne({'emails.address': details.email})) {
 			return 'Email already exists in database';

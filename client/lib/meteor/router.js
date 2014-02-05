@@ -60,8 +60,12 @@ Router.map(function() {
         Router.current().route.teamIds = thisUser.profile.team._ids;
         if (!Router.current().route.currentTeamId || thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId) === -1) {
           Router.current().route.currentTeamId = thisUser.profile.team._ids ? thisUser.profile.team._ids[0] : null;
-        }       
-      };
+        }
+      }
+      else {
+        Router.current().route.teamIds = [];
+        Router.current().route.currentTeamId = null;
+      }
       return subs;
     },
     action: function() {

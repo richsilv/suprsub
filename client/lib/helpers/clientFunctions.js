@@ -107,6 +107,7 @@ clientFunctions = (function() {
 				$('#distanceRead').html(appVars.circleSize.get()/1000+'km');
 				updateCircle();
 				if (appVars.circleSize.get() > 10000) pitchMap.setZoom(10);
+				if (appVars.circleSize.get() > 20000) pitchMap.setZoom(9);
 			}
 			else {
 				navigator.geolocation.getCurrentPosition(function(res) {

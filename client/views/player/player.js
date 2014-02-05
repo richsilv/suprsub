@@ -35,7 +35,8 @@ Template.defineBounds.events({
           appVars.circleChanged.set(true);
           appVars.circleSize.dep.changed();
           appVars.venues.dep.changed();
-          if (appVars.circleSize.value > 10000 && pitchMap.getZoom() > 10) pitchMap.setZoom(10);
+          if (appVars.circleSize.value > 20000 && pitchMap.getZoom() > 9) pitchMap.setZoom(9);
+          if (appVars.circleSize.value > 10000 && appVars.circleSize.value < 20000 && pitchMap.getZoom() !== 10) pitchMap.setZoom(10);
           else if (appVars.circleSize.value < 10000 && pitchMap.getZoom() < 11) pitchMap.setZoom(11);
           Meteor.clearTimeout(self.circleTimeout);
           self.circleTimeout = null;
