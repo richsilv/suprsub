@@ -58,7 +58,6 @@ clientFunctions = (function() {
 				readyDep: new Deps.Dependency()
 			};
 			$.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyDmSBUaNyV0mQrcJj87Ga1OwzhxdxVrHjI&sensor=false&callback=clientFunctions.gMapsCallback', function() {
-				console.log(google.maps);
 			});
 		}
 		handle = {
@@ -82,26 +81,36 @@ clientFunctions = (function() {
 			mapOptions);
 		appVars.circleChanged.set(false);
 		if (!appVars.gc) appVars.gc = new google.maps.Geocoder();
-		if (thisTeam && thisTeam.homeGround) {
-			var thisPitch = Pitches.findOne(thisTeam.homeGround);
-			defaultLocation = new google.maps.LatLng(thisPitch.location.lat, thisPitch.location.lng);
-			appVars.mapCenter.set(defaultLocation);
-			pitchMap.setCenter(defaultLocation);
+		if (Router.current().route.name === "teamDetails") {
+			if (thisTeam && thisTeam.homeGround) {
+				var thisPitch = Pitches.findOne(thisTeam.homeGround);
+				defaultLocation = new google.maps.LatLng(thisPitch.location.lat, thisPitch.location.lng);
+				appVars.mapCenter.set(defaultLocation);
+				pitchMap.setCenter(defaultLocation);
+			}
+			else {
+				navigator.geolocation.getCurrentPosition(function(res) {
+					defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
+					appVars.mapCenter.set(defaultLocation);
+					pitchMap.setCenter(defaultLocation);
+				}, function() {
+					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
+				});
+			}
 		}
-		else if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
-			defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng);
-			appVars.mapCenter.set(defaultLocation);
-			if (circle) {
+		else if (Router.current().route.name === "playerDetails") {
+			if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
+				defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng);
+				appVars.mapCenter.set(defaultLocation);
 				appVars.circleSize.set(Meteor.user().profile.player.size);
 				$('#distanceWrite').val(appVars.circleSize.get()/100);
 				$('#distanceRead').html(appVars.circleSize.get()/1000+'km');
 				updateCircle();
+				if (appVars.circleSize.get() > 10000) pitchMap.setZoom(10);
 			}
-		}
-		else {
-			navigator.geolocation.getCurrentPosition(function(res) {
-				defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
-				if (circle) {
+			else {
+				navigator.geolocation.getCurrentPosition(function(res) {
+					defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
 					appVars.mapCenter.set(defaultLocation);
 					pitchMap.setCenter(defaultLocation);
 					updateCircle();
@@ -109,11 +118,11 @@ clientFunctions = (function() {
 						if (err || !appVars.venues) console.log(err);
 						else appVars.venues.set(res);
 					});
-				}
-			}, function() {
-				window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
-			});
-			appVars.circleChanged.set(true);
+				}, function() {
+					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
+				});
+				appVars.circleChanged.set(true);
+			}
 		}
 		var pitches = Pitches.find().fetch();
 		for (var i=0; i < pitches.length; i++) {
@@ -131,8 +140,8 @@ clientFunctions = (function() {
 		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
 			document.getElementById("pitchMap").style.display = "block";
 			google.maps.event.trigger(pitchMap, 'resize');
+			pitchMap.setCenter(defaultLocation);
 	   	});
-		pitchMap.setCenter(defaultLocation);
 		if (appVars.circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);
 			else if (appVars.venues) {
@@ -185,18 +194,18 @@ clientFunctions = (function() {
 			oldRendered = template.rendered;
 			template.renders = 0;
 			template.created = function() {
-			console.log("Created: ", this); //_.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
-		oldCreated && oldCreated.apply(this, arguments);
-	};
-	template.rendered = function() {
-		console.log("Rendering ", name, template.renders++);
-		oldRendered && oldRendered.apply(this, arguments);
-	};
-	template.destroyed = function() {
-		console.log("Destroyed: ", this);
-		oldDestroyed && oldDestroyed.apply(this, arguments);
-	};    
-	});
+				console.log("Created: ", this); //_.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
+				oldCreated && oldCreated.apply(this, arguments);
+			};
+			template.rendered = function() {
+				console.log("Rendering ", name, template.renders++);
+				oldRendered && oldRendered.apply(this, arguments);
+			};
+			template.destroyed = function() {
+				console.log("Destroyed: ", this);
+				oldDestroyed && oldDestroyed.apply(this, arguments);
+			};    
+		});
 	};
 
 	var initializeCircle = function() {
@@ -218,7 +227,6 @@ clientFunctions = (function() {
 					listener = addToggle(elem.previousElementSibling, 'enable');					
 				elem.addEventListener('click', listener);
 			});
-			console.log('checkboxLabel initialised');
 			break;
 			default:
 		}

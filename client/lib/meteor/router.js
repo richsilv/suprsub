@@ -115,13 +115,11 @@ Router.map(function() {
       'twitterGenderModal': {to: 'mainSection'}
     },
     after: function() {
-      console.log("rendering tGenderModal");
       var oldRendered = Template.twitterGenderModal.rendered;
       Template.twitterGenderModal.rendered = function() {
         $('#twitterGenderModal').modal('setting', {
           closable  : false,
           onHide    : function(){
-            console.log("registered");
             Template.twitterGenderModal.rendered = oldRendered;
             oldRendered && oldRendered.apply(this, arguments);
           }
