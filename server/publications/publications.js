@@ -17,3 +17,13 @@ Meteor.publish('postings', function(id) {
 		return Events.find({}, {sort: {createdAt: -1}, limit: 20});
 	}
 });
+
+Meteor.publish('teams', function(ids) {
+	if (ids) return Teams.find({_id: {$in: ids}});
+	else return Teams.find({_id: 'nullid'});
+})
+
+Meteor.publish("userData", function () {
+	return Meteor.users.find({_id: this.userId},
+		{fields: {'services': 1}});
+});

@@ -30,8 +30,7 @@ clientFunctions = (function() {
 	var markerClickEvent = function(m) {
 		$('#homeGround input').val(m.title);
 		$('#homeGround input').attr('id', m.pitch_ID);
-		location.href = "#homeGround";
-		window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
+		window.scrollTo(window.scrollX, 0);
 	};
 
 	var loadGoogleMaps = function(circle) {
@@ -73,16 +72,23 @@ clientFunctions = (function() {
 	};
 
 	var initialize = function(circle) {
-		defaultLocation = new google.maps.LatLng(51, 0);
+		var defaultLocation = new google.maps.LatLng(51, 0);
 		var mapOptions = {
-			zoom: 11,
-			center: defaultLocation
-		};
+				zoom: 11,
+				center: defaultLocation
+			},
+			thisTeam = Teams.findOne(Router.current().route.currentTeamId);
 		pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
 			mapOptions);
 		appVars.circleChanged.set(false);
 		if (!appVars.gc) appVars.gc = new google.maps.Geocoder();
-		if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
+		if (thisTeam && thisTeam.homeGround) {
+			var thisPitch = Pitches.findOne(thisTeam.homeGround);
+			defaultLocation = new google.maps.LatLng(thisPitch.location.lat, thisPitch.location.lng);
+			appVars.mapCenter.set(defaultLocation);
+			pitchMap.setCenter(defaultLocation);
+		}
+		else if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
 			defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng);
 			appVars.mapCenter.set(defaultLocation);
 			if (circle) {
@@ -94,7 +100,7 @@ clientFunctions = (function() {
 		}
 		else {
 			navigator.geolocation.getCurrentPosition(function(res) {
-				var defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
+				defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
 				if (circle) {
 					appVars.mapCenter.set(defaultLocation);
 					pitchMap.setCenter(defaultLocation);
@@ -105,7 +111,7 @@ clientFunctions = (function() {
 					});
 				}
 			}, function() {
-				window.alert("Your browser does not support geolocation, so you'll have to use the address bar to find your location.");
+				window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
 			});
 			appVars.circleChanged.set(true);
 		}
@@ -122,8 +128,10 @@ clientFunctions = (function() {
 				attachMarkerEvent(marker, markerClickEvent);
 			}
 		}
-		document.getElementById("pitchMap").style.display = "block";
-		google.maps.event.trigger(pitchMap, 'resize');
+		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
+			document.getElementById("pitchMap").style.display = "block";
+			google.maps.event.trigger(pitchMap, 'resize');
+	   	});
 		pitchMap.setCenter(defaultLocation);
 		if (appVars.circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);

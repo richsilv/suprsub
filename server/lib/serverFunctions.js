@@ -124,7 +124,7 @@ serverFunctions = (function() {
 		}
 		currentMatch = fuzzyMatch(token, appConfig.pitchSurnames);
 		if (currentMatch.code !== -1) return {code: 10};
-		var pitchData = Pitches.find({}, {fields: {name: true, owner: true}}).fetch();
+		var pitchData = Pitches.find({}).fetch();
 		var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 		var match = fuzzyMatch(token, currentLookup, 0.75);
 		if (match.code !== -1) return {code: 9, data: match.code};
@@ -240,6 +240,8 @@ serverFunctions = (function() {
 			if (ampmTokens[0].data === 1 && requestData.dateTime.getHours() < 12) requestData.dateTime.setHours(requestData.dateTime.getHours() + 12);
 			else if (ampmTokens[0].data === 1 && requestData.dateTime.getHours() === 12) requestData.dateTime.setHours(0);
 		}
+		// Push forward one week if requested time is more than 30 minutes ago (or one day ahead if no date specified)
+		if (new Date().getTime() - 1800000 > requestData.dateTime.getTime()) requestData.dateTime.setDate(requestData.dateTime.getDate() + (dayTokens.length === 1 ? 7 : 1));
 		var placeTokens = _.filter(richTokens, function(k) {return k.code === 9;});
 		if (placeTokens.length > 1) return new Meteor.Error(500, "Only specify one location.");
 		if (placeTokens.length) requestData.location = placeTokens[0].data;
@@ -269,14 +271,14 @@ serverFunctions = (function() {
 			if (Math.random() > 0.66) sentence += ', ';
 			else if (Math.random() > 0.5) sentence += ' at ';
 			else sentence += ' ';
-			sentence += moment(posting.dateTime).format('HH:mm on ddd, Mo MMM');
+			sentence += moment(posting.dateTime).format('HH:mm on ddd, D MMM');
 		}
 		else {
-			sentence += colloquialDateTime(posting.dateTime);
+			sentence += moment(posting.dateTime).format('HH:mm on ddd, D MMM');
 			if (Math.random() > 0.66) sentence += ', ';
 			else if (Math.random() > 0.5) sentence += ' at ';
 			else sentence += ' ';
-			sentence += moment(posting.dateTime).format('HH:mm on ddd, Mo MMM');
+			sentence += prettyLocation(posting.location);			
 		}
 		sentence += ". " + ['Male', 'Female'][posting.gender];
 		if (posting.teamSize) sentence += ", " + posting.teamSize + "-a-side";

@@ -9,6 +9,14 @@ Router.configure({
       // stop the rest of the before hooks and the action function 
       this.stop();
     }
+    else {
+      this.subscribe('userData').wait();
+    }
+  },
+  after: function() {
+    if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
+      this.redirect('/gender');
+    }
   },
 });
 
@@ -45,7 +53,16 @@ Router.map(function() {
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      return [Meteor.subscribe('allpitches'), clientFunctions.loadGMaps()];
+      var thisUser = Meteor.user(),
+          subs = [Meteor.subscribe('allpitches'), clientFunctions.loadGMaps()];
+      if (thisUser && thisUser.profile && thisUser.profile.team) {
+        subs.push(Meteor.subscribe('teams', thisUser.profile.team._ids));
+        Router.current().route.teamIds = thisUser.profile.team._ids;
+        if (!Router.current().route.currentTeamId || thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId) === -1) {
+          Router.current().route.currentTeamId = thisUser.profile.team._ids ? thisUser.profile.team._ids[0] : null;
+        }       
+      };
+      return subs;
     },
     action: function() {
       this.render();
@@ -85,7 +102,32 @@ Router.map(function() {
     before: function() {
       if (!('postingsChoice' in Router.routes['home']))
         Router.routes['home'].postingsChoice = new suprsubDep('');
-      Meteor.subscribe('postings', Router.routes['home'].postingsChoice.get());
+      this.subscribe('postings', Router.routes['home'].postingsChoice.get());
     }
   });
 });
+
+Router.map(function() {
+  this.route('confirmGender', {
+    path: '/gender',
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'twitterGenderModal': {to: 'mainSection'}
+    },
+    after: function() {
+      console.log("rendering tGenderModal");
+      var oldRendered = Template.twitterGenderModal.rendered;
+      Template.twitterGenderModal.rendered = function() {
+        $('#twitterGenderModal').modal('setting', {
+          closable  : false,
+          onHide    : function(){
+            console.log("registered");
+            Template.twitterGenderModal.rendered = oldRendered;
+            oldRendered && oldRendered.apply(this, arguments);
+          }
+        }).modal('show');
+        clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
+      };
+    }    
+  })
+})

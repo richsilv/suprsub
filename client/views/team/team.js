@@ -84,11 +84,12 @@ Template.teamDetails.helpers({
 });
 Template.teamDetails.events({
   'click #homeGround': function() {
-    location.href = "#otherInfo";
+    window.scrollTo(window.scrollX, window.scrollY + 275);
     $('#otherInfo').show({
       duration: 500, 
       complete: function() {
         tabChoices.setKey('venueSearch', true);
+        pitchMap.setCenter(appVars.mapCenter.get());
       }
     });
     google.maps.event.trigger(pitchMap, 'resize');
@@ -101,7 +102,9 @@ Template.teamDetails.events({
     if (event.keyCode > 57) return false;
   },
   'click #saveButton': function(event) {
-    var homeGroundId = $('#homeGround>input').attr('id'), teamProfile;
+    var homeGroundId = $('#homeGround>input').attr('id'),
+        teamProfile,
+        thisGlowCallback = glowCallback.bind(undefined, event);
     if (!homeGroundId) return false;
     teamProfile = {
         name: $('#teamName').val(),
@@ -109,25 +112,17 @@ Template.teamDetails.events({
         regular: document.getElementById('weekly').checked
     };
     if (teamProfile.regular) {
-      teamProfile.day = parseInt(document.getElementById('day').value, 10);
+      teamProfile.day = parseInt($('#dayChoiceSection .ui.dropdown').dropdown('get value'), 10);
       teamProfile.sameTime = document.getElementById('sameTime').checked;
       if (teamProfile.sameTime) teamProfile.time = new Date(0, 0, 0, parseInt(document.getElementById('timePickerHour').value, 10), parseInt(document.getElementById('timePickerMinute').value, 10));
     }
-    Meteor.users.update(Meteor.userId(), {$set: 
-      {'profile.team': teamProfile}
-    },
-      function(err) {
-        if (!err) {
-          console.log("glow");
-          var icon = $(event.target);
-          if (icon.prop("tagName") != "I") icon = icon.children('i');
-          icon.removeClass("save").addClass("checkmark fontGlow");
-          Meteor.setTimeout(function() {
-            icon.addClass("save").removeClass("checkmark fontGlow");
-          }, 1000);
-        }
-        else console.log(err);
-      });
+    var teamId, currentTeamId = Router.current().route.currentTeamId;
+    if (currentTeamId)
+      Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
+    else {
+      var newTeamId = Teams.insert(teamProfile);
+      Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newTeamId}}, thisGlowCallback); 
+    }
   },
   'click #resetButton': function() {
     setTeamData();
@@ -184,10 +179,8 @@ var regularTimeCheckboxDisable = function() {
 };
 
 var setTeamData = function() {
-  thisUser = Meteor.user();
-  if (!thisUser) return false;
-  if (thisUser.profile && thisUser.profile.team) {
-    var teamData = thisUser.profile.team;
+  if (Router.current().route.currentTeamId) {
+    var teamData = Teams.findOne(Router.current().route.currentTeamId);
     $('#teamName').val(teamData.name);
     $('#homeGround>input').attr('id', teamData.homeGround);
     var ground = Pitches.findOne({'_id': teamData.homeGround});
@@ -205,8 +198,8 @@ var setTeamData = function() {
     }
     document.getElementById('weekly').checked = teamData.regular ? true : false;
     if (teamData.regular) {
-      $('#dayChoiceSection>.ui.dropdown').dropdown('set value', days[teamData.day].name);
-      $('#dayChoiceSection>.ui.udropdown').dropdown('set text', days[teamData.day].name);
+      $('#dayChoiceSection>.ui.dropdown').dropdown('set value', teamData.day);
+      $('#dayChoiceSection>.ui.dropdown').dropdown('set text', appVars.days[teamData.day].name);
       document.getElementById('sameTime').checked = teamData.sameTime ? true : false;
       $('#dayChoiceSection, #timeCheckbox').css({opacity: 1});
       if (teamData.sameTime) {
@@ -222,4 +215,16 @@ var setTeamData = function() {
     return true;
   }
   return false;
+};
+
+var glowCallback = function(event, err) {
+  if (!err) {
+    var icon = $(event.target);
+    if (icon.prop("tagName") != "I") icon = icon.children('i');
+    icon.removeClass("save").addClass("checkmark fontGlow");
+    Meteor.setTimeout(function() {
+      icon.addClass("save").removeClass("checkmark fontGlow");
+    }, 1000);
+  }
+  else console.log(err);
 };

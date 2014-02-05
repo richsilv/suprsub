@@ -39,6 +39,22 @@
 	text-transform: none;
 }
 
+#mfBox {
+	text-align: center;
+}
+
+#mfBox .checkboxLabel {
+	margin-top: 0.875em !important;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+#mfSubBox {
+	position: absolute;
+	left: 5em;
+	bottom: 1.5em;
+}
+
 #errorBox {
 	display: block;
 }

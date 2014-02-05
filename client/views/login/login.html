@@ -5,7 +5,7 @@
 		<div class="row">
 			<div class="large-7 large-centered medium-11 medium-centered column">
 				<div class="ui inverted segment semitranslucent">
-					<h1>Become a <span class="darkgreen suprsubFont darkgreenshadow">SuprSub</span> today</h1>
+					<h1>Become a SuprSub for free today</h1>
 				</div>
 				<div class="ui form segment translucent">
 					<div class="field">
@@ -37,6 +37,14 @@
 								<i class="icon asterisk"></i>
 							</div>
 						</div>
+					</div>
+					<div class="field" id="mfBox">
+						<div class="checkboxLabel">Male</div>
+						<div class="ui toggle checkbox neutral">
+							<input type="checkbox" id="maleFemale">
+							<label></label>
+						</div>
+						<div class="checkboxLabel">Female</div>
 					</div>
 					<div class="field">
 						<div class="ui left labeled icon input">
@@ -78,5 +86,21 @@
 				</div>
 			</div>
 		</div>
+	</div>
+	{{> twitterGenderModal}}
+</template>
+
+<template name="twitterGenderModal">
+	<div class="ui modal" id="twitterGenderModal">
+		<div class="ui segment"><p>In order to comply with Football Association regulations, we can only match players with teams of the same gender - please confirm your gender below.</p></div>
+		<div class="field" id="mfSubBox">
+			<div class="checkboxLabel">Male</div>
+			<div class="ui toggle checkbox neutral">
+				<input type="checkbox" id="maleFemale">
+				<label></label>
+			</div>
+			<div class="checkboxLabel">Female</div>
+		</div>
+		<div class="ui rightF blue submit button" id="genderConfirmButton">Confirm</div>
 	</div>
 </template>

@@ -48,7 +48,9 @@ Template.loginScreen.events({
             profile: {
                 first_name: $('#firstname').val(), 
                 last_name: $('#lastname').val(),
-                name: $('#firstname').val() + ' ' + $('#lastname').val()
+                name: $('#firstname').val() + ' ' + $('#lastname').val(),
+                gender: $('#mfBox .checkbox input')[0].checked ? 1 : 0
+
             }
         }, function(err) {
             if (err) {
@@ -66,14 +68,28 @@ Template.loginScreen.events({
             });
     },
     'click #twitter-login': function(event) {
-        Meteor.loginWithTwitter({},
-            function(error) {
-                if (error) {
-                    accountError.set('Cannot login with Twitter');
-                }
-            });
+        Meteor.loginWithTwitter({}, function(error) {
+            if (error) {
+                console.log(error);
+                accountError.set('Cannot login with Twitter');
+            }
+        });
     }
 });
+Template.loginScreen.rendered = function() {
+    $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
+    clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
+};
+
+Template.twitterGenderModal.events({
+    'click #genderConfirmButton': function(event) {
+        $('#twitterGenderModal').modal('hide');
+        Meteor.setTimeout(function() {
+            Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}});
+            Router.go('/player');
+        }, 600);
+    }
+})
 
 Deps.autorun(function() {
     if (Accounts._resetPasswordToken) {

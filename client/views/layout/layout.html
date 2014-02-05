@@ -29,11 +29,11 @@
 
 <template name="topbar">
 	<div class="ui darkgreen fixed inverted main menu" id="topbar">
-		{{#if currentUser}}
 		<span class="item" href="{{pathFor 'home'}}">
 			<i class="suprsub icon"></i>
-		</span>		
-		<a class="{{#if option "/"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
+		</span>	
+		{{#if currentUser}}	
+		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
 		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">

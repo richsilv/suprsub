@@ -31,16 +31,22 @@ Template.postBox.events({
 });
 Template.postBox.rendered = function() {
   var thisUser = Meteor.user();
-  if (thisUser && thisUser.profile && thisUser.profile.team) 
+  if (!(thisUser && thisUser.profile && thisUser.profile.team)) 
     $('#postingButton').popup({
       position: 'top center',
       inline: true,
-      content: 'You need to enter your team details on the <strong>Team</strong> tab before you can make a posting.'
+      content: 'You need to enter your team details on the <strong>Team</strong> tab before you can make a posting.',
+      debug: false,
+      performance: false,
+      verbose: false
     });
   $('#postingGuidelines').popup({
     position: 'top center',
     inline: true,
-    content: 'Guidelines on how to make your posting.'
+    content: 'Guidelines on how to make your posting.',
+    debug: false,
+    performance: false,
+    verbose: false
   });  
 };
 

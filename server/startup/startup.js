@@ -3,6 +3,7 @@ Meteor.startup(function() {
 	// COLLECTION OBSERVERS
 	Tweets.find({consumed: {$exists: false}}).observeChanges({
 		added: function(tweetId) {
+			var tweet = Tweets.findOne(tweetId);
 			serverFunctions.consumeTweet(Tweets.findOne(tweetId));
 			Tweets.update(tweet, {$set: {consumed: true}});
 		}

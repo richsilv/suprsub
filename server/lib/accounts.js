@@ -80,11 +80,13 @@ Accounts.onCreateUser(function(options, user) {
 		if (options.profile) user.profile = _.extend(options.profile, {
 			first_name: user.services.facebook.first_name,
 			last_name : user.services.facebook.last_name,
+			gender: user.services.facebook.gender === "male" ? 0 : 1, 
 			contact: [1]
 			});
 		else user.profile = {
 			first_name: user.services.facebook.first_name,
 			last_name : user.services.facebook.last_name,
+			gender: user.services.facebook.gender === "male" ? 0 : 1,
 			contact: [1]
 			};
 	}
@@ -98,9 +100,10 @@ Accounts.onCreateUser(function(options, user) {
 			});
 		}
 		else user.profile = {contact: [0]};
+		user.profile = _.extend(user.profile, {confirmGender: true});
 	}
 	else {
-		user.profile = _.extend(options.profile, {contact: [2]});
+		user.profile = _.extend(options.profile, {contact: [2], team: {_ids: []}});
 	}
 	return user;
 });
