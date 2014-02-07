@@ -6,6 +6,7 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 	template.rendered = function() {
 		if (afterwards) {
 			oldRender && oldRender.apply(this, arguments);
+			console.log("between");
 			oneTimeFunc.apply(this, arguments);
 		}
 		else {
@@ -15,4 +16,11 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 		template.rendered = oldRender;
 	}
 	return true;
+};
+
+templateAttach = function(template, callback) {
+	if (typeof template === "string") template = Template[template];
+	if (!template) return false;
+	document.body.appendChild(Spark.render(template));
+	callback.apply(this, arguments);
 };

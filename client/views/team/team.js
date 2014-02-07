@@ -80,13 +80,14 @@ Template.teamDetails.helpers({
   },
   gender: function() {
     var team = Teams.findOne(Router.current().route.currentTeamId);
-    return ["Male", "Female"][team.gender];
+    return team ? ["Male", "Female"][team.gender] : Meteor.user().profile.gender;
   }
 });
 Template.teamDetails.events({
   'click #addNewTeam': function() {
     if (Router.current().route.currentTeamId)
       Router.current().route.currentTeamId = null;
+      Spark.getDataContext(document.querySelector('#teamNameHolder')).nameEntryOverride.dep.changed();
     setTeamData();
   },
   'click #deleteTeam': function() {
@@ -113,7 +114,6 @@ Template.teamDetails.events({
     var homeGroundId = $('#homeGround>input').attr('id'),
         teamName = $('#teamName').val() || $('#teamChoice').dropdown('get text'),
         node = document.querySelector('#cancelOrSave');
-    console.log(homeGroundId, teamName);
     if (!(homeGroundId && teamName)) Spark.getDataContext(node).disableSave.set(true);
     else Spark.getDataContext(node).disableSave.set(false);
   },
@@ -144,19 +144,34 @@ Template.teamDetails.events({
     }
     var teamNameHolder = document.querySelector('#teamNameHolder');
     Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
-    renderOnce('teamName', function() {
-      setTeamData();
-      teamNameDropdownInit();
-    });
     return false;
   },
   'click #resetButton': function() {
     var teamNameHolder = document.querySelector('#teamNameHolder');
-    renderOnce('teamName', function() {
-      setTeamData();
-      teamNameDropdownInit();
-    });
     Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+  },
+  'click #joinTeam': function() {
+    templateAttach('joinTeamModal', function() {
+      $('#joinTeamModal').modal('setting', {
+          onHide: function() {
+            $('#joinTeamModal').remove();
+          },
+        });
+    });
+  },
+  'click #sendInvitation': function() {
+    if (Router.current().route.currentTeamId) {
+      Meteor.call('sendSecureCode', Router.current().route.currentTeamId, function(err) {
+        if (!err)
+          templateAttach('invitationModal', function() {
+            $('#invitationModal').modal('setting', {
+              onHide: function() {
+                $('#invitationModal').remove();
+              },
+            });
+          });
+      });
+    }
   }
 });
 Template.teamDetails.rendered = function() {
@@ -164,10 +179,17 @@ Template.teamDetails.rendered = function() {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
     $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
-    $(this.findAll('.ui.dropdown:not(#teamChoice)')).dropdown({verbose: false, debug: false, performance: false});
-    clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-    setTeamData();
     this.renderedOnce = true;
+  }
+  $(this.findAll('.ui.dropdown:not(#teamChoice)')).dropdown({verbose: false, debug: false, performance: false});
+  clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
+  setTeamData();
+  teamNameDropdownInit();
+  if (Router.current().route.currentTeamId) {
+    $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId);
+    var teamData = Teams.findOne(Router.current().route.currentTeamId);
+    $('#teamName').val(teamData.name);
+    $('#teamName').focus();
   }
 };
 Template.teamDetails.created = function() {
@@ -193,7 +215,7 @@ Template.teamName.events({
         $('#teamName').val(teamData.name);
         $('#teamName').focus();
       }
-      renderOnce('teamName', myFunc);  
+//      renderOnce('teamName', myFunc);  
     }
   },
   'keyup input, click div': function() {
@@ -229,6 +251,14 @@ Template.newVenueBox.events({
     }
   }
 });
+
+Template.invitationModal.rendered = function() {
+  $('#invitationModal').modal('show'); 
+};
+
+Template.joinTeamModal.rendered = function() {
+  $('#joinTeamModal').modal('show'); 
+};
 
 var regularDayCheckboxEnable = function() {
   $('#dayChoiceSection').css({ opacity: 1 });
@@ -279,8 +309,7 @@ var setTeamData = function() {
     }
     $('#weekly')[0].checked = teamData.regular ? true : false;
     if (teamData.regular) {
-      $('#dayChoiceSection>.ui.dropdown').dropdown('set value', teamData.day);
-      $('#dayChoiceSection>.ui.dropdown').dropdown('set text', appVars.days[teamData.day].name);
+      $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', teamData.day ? teamData.day : 0);
       $('#sameTime')[0].checked = teamData.sameTime ? true : false;
       $('#dayChoiceSection, #timeCheckbox').css({opacity: 1});
       if (teamData.sameTime) {
@@ -299,8 +328,7 @@ var setTeamData = function() {
     $('#teamName').val('');
     $('#homeGround>input').attr('id', '');
     $('#homeGround>input').val('');
-    $('#dayChoiceSection>.ui.dropdown').dropdown('set value', 0);
-    $('#dayChoiceSection>.ui.dropdown').dropdown('set text', appVars.days[0].name);
+    $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', 0);
     $('timePickerHour').val(19);
     $('timePickerMinute').val(0);
     $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});

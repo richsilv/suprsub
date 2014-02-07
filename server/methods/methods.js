@@ -164,6 +164,40 @@ Meteor.methods({
 		});
 		return "done";
 	},
+	sendSecureCode: function(code) {
+		var contacts = Meteor.user().profile.contact,
+			team = Teams.findOne(code),
+			suprsubRoot = Meteor.absoluteUrl();
+		if (0 in contacts) {
+			Meteor.call('twitterSendMessage', "Here's the link you need to send to your teammates - " + 
+				suprsubRoot + "/team/" + code + ", or they can type the code " + code + "into the 'Join Team' " +
+				"form if they're already a member.");
+		}
+		if (2 in contacts) {
+			Email.send({
+				from: "info@suprsub.meteor.com",
+				to: Meteor.user().emails[0].address,
+				subject: "SuprSub team link and code",
+				html: Handlebars.templates['sendcode']({
+					teamName: team.name,
+					suprsubRoot: suprsubRoot,
+					code: code
+				})
+			});
+		}
+		else if (1 in contacts) {
+			Email.send({
+				from: "info@suprsub.meteor.com",
+				to: Meteor.user().services.facebook.email,
+				subject: "SuprSub team link and code",
+				html: Handlebars.templates['sendcode']({
+					teamName: team.name,
+					suprsubRoot: suprsubRoot,
+					code: code
+				})
+			});			
+		}
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}

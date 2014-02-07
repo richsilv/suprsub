@@ -12,13 +12,14 @@
       "jquery-transit": {
         "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
         "branch": "master"
-      }
+      },
+      "handlebars-server": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.12.1",
-        "commit": "6d895bcec1953a1dd609541288fccc3971520d72"
+        "tag": "v0.12.4",
+        "commit": "a9dec18066d80e575e57189e005782436ad1d87f"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
@@ -54,6 +55,11 @@
         "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
         "branch": "master",
         "commit": "d3b8a4149ab40b14b125edd473c3850177895fb5"
+      },
+      "handlebars-server": {
+        "git": "https://github.com/EventedMind/meteor-handlebars-server.git",
+        "tag": "v1.1.0",
+        "commit": "ed99c8e9280894519f44a5b4c84f66ff596c5450"
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",

@@ -7,6 +7,9 @@
     "zurb-foundation": {},
     "houston": {},
     "smart-collections": {},
-    "jquery-transit": {"git": "https://github.com/noorderstorm/meteor-jquery-transit.git"}
+    "jquery-transit": {
+      "git": "https://github.com/noorderstorm/meteor-jquery-transit.git"
+    },
+    "handlebars-server": {}
   }
 }
