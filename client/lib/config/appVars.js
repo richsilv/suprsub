@@ -27,7 +27,8 @@ appVars = (function() {
 		{name: "Afternoon", periodCode: 1}, 
 		{name: "Evening", periodCode: 2}
 		],
-		_libs: {}
+		_libs: {},
+	    saveCalc: new Deps.Dependency()
 	};
 }
 )();

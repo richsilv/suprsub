@@ -198,6 +198,9 @@ Meteor.methods({
 			});			
 		}
 	},
+	getTeamMembers: function(teamId) {
+		return teamId ? Meteor.users.find({'profile.team._ids': teamId}) : [];
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}

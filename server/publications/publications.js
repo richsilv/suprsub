@@ -21,7 +21,7 @@ Meteor.publish('postings', function(id) {
 Meteor.publish('teams', function(ids) {
 	if (ids) return Teams.find({_id: {$in: ids}});
 	else {
-		var thisUser = Meteor.user();
+		var thisUser = Meteor.users.findOne(this.userId);
 		if (thisUser && thisUser.profile && thisUser.profile.team)
 			return Teams.find({_id: {$in: thisUser.profile.team._ids}});
 		else

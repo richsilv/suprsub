@@ -30,6 +30,7 @@ clientFunctions = (function() {
 	var markerClickEvent = function(m) {
 		$('#homeGround input').val(m.title);
 		$('#homeGround input').attr('id', m.pitch_ID);
+		appVars.saveCalc.changed();
 		window.scrollTo(window.scrollX, 0);
 	};
 

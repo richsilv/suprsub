@@ -1,11 +1,15 @@
-<template name="teamSettings">
+<template name="teamInfo">
 	<div id="main-background-image"></div>
 	<div class="gap row">
 		<div class="large-16 columns">
 			{{> teamDetails}}
 		</div>
 	</div>
-
+		<div class="gap row">
+			{{> mainButtons}}
+		</div>
+	</div>
+	<div class="cleared row"></div>
 	<div class="gap row">
 		{{> otherInfo}}
 	</div>
@@ -21,138 +25,23 @@
 						{{> teamName}}
 					</div>
 					<div class="small-4 columns ui two buttons noMargin">
-						<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam"><i class="add icon"></i></div>
-						<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam"><i class="minus icon"></i></div>
+						{{> teamButtons}}
 					</div>
 					<div class="row">
-						<div class="columns">
-							<div class="ui four fluid icon buttons">
-								<div class="ui icon button attached withLabel" id="joinTeam">
-									<i class="users icon"></i>
-								</div>
-								<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation">
-									<i class="unordered list icon"></i>
-								</div>
-								<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation">
-									<i class="mail icon"></i>
-									<i class="right icon"></i>
-								</div>
-								<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation">
-									<i class="right icon"></i>
-									<i class="users icon"></i>
-								</div>
-							</div>
-						</div>
+						{{> playerButtons}}
 					</div>
+					{{#if teamId}}
+						<div class="ui fluid segment">
+							{{> playerTable}}
+						</div>
+					{{/if}}
 				</form>
 			</div>
 			<div class="medium-8 columns">
-				<form class="ui form segment content height225" id="teamForm">
-					<h2 class="ui header">Settings</h2>
-					<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
-						<div class="field">
-							<div class="checkboxLabel">Friendly</div>
-							<div class="ui toggle checkbox neutral">
-								<input type="checkbox" id="friendlyCompetitive">
-								<label></label>
-							</div>
-							<div class="checkboxLabel">Competitive</div>
-						</div>
-					</div>
-					<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
-						<div class="field">
-							<label>Game Format</label>
-							<div class="ui fluid selection dropdown">
-								<input type="hidden" id="format">
-								<div class="default text">Select</div>
-								<i class="dropdown icon"></i>
-								<div class="menu">
-									<div class="item" data-value="5">5-a-side</div>
-									<div class="item" data-value="6">6-a-side</div>
-									<div class="item" data-value="7">7-a-side</div>
-									<div class="item" data-value="8">8-a-side</div>
-									<div class="item" data-value="9">9-a-side</div>
-									<div class="item" data-value="10">10-a-side</div>
-									<div class="item" data-value="11">11-a-side</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="field">
-						<label>Home Ground</label>
-						{{#constant}}
-						<div class="ui input" id="homeGround">
-							<input placeholder="Use the dialogue box below to select" type="text" readonly>
-						</div>
-						{{/constant}}
-					</div>
-					<div class="two fields">
-						<div class="field" id="weeklyCheckBox">
-							<div class="ui toggle checkbox" id="regDayCheckbox">
-								<input type="checkbox" id="weekly">
-								<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
-							</div>
-						</div>
-						<div class="field opacity" id="dayChoiceSection">
-							<label>Day</label>
-							<div class="ui selection dropdown">
-								<input type="hidden" id="day">
-								<div class="default text">Select</div>
-								<i class="dropdown icon"></i>
-								<div class="menu">
-									{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="two fields">
-						<div class="field">
-							<div class="ui toggle checkbox opacity" id="timeCheckbox">
-								<input type="checkbox" id="sameTime">
-								<label>Same time<br class="show-for-medium-only"> each week?</label>
-							</div>
-						</div>
-						<div class="field opacity" id="timeSection">
-							<label>Kick-off</label>
-							<div class="row">
-								<div class="small-9 columns" style="margin: 0;">
-									<div class="ui left icon input">
-										<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
-										<i class="time icon"></i>
-									</div>
-								</div>
-								<div class="small-7 columns" style="margin: 0;">
-									<div class="ui input">
-										<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
-									</div>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
+				{{> teamSettings}}
 			</div>
 		</div>
 		<div class="cleared row"></div>
-		{{#isolate}}
-		<div class="gap row">
-			<div class="medium-4 medium-centered columns">
-				<div class="ui segment content whitetranslucent">
-					<div class="ui two fluid large buttons" id="cancelOrSave">
-						<div class="ui negative animated button" id="resetButton">
-							<div class="visible content">Reset</div>
-							<div class="hidden content"><i class="backward icon"></i></div>
-						</div>
-						<div class="ui positive animated{{#if disableSave}} disabled{{/if}} button" id="saveButton">
-							<div class="visible content">Save</div>
-							<div class="hidden content"><i class="save icon"></i></div>
-						</div>	
-					</div>
-				</div>
-			</div>
-		</div>
-		{{/isolate}}
-	</div>
-	<div class="cleared row"></div>
 </template>
 
 <template name="teamName">
@@ -177,27 +66,165 @@
 	</div>
 </template>
 
+<template name="teamButtons">
+	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam"><i class="add icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam"><i class="minus icon"></i></div>
+</template>
+
+<template name="playerButtons">
+	<div class="columns">
+		<div class="ui four fluid icon buttons">
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="toggleTeammates">
+				<i class="users icon"></i>
+			</div>
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="toggleRingers">
+				<i class="unordered list icon"></i>
+			</div>
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation">
+				<i class="mail icon"></i>
+				<i class="right icon"></i>
+			</div>
+			<div class="ui icon button attached withLabel" id="joinTeam">
+				<i class="right icon"></i>
+				<i class="users icon"></i>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="playerTable">
+	<table class="ui table">
+		<tr><th>{{tableHeader}}</th></tr>
+		{{#each tableInfo}}
+		<tr><td>{{name}}</td></tr>
+		{{/each}}
+	</table>	
+</template>
+
+<template name="teamSettings">
+	<form class="ui form segment content height225" id="teamForm">
+		<h2 class="ui header">Settings</h2>
+		<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
+			<div class="field">
+				<div class="checkboxLabel">Friendly</div>
+				<div class="ui toggle checkbox neutral">
+					<input type="checkbox" id="friendlyCompetitive">
+					<label></label>
+				</div>
+				<div class="checkboxLabel">Competitive</div>
+			</div>
+		</div>
+		<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
+			<div class="field">
+				<label>Game Format</label>
+				<div class="ui fluid selection dropdown">
+					<input type="hidden" id="format">
+					<div class="default text">Select</div>
+					<i class="dropdown icon"></i>
+					<div class="menu">
+						<div class="item" data-value="5">5-a-side</div>
+						<div class="item" data-value="6">6-a-side</div>
+						<div class="item" data-value="7">7-a-side</div>
+						<div class="item" data-value="8">8-a-side</div>
+						<div class="item" data-value="9">9-a-side</div>
+						<div class="item" data-value="10">10-a-side</div>
+						<div class="item" data-value="11">11-a-side</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="field">
+			<label>Home Ground</label>
+			{{#constant}}
+			<div class="ui input" id="homeGround">
+				<input placeholder="Use the dialogue box below to select" type="text" readonly>
+			</div>
+			{{/constant}}
+		</div>
+		<div class="two fields">
+			<div class="field" id="weeklyCheckBox">
+				<div class="ui toggle checkbox" id="regDayCheckbox">
+					<input type="checkbox" id="weekly">
+					<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
+				</div>
+			</div>
+			<div class="field opacity" id="dayChoiceSection">
+				<label>Day</label>
+				<div class="ui selection dropdown">
+					<input type="hidden" id="day">
+					<div class="default text">Select</div>
+					<i class="dropdown icon"></i>
+					<div class="menu">
+						{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="two fields">
+			<div class="field">
+				<div class="ui toggle checkbox opacity" id="timeCheckbox">
+					<input type="checkbox" id="sameTime">
+					<label>Same time<br class="show-for-medium-only"> each week?</label>
+				</div>
+			</div>
+			<div class="field opacity" id="timeSection">
+				<label>Kick-off</label>
+				<div class="row">
+					<div class="small-9 columns" style="margin: 0;">
+						<div class="ui left icon input">
+							<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+							<i class="time icon"></i>
+						</div>
+					</div>
+					<div class="small-7 columns" style="margin: 0;">
+						<div class="ui input">
+							<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</template>
+
+<template name="mainButtons">
+	<div class="medium-4 medium-centered columns">
+		<div class="ui segment content whitetranslucent">
+			<div class="ui two fluid large buttons" id="cancelOrSave">
+				<div class="ui negative animated button" id="resetButton">
+					<div class="visible content">Reset</div>
+					<div class="hidden content"><i class="backward icon"></i></div>
+				</div>
+				<div class="ui positive animated{{#if disableSave}} disabled{{/if}} button" id="saveButton">
+					<div class="visible content">Save</div>
+					<div class="hidden content"><i class="save icon"></i></div>
+				</div>	
+			</div>
+		</div>
+	</div>	
+</template>
+
 <template name="otherInfo">
 	<div class="large-16 columns">
 		<div class="ui segment content whitetranslucent" id="otherInfo">
 			<div class="row">
 				<div class="large-8 columns">
 					<form class="ui form segment content">
-							<div class="ui grid">
-								<div class="field fourteen wide column">
-									<label>Home Ground</label>
-									<div class="ui left labeled icon input">
-										<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
-										<i class="globe icon"></i>
-									</div>
-								</div>
-								<div class="two wide column">
-									<div class="ui right attached animated fade button withLabel" id="teamSearchButton">
-										<div class="hidden content">Search</div>
-										<div class="visible content"><i class="search icon"></i></div>
-									</div>
+						<div class="ui grid">
+							<div class="field fourteen wide column">
+								<label>Home Ground</label>
+								<div class="ui left labeled icon input">
+									<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
+									<i class="globe icon"></i>
 								</div>
 							</div>
+							<div class="two wide column">
+								<div class="ui right attached animated fade button withLabel" id="mapSearchButton">
+									<div class="hidden content">Search</div>
+									<div class="visible content"><i class="search icon"></i></div>
+								</div>
+							</div>
+						</div>
 					</form>
 					<div id="matches"></div>
 					<div class="mini purple ui button bottomRight" id="addVenue">Add a venue</div>
@@ -206,9 +233,9 @@
 				<div class="large-8 columns">
 					<div id="pitchMapContainerSmall">
 						{{#if tabChoices 'newVenue'}}
-							{{> newVenueBox}}
+						{{> newVenueBox}}
 						{{else}}
-							{{> pitchMapSmall}}
+						{{> pitchMapSmall}}
 						{{/if}}
 					</div>
 				</div>
@@ -218,9 +245,9 @@
 </template>
 
 <template name="pitchMapSmall">
-		{{#constant}}
-		<div class="ui row small" id="pitchMap" style="display: none;"></div>
-		{{/constant}}
+	{{#constant}}
+	<div class="ui row small" id="pitchMap" style="display: none;"></div>
+	{{/constant}}
 </template>
 
 <template name="newVenueBox">
