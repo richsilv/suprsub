@@ -8,9 +8,11 @@ appConfig = (function() {
 		facebooklocal: SecureData.findOne({Name: 'facebooklocal'}).Value,
 		facebookprod: SecureData.findOne({Name: 'facebookprod'}).Value,
 		twitterconfig: SecureData.findOne({Name: 'twitterconfig'}).Value,
-		twitterAccountId: SecureData.findOne({Name: 'twitterconfig'}).AccountId,
+		twitterlocal: SecureData.findOne({Name: 'twitterlocal'}).Value,
+		//twitterAccountId: SecureData.findOne({Name: 'twitterconfig'}).AccountId,
 		//twitterToken: SecureData.findOne({Name: 'twitterconfig'}).Token;
 		// DELETE THIS TO POST AS SUPRSUB
+		twitterAccountId: SecureData.findOne({Name: 'twitterlocal'}).AccountId,
 		twitterToken: SecureData.findOne({Name: 'Claudio'}).Value.service.twitter,
 		// ==============================
 		dictionary: JSON.parse(Assets.getText("dictionary.json")),

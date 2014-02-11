@@ -13,7 +13,9 @@
 	<div class="gap row">
 		{{> otherInfo}}
 	</div>
-
+	{{#if codeEntered}}
+		{{> codeModal}}
+	{{/if}}
 </template>
 
 <template name="teamDetails">
@@ -74,10 +76,10 @@
 <template name="playerButtons">
 	<div class="columns">
 		<div class="ui four fluid icon buttons">
-			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="toggleTeammates">
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#if tabChoices 'membersRingers'}} teal{{/if}}" id="toggleTeammates">
 				<i class="users icon"></i>
 			</div>
-			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="toggleRingers">
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#unless tabChoices 'membersRingers'}} teal{{/unless}}" id="toggleRingers">
 				<i class="unordered list icon"></i>
 			</div>
 			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation">
@@ -107,8 +109,8 @@
 		<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">
 				<div class="checkboxLabel">Friendly</div>
-				<div class="ui toggle checkbox neutral">
-					<input type="checkbox" id="friendlyCompetitive">
+				<div class="ui toggle checkbox neutral" id="friendlyCompetitive">
+					<input type="checkbox">
 					<label></label>
 				</div>
 				<div class="checkboxLabel">Competitive</div>
@@ -117,7 +119,7 @@
 		<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">
 				<label>Game Format</label>
-				<div class="ui fluid selection dropdown">
+				<div class="ui fluid selection dropdown" id="gameFormat">
 					<input type="hidden" id="format">
 					<div class="default text">Select</div>
 					<i class="dropdown icon"></i>
@@ -273,15 +275,54 @@
 	</form>
 </template>
 
-<template name="invitationModal">
-	<div class="ui modal" id="invitationModal">
+<template name="chooseCodeTypeModal">
+	<div class="ui modal" id="chooseCodeTypeModal">
 		<i class="close icon"></i>
 		<div class="header">
-			Team Inviation Sent
+			Choose Invitation Type
+		</div>
+		<div class="content">
+			<div class="left">
+				There are two sorts of invitation you can generate:
+				<ul>
+					<li>An invitation that will allow other players to join your team as a <em>teammate</em>, and will allow them to view and change your team settings.</li>
+					<li>An invitation to register as a <em>preferred Suprsub</em> for your team, meaning they can be posted first whenever you're looking for an extra player.  They won't be able to view or edit any of the team details though.</li>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="ui button" id="inviteTeammates">Invite Teammates</div>
+			<div class="ui button" id="inviteSuprsubs">Invite Suprsubs</div>
+		</div>
+	</div>
+</template>
+
+<template name="teammateInvitationModal">
+	<div class="ui modal" id="teammateInvitationModal">
+		<i class="close icon"></i>
+		<div class="header">
+			Teammate Inviation Sent
 		</div>
 		<div class="content">
 			<div class="left">
 				An invitation mail has been sent to you via {{contacts}}, containing the team code {{teamCode}}.  You can forward this to any team members you'd like to join your team and they can use the attached link to sign up.  If they're already a member, they can simply enter the code by clicking on the <em>Join Team</em> icon and entering it there.
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui button">OK</div>
+		</div>
+	</div>
+</template>
+
+<template name="suprsubInvitationModal">
+	<div class="ui modal" id="suprsubInvitationModal">
+		<i class="close icon"></i>
+		<div class="header">
+			Suprsub Inviation Sent
+		</div>
+		<div class="content">
+			<div class="left">
+				An invitation mail has been sent to you via {{contacts}}, containing the Suprsub code {{teamCode}}.  You can forward this to anybody you'd like to invite to be a preferred Suprsub and they can use the attached link to sign up.  If they're already a member, they can simply enter the code by clicking on the <em>Join Team</em> icon and entering it there.
 			</div>
 		</div>
 		<div class="actions">
@@ -300,7 +341,7 @@
 			<div class="left">
 				Enter the code that your team captain sent you here:
 				<div class="ui input">
-					<input type="text" placeholder="Team code...">
+					<input type="text" placeholder="Team code..." id="teamCodeEntry">
 				</div>
 			</div>
 		</div>
@@ -308,5 +349,23 @@
 			<div class="ui button">Cancel</div>		
 			<div class="ui button" id="joinTeamSubmitButton">Submit</div>
 		</div>
+	</div>
+</template>
+
+<template name="codeModal">
+	<div class="ui modal" id="codeModal">
+		<i class="close icon"></i>
+		<div class="header">
+			{{header}}
+		</div>
+		<div class="content">
+			<div class="left">
+				{{content}}
+			</div>
+		</div>
+		<div class="actions">	
+			<div class="ui button">OK</div>
+		</div>
+	</div>
 	</div>
 </template>

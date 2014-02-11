@@ -1,6 +1,6 @@
 clientFunctions = (function() {
 
-	var _libs = {};
+	var _libs = {}, joinTeamDep;
 
 	var contactString = function() {
 		var cString = '', contactArray = Meteor.user().profile.contact;
@@ -152,7 +152,7 @@ clientFunctions = (function() {
 		});
 	};
 
-	updateCircle = function() {
+	var updateCircle = function() {
 		if (appVars.liveCircle) appVars.liveCircle.setMap(null);
 		appVars.liveCircle = null;
 		var populationOptions = {
@@ -234,6 +234,34 @@ clientFunctions = (function() {
 		}
 	};
 
+	var joinTeam = function(code) {
+		var handle, self;
+		if (!joinTeamDep) {
+			joinTeamDep = {
+				ready: false,
+				readyDep: new Deps.Dependency()
+			};
+		}
+		Meteor.call('joinTeam', code, function(err, res) {
+			joinTeamDep.ready = true;
+			joinTeamDep.readyDep.changed();
+			if (!err) {
+				joinTeamDep.info = res;
+			}
+		});
+		handle = {
+			ready: function() {
+				joinTeamDep.readyDep.depend();
+				return joinTeamDep.ready;
+			},
+			info: function() {
+				joinTeamDep.readyDep.depend();
+				return joinTeamDep.info;				
+			}
+		};
+		return handle;
+	};
+
 	return {
 		_libs: _libs,
 		contactString: contactString,
@@ -245,7 +273,8 @@ clientFunctions = (function() {
 		initializeCircle: initializeCircle,
 		updateCircle: updateCircle,
 		logTemplateEvents: logTemplateEvents,
-		suprsubPlugins: suprsubPlugins
+		suprsubPlugins: suprsubPlugins,
+		joinTeam: joinTeam
 	};
 
 })();

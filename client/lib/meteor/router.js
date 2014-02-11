@@ -45,16 +45,17 @@ Router.map(function() {
 });
 
 Router.map(function() {
+  var subs;
   this.route('teamDetails', {
-    path: '/team',
+    path: '/team/:joinCode?',
     template: 'mainTemplate',
     yieldTemplates: {
       'teamInfo': {to: 'mainSection'},
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      var thisUser = Meteor.user(),
-          subs = [Meteor.subscribe('allpitches'), clientFunctions.loadGMaps()];
+      var thisUser = Meteor.user();
+      subs = [Meteor.subscribe('allpitches'), clientFunctions.loadGMaps()];
       if (thisUser && thisUser.profile && thisUser.profile.team) {
         subs.push(Meteor.subscribe('teams'));
         Router.current().route.teamIds = thisUser.profile.team._ids;
@@ -74,6 +75,12 @@ Router.map(function() {
         clientFunctions.initialize();
         Template.pitchMapLarge.rendered = null;
       };
+    },
+    after: function() {
+      if (this.params.joinCode) {
+        Router.current().route.codeEntered = clientFunctions.joinTeam(this.params.joinCode);
+        this.redirect('/team');
+      };      
     }
   });
 });

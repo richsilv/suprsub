@@ -30,13 +30,13 @@ Meteor.startup(function() {
 		service: "twitter"
 	});
 	if (Meteor.absoluteUrl().slice(0,22) !== "http://localhost:3000/") {
-	//	Accounts.config({sendVerificationEmail: false, forbidClientAccountCreation: false});
-	Accounts.loginServiceConfiguration.insert(appConfig.facebookprod);
-	Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);
-}
-else {
-	Accounts.loginServiceConfiguration.insert(appConfig.facebooklocal);
-	Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);	
-}
+		//	Accounts.config({sendVerificationEmail: false, forbidClientAccountCreation: false});
+		Accounts.loginServiceConfiguration.insert(appConfig.facebookprod);
+		Accounts.loginServiceConfiguration.insert(appConfig.twitterconfig);
+	}
+	else {
+		Accounts.loginServiceConfiguration.insert(appConfig.facebooklocal);
+		Accounts.loginServiceConfiguration.insert(appConfig.twitterlocal);	
+	}
 
 });

@@ -1,6 +1,7 @@
 var tabChoices = new suprsubDep({
       newVenue: false,
-      venueSearch: false
+      venueSearch: false,
+      membersRingers: false
     });
 
 // **************************
@@ -11,6 +12,27 @@ Handlebars.registerHelper("tabChoices", function(key) {
 
 Handlebars.registerHelper("teamId", function() {
   return Router.current().route.currentTeamId.get();
+});
+
+Handlebars.registerHelper("codeEntered", function() {
+  if (Router.current().route.codeEntered && Router.current().route.codeEntered.ready()) {
+    return Router.current().route.codeEntered.info().code || null;
+  }
+});
+
+// **************************
+
+Template.teamDetails.events({
+   'submit form': function() {
+    Deps.flush();
+    if (!Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.get()) {
+      saveTeamData({target: '#saveButton'});
+      renderOnce('teamName', function() {
+        $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
+      });
+    }
+    return false;
+  } 
 });
 
 // **************************
@@ -35,7 +57,7 @@ Template.teamName.events({
         $('#teamName').val(teamData.name);
         $('#teamName').focus();
       }
-//      renderOnce('teamName', myFunc);  
+      renderOnce('teamName', myFunc);  
     }
   },
   'keyup input, click div': function() {
@@ -84,12 +106,22 @@ Template.playerTable.helpers({
       return "Preferred Suprsubs";
   },
   tableInfo: function() {
-    Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
-      if (err)
-        console.log(err);
-      else
-        return res;
-    });
+    if (tabChoices.getKey('membersRingers')) {
+      Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
+        if (err)
+          console.log(err);
+        else
+          return res;
+      });
+    }
+    else {
+      Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
+        if (err)
+          console.log(err);
+        else
+          return res;
+      });      
+    }
   }
 });
 
@@ -219,22 +251,21 @@ Template.playerButtons.events({
     templateAttach('joinTeamModal', function() {
       $('#joinTeamModal').modal('setting', {
           onHide: function() {
-            $('#joinTeamModal').remove();
+            var joinCode = $('#teamCodeEntry').val();
+            $('.ui.dimmer.page').remove();
+            Router.current().route.codeEntered = clientFunctions.joinTeam(joinCode);            
           },
         });
     });
   },
   'click #sendInvitation': function() {
     if (Router.current().route.currentTeamId.get()) {
-      Meteor.call('sendSecureCode', Router.current().route.currentTeamId.get(), function(err) {
-        if (!err)
-          templateAttach('invitationModal', function() {
-            $('#invitationModal').modal('setting', {
-              onHide: function() {
-                $('#invitationModal').remove();
-              },
-            });
-          });
+      templateAttach('chooseCodeTypeModal', function() {
+        $('#chooseCodeTypeModal').modal('setting', {
+          onHide: function() {
+            $('.ui.dimmer.page').remove();
+          },
+        });
       });
     }
   }
@@ -277,8 +308,54 @@ Template.newVenueBox.events({
 
 // **************************
 
-Template.invitationModal.rendered = function() {
-  $('#invitationModal').modal('show'); 
+Template.chooseCodeTypeModal.events({
+  'click #inviteTeammates': function() {
+    Meteor.setTimeout(function() {
+      $('#chooseCodeTypeModal').modal('hide');
+      Meteor.call('sendTeamCode', Router.current().route.currentTeamId.get(), function(err) {
+        if (!err)
+          templateAttach('teammateInvitationModal', function() {
+            $('#teammateInvitationModal').modal('setting', {
+              onHide: function() {
+                $('.ui.dimmer.page').remove();
+              },
+            });
+          });
+      });
+    }, 250);
+  },
+  'click #inviteSuprsubs': function() {
+    Meteor.setTimeout(function() {
+      var thisTeam = Teams.findOne(Router.current().route.currentTeamId.get());
+      $('#chooseCodeTypeModal').modal('hide');
+      Meteor.call('sendRingerCode', thisTeam.ringerCode, Meteor.user().name, function(err) {
+        if (!err)
+          templateAttach('suprsubInvitationModal', function() {
+            $('#suprsubInvitationModal').modal('setting', {
+              onHide: function() {
+                $('.ui.dimmer.page').remove();
+              },
+            });
+          });
+      });
+    }, 250);
+  }  
+});
+
+Template.chooseCodeTypeModal.rendered = function() {
+  $('#chooseCodeTypeModal').modal('show'); 
+};
+
+// **************************
+
+Template.teammateInvitationModal.rendered = function() {
+  $('#teammateInvitationModal').modal('show'); 
+};
+
+// **************************
+
+Template.suprsubInvitationModal.rendered = function() {
+  $('#suprsubInvitationModal').modal('show'); 
 };
 
 // **************************
@@ -287,12 +364,37 @@ Template.joinTeamModal.rendered = function() {
   $('#joinTeamModal').modal('show'); 
 };
 
+// **************************
+
+Template.codeModal.helpers({
+  header: function() {
+    return ['', 'Suprsub Registered', 'Team Joined', 'Code not recognised'][Router.current().route.codeEntered.info().code];
+  },
+  content: function() {
+    var contentBase = [
+      '',
+      "Congratulations, you're now registered as a preferred Suprsub for *****!",
+      "Congratulations, you've just joined a new team - *****!  You should see them in the drop-down menu under <strong>Team Name</strong>.",
+      "Sorry, but we don't recognise the code you've entered."
+    ][Router.current().route.codeEntered.info().code];
+    return contentBase.replace("*****", Router.current().route.codeEntered.info().teamName);
+  }
+});
+Template.codeModal.rendered = function() {
+  $('#codeModal').modal({
+    onHide: function() {
+      $('.ui.dimmer.page').remove();
+      delete Router.current().route.codeEntered;
+    }
+  }).modal('show');
+}
+
 // ***************** DEPS *************************
 
 Deps.autorun(function() {
   appVars.saveCalc.depend();
   var homeGroundId = $('#homeGround>input').attr('id'),
-      teamName = $('#teamName') ? $('#teamName').val() : $('#teamChoice').dropdown('get text'),
+      teamName = $('#teamName').length ? $('#teamName').val() : $('#teamChoice').dropdown('get text'),
       node = document.querySelector('#cancelOrSave');
   if (node) {
     if (!(homeGroundId && teamName)) Spark.getDataContext(node).disableSave.set(true);
@@ -338,7 +440,7 @@ function teamNameDropdownInit() {
   $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
 }
 
-function setTeamData() {
+setTeamData = function() {
   if (Router.current().route.currentTeamId.get()) {
     var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
     $('#teamName').val(teamData.name);
@@ -356,6 +458,11 @@ function setTeamData() {
         Meteor.clearInterval(googleCallback);
       }, 5000);
     }
+    if (teamData.type)
+      $('#friendlyCompetitive').checkbox('enable');
+    else
+      $('#friendlyCompetitive').checkbox('disable');
+    $('#gameFormat').dropdown('set value', teamData.format);
     if (teamData.regular) {
       $('#regDayCheckbox').checkbox('enable');
       $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', teamData.day ? teamData.day : 0);
@@ -371,7 +478,10 @@ function setTeamData() {
         $('#timeSection').css({opacity: 0.1});
       }
     }
-    else $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});
+    else {
+      $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});
+      $('#regDayCheckbox').checkbox('disable');
+    }
     return true;
   }
   else {
@@ -408,11 +518,14 @@ function saveTeamData(event) {
   teamProfile = {
       name: $('#teamName').val(),
       homeGround: homeGroundId,
-      regular: document.getElementById('weekly').checked
+      regular: $('#weekly')[0].checked,
+      type: $('#friendlyCompetitive input')[0].checked,
+      format: $('#gameFormat').dropdown('get value'),
+      ringerCode: Meteor.uuid()
   };
   if (teamProfile.regular) {
     teamProfile.day = parseInt($('#dayChoiceSection .ui.dropdown').dropdown('get value'), 10);
-    teamProfile.sameTime = document.getElementById('sameTime').checked;
+    teamProfile.sameTime = $('#sameTime')[0].checked;
     if (teamProfile.sameTime) teamProfile.time = new Date(0, 0, 0, parseInt(document.getElementById('timePickerHour').value, 10), parseInt(document.getElementById('timePickerMinute').value, 10));
   }
   var teamId, currentTeamId = Router.current().route.currentTeamId.get();

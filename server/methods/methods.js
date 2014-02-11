@@ -120,8 +120,9 @@ Meteor.methods({
 		});
 		fut.wait();
 	},
-	twitterBefriendSuprSub: function() {
-		var user = Meteor.user().services.twitter, fut = new Future();
+	twitterBefriendSuprSub: function(user) {
+		var fut = new Future();
+		if (!user) user = Meteor.user().services.twitter;
 		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
 		var Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
@@ -130,13 +131,13 @@ Meteor.methods({
 			access_token_secret:  user.accessTokenSecret
 		});
 		Twit.post('friendships/create', {user_id: appConfig.twitterAccountId, follow: true}, function(errOne, resOne) {
-			var Twit = new TwitMaker({
+			var secondTwit = new TwitMaker({
 				consumer_key:         appConfig.twitterconfig.consumerKey,
 				consumer_secret:      appConfig.twitterconfig.secret,
 				access_token:         appConfig.twitterToken.token,
 				access_token_secret:  appConfig.twitterToken.secret
 			});
-			Twit.post('friendships/create', {user_id: user.id, follow: true}, function(errTwo, resTwo) {
+			secondTwit.post('friendships/create', {user_id: user.id, follow: true}, function(errTwo, resTwo) {
 				fut.return({err: [errOne, errTwo], res: [resOne, resTwo]});
 			});
 		});
@@ -164,16 +165,16 @@ Meteor.methods({
 		});
 		return "done";
 	},
-	sendSecureCode: function(code) {
+	sendTeamCode: function(code) {
+		console.log(code);
 		var contacts = Meteor.user().profile.contact,
 			team = Teams.findOne(code),
 			suprsubRoot = Meteor.absoluteUrl();
-		if (0 in contacts) {
+		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your teammates - " + 
-				suprsubRoot + "/team/" + code + ", or they can type the code " + code + "into the 'Join Team' " +
-				"form if they're already a member.");
+				suprsubRoot + "team/" + code);
 		}
-		if (2 in contacts) {
+		if (contacts.indexOf(2) > -1) {
 			Email.send({
 				from: "info@suprsub.meteor.com",
 				to: Meteor.user().emails[0].address,
@@ -185,7 +186,7 @@ Meteor.methods({
 				})
 			});
 		}
-		else if (1 in contacts) {
+		else if (contacts.indexOf(1) > -1) {
 			Email.send({
 				from: "info@suprsub.meteor.com",
 				to: Meteor.user().services.facebook.email,
@@ -198,8 +199,60 @@ Meteor.methods({
 			});			
 		}
 	},
+	sendRingerCode: function(code, name) {
+		var contacts = Meteor.user().profile.contact,
+			team = Teams.findOne(code),
+			suprsubRoot = Meteor.absoluteUrl();
+		if (contacts.indexOf(0) > -1) {
+			Meteor.call('twitterSendMessage', "Here's the link you need to send to your potential Supsrubs - " + 
+				suprsubRoot + "team/" + code);
+		}
+		if (contacts.indexOf(2) > -1) {
+			Email.send({
+				from: "info@suprsub.meteor.com",
+				to: Meteor.user().emails[0].address,
+				subject: "SuprSub team link and code",
+				html: Handlebars.templates['sendcoderinger']({
+					teamName: team.name,
+					suprsubRoot: suprsubRoot,
+					code: code,
+					inviter: name
+				})
+			});
+		}
+		else if (contacts.indexOf(1) > -1) {
+			Email.send({
+				from: "info@suprsub.meteor.com",
+				to: Meteor.user().services.facebook.email,
+				subject: "SuprSub team link and code",
+				html: Handlebars.templates['sendcoderinger']({
+					teamName: team.name,
+					suprsubRoot: suprsubRoot,
+					code: code,
+					inviter: name
+				})
+			});			
+		}
+	},	
 	getTeamMembers: function(teamId) {
-		return teamId ? Meteor.users.find({'profile.team._ids': teamId}) : [];
+		return teamId ? Meteor.users.find({'profile.team._ids': teamId}, {fields: {name: true}}).fetch() : [];
+	},
+	getRingers: function(teamId) {
+		var team = Teams.findOne(teamId);
+		return team ? Meteor.users.find({_id: team.ringers}, {fields: {name: true}}).fetch() : [];
+	},
+	joinTeam: function(teamCode) {
+		var ringerTeam = Teams.findOne({ringerCode: teamCode});
+		if (ringerTeam) {
+			Teams.update(ringerTeam, {$push: {ringers: Meteor.userId()}});
+			return {code: 1, teamName: ringerTeam.name};
+		}
+		var memberTeam = Teams.findOne(teamCode);
+		if (memberTeam) {
+			Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': teamCode}});
+			return {code: 2, teamName: memberTeam.name};
+		}
+		return {code: 3};	
 	},
 	evaluate: function(string) {
 		return eval(string);
