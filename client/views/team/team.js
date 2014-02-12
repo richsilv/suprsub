@@ -2,7 +2,9 @@ var tabChoices = new suprsubDep({
       newVenue: false,
       venueSearch: false,
       membersRingers: false
-    });
+    }),
+    ringerList = new suprsubDep([]);
+    memberList = new suprsubDep([]);
 
 // **************************
 
@@ -107,20 +109,10 @@ Template.playerTable.helpers({
   },
   tableInfo: function() {
     if (tabChoices.getKey('membersRingers')) {
-      Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
-        if (err)
-          console.log(err);
-        else
-          return res;
-      });
+      return membersList.get();
     }
     else {
-      Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
-        if (err)
-          console.log(err);
-        else
-          return res;
-      });      
+      return ringerList.get();
     }
   }
 });
@@ -402,6 +394,21 @@ Deps.autorun(function() {
       Spark.getDataContext(node).disableSave.set(false);
     }
   }
+});
+
+Deps.autorun(function() {
+  Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
+    if (err)
+      console.log(err);
+    else
+      memberList.set(res);
+  });
+  Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
+    if (err)
+      console.log(err);
+    else
+      ringerList.set(res);
+  });   
 });
 
 // ***************** HELPER FUNCTIONS **********************
