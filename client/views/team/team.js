@@ -379,7 +379,7 @@ Template.codeModal.rendered = function() {
       delete Router.current().route.codeEntered;
     }
   }).modal('show');
-}
+};
 
 // ***************** DEPS *************************
 
@@ -419,21 +419,21 @@ function regularDayCheckboxEnable() {
     $('#dayChoiceSection, #timeCheckbox').css({ opacity: 1 });
   else
     $('#regDayCheckbox').checkbox('disable');
-};
+}
 function regularDayCheckboxDisable() {
   $('#dayChoiceSection, #timeCheckbox, #timeSection').css({ opacity: 0.1 });
   $('#timeCheckbox').checkbox('disable');
-};
+}
 
 function regularTimeCheckboxEnable() {
   if ($('#timeCheckbox').css('opacity') === '1')
     $('#timeSection').css({ opacity: 1 });
   else $('#timeCheckbox').checkbox('disable');
-};
+}
 function regularTimeCheckboxDisable() {
   if ($('#timeCheckbox').css('opacity') === '1')  
     $('#timeSection').css({ opacity: 0.1 });
-};
+}
 
 function teamNameDropdownInit() {
   $('#teamChoice').dropdown({
@@ -447,7 +447,7 @@ function teamNameDropdownInit() {
   $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
 }
 
-setTeamData = function() {
+function setTeamData() {
   if (Router.current().route.currentTeamId.get()) {
     var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
     $('#teamName').val(teamData.name);
