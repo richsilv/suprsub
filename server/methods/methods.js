@@ -238,7 +238,7 @@ Meteor.methods({
 	},
 	getRingers: function(teamId) {
 		var team = Teams.findOne(teamId);
-		return team ? Meteor.users.find({_id: {$in: team.ringers}}, {fields: {name: true}}).fetch() : [];
+		return team ? Meteor.users.find({_id: {$in: team.ringers}}, {fields: {'profile.name': true}}).fetch() : [];
 	},
 	joinTeam: function(teamCode) {
 		var ringerTeam = Teams.findOne({ringerCode: teamCode});
