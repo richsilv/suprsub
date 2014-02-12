@@ -2,7 +2,7 @@ var tabChoices = new suprsubDep({
       newVenue: false,
       venueSearch: false,
       membersRingers: false
-    }),
+    });
     ringerList = new suprsubDep([]);
     memberList = new suprsubDep([]);
 
@@ -109,13 +109,29 @@ Template.playerTable.helpers({
   },
   tableInfo: function() {
     if (tabChoices.getKey('membersRingers')) {
-      return membersList.get();
+      return memberList.get();
     }
     else {
       return ringerList.get();
     }
   }
 });
+Template.playerTable.rendered = function() {
+  Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
+    if (err)
+      console.log(err);
+    else
+      memberList.set(res);
+      membersRingers.dep.changed();
+  });
+  Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
+    if (err)
+      console.log(err);
+    else
+      ringerList.set(res);
+      membersRingers.dep.changed();
+  });
+};
 
 // **************************
 
@@ -402,12 +418,14 @@ Deps.autorun(function() {
       console.log(err);
     else
       memberList.set(res);
+      tabChoices.dep.changed();
   });
   Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
     if (err)
       console.log(err);
     else
       ringerList.set(res);
+      tabChoices.dep.changed();
   });   
 });
 
