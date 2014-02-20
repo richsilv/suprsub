@@ -183,6 +183,7 @@ serverFunctions = (function() {
 	}
 
 	function parseRequest(tokens) {
+		// SETUP
 		var richTokens = [],
 			requestData = {
 				players: null,
@@ -190,7 +191,14 @@ serverFunctions = (function() {
 				location: null,
 				gender: 0
 			},
-			state = 0;
+			state = 0,
+			thisUser = Meteor.user();
+
+		if (!thisUser || !thisUser.profile || !thisUser.profile.team || !thisUser.profile.team._ids || !thisUser.profile.team._ids.length)
+			return new Meteor.Error(500, "No user logged in or no team data for logged-in user");
+		var defaultTokens = getDefaultTokens(thisUser.profile.team._ids[0]);
+
+		// GET TOKEN COLLECTION
 		for (var i = 0, l = tokens.length; i < l; i++) {
 			var k = {code: -1}, n = 0, thisToken;
 			while (k.code < 0 && i + n < l) {
@@ -208,6 +216,11 @@ serverFunctions = (function() {
 			}
 		}
 		richTokens = stripUseless(richTokens);
+
+		// MERGE TOKENS
+		richTokens = mergeTokens(richTokens, defaultTokens);
+
+		//PROCEED WITH ANALYSIS
 		if (_.some(richTokens, function(token) {return token.code === 11;})) return {cancel: true};
 		else if (_.some(richTokens, function(token) {return token.code === 13;})) return {suprsub: true};
 		if (richTokens[0].code !== 6) return new Meteor.Error(500, "Number of players must come first.");
@@ -565,6 +578,46 @@ serverFunctions = (function() {
 
 	function getPeriodCode(dateTime) {
 		return Math.floor((dateTime.getHours() - 6) / 6)+ '/' + dateTime.getDay();
+	}
+
+	function getDefaultTokens(teamId) {
+		var thisTeam = Teams.findOne(teamId),
+			tokens = [];
+		if (thisTeam) {
+			for (prop in thisTeam) {
+				switch(prop) {
+					case 'homeGround':
+						tokens.push({code: 9, data: thisTeam.homeGround});
+						break;
+
+					case 'day':
+						if (thisTeam.regular)
+							tokens.push({code: 5, data: thisTeam.day});
+						break;
+
+					case 'time':
+						if (thisTeam.sameTime)
+							tokens.push({code: 7, data: {hours: thisTeam.time.getHours(), mins: thisTeam.time.getMinutes()}})
+						break;
+
+					case 'format':
+						tokens.push({code: 18, data: thisTeam.format});
+				}
+			}
+			console.log('DEFAULTS: ', tokens);
+			return tokens;
+		}
+		return [];
+	}
+
+	function mergeTokens(spec, defaults) {
+		console.log('IN: ', spec);
+		for (var i = 0, l = defaults.length; i < l; i += 1) {
+			if (!_.find(spec, function(token) {return token.code === defaults[i].code;}))
+				spec.push(defaults[i]);
+		}
+		console.log('OUT: ', spec);
+		return spec;
 	}
 
 	return {

@@ -22,11 +22,11 @@
 	<div class="row">
 		<div class="ui segment content whitetranslucent">
 			<div class="medium-8 columns">
-				<form class="ui form segment content height225" id="teamForm">
-					<div class="small-12 columns">
+				<form class="ui form segment content height225 teamForm">
+					<div class="small-11 columns">
 						{{> teamName}}
 					</div>
-					<div class="small-4 columns ui two buttons noMargin">
+					<div class="small-5 columns ui three buttons noMargin">
 						{{> teamButtons}}
 					</div>
 					<div class="row">
@@ -69,6 +69,7 @@
 </template>
 
 <template name="teamButtons">
+	<div class="ui fluid attached icon button withLabel{{#if defaultTeam}} teal{{/if}}" id="setDefault"><i class="pin icon"></i></div>
 	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam"><i class="add icon"></i></div>
 	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam"><i class="minus icon"></i></div>
 </template>
@@ -104,7 +105,7 @@
 </template>
 
 <template name="teamSettings">
-	<form class="ui form segment content height225" id="teamForm">
+	<form class="ui form segment content height225 teamForm">
 		<h2 class="ui header">Settings</h2>
 		<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">

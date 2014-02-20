@@ -6,6 +6,7 @@ Template.pitchData.helpers({
     else return []; 
   }
 });
+
 Template.pitchData.rendered = function() {
   var widths = $('#pitchTable > thead > tr:first-child') .children().map(function(i, e) {return e.offsetWidth;});
   $('#pitchTable > tbody > tr').each(function(j, f) {
@@ -13,17 +14,22 @@ Template.pitchData.rendered = function() {
   });
 };
 
+// **************************
+
 Template.playerDetails.helpers({
   "tabChoice": function(key, value) {
     if ('tabChoices' in appVars) return appVars.tabChoices.getKey(key) === value;
     else return false; 
   }
 });
+
 Template.playerDetails.events({
   'click #tabSpace div a': function(event, target) {
     appVars.tabChoices.setKey('playerTab', event.target.name);
   }
 });
+
+// **************************
 
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
@@ -44,6 +50,7 @@ Template.defineBounds.events({
     clientFunctions.updateCircle();
   }  
 });
+
 Template.defineBounds.rendered = function() {
   $('#distanceWrite').val(appVars.circleSize.get()/100);
   $('#distanceRead').html(parseInt($('#distanceWrite').val(), 10)/10 + 'km');
@@ -52,11 +59,14 @@ Template.defineBounds.rendered = function() {
   $('#pitchMap').css('margin-left', -newWidth/2);
 };
 
+// **************************
+
 Template.playerAreaButtons.helpers({
   unmoved: function() {
     return !appVars.circleChanged.get();
   }
 });
+
 Template.playerAreaButtons.events({
   'click #saveBoundsButton': function(event) {
     appVars.circleChanged.set(false);
@@ -95,6 +105,8 @@ Template.playerAreaButtons.events({
   }
 });
 
+// **************************
+
 Template.playerForm.helpers({
   first_name: function() {
     return (Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.first_name : null;
@@ -116,6 +128,7 @@ Template.playerForm.helpers({
     else return false;
   }
 });
+
 Template.playerForm.events({
   'click #saveButton': function(event) {
     var availability = {},
@@ -174,6 +187,7 @@ Template.playerForm.events({
     $('.dropdown').dropdown('set text', clientFunctions.contactString()).dropdown('hide');
   }
 });
+
 Template.playerForm.rendered = function() {
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
@@ -187,6 +201,8 @@ Template.playerForm.rendered = function() {
   });
 };
 
+// **************************
+
 Template.availability.helpers({
   days: function() {
     return appVars.days;
@@ -198,6 +214,7 @@ Template.availability.helpers({
     return {periodCode: this.periodCode, days: appVars.days};
   }
 });
+
 Template.availability.rendered = function() {
   var thisUser = Meteor.user();
   if (thisUser && thisUser.profile && thisUser.profile.player && thisUser.profile.player.availability) {
@@ -206,6 +223,8 @@ Template.availability.rendered = function() {
     }
   }
 };
+
+// **************************
 
 Template.linkModal.events({
   'click #emailCancel': function() {
@@ -234,6 +253,7 @@ Template.linkModal.events({
     });
   }
 });
+
 Template.linkModal.rendered = function() {
   $('#linkModal').modal({
     onShow: function() {
@@ -262,3 +282,32 @@ Template.linkModal.rendered = function() {
     verbose: false
   });
 };
+
+// ***************** DEPS *************************
+
+Deps.autorun(function() {
+    if (appVars.liveCircle) {
+      appVars.mapCenter.set(appVars.liveCircle.getCenter());
+    }
+    else if (appVars.circleSize) {
+      var populationOptions = {
+        strokeColor: '#78db1c',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#78db1c',
+        fillOpacity: 0.35,
+        map: appVars.pitchMap,
+        draggable: true,
+        center: appVars.mapCenter.get(),
+        radius: appVars.circleSize.get()
+      };
+      if (window.google) {
+        appVars.liveCircle = new google.maps.Circle(populationOptions);
+        google.maps.event.addListener(appVars.liveCircle, 'center_changed', function() {
+          appVars.mapCenter.set(appVars.liveCircle.getCenter());
+          appVars.liveCircle.setOptions({ strokeColor: '#db781c', fillColor: '#db781c' });
+          appVars.circleChanged.set(true);
+        });
+      }
+    }
+});

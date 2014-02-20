@@ -1,0 +1,48 @@
+#adminGrid ul {
+	height: 300px;
+	overflow-y: auto;
+}
+
+.dataBox {
+	height: 200px;
+	border: 1px solid black;
+	overflow-y: scroll;
+}
+
+.keyName {
+	color: purple;
+}
+
+.idText {
+	color: blue;
+}
+
+.objId {
+	color: darkred;	
+}
+
+.twitterId {
+	color: darkorange;
+}
+
+.object {
+	color: darkgreen;
+}
+
+.backButton {
+	float: right;
+	margin-right: 50px;
+	margin-top: 20px;
+}
+
+#tweetSubmit {
+	display: inline;
+	width: 10%;
+	float: right;
+}
+
+#tweetText {
+	width: 90%%;
+	display: inline;
+	float: left;
+}

@@ -10,7 +10,7 @@ Router.configure({
       this.stop();
     }
     else {
-      this.subscribe('userData').wait();
+      this.subscribe('userData');
     }
   },
   after: function() {
@@ -21,6 +21,9 @@ Router.configure({
 });
 
 Router.map(function() {
+
+  var subs;
+
   this.route('playerDetails', {
     path: '/player',
     template: 'mainTemplate',
@@ -29,7 +32,7 @@ Router.map(function() {
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      return [Meteor.subscribe('allpitches'), clientFunctions.loadGMaps()];
+      return [Meteor.subscribe('allPitches'), clientFunctions.loadGMaps()];
     },
     action: function() {
       this.render();
@@ -42,10 +45,7 @@ Router.map(function() {
       appVars.circleSize = new suprsubDep(8000);
     }
   });
-});
 
-Router.map(function() {
-  var subs;
   this.route('teamDetails', {
     path: '/team/:joinCode?',
     template: 'mainTemplate',
@@ -55,7 +55,7 @@ Router.map(function() {
     },
     waitOn: function() {
       var thisUser = Meteor.user();
-      subs = [Meteor.subscribe('allpitches'), clientFunctions.loadGMaps()];
+      subs = [Meteor.subscribe('allPitches'), clientFunctions.loadGMaps()];
       if (thisUser && thisUser.profile && thisUser.profile.team) {
         subs.push(Meteor.subscribe('teams'));
         Router.current().route.teamIds = thisUser.profile.team._ids;
@@ -83,9 +83,7 @@ Router.map(function() {
       };      
     }
   });
-});
 
-Router.map(function() {
   this.route('home', {
     path: '/',
     template: 'mainTemplate',
@@ -97,9 +95,7 @@ Router.map(function() {
       this.redirect('/home');
     }
   });
-});
 
-Router.map(function() {
   this.route('home', {
     path: '/home',
     template: 'mainTemplate',
@@ -108,17 +104,15 @@ Router.map(function() {
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      return [Meteor.subscribe('allpitches')];
+      return [Meteor.subscribe('allPitches')];
     },
     before: function() {
       if (!('postingsChoice' in Router.routes['home']))
         Router.routes['home'].postingsChoice = new suprsubDep('');
-      this.subscribe('postings', Router.routes['home'].postingsChoice.get());
+      this.subscribe('events', Router.routes['home'].postingsChoice.get());
     }
   });
-});
 
-Router.map(function() {
   this.route('confirmGender', {
     path: '/gender',
     template: 'mainTemplate',
@@ -137,6 +131,30 @@ Router.map(function() {
         }).modal('show');
         clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
       };
-    }    
-  })
-})
+    }   
+  });
+
+  this.route('myAdmin', {
+    path: '/myadmin',
+    template: 'adminTemplate',
+    waitOn: function() {
+      this.objectHistory = [];
+      return [
+        Meteor.subscribe('allEvents', 20),
+        Meteor.subscribe('allTeams', 20),
+        Meteor.subscribe('allTweets', 20),
+        Meteor.subscribe('allPitches'),
+        Meteor.subscribe('allUsers', 20)
+      ];
+    },
+    data: function() {
+      return {
+        events: Events.find({}, {sort: {createdAt: -1}}),
+        teams: Teams.find({}, {sort: {name: 1}}),
+        tweets: Tweets.find({}, {sort: {twitterCreated: -1}}),
+        users: Meteor.users.find({}, {sort: {'profile.name': 1}}),
+        pitches: Pitches.find({}, {sort: {name: 1}})
+      }
+    }
+  });
+});

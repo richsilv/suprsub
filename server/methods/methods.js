@@ -234,11 +234,11 @@ Meteor.methods({
 		}
 	},	
 	getTeamMembers: function(teamId) {
-		return teamId ? Meteor.users.find({'profile.team._ids': teamId}, {fields: {name: true}}).fetch() : [];
+		return teamId ? Meteor.users.find({'profile.team._ids': teamId}, {fields: {'profile.name': true}}).fetch() : [];
 	},
 	getRingers: function(teamId) {
 		var team = Teams.findOne(teamId);
-		return team ? Meteor.users.find({_id: {$in: team.ringers}}, {fields: {'profile.name': true}}).fetch() : [];
+		return (team && team.ringers) ? Meteor.users.find({_id: {$in: team.ringers}}, {fields: {'profile.name': true}}).fetch() : [];
 	},
 	joinTeam: function(teamCode) {
 		var ringerTeam = Teams.findOne({ringerCode: teamCode});

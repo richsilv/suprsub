@@ -1,0 +1,80 @@
+<template name="adminTemplate">
+	<div class="grid" id="adminGrid">
+		<input type="button" value="Back" class="backButton">
+		<div class="row"><h1>ADMIN</h1></div>
+		<form class="row" id="tweetForm">
+			<input type="text" id="tweetText">
+			<input type="submit" id="tweetSubmit">
+		</form>
+		<div class="medium-5 columns">
+			<h2>EVENTS</h2>
+			{{> eventsBox}}
+		</div>
+		<div class="medium-6 columns">
+			<h2>TWEETS</h2>
+			{{> tweetsBox}}
+		</div>
+		<div class="medium-5 columns">
+			<h2>TEAMS</h2>
+			{{> teamsBox}}
+		</div>
+		<div class="medium-5 columns">
+			<h2>USERS</h2>
+			{{> usersBox}}
+		</div>
+		<div class="medium-5 columns">
+			<h2>PITCHES</h2>
+			{{> pitchesBox}}
+		</div>		
+	</div>
+</template>
+
+<template name="eventsBox">
+	<div  id="eventData" class="dataBox">
+	</div>
+	<ul>
+	{{#each this.events}}
+		<li><span class="idText">{{this._id}}</span>, {{this.createdAt}}</li>
+	{{/each}}
+	</ul>
+</template>
+
+<template name="tweetsBox">
+	<div  id="tweetData" class="dataBox">
+	</div>
+	<ul>
+	{{#each this.tweets}}
+		<li><span class="idText">{{this._id}}</span>, {{this.twitterCreated}}</li>
+	{{/each}}
+	</ul>
+</template>
+
+<template name="teamsBox">
+	<div  id="teamData" class="dataBox">
+	</div>
+	<ul>
+	{{#each this.teams}}
+		<li><span class="idText">{{this._id}}</span>, {{this.name}}</li>
+	{{/each}}
+	</ul>
+</template>
+
+<template name="usersBox">
+	<div  id="userData" class="dataBox">
+	</div>
+	<ul>
+	{{#each this.users}}
+		<li><span class="idText">{{this._id}}</span>, {{this.profile.name}}</li>
+	{{/each}}
+	</ul>
+</template>
+
+<template name="pitchesBox">
+	<div  id="pitchData" class="dataBox">
+	</div>
+	<ul>
+	{{#each this.pitches}}
+		<li><span class="idText">{{this._id}}</span>, {{this.name}}</li>
+	{{/each}}
+	</ul>
+</template>

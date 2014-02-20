@@ -13,7 +13,7 @@
 	min-height: 325px;
 }
 
-#teamForm .ui.toggle.checkbox {
+.teamForm .ui.toggle.checkbox {
 	margin-top: 1.5em;
 }
 

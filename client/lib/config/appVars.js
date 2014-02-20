@@ -28,7 +28,8 @@ appVars = (function() {
 		{name: "Evening", periodCode: 2}
 		],
 		_libs: {},
-	    saveCalc: new Deps.Dependency()
+	    saveCalc: new Deps.Dependency(),
+	    maxInvalidate: 100
 	};
 }
 )();

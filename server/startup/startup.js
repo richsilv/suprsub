@@ -1,5 +1,15 @@
 Meteor.startup(function() {
 
+    // LOG ALL QUERIES
+/*    var wrappedFind = Meteor.Collection.prototype.find;
+
+    console.log('[startup] wrapping Collection.find')
+    
+    Meteor.Collection.prototype.find = function () {
+      console.log(this._name + '.find', JSON.stringify(arguments))
+      return wrappedFind.apply(this, arguments);
+    }*/
+
 	// COLLECTION OBSERVERS
 	Tweets.find({consumed: {$exists: false}}).observeChanges({
 		added: function(tweetId) {

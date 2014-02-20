@@ -2,11 +2,11 @@ Meteor.publish('pitches', function(loc, prox) {
 	return Pitches.find({location: {$near: loc}});
 });
 
-Meteor.publish('allpitches', function() {
+Meteor.publish('allPitches', function() {
 	return Pitches.find();
 });
 
-Meteor.publish('postings', function(id) {
+Meteor.publish('events', function(id) {
 	if (id) {
 		var thisUser = Meteor.users.findOne(id);
 		if (!thisUser)
@@ -16,6 +16,10 @@ Meteor.publish('postings', function(id) {
 	else {
 		return Events.find({}, {sort: {createdAt: -1}, limit: 20});
 	}
+});
+
+Meteor.publish('allEvents', function(x) {
+	return Events.find({}, {limit: x});
 });
 
 Meteor.publish('teams', function(ids) {
@@ -29,7 +33,27 @@ Meteor.publish('teams', function(ids) {
 	}
 })
 
+Meteor.publish('allTeams', function(x) {
+	return Teams.find({}, {limit: x});
+});
+
 Meteor.publish("userData", function () {
 	return Meteor.users.find({_id: this.userId},
 		{fields: {'services': 1}});
 });
+
+Meteor.publish("allUsers", function(x) {
+	return Meteor.users.find({}, {limit: x});
+})
+
+Meteor.publish("tweets", function(userId) {
+	var thisUser = Meteor.users.findOne(userId);
+	if (thisUser && thisUser.admin)
+		return Tweets.find({}, {sort: {createdAt: -1}, limit: 20});
+	else
+		return [];
+});
+
+Meteor.publish("allTweets", function(x) {
+	return Tweets.find({}, {limit: x});
+})

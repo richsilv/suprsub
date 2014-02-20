@@ -5,6 +5,7 @@ var tabChoices = new suprsubDep({
     });
     ringerList = new suprsubDep([]);
     memberList = new suprsubDep([]);
+    memberRefresh = new Deps.Dependency();
 
 // **************************
 
@@ -80,6 +81,13 @@ Template.teamName.created = function() {
 
 // **************************
 
+Template.teamButtons.helpers({
+  'defaultTeam': function() {
+    Router.current().route.currentTeamId.dep.depend();
+    return Router.current().route.teamIds.indexOf(Router.current().route.currentTeamId.get()) === 0;  
+  }
+});
+
 Template.teamButtons.events({
   'click #addNewTeam': function() {
     if (Router.current().route.currentTeamId.get())
@@ -95,6 +103,17 @@ Template.teamButtons.events({
       Router.current().route.currentTeamId.set(null);
       setTeamData();
     }
+  },
+  'click #setDefault': function() {
+    var teamIds = Router.current().route.teamIds,
+        currentTeamId = Router.current().route.currentTeamId.get(),
+        i = teamIds.indexOf(currentTeamId);
+    if (i < 1)
+      return false;
+    var newArray = [currentTeamId].concat(teamIds.slice(0, i)).concat(teamIds.slice(i + 1));
+    Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
+    Router.current().route.teamIds = newArray;
+    Router.current().route.currentTeamId.dep.changed();
   }
 });
 
@@ -117,20 +136,10 @@ Template.playerTable.helpers({
   }
 });
 Template.playerTable.rendered = function() {
-  Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
-    if (err)
-      console.log(err);
-    else
-      memberList.set(res);
-      membersRingers.dep.changed();
-  });
-  Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
-    if (err)
-      console.log(err);
-    else
-      ringerList.set(res);
-      membersRingers.dep.changed();
-  });
+  if (Router.current() && Router.current().route.currentTeamId && !this.membersRefreshed) {
+    this.membersRefreshed = true;
+    memberRefresh.changed();
+  }
 };
 
 // **************************
@@ -159,7 +168,7 @@ Template.teamSettings.events({
   'keydown #timeSection input[type="number"]': function(event) {
     if (event.keyCode > 57) return false;
   },
-  'submit #teamForm': saveTeamData
+  'submit .teamForm': saveTeamData
 });
 
 Template.teamSettings.rendered = function() {
@@ -413,20 +422,21 @@ Deps.autorun(function() {
 });
 
 Deps.autorun(function() {
-  Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
-    if (err)
-      console.log(err);
-    else
-      memberList.set(res);
-      tabChoices.dep.changed();
-  });
-  Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
-    if (err)
-      console.log(err);
-    else
-      ringerList.set(res);
-      tabChoices.dep.changed();
-  });   
+  memberRefresh.depend();
+  if (Router.current() && Router.current().route.currentTeamId) {
+    Meteor.call('getTeamMembers', Router.current().route.currentTeamId.get(), function(err, res) {
+      if (err)
+        console.log(err);
+      else
+        memberList.set(res);
+    });
+    Meteor.call('getRingers', Router.current().route.currentTeamId.get(), function(err, res) {
+      if (err)
+        console.log(err);
+      else
+        ringerList.set(res);
+    });
+  }
 });
 
 // ***************** HELPER FUNCTIONS **********************
@@ -558,7 +568,10 @@ function saveTeamData(event) {
     Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
   else {
     var newTeamId = Teams.insert(teamProfile);
-    Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newTeamId}}, thisGlowCallback); 
+    if (Meteor.user().profile.team._ids.indexOf(newTeamId) < 0)
+      Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newTeamId}}, thisGlowCallback);
+    else
+      thisGlowCallback();
   }
   var teamNameHolder = document.querySelector('#teamNameHolder');
   Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);

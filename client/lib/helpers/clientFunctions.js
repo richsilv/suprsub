@@ -192,11 +192,11 @@ clientFunctions = (function() {
 	var logTemplateEvents = function() {
 		_.each(Template, function(template, name) {
 			var oldCreated = template.created,
-			oldDestroyed = template.destroyed;
-			oldRendered = template.rendered;
+				oldDestroyed = template.destroyed,
+				oldRendered = template.rendered;
 			template.renders = 0;
 			template.created = function() {
-				console.log("Created: ", this); //_.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
+				console.log("Created: ", name, this); //_.filter(_.map(this.firstNode, function(a, b) { return b; }), function(a) { return typeof a === 'string' && a.slice(0, 7) === '_spark_'; }));
 				oldCreated && oldCreated.apply(this, arguments);
 			};
 			template.rendered = function() {
@@ -204,7 +204,7 @@ clientFunctions = (function() {
 				oldRendered && oldRendered.apply(this, arguments);
 			};
 			template.destroyed = function() {
-				console.log("Destroyed: ", this);
+				console.log("Destroyed: ", name, this);
 				oldDestroyed && oldDestroyed.apply(this, arguments);
 			};    
 		});

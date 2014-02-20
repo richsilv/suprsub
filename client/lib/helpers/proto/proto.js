@@ -1,7 +1,10 @@
+window._allDeps = [];
+
 suprsubDep = function(initial) {
   this.value = initial;
   this.count = 0;
   this.dep = new Deps.Dependency();
+  window._allDeps.push(this);
 };
 
 suprsubDep.prototype.get = function() {
@@ -12,7 +15,12 @@ suprsubDep.prototype.get = function() {
 suprsubDep.prototype.set = function(newValue){
     if (this.value !== newValue) {
         this.value = newValue;
-        this.dep.changed();
+        if (this.count < appVars.maxInvalidate)
+            this.dep.changed();
+        else {
+            console.log("stopped at", arguments.callee.caller)
+            console.trace()
+        }
         this.count++;
     }
     return this.value;
