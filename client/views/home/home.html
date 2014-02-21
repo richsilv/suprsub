@@ -15,10 +15,16 @@
 				</ul>
 			</div>
 			<div class="row">
+			{{#if postBoxText}}
 				<div class="large-2 columns"></div>
 				<div class="large-14 columns">
 					{{> postBox}}
 				</div>
+			{{else}}
+				<div class="large-16 columns">
+					{{> fullPostingForm}}
+				</div>
+			{{/if}}
 			</div>
 		</div>
 		<div class="large-1 columns"></div>
@@ -55,6 +61,66 @@
 					<i class="question icon link"></i>
 				</div>
 			</div>
+		</form>
+	</div>
+</template>
+
+<template name="fullPostingForm">
+		<div class="ui segment whitetranslucent">
+		<form class="ui reply form" id="fullPostingForm">
+			<div class="ui grid">
+				<div class="row">
+					<div class="field ten wide column">
+						<label>Location</label>
+						<div class="ui left labeled icon input">
+							<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
+							<i class="globe icon"></i>
+						</div>
+					</div>
+					<div class="field six wide column">
+						<label>No. of players</label>
+						<div class="ui fluid selection dropdown" id="gameFormat">
+							<input type="hidden" id="format">
+							<div class="default text">Select</div>
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<div class="item" data-value="1">1</div>
+								<div class="item" data-value="2">2</div>
+								<div class="item" data-value="3">3</div>
+								<div class="item" data-value="4">4</div>
+								<div class="item" data-value="5">5</div>
+								<div class="item" data-value="6">6</div>
+								<div class="item" data-value="7">7</div>
+							</div>
+						</div>					
+					</div>
+				</div>
+				<div class="row">
+					<div class="field eight wide column">
+						<label>Date</label>
+						<div class="ui left labeled icon input">
+							<input id="datepicker">
+							<i class="calendar icon"></i>
+						</div>
+					</div>
+					<div class="field eight wide column" id="timeSection">
+						<label>Kick-off</label>
+						<div class="row">
+							<div class="small-9 columns" style="margin: 0;">
+								<div class="ui left icon input">
+									<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+									<i class="time icon"></i>
+								</div>
+							</div>
+							<div class="small-7 columns" style="margin: 0;">
+								<div class="ui input">
+									<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+								</div>
+							</div>
+						</div>
+					</div>				
+				</div>
+			</div>			
 		</form>
 	</div>
 </template>

@@ -1,6 +1,11 @@
+postBoxText = new suprsubDep(false);
+
 Template.homePage.helpers({
   filter: function() {
     return Router.routes['home'].postingsChoice.get();
+  },
+  postBoxText: function() {
+    return postBoxText.get();
   }
 });
 Template.homePage.events({

@@ -13,13 +13,17 @@
         "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
         "branch": "master"
       },
+      "Pikaday": {
+        "git": "https://github.com/richsilv/Pikaday.git",
+        "branch": "master"
+      },
       "handlebars-server": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.12.4",
-        "commit": "a9dec18066d80e575e57189e005782436ad1d87f"
+        "tag": "v0.12.5",
+        "commit": "71d23b40d8ca6351dfd0740ba7393a0c88e57561"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
@@ -55,6 +59,11 @@
         "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
         "branch": "master",
         "commit": "d3b8a4149ab40b14b125edd473c3850177895fb5"
+      },
+      "Pikaday": {
+        "git": "https://github.com/richsilv/Pikaday.git",
+        "branch": "master",
+        "commit": "29002b0fa83589352ac8c9319748b3bb97c537ee"
       },
       "handlebars-server": {
         "git": "https://github.com/EventedMind/meteor-handlebars-server.git",
