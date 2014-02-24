@@ -560,6 +560,7 @@ function saveTeamData(event) {
   };
   if (teamProfile.regular) {
     teamProfile.day = parseInt($('#dayChoiceSection .ui.dropdown').dropdown('get value'), 10);
+    teamProfile.day = teamProfile.day ? teamProfile.day : 0
     teamProfile.sameTime = $('#sameTime')[0].checked;
     if (teamProfile.sameTime) teamProfile.time = new Date(0, 0, 0, parseInt(document.getElementById('timePickerHour').value, 10), parseInt(document.getElementById('timePickerMinute').value, 10));
   }

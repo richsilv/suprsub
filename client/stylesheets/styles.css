@@ -59,6 +59,10 @@ body {
 	margin-top: 0.9375em;	
 }
 
+.gap.button {
+	margin-top: 0.9375em;	
+}
+
 .noMargin {
 	padding-left: 0 !important;
 	padding-right: 0 !important;

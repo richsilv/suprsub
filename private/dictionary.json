@@ -4,6 +4,7 @@
 	"i'm": 0,
 	"we're": 0,
 	"need": 0,
+	"my": 0,
 	"looking": 1,
 	"for": 2,
 	"am": 3,
@@ -55,5 +56,7 @@
 	"friendly": 15,
 	"comp": 15,
 	"competitive": 15,
-	"_comment": "Twitter handles are 20, eventIds are 19, team sizes are 18, pitch names are 9, pitch surnames (goals, powerleague) are 10"
+	"mylist": 16,
+	"list": 16,
+	"_comment": "Twitter handles are 20, eventIds are 19, team sizes are 18, prices are 17, pitch names are 9, pitch surnames (goals, powerleague) are 10"
 }

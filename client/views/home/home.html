@@ -15,6 +15,14 @@
 				</ul>
 			</div>
 			<div class="row">
+				<div class="ui tabular menu" id="postBoxTextChoice">
+				  	<a class="{{#unless postBoxText}}active {{/unless}}item ui popup" activate="0" title="Make a posting using an easy-to-fill form">
+				    	Form
+				  	</a>
+				  	<a class="{{#if postBoxText}}active {{/if}}item ui popup" activate="1" title="Make a posting using free text, like you would by tweeting">
+				    	Text
+				  	</a>
+			  	</div>
 			{{#if postBoxText}}
 				<div class="large-2 columns"></div>
 				<div class="large-14 columns">
@@ -33,9 +41,9 @@
 		      	<h2 class="ui header" id="activityHeader">Latest Activity</h2>
 		      	<span id="toggleBox">
 		      		<div class="ui breadcrumb">
-					  <a class="{{#unless filter}}active {{/unless}}section" id="allFilter">All</a>
+					  <a class="{{#unless filter}}active {{/unless}}section" id="allFilter" title="All active postings">All</a>
 					  <div class="divider"> / </div>
-					  <a class="{{#if filter}}active {{/if}}section" id="userFilter">Mine</a>
+					  <a class="{{#if filter}}active {{/if}}section" id="userFilter" title="Postings which match my area and time period settings">Mine</a>
 					</div>
 		      	</span>
 		      	{{> activityFeed}}
@@ -54,10 +62,10 @@
 				<textarea id="postingArea" placeholder="Need * player(s) at *:**pm tomorrow at XXXXXXXXX"></textarea>
 			</div>
 			<div class="ui buttons">
-				<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton">
+				<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton" title="Submit this posting">
 					<i class="icon edit"></i> Make a Posting Now!
 				</div>
-				<div class="ui orange button icon" id="postingGuidelines">
+				<div class="ui orange button icon" id="postingGuidelines" title="Read the posting guidelines so you know what information is required">
 					<i class="question icon link"></i>
 				</div>
 			</div>
@@ -66,61 +74,100 @@
 </template>
 
 <template name="fullPostingForm">
-		<div class="ui segment whitetranslucent">
+	<div class="ui segment whitetranslucent">
 		<form class="ui reply form" id="fullPostingForm">
 			<div class="ui grid">
-				<div class="row">
-					<div class="field ten wide column">
-						<label>Location</label>
-						<div class="ui left labeled icon input">
-							<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
-							<i class="globe icon"></i>
+				<div class="field six wide column">
+					<label>No. of players</label>
+					<div class="ui fluid selection dropdown" id="numberPlayers" title="The number of SuprSubs your team is looking for">
+						<input type="hidden" id="players">
+						<div class="default text">Select</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							<div class="item" data-value="1">1</div>
+							<div class="item" data-value="2">2</div>
+							<div class="item" data-value="3">3</div>
+							<div class="item" data-value="4">4</div>
+							<div class="item" data-value="5">5</div>
+							<div class="item" data-value="6">6</div>
+							<div class="item" data-value="7">7</div>
 						</div>
+					</div>					
+				</div>
+				<div class="field ten wide column">
+					<label>Location</label>
+					<div class="ui left labeled icon input" title="The match location. If you can't find your venue, you can make a request for it to be added on the Team page">
+						<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
+						<i class="globe icon"></i>
 					</div>
-					<div class="field six wide column">
-						<label>No. of players</label>
-						<div class="ui fluid selection dropdown" id="gameFormat">
-							<input type="hidden" id="format">
-							<div class="default text">Select</div>
-							<i class="dropdown icon"></i>
-							<div class="menu">
-								<div class="item" data-value="1">1</div>
-								<div class="item" data-value="2">2</div>
-								<div class="item" data-value="3">3</div>
-								<div class="item" data-value="4">4</div>
-								<div class="item" data-value="5">5</div>
-								<div class="item" data-value="6">6</div>
-								<div class="item" data-value="7">7</div>
-							</div>
-						</div>					
+					<div id="matchesFloat"></div>
+				</div>
+				<div class="field eight wide column">
+					<label>Date</label>
+					<div class="ui left labeled icon input" title="The date of your match">
+						<input id="datepicker">
+						<i class="calendar icon"></i>
 					</div>
 				</div>
-				<div class="row">
-					<div class="field eight wide column">
-						<label>Date</label>
-						<div class="ui left labeled icon input">
-							<input id="datepicker">
-							<i class="calendar icon"></i>
+				<div class="field eight wide column" id="timeSection" title="Kick-off time">
+					<label>Kick-off</label>
+					<div class="row">
+						<div class="small-9 columns" style="margin: 0;">
+							<div class="ui left icon input">
+								<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+								<i class="time icon"></i>
+							</div>
+						</div>
+						<div class="small-7 columns" style="margin: 0;">
+							<div class="ui input">
+								<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+							</div>
 						</div>
 					</div>
-					<div class="field eight wide column" id="timeSection">
-						<label>Kick-off</label>
-						<div class="row">
-							<div class="small-9 columns" style="margin: 0;">
-								<div class="ui left icon input">
-									<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
-									<i class="time icon"></i>
-								</div>
-							</div>
-							<div class="small-7 columns" style="margin: 0;">
-								<div class="ui input">
-									<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
-								</div>
-							</div>
-						</div>
-					</div>				
 				</div>
-			</div>			
+				<div class="field eight wide column">
+					<div class="checkboxLabel">Friendly</div>
+					<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+						<input type="checkbox">
+						<label></label>
+					</div>
+					<div class="checkboxLabel">Competitive</div>
+				</div>
+				<div class="field eight wide column">
+					<label>Game Format</label>
+					<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
+						<input type="hidden" id="format">
+						<div class="default text">Select</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							<div class="item" data-value="5">5-a-side</div>
+							<div class="item" data-value="6">6-a-side</div>
+							<div class="item" data-value="7">7-a-side</div>
+							<div class="item" data-value="8">8-a-side</div>
+							<div class="item" data-value="9">9-a-side</div>
+							<div class="item" data-value="10">10-a-side</div>
+							<div class="item" data-value="11">11-a-side</div>
+						</div>
+					</div>
+				</div>
+				<div class="field seven wide column" id="cost">
+					<label>Cost</label>
+					<div class="ui left icon input" title="Will you expect your SubrSub(s) to pay to play?  If you leave this blank, we will assume not.">
+						<input id="costInput" type="number" min="0" max="20" class="input" placeholder="free">
+						<i class="pound icon"></i>
+					</div>
+				</div>
+				<div class="field nine wide column">
+					<label>Send to:</label>
+					<div class="checkboxLabel">Everyone</div>
+					<div class="ui toggle checkbox neutral" id="onlySuprsubs" title="Do you want to notify everybody of this posting, or only those you've already specified as preferred SubrSubs?">
+						<input type="checkbox">
+						<label></label>
+					</div>
+					<div class="checkboxLabel">My Suprsubs</div>
+				</div>
+				<div class="bottomRight positive ui gap button" id="fullPostingFormSubmit" title="Submit this posting">Make Posting</div>
+			</div>	
 		</form>
 	</div>
 </template>
@@ -160,6 +207,20 @@
 					</div>
 					<p>{{posting.teamSize}}</p>
 				{{/if}}
+				<div class="ui teal ribbon label">
+					Cost
+				</div>
+				<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
+				<div class="ui teal ribbon label">
+					Post to
+				</div>
+				<p>
+					{{#if posting.onlyRingers}}
+						My Preferred SuprSubs only
+					{{else}}
+						All potential Suprsubs
+					{{/if}}
+				</p>
 				<div class="ui grid">
 					<div class="four wide column"></div>
 					<div class="eight wide column">

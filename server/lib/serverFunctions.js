@@ -189,7 +189,9 @@ serverFunctions = (function() {
 				players: null,
 				dateTime: null,
 				location: null,
-				gender: 0
+				onlyRingers: false,
+				gender: 0,
+				price: 0
 			},
 			state = 0,
 			thisUser = Meteor.user();
@@ -226,6 +228,11 @@ serverFunctions = (function() {
 		if (richTokens[0].code !== 6) return new Meteor.Error(500, "Number of players must come first.");
 		requestData.players = richTokens[0].data;
 		richTokens.shift();
+		var priceTokens = _.filter(richTokens, function(k) {return k.code === 17;});
+		if (priceTokens.length)
+			requestData.price = priceTokens[0].data;
+		if (_.filter(richTokens, function(k) {return k.code === 16;}).length)
+			requestData.onlyRingers = true;	
 		var ampmTokens = _.filter(richTokens, function(k) {return k.code === 3;});
 		if (ampmTokens.length > 1) return new Meteor.Error(500, "Only specify am/pm once.");
 		var dayTokens = _.filter(richTokens, function(k) {return k.code === 5;});
@@ -261,7 +268,10 @@ serverFunctions = (function() {
 		var genderTokens = _.filter(richTokens, function(k) {return k.code === 14;});
 		if (genderTokens.length) requestData.gender = genderTokens[0].data;
 		var gameTypeTokens = _.filter(richTokens, function(k) {return k.code === 15;});
-		if (gameTypeTokens.length) requestData.gameType = gameTypeTokens[0].data;
+		if (gameTypeTokens.length)
+			requestData.gameType = gameTypeTokens[0].data;
+		else 
+			requestData.gameType = 0;
 		var teamSizeTokens = _.filter(richTokens, function(k) {return k.code === 18;});
 		if (teamSizeTokens.length) requestData.teamSize = teamSizeTokens[0].data;
 		return requestData;

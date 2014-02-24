@@ -104,7 +104,10 @@ Router.map(function() {
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      return [Meteor.subscribe('allPitches')];
+      return [
+        Meteor.subscribe('allPitches'),
+        Meteor.subscribe('teams')
+        ];
     },
     before: function() {
       if (!('postingsChoice' in Router.routes['home']))

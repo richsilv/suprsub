@@ -104,7 +104,8 @@ Accounts.onCreateUser(function(options, user) {
 		Meteor.call('twitterBefriendSuprSub', user.services.twitter);
 	}
 	else {
-		user.profile = _.extend(options.profile, {contact: [2], team: {_ids: []}});
+		user.profile = _.extend(options.profile, {contact: [2]});
 	}
+	user.profile.team =  {_ids: []};
 	return user;
 });

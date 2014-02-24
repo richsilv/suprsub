@@ -1,4 +1,4 @@
-Future = Npm.require('fibers/future'),
+Future = Npm.require('fibers/future');
 
 appConfig = (function() {
 
@@ -26,8 +26,9 @@ appConfig = (function() {
 			{name: 'number', regex: /^[0-9]+$/, code: 6, transform: function(token) {return parseInt(token, 10);}},
 			{name: 'twitterHandle', regex: /^@[A-Za-z0-9_]+$/, code: 20, transform: function(token) {return token;}},
 			{name: 'eventId', regex: /^_id[A-Za-z0-9]+$/, code: 19, transform: function(token) {return token.substr(3);}},
-			{name: 'teamSize', regex: /^(\d+)(?:as|-a-side)$/, code: 18, transform: function(token) {return parseInt(/^(\d+)(?:as|-a-side)$/.exec(token)[1], 10);}}
-		],
+			{name: 'teamSize', regex: /^(\d+)(?:as|-a-side)$/, code: 18, transform: function(token) {return parseInt(/^(\d+)(?:as|-a-side)$/.exec(token)[1], 10);}},
+			{name: 'price', regex: /^(?:£)([0-9]+\.?[0-9]{0,2})$/, code: 17, transform: function(token) {return parseFloat(/^(?:£)([0-9]+\.?[0-9]{0,2})$/.exec(token)[1], 10);}}
+					],
 		Natural: Natural,
 		Tokenizer: new Natural.RegexpTokenizer( { pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/ } )
 

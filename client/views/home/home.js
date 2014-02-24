@@ -1,4 +1,5 @@
-postBoxText = new suprsubDep(false);
+  postBoxText = new suprsubDep(false);
+ // var picker;
 
 Template.homePage.helpers({
   filter: function() {
@@ -14,6 +15,13 @@ Template.homePage.events({
   },
   'click #userFilter': function() {
     Router.routes['home'].postingsChoice.set(Meteor.userId());
+  },
+  'click #postBoxTextChoice .item': function(event) {
+    console.log(event);
+    if (event.target.attributes.activate.value === "1")
+      postBoxText.set(true);
+    else
+      postBoxText.set(false);
   }
 })
 
@@ -55,6 +63,83 @@ Template.postBox.rendered = function() {
   });  
 };
 
+// ****************************
+
+Template.fullPostingForm.helpers({
+  'verified': function() {
+    return verifyForm();
+  }
+})
+
+Template.fullPostingForm.events({
+  'keyup #homeGroundSearch': function(event, template) {
+    if (event.keyCode === 27) {
+      $('#matchesFloat').hide();
+      return false;      
+    }
+    if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
+      template.lastUpdate = new Date().getTime();
+      if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
+        var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
+        var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>';});
+        $('#matchesFloat').html(pitchElement + '</div></div></div>');
+        $('#matchesFloat').show();
+      }
+    }
+  },
+  'click .pitchEntry.item': function(event) {
+    $('#homeGroundSearch').val(event.target.innerText);
+    $('#homeGroundSearch').attr('data-value', event.target.id);
+    $('#matchesFloat').hide();
+  },
+  'click #fullPostingFormSubmit': function(event) {
+      var requestData = {
+        players: null,
+        dateTime: null,
+        location: null,
+        onlyRingers: false,
+        gender: 0,
+        price: 0
+      }
+      if (!verifyForm()) return false;
+      requestData.players = parseInt($('#numberPlayers').dropdown('get value'), 10);
+      requestData.dateTime = picker.getDate();
+      requestData.dateTime = new Date(requestData.dateTime.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() * 60000));
+      requestData.location = $('#homeGroundSearch').attr('data-value');
+      requestData.gameType = $('#friendlyCompetitive input')[0].checked;
+      var teamSize = parseInt($('#gameFormat').dropdown('get value'), 10);
+      if (teamSize)
+        requestData.teamSize = teamSize;
+      if (parseInt($('#costInput').val(), 10))
+        requestData.price = parseInt($('#costInput').val(), 10);
+      if ($('#onlySuprsubs input')[0].checked)
+        requestData.onlyRingers = true;
+      requestData.gender = Meteor.user().profile.gender;
+      appVars.newPosting.set(requestData);
+      Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
+    }
+});
+
+Template.fullPostingForm.rendered = function() {
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  picker = new Pikaday({
+    field: $('#datepicker')[0],
+    format: 'ddd, D MMM YYYY',
+    onSelect: function() {
+    }
+  });
+  // $('#datepicker').val(moment(tomorrow).format('Do MMMM YYYY'));
+  picker.setDate(tomorrow);
+  $('#fullPostingForm .dropdown').dropdown({verbose: false, debug: false, performance: false});;
+  $('.ui.neutral.checkbox').checkbox({verbose: false, debug: false, performance: false});
+  clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
+  setFormDefaults();
+};
+
+// ****************************
+
 Template.postingModal.helpers({
   posting: function(){
     postingData = appVars.newPosting.get();
@@ -63,11 +148,13 @@ Template.postingModal.helpers({
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),
       location: prettyLocation(postingData.location),
-      gender: postingData.gender ? "Female" : "Male"
+      gender: postingData.gender ? "Female" : "Male",
+      price: postingData.price,
+      onlyRingers: postingData.onlyRingers
     };
     if (postingData.players > 1) output.players += 's';
     if ('gameType' in postingData) output.gameType = ['Friendly', 'Competitive'][postingData.gameType];
-    if ('teamSize' in postingData) output.teamSize = postingData.teamSize + '-a-side';    
+    if ('teamSize' in postingData) output.teamSize = postingData.teamSize + '-a-side';   
     return output;
   }
 });
@@ -135,3 +222,54 @@ Template.activityFeed.created = function() {
 Template.activityFeed.destroyed = function() {
   Meteor.clearInterval(this.rerender);
 };
+
+function verifyForm() {
+  if (!parseInt($('#numberPlayers').dropdown('get value'), 10))
+    return false;
+  if (!$('#homeGroundSearch').attr('data-value'))
+    return false;
+  var dateEntered = picker.getDate(),
+      dateNow = (new Date()).getTime();
+  dateEntered = dateEntered.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() + 30) * 60000;
+  if (dateEntered < dateNow || dateEntered > dateNow + 5184000000)
+    return false;
+  return true;
+}
+
+setFormDefaults = function() {
+  var teamList = Meteor.user().profile.team._ids;
+  if (!teamList.length)
+    return false;
+  var teamProfile = Teams.findOne({_id: teamList[0]});
+  if (teamProfile.format)
+    $('#gameFormat').dropdown('set selected', teamProfile.format);
+  if (teamProfile.homeGround) {
+    var homeGround = Pitches.findOne({_id: teamProfile.homeGround});
+    if (homeGround) {
+      $('#homeGroundSearch').val(homeGround.name);
+      $('#homeGroundSearch').attr('data-value', homeGround._id);
+    }
+  }
+  if (teamProfile.type)
+    $('#friendlyCompetitive').checkbox('enable');
+  else
+    $('#friendlyCompetitive').checkbox('disable');
+  if (teamProfile.regular) {
+    var date = nextMatchingWeekDay(teamProfile.day);
+    if (date)
+      picker.setDate(date);
+    if (teamProfile.sameTime) {
+      $('#timePickerHour').val(teamProfile.time.getHours());
+      $('#timePickerMinute').val(teamProfile.time.getMinutes());
+    }
+  }
+}
+
+nextMatchingWeekDay = function(day) {
+  var nowDate = new Date(),
+      today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()),
+      thisDay = today.getDay();
+  if (isNaN(day)) return null;
+  today.setDate(today.getDate() + ((7 + day - thisDay) % 7));
+  return today;
+}

@@ -50,7 +50,7 @@
 	<div class="field" id="teamNameHolder">
 		<label>Team Name</label>
 		{{#if dropdownTeams}}
-		<div class="ui fluid selection dropdown" id="teamChoice">
+		<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
 			<input type="hidden">
 			<div class="default text">Select Team</div>
 			<i class="dropdown icon"></i>
@@ -62,32 +62,32 @@
 		</div>
 		{{else}}
 		<div class="ui input">
-			<input placeholder="Team Name" type="text" id="teamName">
+			<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings">
 		</div>
 		{{/if}}
 	</div>
 </template>
 
 <template name="teamButtons">
-	<div class="ui fluid attached icon button withLabel{{#if defaultTeam}} teal{{/if}}" id="setDefault"><i class="pin icon"></i></div>
-	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam"><i class="add icon"></i></div>
-	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam"><i class="minus icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#if defaultTeam}} teal{{/if}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (note this will delete it for ALL team members)"><i class="minus icon"></i></div>
 </template>
 
 <template name="playerButtons">
 	<div class="columns">
 		<div class="ui four fluid icon buttons">
-			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#if tabChoices 'membersRingers'}} teal{{/if}}" id="toggleTeammates">
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#if tabChoices 'membersRingers'}} teal{{/if}}" id="toggleTeammates" title="Show all members of this team">
 				<i class="users icon"></i>
 			</div>
-			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#unless tabChoices 'membersRingers'}} teal{{/unless}}" id="toggleRingers">
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#unless tabChoices 'membersRingers'}} teal{{/unless}}" id="toggleRingers" title="Show all preferred SuprSubs for this team">
 				<i class="unordered list icon"></i>
 			</div>
-			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation">
+			<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation" title="Send an invitation for players to join your team as team members or preferred SuprSubs">
 				<i class="mail icon"></i>
 				<i class="right icon"></i>
 			</div>
-			<div class="ui icon button attached withLabel" id="joinTeam">
+			<div class="ui icon button attached withLabel" id="joinTeam" title="Enter a code that you have been sent to join a friend's team or register as a SuprSub">
 				<i class="right icon"></i>
 				<i class="users icon"></i>
 			</div>
@@ -110,7 +110,7 @@
 		<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">
 				<div class="checkboxLabel">Friendly</div>
-				<div class="ui toggle checkbox neutral" id="friendlyCompetitive">
+				<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
 					<input type="checkbox">
 					<label></label>
 				</div>
@@ -120,7 +120,7 @@
 		<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">
 				<label>Game Format</label>
-				<div class="ui fluid selection dropdown" id="gameFormat">
+				<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
 					<input type="hidden" id="format">
 					<div class="default text">Select</div>
 					<i class="dropdown icon"></i>
@@ -140,13 +140,13 @@
 			<label>Home Ground</label>
 			{{#constant}}
 			<div class="ui input" id="homeGround">
-				<input placeholder="Use the dialogue box below to select" type="text" readonly>
+				<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">
 			</div>
 			{{/constant}}
 		</div>
 		<div class="two fields">
 			<div class="field" id="weeklyCheckBox">
-				<div class="ui toggle checkbox" id="regDayCheckbox">
+				<div class="ui toggle checkbox" id="regDayCheckbox" title="Does your team play on the same day every week?">
 					<input type="checkbox" id="weekly">
 					<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
 				</div>
@@ -165,7 +165,7 @@
 		</div>
 		<div class="two fields">
 			<div class="field">
-				<div class="ui toggle checkbox opacity" id="timeCheckbox">
+				<div class="ui toggle checkbox opacity" id="timeCheckbox" title="Do your matches kick off at the same time every week?">
 					<input type="checkbox" id="sameTime">
 					<label>Same time<br class="show-for-medium-only"> each week?</label>
 				</div>
@@ -194,11 +194,11 @@
 	<div class="medium-4 medium-centered columns">
 		<div class="ui segment content whitetranslucent">
 			<div class="ui two fluid large buttons" id="cancelOrSave">
-				<div class="ui negative animated button" id="resetButton">
+				<div class="ui negative animated button" id="resetButton" title="Reset any changes you've made">
 					<div class="visible content">Reset</div>
 					<div class="hidden content"><i class="backward icon"></i></div>
 				</div>
-				<div class="ui positive animated{{#if disableSave}} disabled{{/if}} button" id="saveButton">
+				<div class="ui positive animated{{#if disableSave}} disabled{{/if}} button" id="saveButton" title="Save these changes">
 					<div class="visible content">Save</div>
 					<div class="hidden content"><i class="save icon"></i></div>
 				</div>	
@@ -217,12 +217,12 @@
 							<div class="field fourteen wide column">
 								<label>Home Ground</label>
 								<div class="ui left labeled icon input">
-									<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
+									<input type="text" placeholder="Type a description or address" id="homeGroundSearch" title="You can find a venue either using its name (e.g. Powerleague Wembley), or by typing an address or place and hitting the search icon">
 									<i class="globe icon"></i>
 								</div>
 							</div>
 							<div class="two wide column">
-								<div class="ui right attached animated fade button withLabel" id="mapSearchButton">
+								<div class="ui right attached animated fade button withLabel" id="mapSearchButton" title="Pan to this location">
 									<div class="hidden content">Search</div>
 									<div class="visible content"><i class="search icon"></i></div>
 								</div>
@@ -230,7 +230,7 @@
 						</div>
 					</form>
 					<div id="matches"></div>
-					<div class="mini purple ui button bottomRight" id="addVenue">Add a venue</div>
+					<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 				</div>
 				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
 				<div class="large-8 columns">
