@@ -141,7 +141,8 @@ Router.map(function() {
     path: '/about',
     template: 'mainTemplate',
     yieldTemplates: {
-      'about': {to: 'mainSection'}
+      'about': {to: 'mainSection'},
+      'socialBox': {to: 'socialBox'}
     }
   });
 
