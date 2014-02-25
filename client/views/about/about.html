@@ -16,14 +16,15 @@
 <template name="aboutMenu">
 	<div class="ui small-16 columns segment whitetranslucent" id="instructionsMenu">
 		<div class="ui fluid vertical menu">
-			<div class="teal item">
-				About SuprSub
+			<div class="{{#if tabChoice 'aboutTab' 'aboutSuprSub'}}active {{/if}}teal item" id="aboutSuprSub">
+				<a href="#aboutSuprSubSection">About SuprSub</a>
 			</div>
-			<div class="teal item">
-				How it Works
+			<div class="{{#if tabChoice 'aboutTab' 'howItWorks'}}active {{/if}}teal item" id="howItWorks">
+				<a href="#howItWorksSection">How it Works</a>
 			</div>
-			<div class="teal item">
-				Rules and Guidelines
+			<div class="{{#if tabChoice 'aboutTab' 'rulesAndGuidelines'}}active {{/if}}teal item" id="rulesAndGuidelines">
+				<a href="#rulesAndGuidelinesSection">Rules and Guidelines</a>
+				{{#if tabChoice 'aboutTab' 'rulesAndGuidelines'}}
 				<div class="menu">
 					<a class="item">
 						Players
@@ -41,9 +42,11 @@
 						Complaints
 					</a>
 				</div>
+				{{/if}}
 			</div>
-			<div class="teal item">
-				Posting Instructions
+			<div class="{{#if tabChoice 'aboutTab' 'postingInstructions'}}active {{/if}}teal item" id="postingInstructions">
+				<a href="#postingInstructionsSection">Posting Instructions</a>
+				{{#if tabChoice 'aboutTab' 'postingInstructions'}}
 				<div class="menu">
 					<a class="active teal item">
 						Making a Posting
@@ -58,6 +61,7 @@
 						<div class="ui label"><i class="large remove icon"></i></div>
 					</a>
 				</div>
+				{{/if}}
 			</div>
 		</div>
 	</div>
@@ -66,7 +70,7 @@
 <template name="aboutSuprSub">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header">About SuprSub</h1>
+			<h1 class="ui top attached header" id="aboutSuprSubSection">About SuprSub</h1>
 			<div class="ui small-16 columns attached segment whitetranslucent">
 			<p>SuprSub is a player to player exchange, helping teams to find a last minute player and hungry SuprSubs to find more games.</p>
 			<h4>3 Easy Steps:</h4>
@@ -84,7 +88,7 @@
 <template name="howItWorks">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header">How It Works</h1>
+			<h1 class="ui top attached header" id="howItWorksSection">How It Works</h1>
 			<div class="ui small-16 columns attached segment whitetranslucent">
 				<p>5-a-side, 11-a-side and everything in between.  Play more football!</p>
 				<p>SuprSub provides an easy way of posting last minute player needs to a large and growing community of eager footballers.  By last minute we mean anytime in the next week, from a few hours to a few days.</p>
@@ -104,8 +108,28 @@
 <template name="rulesGuidelines">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header">Rules and Guidelines</h1>
+			<h1 class="ui top attached header" id="rulesAndGuidelinesSection">Rules and Guidelines</h1>
 			<div class="ui small-16 columns attached segment whitetranslucent">
+			<p>SuprSub is a community of football players who love playing football and is intended to help everyone get more out of the game.  Please follow these simple and mostly obvious guidelines to ensure everything runs smoothly.  Thank you.</p>
+			<h4>Players</h4>
+			<ul>
+				<li>it's best to assume that the game will be competitive and therefore you must bring all the necessary equipment (e.g. assume you need shinpads to play).</li>
+				<li>make sure you know what type of game and playing surface to expect.</li>
+				<li>aim to get to the pitch 10 minutes early so its easier to find your new teammates.  It's not always straightforward to find the entrance.</li>
+			</ul>
+			<h4>Teams</h4>
+			<ul>
+				<li>try and give your new player as much detail about the game as possible before you meet.</li>
+				<li>have a specific and obvious place to meet up.</li>
+				<li>get there 10 minutes early so you’re there to greet your new SuprSub.</li>
+			</ul>
+			<h4>Everyone</h4>
+			<ul>
+				<li>play the beautiful game as it is meant to be played!</li>
+				<li>often in short sided games, everyone takes 5-10 minutes in goal.  Players shouldn’t refuse and equally teams shouldn’t stick their SuprSub in goal for the whole game either.</li>
+			</ul>
+			<h4>Match Fees</h4>
+			<p>We realise playing football in the UK is not free and renting a pitch costs money. If you want your SuprSub to contribute a match fee you MUST agree this with them before the game via a Tweet/FB/email otherwise it is assumed that the SuprSub will not be required to contribute.</p>
 			</div>
 		</div>
 	</div>
@@ -114,7 +138,7 @@
 <template name="postingInstructions">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header">Making a Posting</h1>
+			<h1 class="ui top attached header" id="postingInstructionsSection">Making a Posting</h1>
 			<div class="ui small-16 columns attached segment whitetranslucent">
 				<h3 class="ui header">How to make a posting using Twitter or the Free Text Box</h3>
 				<hr>

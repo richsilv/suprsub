@@ -1,3 +1,36 @@
-Template.aboutMenu.rendered = function() {
-	return false;
-}
+var sectionInfo;
+appVars.tabChoices.value.aboutTab = 'aboutSuprSub';
+
+// window.onscroll = function(event) {
+// 	console.log(event);
+// };
+Template.about.created = function() {
+	window.onscroll = function(event) {
+		sectionInfo.forEach(function(s) {
+			if (s.y - 100 < window.scrollY)
+				appVars.tabChoices.setKey('aboutTab', s.id);
+		});
+	}
+};
+
+Template.about.destroyed = function() {
+	window.onscroll = null;
+};
+
+Template.about.rendered = function() {
+	if (!this.runOnce) {
+		var sections = $('.instructionsRow .grid .top.attached.header');
+		sectionInfo = _.reduce(sections, function(t, x) {t.push({id: x.id.substr(0, x.id.length - 7), y: x.offsetTop}); return t;}, []).sort(function(a, b) {return a.y - b.y;});
+		this.runOnce = true;
+	}
+};
+
+// *************************
+
+Template.aboutMenu.events({
+	'click .vertical.menu>.item>a': function(event) {
+		appVars.tabChoices.setKey('aboutTab', event.target.parentNode.id);
+		window.scrollTo(0, $(event.target.hash)[0].offsetTop);
+	}
+});
+
