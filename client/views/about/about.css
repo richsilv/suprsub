@@ -1,0 +1,40 @@
+.columns .row.instructionsRow {
+	margin-bottom: 0.9375em;
+	font-size: 1.2em;
+	line-height: 1.5em;
+}
+
+.instructionsRow .attached.header {
+	position: relative;
+}
+
+.instructionsRow .attached.segment {
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.instructionsRow a, .instructionsRow a:visited {
+    color: rgb(0, 181, 173);
+    text-decoration: none;
+}
+
+.instructionsRow a:hover {
+    color: rgb(0, 153, 145);
+    cursor: pointer;	
+}
+
+#instructionsMenu .label {
+	width: 40px;
+}
+
+#instructionsMenu .label .icon {
+	width: 100%;
+}
+
+@media only screen and (min-width: 40.1em) {
+	#instructionsMenu {
+		position: fixed;
+		max-width: 280px;
+		width: 22.5em;
+	}
+}

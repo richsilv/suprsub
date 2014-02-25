@@ -1,0 +1,162 @@
+<template name="about">
+	<div id="main-background-image"></div>
+	<div class="grid row">
+		<div class="small-16 medium-5 columns">
+		{{>aboutMenu}}
+		</div>
+		<div class="small-16 medium-11 columns">
+		{{>aboutSuprSub}}
+		{{>howItWorks}}
+		{{>rulesGuidelines}}
+		{{>postingInstructions}}
+		</div>
+	</div>
+</template>
+
+<template name="aboutMenu">
+	<div class="ui small-16 columns segment whitetranslucent" id="instructionsMenu">
+		<div class="ui fluid vertical menu">
+			<div class="teal item">
+				About SuprSub
+			</div>
+			<div class="teal item">
+				How it Works
+			</div>
+			<div class="teal item">
+				Rules and Guidelines
+				<div class="menu">
+					<a class="item">
+						Players
+					</a>
+					<a class="item">
+						Teams
+					</a>
+					<a class="item">
+						Everyone
+					</a>
+					<a class="item">
+						Match Fees
+					</a>
+					<a class="item">
+						Complaints
+					</a>
+				</div>
+			</div>
+			<div class="teal item">
+				Posting Instructions
+				<div class="menu">
+					<a class="active teal item">
+						Making a Posting
+						<div class="ui teal label"><i class="large pencil icon"></i></div>
+					</a>
+					<a class="item">
+						Responding to a Posting
+						<div class="ui label"><i class="large reply mail icon"></i></div>
+					</a>
+					<a class="item">
+						Cancelling a Posting
+						<div class="ui label"><i class="large remove icon"></i></div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="aboutSuprSub">
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">About SuprSub</h1>
+			<div class="ui small-16 columns attached segment whitetranslucent">
+			<p>SuprSub is a player to player exchange, helping teams to find a last minute player and hungry SuprSubs to find more games.</p>
+			<h4>3 Easy Steps:</h4>
+			<ol>
+				<li>Teams find last minute players by tweeting how many, when and where you need them to <a href="https://twitter.com/intent/user?screen_name=suprsub">@suprsub</a>, or posting via <a href="www.suprsub.com">www.suprsub.com</a>. We repost this to our large and growing SuprSub community.</li>
+				<li>Players find games by registering when and where they are available, and we will notify you when there is a match OR just follow our stream <a href="https://twitter.com/intent/user?screen_name=suprsub">@suprsub on Twitter</a> or at <a href="www.suprsub.com">www.suprsub.com</a>.</li>
+				<li>When you match, we put you in contact directly to finalise the details.</li>
+			</ol>
+			<p>So go on then! Be a SuprSub. Find a SuprSub.  Play more football!</p>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="howItWorks">
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">How It Works</h1>
+			<div class="ui small-16 columns attached segment whitetranslucent">
+				<p>5-a-side, 11-a-side and everything in between.  Play more football!</p>
+				<p>SuprSub provides an easy way of posting last minute player needs to a large and growing community of eager footballers.  By last minute we mean anytime in the next week, from a few hours to a few days.</p>
+				<p>Look for a player by tweeting the @suprsub account, using the #suprsub hashtag or use the “make a posting now” box on the website detailing number of players needed, location, day and time.</p>
+				<p>Teams can save their regular games on www.suprsub.com meaning they can search for a player in one click</p>
+				<p>We ensure all the details are correct (especially pitch location) and then release the request to our SuprSub community on Twitter, Facebook and Web.  If it matches a registered player’s availability, they are sent a push notification.  All this should take a few seconds.</p>
+				<p>Keen players register their availability as a SuprSub at www.suprsub.com detailing where and when they are willing to play.  Choose how you wish to be notified when a team needs you.  Or just follow our feed and pick a game when and where it suits you.</p>
+				<p>When SuprSub matches a team and player, the two parties are put in contact to arrange the finer details of the game (exact meeting point, what colour to wear, what surface you will play on, are shin pads mandatory etc).</p>
+				<p>If you are a team in need of a spare player or two, SuprSub allows you to reach a big network of eager players in your local area in seconds.</p>
+				<p>If you are someone who just loves to play football, SuprSub gives you the opportunity to get more games by filling in for teams that are short as often as you want.</p>
+				<p>We at SuprSub will assume that everything always works out well.  But if it doesn’t for any reason, please report abuse/no-shows/cancelled games and any and all unwanted behaviour to admin@suprsub.com</p>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="rulesGuidelines">
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">Rules and Guidelines</h1>
+			<div class="ui small-16 columns attached segment whitetranslucent">
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="postingInstructions">
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">Making a Posting</h1>
+			<div class="ui small-16 columns attached segment whitetranslucent">
+				<h3 class="ui header">How to make a posting using Twitter or the Free Text Box</h3>
+				<hr>
+				<div class="ui green icon message">
+					<i class="thumbs up icon"></i>
+					<div class="content">
+						<div class="header">
+							A Successful Posting
+						</div>
+						<p>Looking for two players, Powerleague Wembley, 8:30 pm on Thursday, friendly 7-a-side.</p>
+					</div>
+				</div>
+				<div class="ui red icon message">
+					<i class="thumbs down icon"></i>
+					<div class="content">
+						<div class="header">
+							An Unsuccessful Posting
+						</div>
+						<p>Goals Bexleyheath, Wednesday 11am, competitive, <strong>looking for one player</strong></p>
+					</div>
+				</div>
+				<div class="ui red icon message">
+					<i class="thumbs down icon"></i>
+					<div class="content">
+						<div class="header">
+							An Erroneous Posting
+						</div>
+						<p>need three at liverpool powerleague at <strong>4:15</strong> tomorrow <em>This will make a posting for 4:15am!</em></p>
+					</div>
+				</div>
+				<p>Here are the posting instructions</p>
+			</div>
+		</div>
+	</div>
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">Responding to a Posting</h1>
+			<div class="ui small-16 columns attached segment whitetranslucent">
+				<h3 class="ui header">How to respond to a posting that you've been sent when you'd like to become a Suprsub.</h3>
+				<hr>
+				<p>Instructions on how to respond.</p>
+			</div>
+		</div>
+	</div>
+</template>

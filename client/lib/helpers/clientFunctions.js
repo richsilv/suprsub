@@ -181,6 +181,7 @@ clientFunctions = (function() {
 						appVars.venues.dep.changed();	
 						Meteor.clearTimeout(self.circleTimeout);
 						self.circleTimeout = null;
+					    appVars.tabChoices.setKey('playerTab', 'pitchData');
 					}, 500);
 				}
 				appVars.mapCenter.value = appVars.liveCircle.getCenter();

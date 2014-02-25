@@ -61,8 +61,8 @@
 			<div class="field">
 				<textarea id="postingArea" placeholder="Need * player(s) at *:**pm tomorrow at XXXXXXXXX"></textarea>
 			</div>
-			<div class="ui buttons">
-				<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton" title="Submit this posting">
+			<div class="ui buttons bottomRight">
+				<div class="ui button teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton" title="{{#if teamRegistered}}Submit this posting{{else}}You need to enter your team details on the Team tab before you can make a posting{{/if}}">
 					<i class="icon edit"></i> Make a Posting Now!
 				</div>
 				<div class="ui orange button icon" id="postingGuidelines" title="Read the posting guidelines so you know what information is required">
@@ -76,7 +76,7 @@
 <template name="fullPostingForm">
 	<div class="ui segment whitetranslucent">
 		<form class="ui reply form" id="fullPostingForm">
-			<div class="ui grid">
+			<div class="underlineRow ui grid">
 				<div class="field six wide column">
 					<label>No. of players</label>
 					<div class="ui fluid selection dropdown" id="numberPlayers" title="The number of SuprSubs your team is looking for">
@@ -102,6 +102,8 @@
 					</div>
 					<div id="matchesFloat"></div>
 				</div>
+			</div>
+			<div class="underlineRow ui grid">
 				<div class="field eight wide column">
 					<label>Date</label>
 					<div class="ui left labeled icon input" title="The date of your match">
@@ -125,6 +127,8 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="underlineRow ui grid">
 				<div class="field eight wide column">
 					<div class="checkboxLabel">Friendly</div>
 					<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
@@ -150,6 +154,8 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="underlineRow ui grid">
 				<div class="field seven wide column" id="cost">
 					<label>Cost</label>
 					<div class="ui left icon input" title="Will you expect your SubrSub(s) to pay to play?  If you leave this blank, we will assume not.">
@@ -166,8 +172,10 @@
 					</div>
 					<div class="checkboxLabel">My Suprsubs</div>
 				</div>
-				<div class="bottomRight positive ui gap button" id="fullPostingFormSubmit" title="Submit this posting">Make Posting</div>
-			</div>	
+			</div>{{#isolate}}
+			<div class="ui lowered button bottomRight teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="postingButton" title="{{#if teamRegistered}}Submit this posting{{else}}You need to enter your team details on the Team tab before you can make a posting{{/if}}">
+					<i class="icon edit"></i> Make a Posting Now!
+			</div>{{/isolate}}
 		</form>
 	</div>
 </template>

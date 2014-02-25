@@ -7,7 +7,7 @@ appVars = (function() {
 		gc: null,
 		venues: new suprsubDep([]),
 		mapCenter: new suprsubDep({b: 51.5080391, d: -0.12806929999999284, lat: function() {return this.b;}, lng: function() {return this.d;}}),
-		tabChoices: new suprsubDep({playerTab: 'pitchData'}),
+		tabChoices: new suprsubDep({playerTab: 'availability'}),
 		circleChanged: new suprsubDep(false),
 		newPosting: new suprsubDep(null),
 		mainOption: '/',

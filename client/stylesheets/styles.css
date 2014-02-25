@@ -63,6 +63,10 @@ body {
 	margin-top: 0.9375em;	
 }
 
+.lowered.button {
+	top: 0.9375em;
+}
+
 .noMargin {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
@@ -137,7 +141,7 @@ label > br {
 }
 
 .darkgreen {
-  color: hsl(120, 75%, 43%); !important;
+  color: hsl(120, 75%, 43%) !important;
 }
 
 .darkgreenshadow {
@@ -145,8 +149,8 @@ label > br {
 }
 
 .ui.darkgreen.active.item {
-  	border-color: hsl(120, 75%, 43%); !important;
-  	color: hsl(120, 75%, 43%); !important;
+  	border-color: hsl(120, 75%, 43%) !important;
+  	color: hsl(120, 75%, 43%) !important;
 }
 .ui.inverted.darkgreen {
   	background-color: hsl(120, 75%, 43%);
@@ -160,8 +164,8 @@ label > br {
 
 .ui.menu .darkgreen.active.item,
 .ui.darkgreen.menu .active.item {
-  border-color: hsl(120, 75%, 43%); !important;
-  color: hsl(120, 75%, 43%); !important;
+  border-color: hsl(120, 75%, 43%) !important;
+  /*color: hsl(120, 75%, 43%) !important;*/
 }
 .ui.inverted.darkgreen.menu {
   background-color: hsl(120, 75%, 43%);

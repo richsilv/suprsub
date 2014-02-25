@@ -33,6 +33,8 @@ Template.playerDetails.events({
 
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
+    appVars.tabChoices.setKey('playerTab', 'pitchData');
+    Deps.flush();
     appVars.circleChanged.set(true);
     $('#distanceRead').html(parseInt(event.target.value, 10) / 10 + 'km');
     appVars.circleSize.value = parseInt($('#distanceWrite').val(), 10) * 100;
@@ -91,6 +93,8 @@ Template.playerAreaButtons.events({
     appVars.liveCircle.setOptions({ strokeColor: '#78db1c', fillColor: '#78db1c' });
   },
   'click #revertBoundsButton': function() {
+    appVars.tabChoices.setKey('playerTab', 'pitchData');
+    Deps.flush();
     appVars.circleChanged.set(false);
     var thisUser = Meteor.user();
     if (thisUser && thisUser.profile && thisUser.profile.player) {
@@ -190,8 +194,8 @@ Template.playerForm.events({
 
 Template.playerForm.rendered = function() {
   var thisUser = Meteor.user();
-  $(this.findAll('.ui.checkbox')).checkbox({verbose: true, debug: false, performance: false});
-  $(this.findAll('.ui.dropdown')).dropdown({verbose: true, debug: false, performance: false, action: 'nothing'});
+  $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
+  $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, action: 'nothing'});
   $(this.findAll('.ui.dropdown')).dropdown('set text', clientFunctions.contactString());
   $(this.findAll('.ui.dropdown')).find('.item').each(function(i, elem) {
     if (thisUser.profile.contact && thisUser.profile.contact.indexOf(parseInt(elem.attributes['data-value'].nodeValue, 10)) > -1)

@@ -1,5 +1,7 @@
-  postBoxText = new suprsubDep(false);
- // var picker;
+var postBoxText = new suprsubDep(false),
+    picker;
+
+// *********************************
 
 Template.homePage.helpers({
   filter: function() {
@@ -17,7 +19,6 @@ Template.homePage.events({
     Router.routes['home'].postingsChoice.set(Meteor.userId());
   },
   'click #postBoxTextChoice .item': function(event) {
-    console.log(event);
     if (event.target.attributes.activate.value === "1")
       postBoxText.set(true);
     else
@@ -26,9 +27,9 @@ Template.homePage.events({
 })
 
 Template.postBox.helpers({
-  teamRegistered: function() {
+  'teamRegistered': function() {
     var thisUser = Meteor.user();
-    return (thisUser && thisUser.profile && thisUser.profile.team);
+    return (thisUser && thisUser.profile && thisUser.profile.team);   
   }
 });
 Template.postBox.events({
@@ -44,7 +45,7 @@ Template.postBox.events({
 });
 Template.postBox.rendered = function() {
   var thisUser = Meteor.user();
-  if (!(thisUser && thisUser.profile && thisUser.profile.team)) 
+/*  if (!(thisUser && thisUser.profile && thisUser.profile.team)) 
     $('#postingButton').popup({
       position: 'top center',
       inline: true,
@@ -60,7 +61,7 @@ Template.postBox.rendered = function() {
     debug: false,
     performance: false,
     verbose: false
-  });  
+  });  */
 };
 
 // ****************************
@@ -68,6 +69,10 @@ Template.postBox.rendered = function() {
 Template.fullPostingForm.helpers({
   'verified': function() {
     return verifyForm();
+  },
+  'teamRegistered': function() {
+    var thisUser = Meteor.user();
+    return (thisUser && thisUser.profile && thisUser.profile.team);   
   }
 })
 
@@ -124,14 +129,14 @@ Template.fullPostingForm.events({
 Template.fullPostingForm.rendered = function() {
   var tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  picker = new Pikaday({
-    field: $('#datepicker')[0],
-    format: 'ddd, D MMM YYYY',
-    onSelect: function() {
-    }
-  });
+  if (!picker)
+    picker = new Pikaday({
+      field: $('#datepicker')[0],
+      format: 'ddd, D MMM YYYY',
+      defaultDate: tomorrow,
+      setDefaultDate: false
+    });
   // $('#datepicker').val(moment(tomorrow).format('Do MMMM YYYY'));
-  picker.setDate(tomorrow);
   $('#fullPostingForm .dropdown').dropdown({verbose: false, debug: false, performance: false});;
   $('.ui.neutral.checkbox').checkbox({verbose: false, debug: false, performance: false});
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
@@ -237,6 +242,8 @@ function verifyForm() {
 }
 
 setFormDefaults = function() {
+  var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
   var teamList = Meteor.user().profile.team._ids;
   if (!teamList.length)
     return false;
@@ -254,6 +261,7 @@ setFormDefaults = function() {
     $('#friendlyCompetitive').checkbox('enable');
   else
     $('#friendlyCompetitive').checkbox('disable');
+  picker.setDate(tomorrow);
   if (teamProfile.regular) {
     var date = nextMatchingWeekDay(teamProfile.day);
     if (date)

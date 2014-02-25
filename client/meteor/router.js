@@ -137,6 +137,14 @@ Router.map(function() {
     }   
   });
 
+  this.route('about', {
+    path: '/about',
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'about': {to: 'mainSection'}
+    }
+  });
+
   this.route('myAdmin', {
     path: '/myadmin',
     template: 'adminTemplate',

@@ -8,10 +8,10 @@
 			<div class="large-16 columns">
 				<div class="ui segment content whitetranslucent height280" id="tabSpace">
 					<div class="ui tabular menu">
-					  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData">
+					  <a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData" title="List the venues within your selected home area">
 					    Selected Venues
 					  </a>
-					  <a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability">
+					  <a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
 					    Availability
 					  </a>
 					</div>
@@ -63,7 +63,7 @@
 		  	<div class="ui grid">
 			    <div class="ui eleven wide column field">
 			      	<label>Preferred Contact</label>
-					<div class="ui fluid selection dropdown">
+					<div class="ui fluid selection dropdown" title="This is how we'll send you messages and make you aware of relevant postings - you can select more than one">
 						<input type="hidden" name="contact">
 						<div class="text" id="selectedContact">None</div>
 						<i class="dropdown icon"></i>
@@ -75,7 +75,7 @@
 					</div>
 			    </div>
 			    <div class="ui five wide column">
-			    	<div class="ui animated fluid positive attached withLabel button glowBase" id="saveButton">
+			    	<div class="ui animated fluid positive attached withLabel button glowBase" id="saveButton" title="Save your profile">
 					  	<div class="visible content">Save</div>
 					  	<div class="hidden content">
 					    	<i class="save icon glowBase"></i>
@@ -185,11 +185,11 @@
 
 <template name="playerAreaButtons">
 	<div class="ui two large buttons cancelOrSave" id="cancelOrSave">
-		<div class="ui red animated{{#if unmoved}} disabled{{/if}} button" id="revertBoundsButton">
+		<div class="ui red animated{{#if unmoved}} disabled{{/if}} button" id="revertBoundsButton"{{#unless unmoved}} title="Reset your area to the last time it was saved"{{/unless}}>
 			<div class="visible content">Reset</div>
 			<div class="hidden content"><i class="backward icon"></i></div>
 		</div>
-		<div class="ui green animated{{#if unmoved}} disabled{{/if}} button" id="saveBoundsButton">
+		<div class="ui green animated{{#if unmoved}} disabled{{/if}} button" id="saveBoundsButton"{{#unless unmoved}}  title="Save your home area as it appears on the map now"{{/unless}}>
 			<div class="visible content">Save</div>
 			<div class="hidden content"><i class="save icon"></i></div>
 		</div>	
