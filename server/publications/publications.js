@@ -6,12 +6,15 @@ Meteor.publish('allPitches', function() {
 	return Pitches.find();
 });
 
-Meteor.publish('events', function(id) {
+Meteor.publish('events', function(id, userPostings) {
 	if (id) {
 		var thisUser = Meteor.users.findOne(id);
 		if (!thisUser)
 			return Events.find({}, {sort: {createdAt: -1}, limit: 20});
-		return Events.find({periodCode: {$in: Object.keys(thisUser.profile.player.availability)}}, {sort: {createdAt: -1}, limit: 20});
+		else if (userPostings)
+			return Events.find({team: {$in: thisUser.profile.team._ids}}, {sort: {createdAt: -1}, limit: 20});
+		else
+			return thisUser.profile.player.availability ? Events.find({periodCode: {$in: Object.keys(thisUser.profile.player.availability)}}, {sort: {createdAt: -1}, limit: 20}) : null;
 	}
 	else {
 		return Events.find({}, {sort: {createdAt: -1}, limit: 20});
@@ -44,7 +47,7 @@ Meteor.publish("userData", function () {
 
 Meteor.publish("allUsers", function(x) {
 	return Meteor.users.find({}, {limit: x});
-})
+});
 
 Meteor.publish("tweets", function(userId) {
 	var thisUser = Meteor.users.findOne(userId);
@@ -56,4 +59,4 @@ Meteor.publish("tweets", function(userId) {
 
 Meteor.publish("allTweets", function(x) {
 	return Tweets.find({}, {limit: x});
-})
+});

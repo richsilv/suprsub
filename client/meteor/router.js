@@ -110,9 +110,11 @@ Router.map(function() {
         ];
     },
     before: function() {
-      if (!('postingsChoice' in Router.routes['home']))
+      if (!('postingsChoice' in Router.routes['home'])) {
         Router.routes['home'].postingsChoice = new suprsubDep('');
-      this.subscribe('events', Router.routes['home'].postingsChoice.get());
+        Router.routes['home'].postingsUser = new suprsubDep(false);
+      }
+      this.subscribe('events', Router.routes['home'].postingsChoice.get(), Router.routes['home'].postingsUser.get());
     }
   });
 

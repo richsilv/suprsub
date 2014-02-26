@@ -41,9 +41,11 @@
 		      	<h2 class="ui header" id="activityHeader">Latest Activity</h2>
 		      	<span id="toggleBox">
 		      		<div class="ui breadcrumb">
-					  <a class="{{#unless filter}}active {{/unless}}section" id="allFilter" title="All active postings">All</a>
-					  <div class="divider"> / </div>
-					  <a class="{{#if filter}}active {{/if}}section" id="userFilter" title="Postings which match my area and time period settings">Mine</a>
+					  	<a class="{{#unless filter}}active {{/unless}}section" id="allFilter" title="All active postings">All</a>
+					  	<div class="divider"> / </div>
+					  	<a class="{{#if filter}}{{#unless postingsUser}}active {{/unless}}{{/if}}section" id="userFilter" title="Postings which match my area and time period settings">Filtered</a>
+						<div class="divider"> / </div>
+					  	<a class="{{#if postingsUser}}active {{/if}}section" id="userPostings" title="My postings and posting to which I've responded">Mine</a>
 					</div>
 		      	</span>
 		      	{{> activityFeed}}

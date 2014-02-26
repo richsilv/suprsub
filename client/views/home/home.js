@@ -7,6 +7,9 @@ Template.homePage.helpers({
   filter: function() {
     return Router.routes['home'].postingsChoice.get();
   },
+  postingsUser: function() {
+    return Router.routes['home'].postingsUser.get();
+  },
   postBoxText: function() {
     return postBoxText.get();
   }
@@ -14,10 +17,16 @@ Template.homePage.helpers({
 Template.homePage.events({
   'click #allFilter': function() {
     Router.routes['home'].postingsChoice.set('');
+    Router.routes['home'].postingsUser.set(false);
   },
   'click #userFilter': function() {
     Router.routes['home'].postingsChoice.set(Meteor.userId());
+    Router.routes['home'].postingsUser.set(false);
   },
+  'click #userPostings': function() {
+    Router.routes['home'].postingsChoice.set(Meteor.userId());
+    Router.routes['home'].postingsUser.set(true);
+  },  
   'click #postBoxTextChoice .item': function(event) {
     if (event.target.attributes.activate.value === "1")
       postBoxText.set(true);
@@ -36,7 +45,9 @@ Template.postBox.events({
   'submit #postingForm, click #postingButton': function() {
     Meteor.call('analysePosting', $('#postingArea').val(), function(err, res) {
       if (err) console.log(err);
+      else if (!Meteor.user().profile.team._ids.length) console.log("This user has no team");
       else {
+        res = _.extend(res, {team: Meteor.user().profile.team._ids[0]});
         appVars.newPosting.set(res);
         Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
       }
@@ -129,13 +140,13 @@ Template.fullPostingForm.events({
 Template.fullPostingForm.rendered = function() {
   var tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
-  if (!picker)
-    picker = new Pikaday({
-      field: $('#datepicker')[0],
-      format: 'ddd, D MMM YYYY',
-      defaultDate: tomorrow,
-      setDefaultDate: false
-    });
+  if (picker) picker.destroy();
+  picker = new Pikaday({
+    field: $('#datepicker')[0],
+    format: 'ddd, D MMM YYYY',
+    defaultDate: tomorrow,
+    setDefaultDate: false
+  });
   // $('#datepicker').val(moment(tomorrow).format('Do MMMM YYYY'));
   $('#fullPostingForm .dropdown').dropdown({verbose: false, debug: false, performance: false});;
   $('.ui.neutral.checkbox').checkbox({verbose: false, debug: false, performance: false});
@@ -186,8 +197,8 @@ Template.activityFeed.helpers({
     else return "teal twitter";
   },
   teamName: function() {
-    var user = Meteor.users.findOne({_id: this.userId});
-    if (user && user.profile && user.profile.team) return user.profile.team.name;
+    var team = Teams.findOne(this.team);
+    if (team) return team.name;
     else return 'Unknown Team';
   },
   message: function() {
@@ -253,7 +264,7 @@ setFormDefaults = function() {
   if (teamProfile.homeGround) {
     var homeGround = Pitches.findOne({_id: teamProfile.homeGround});
     if (homeGround) {
-      $('#homeGroundSearch').val(homeGround.name);
+      $('#homeGroundSearch').val(homeGround.owner + " - " + homeGround.name);
       $('#homeGroundSearch').attr('data-value', homeGround._id);
     }
   }

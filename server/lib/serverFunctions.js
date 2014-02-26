@@ -182,7 +182,7 @@ serverFunctions = (function() {
 		return richTokens;	
 	}
 
-	function parseRequest(tokens) {
+	function parseRequest(tokens, user) {
 		// SETUP
 		var richTokens = [],
 			requestData = {
@@ -194,7 +194,7 @@ serverFunctions = (function() {
 				price: 0
 			},
 			state = 0,
-			thisUser = Meteor.user();
+			thisUser = user ? user : Meteor.user();
 
 		if (!thisUser || !thisUser.profile || !thisUser.profile.team || !thisUser.profile.team._ids || !thisUser.profile.team._ids.length)
 			return new Meteor.Error(500, "No user logged in or no team data for logged-in user");
@@ -460,7 +460,7 @@ serverFunctions = (function() {
 			return false;
 		}
 		tokens = _.map(appConfig.Tokenizer.tokenize(mainText), function(token) {return token.toLowerCase();});
-		posting = parseRequest(tokens);
+		posting = parseRequest(tokens, thisUser);
 		if ('error' in posting) {
 			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " there was a problem with your request: " + posting.reason);
 			return false;
@@ -526,6 +526,9 @@ serverFunctions = (function() {
 				Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets);
 			}
 		}
+		else if (!thisUser.profile.team._ids.length)
+			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, but you don't have a team set up on SuprSub.com! Please log on to add one and you can then make postings.");
+		posting = _.extend(posting, {team: thisUser.profile.team._ids[0]});
 		var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
 		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
 		return false;
