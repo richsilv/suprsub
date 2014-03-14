@@ -1,9 +1,12 @@
-var successSet = new suprsubDep([]),
+successSet = new suprsubDep([]),
     failureSet = new suprsubDep([]),
     waitingFlag = new suprsubDep(false);
 
 Template.successFailurePITCHES.helpers({
   success: function() {
+    console.log("reassess");
+    var x = successSet.get();
+    console.log(x, successSet.value);
     return successSet.get();
   },
   failure: function() {
@@ -18,7 +21,6 @@ Template.pitchesTemplate.rendered = function ( ) {
   if (dropElem.length && !dropElem[0].dropzone)
     $('#fileDrop').dropzone({
       success: function(file, res) {
-        successSet.set([]);
         if (res) {
           var added = [];
           failureSet.set(res.failure);
@@ -27,10 +29,9 @@ Template.pitchesTemplate.rendered = function ( ) {
             var thisPitch = Pitches.findOne(pitch);
             if (!thisPitch) {
               Pitches.insert(pitch, function(err) {
-                var currentSet = successSet.get();
                 if (!err) {
-                  currentSet.push(pitch);
-                  successSet.set(currentSet);
+                  added.push(pitch);
+                  successSet.set(added);
                 }
               });
             }

@@ -71,6 +71,7 @@ Template.adminTemplate.events({
 	},
 	'click #deletePitch': function() {
 		Pitches.remove($('#pitchData .objId')[0].innerText);
+		$('#pitchData').html('');
 	}
 });
 
