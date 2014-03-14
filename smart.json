@@ -13,6 +13,8 @@
     "Pikaday": {
       "git": "https://github.com/richsilv/Pikaday.git"
     },
-    "handlebars-server": {}
+    "handlebars-server": {},
+    "impicker": {},
+    "Dropzonejs": {}
   }
 }

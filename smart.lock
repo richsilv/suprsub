@@ -17,18 +17,20 @@
         "git": "https://github.com/richsilv/Pikaday.git",
         "branch": "master"
       },
-      "handlebars-server": {}
+      "handlebars-server": {},
+      "impicker": {},
+      "Dropzonejs": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.13.0",
-        "commit": "e52080af47b590b6204d0824ece47e0f1a914f76"
+        "tag": "v0.14.0",
+        "commit": "36a98dcdc50216949d2f55c8bebc62ef5cbb29ee"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.3",
-        "commit": "79861385df5d2b667630ec82abe4de3efa3166e3"
+        "tag": "v0.6.4",
+        "commit": "927bbaed1b87894fb6fb70807f74ff3a5bd89f29"
       },
       "twit": {
         "git": "https://github.com/subhog/meteor-twit.git",
@@ -46,9 +48,9 @@
         "commit": "545234bc38f7a747a5d69b48f75c5cc77ca8382f"
       },
       "houston": {
-        "git": "https://github.com/gterrono/meteor-admin-ui.git",
-        "tag": "v1.0.0",
-        "commit": "e98660af09cb3e4e90848abfe943a06e7068cccc"
+        "git": "https://github.com/gterrono/houston.git",
+        "tag": "v1.0.1",
+        "commit": "59653d3a345a438c83bfd5244b992a19c4b014d7"
       },
       "smart-collections": {
         "git": "https://github.com/arunoda/meteor-smart-collections.git",
@@ -63,12 +65,22 @@
       "Pikaday": {
         "git": "https://github.com/richsilv/Pikaday.git",
         "branch": "master",
-        "commit": "f096fb761b1c5d89db09ec5042276257d992039c"
+        "commit": "984f2e4d17d43b6232343f9ef5b54f17685188c0"
       },
       "handlebars-server": {
         "git": "https://github.com/EventedMind/meteor-handlebars-server.git",
         "tag": "v1.1.0",
         "commit": "ed99c8e9280894519f44a5b4c84f66ff596c5450"
+      },
+      "impicker": {
+        "git": "https://github.com/wulx/impicker.git",
+        "tag": "v1.2.0",
+        "commit": "29a7a52d27b2cf8447fc24946b0fdbf60c4b12a6"
+      },
+      "Dropzonejs": {
+        "git": "https://github.com/devonbarrett/meteor-dropzone.git",
+        "tag": "v1.0.1",
+        "commit": "aa0e15055a519e72a97d02cffad4b052e840433d"
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",

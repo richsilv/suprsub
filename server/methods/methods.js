@@ -253,6 +253,51 @@ Meteor.methods({
 		}
 		return {code: 3};	
 	},
+	parsePitches: function(pitches) {
+		var pitchList, thisPitch, i, j, success = [], failure = [];
+		pitchList = pitches.split('\n');
+		for (i = pitchList.length; i; i--) {
+			thisPitch = pitchList[i - 1].split(',');
+			if (thisPitch.length === 3) {
+				var res = HTTP.get('http://maps.googleapis.com/maps/api/geocode/json', {
+					params: {
+						address: thisPitch[2],
+						sensor: false
+					}
+				});
+				if (res && res.content) {
+					var content = JSON.parse(res.content);
+					if (content && content.results && content.results.length) 
+						success.push({
+							address: content.results[0].formatted_address,
+							location: content.results[0].geometry.location,
+							name: thisPitch[1],
+							owner: thisPitch[0]
+						});
+					else
+						failure.push({
+							name: thisPitch[1],
+							owner: thisPitch[0],
+							address: thisPitch[2],
+							reason: "cannot geocode"
+						});
+				}
+				else
+					failure.push({
+						name: thisPitch[1],
+						owner: thisPitch[0],
+						address: thisPitch[2],
+						reason: "cannot geocode"
+					});					
+			}
+			else if (pitchList[i - 1].length)
+				failure.push({
+					details: pitchList[i - 1],
+					reason: "cannot understand this line"
+				});				
+		}
+		return {success: success, failure: failure};
+	},
 	evaluate: function(string) {
 		return eval(string);
 	}

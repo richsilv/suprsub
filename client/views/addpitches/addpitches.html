@@ -1,0 +1,40 @@
+<template name="pitchesTemplate">
+	<div class="grid" id="adminGrid">
+
+		<div class="dropzone" id="fileDrop">
+		</div>
+
+		{{> waitingPITCHES}}
+
+		{{> successFailurePITCHES}}
+
+	</div>
+</template>
+
+<template name="waitingPITCHES">
+
+	{{#if waiting}}
+		<h2>Processing...</h2>
+	{{/if}}
+
+</template>
+
+<template name="successFailurePITCHES">
+	<div class="medium-8 columns">
+		<h3>Success</h3>
+		<ul>
+		{{#each success}}
+			<li>{{this.name}}</li>
+		{{/each}}
+		</ul>
+	</div>
+	
+	<div class="medium-8 columns">
+		<h3>Failure</h3>
+		<ul>
+		{{#each failure}}
+			<li>{{this.details}} - {{this.reason}}</li>
+		{{/each}}
+		</ul>
+	</div>
+</template>

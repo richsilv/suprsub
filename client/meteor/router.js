@@ -171,4 +171,28 @@ Router.map(function() {
       }
     }
   });
+
+  this.route('uploadPitches', {
+    path: '/uploadPitches',
+    template: 'blank',
+    before: function() {
+      Meteor.call('printLine');
+      console.log(this.params);
+    }
+  });
+
+  this.route('addPitches', {
+    path: '/addPitches',
+    template: 'pitchesTemplate',
+    waitOn: function() {
+      return [
+        Meteor.subscribe('allPitches')
+      ];
+    },
+    data: function() {
+      return {
+        pitches: Pitches.find({}, {sort: {name: 1}})
+      }
+    }
+  }); 
 });

@@ -1,0 +1,9 @@
+#fileDrop {
+	width: auto;
+	min-height: 150px;
+	background-color: brown;
+}
+
+#fileDrop div span {
+	display: block;
+}

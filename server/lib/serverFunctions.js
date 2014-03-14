@@ -47,8 +47,8 @@ serverFunctions = (function() {
 				console.log("Bind Error!");
 				console.trace();
 				console.log(e);
-			}
-			));
+			})
+		);
 		stream.on('connect', function(request) {
 			console.log("Connected to Twitter.");
 			console.log(request);
