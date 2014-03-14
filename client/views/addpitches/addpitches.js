@@ -18,20 +18,23 @@ Template.pitchesTemplate.rendered = function ( ) {
   if (dropElem.length && !dropElem[0].dropzone)
     $('#fileDrop').dropzone({
       success: function(file, res) {
+        successSet.set([]);
         if (res) {
           var added = [];
           failureSet.set(res.failure);
           waitingFlag.set(false);
-          console.log(res);
           res.success.forEach(function(pitch) {
             var thisPitch = Pitches.findOne(pitch);
             if (!thisPitch) {
               Pitches.insert(pitch, function(err) {
-                if (!err) added.push(pitch);
+                var currentSet = successSet.get();
+                if (!err) {
+                  currentSet.push(pitch);
+                  successSet.set(currentSet);
+                }
               });
             }
           });
-          successSet.set(added);
         }
       },
       processing: function(file) {

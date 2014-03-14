@@ -68,6 +68,9 @@ Template.adminTemplate.events({
 	},
 	'click .twitterId': function(event) {
 		window.open('https://twitter.com/account/redirect_by_id/' + event.target.innerText, '_blank');
+	},
+	'click #deletePitch': function() {
+		Pitches.remove($('#pitchData .objId')[0].innerText);
 	}
 });
 
