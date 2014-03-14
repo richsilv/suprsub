@@ -25,6 +25,7 @@ Template.pitchesTemplate.rendered = function ( ) {
           var added = [];
           failureSet.set(res.failure);
           waitingFlag.set(false);
+          console.log(res.success);
           res.success.forEach(function(pitch) {
             var thisPitch = Pitches.findOne(pitch);
             if (!thisPitch) {

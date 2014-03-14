@@ -590,7 +590,7 @@ serverFunctions = (function() {
 	}
 
 	function getPeriodCode(dateTime) {
-		return Math.floor((dateTime.getHours() - 6) / 6)+ '/' + dateTime.getDay();
+		return dateTime ? Math.floor((dateTime.getHours() - 6) / 6)+ '/' + dateTime.getDay() : null;
 	}
 
 	function getDefaultTokens(teamId) {
