@@ -29,7 +29,8 @@ appVars = (function() {
 		],
 		_libs: {},
 	    saveCalc: new Deps.Dependency(),
-	    maxInvalidate: 100
+	    maxInvalidate: 100,
+	    maxPitches: 40
 	};
 }
 )();

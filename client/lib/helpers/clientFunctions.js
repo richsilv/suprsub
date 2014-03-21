@@ -126,7 +126,7 @@ clientFunctions = (function() {
 				appVars.circleChanged.set(true);
 			}
 		}
-		var pitches = Pitches.find().fetch();
+		var pitches = Pitches.find({}, {limit: appVars.maxPitches}).fetch();
 		for (var i=0; i < pitches.length; i++) {
 			var marker = new google.maps.Marker({
 				position: pitches[i].location,

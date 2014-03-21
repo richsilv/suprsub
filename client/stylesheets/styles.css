@@ -257,6 +257,9 @@ i.suprsub.icon:before{
 	border-radius: 2px;
 }
 
+.gm-style img { max-width: none; }
+.gm-style label { width: auto; display: inline; }
+
 .glowBase {
 	transition: text-shadow 0.5s, box-shadow 0.5s;
     -webkit-transition: -webkit-text-shadow 0.5s, -webkit-box-shadow 0.5s;

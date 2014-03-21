@@ -129,7 +129,8 @@ function deleteTeamFunction() {
 }
 
 Template.teamButtons.events({
-  'click #setDefault': function() {
+  'click #setDefault': function(event) {
+    console.log(event);
     if (!($(event.target).hasClass('disabled')))
       confirmModal("<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
         "<p>All future postings will be made on behalf of this team.</p>", defaultTeamFunction);
