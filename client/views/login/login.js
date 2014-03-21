@@ -34,7 +34,8 @@ Template.loginScreen.helpers({
     }
 })
 Template.loginScreen.events({
-    'click #signup-button' : function() {
+    'click #signup-button, keyup .form .input' : function(event) {
+        if (event.keyCode && event.keyCode !== 13) return false;
         if ($('#signup-password').val() !== $('#confirm-password').val()) {
             accountError.set("Passwords do not match");
             $('#signup-password').val('');

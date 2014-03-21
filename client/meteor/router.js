@@ -59,7 +59,7 @@ Router.map(function() {
       if (thisUser && thisUser.profile && thisUser.profile.team) {
         subs.push(Meteor.subscribe('teams'));
         Router.current().route.teamIds = thisUser.profile.team._ids;
-        if (!Router.current().route.currentTeamId || thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId) === -1) {
+        if (!Router.current().route.currentTeamId || thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId.value) === -1) {
           Router.current().route.currentTeamId = new suprsubDep(thisUser.profile.team._ids ? thisUser.profile.team._ids[0] : null);
         }
       }

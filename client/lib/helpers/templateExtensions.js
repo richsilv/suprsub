@@ -22,5 +22,14 @@ templateAttach = function(template, callback) {
 	if (typeof template === "string") template = Template[template];
 	if (!template) return false;
 	document.body.appendChild(Spark.render(template));
-	callback.apply(this, arguments);
+	callback && callback.apply(this, arguments);
 };
+
+confirmModal = function(message, callback) {
+	templateAttach(function() {
+		return Template.generalConfirmModal({
+			message: message,
+			callback: callback
+		});
+	});
+}

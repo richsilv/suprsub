@@ -85,17 +85,40 @@ Template.teamButtons.helpers({
   'defaultTeam': function() {
     Router.current().route.currentTeamId.dep.depend();
     return Router.current().route.teamIds.indexOf(Router.current().route.currentTeamId.get()) === 0;  
+  },
+  'multiTeams': function() {
+    return Router.current().route.teamIds.length > 1;
   }
 });
 
-Template.teamButtons.events({
-  'click #addNewTeam': function() {
+function defaultTeamFunction() {
+    if (Router.current().route.currentTeamId.get()) {
+      var teamIds = Router.current().route.teamIds,
+          currentTeamId = Router.current().route.currentTeamId.get(),
+          i = teamIds.indexOf(currentTeamId);
+      if (i < 1)
+        return false;
+      var newArray = [currentTeamId].concat(teamIds.slice(0, i)).concat(teamIds.slice(i + 1));
+      Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
+      Router.current().route.teamIds = newArray;
+      Router.current().route.currentTeamId.dep.changed();
+    }
+}
+function addTeamFunction() {
     if (Router.current().route.currentTeamId.get())
       Router.current().route.currentTeamId.set(null);
       Spark.getDataContext(document.querySelector('#teamNameHolder')).nameEntryOverride.dep.changed();
     setTeamData();
-  },
-  'click #deleteTeam': function() {
+}
+function leaveTeamFunction() {
+    if (Router.current().route.currentTeamId.get()) {
+      var newArray = _.without(Meteor.user().profile.team._ids, Router.current().route.currentTeamId.get()); 
+      Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
+      Router.current().route.currentTeamId.set(newArray.length ? newArray[0] : null);
+      setTeamData();
+    }
+}
+function deleteTeamFunction() {
     if (Router.current().route.currentTeamId.get()) {
       Meteor.call('deleteTeam', Router.current().route.currentTeamId.get(), function(err, res) {
         if (!err) Router.current().route.teamIds = Meteor.user().profile.team._ids;
@@ -103,17 +126,27 @@ Template.teamButtons.events({
       Router.current().route.currentTeamId.set(null);
       setTeamData();
     }
-  },
+}
+
+Template.teamButtons.events({
   'click #setDefault': function() {
-    var teamIds = Router.current().route.teamIds,
-        currentTeamId = Router.current().route.currentTeamId.get(),
-        i = teamIds.indexOf(currentTeamId);
-    if (i < 1)
-      return false;
-    var newArray = [currentTeamId].concat(teamIds.slice(0, i)).concat(teamIds.slice(i + 1));
-    Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
-    Router.current().route.teamIds = newArray;
-    Router.current().route.currentTeamId.dep.changed();
+    if (!($(event.target).hasClass('disabled')))
+      confirmModal("<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
+        "<p>All future postings will be made on behalf of this team.</p>", defaultTeamFunction);
+  },
+  'click #addNewTeam': function(event) {
+    if (!($(event.target).hasClass('disabled')))
+      confirmModal("<p>Do you want to <strong>create</strong> a new team?</p>", addTeamFunction);
+  },
+  'click #leaveTeam': function(event) {
+    if (!($(event.target).hasClass('disabled')))
+      confirmModal("<p>Do you want to <strong>leave</strong> this team?</p><p>Other members of the team will be unaffected, but " +
+        "you will no longer be able to view or alter the team settings.", leaveTeamFunction);
+  },  
+  'click #deleteTeam': function(event) {
+    if (!($(event.target).hasClass('disabled')))
+      confirmModal("<p>Are you sure you want to delete this team? The team will be removed for <strong>all</strong> " +
+        "team members.</p><p>Use the minus icon if you just want to leave the team.</p>", deleteTeamFunction);
   }
 });
 

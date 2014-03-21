@@ -23,10 +23,10 @@
 		<div class="ui segment content whitetranslucent">
 			<div class="medium-8 columns">
 				<form class="ui form segment content height225 teamForm">
-					<div class="small-11 columns">
+					<div class="small-10 columns">
 						{{> teamName}}
 					</div>
-					<div class="small-5 columns ui three buttons noMargin">
+					<div class="small-6 columns ui four buttons noMargin">
 						{{> teamButtons}}
 					</div>
 					<div class="row">
@@ -69,9 +69,10 @@
 </template>
 
 <template name="teamButtons">
-	<div class="ui fluid attached icon button withLabel{{#if defaultTeam}} teal{{/if}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
 	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
-	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (note this will delete it for ALL team members)"><i class="minus icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
+	<div class="ui fluid attached icon button withLabel{{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
 </template>
 
 <template name="playerButtons">
