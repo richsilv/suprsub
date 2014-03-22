@@ -124,21 +124,22 @@ function leaveTeamFunction() {
       setTeamData();
     }
 }
-deleteTeamFunction = function() {
+function deleteTeamFunction() {
     var deleteTeamId = Router.current().route.currentTeamId.get(),
         teamIds = Router.current().route.teamIds;
     if (deleteTeamId) {
       console.log("deleting...");
       Teams.remove({_id: deleteTeamId});
-/*      Meteor.call('deleteTeam', deleteTeamId);
       teamIds = _.without(teamIds, deleteTeamId);
-      if (teamIds.length) {
+      Meteor.users.update(Meteor.userId(), {$set: {'profile.team._ids': teamIds}});
+      Meteor.call('deleteTeam', deleteTeamId);
+/*      if (teamIds.length) {
         Router.current().route.currentTeamId.set(teamIds[0]);
         $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());        
       }
       else
         Router.current().route.currentTeamId.set(null);
-      setTeamData();*/
+*/      setTeamData();
     }
 }
 
@@ -527,6 +528,7 @@ function teamNameDropdownInit() {
 }
 
 function setTeamData() {
+  console.trace();
   if (Router.current().route.currentTeamId.get()) {
     var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
     $('#teamName').val(teamData.name);
@@ -582,7 +584,7 @@ function setTeamData() {
     $('#timeCheckbox').checkbox('disable');
   }
   return false;
-};
+}
 
 function glowCallback(event, err) {
   if (!err) {
@@ -594,24 +596,25 @@ function glowCallback(event, err) {
     }, 1000);
   }
   else console.log(err);
-};
+}
 
 function saveTeamData(event) {
   var homeGroundId = $('#homeGround>input').attr('id'),
       teamProfile,
-      thisGlowCallback = glowCallback.bind(undefined, event);
+      thisGlowCallback = glowCallback.bind(undefined, event),
+      format = $('#gameFormat').dropdown('get value');
   if (!homeGroundId) return false;
   teamProfile = {
       name: $('#teamName').val(),
       homeGround: homeGroundId,
       regular: $('#weekly')[0].checked,
       type: $('#friendlyCompetitive input')[0].checked,
-      format: $('#gameFormat').dropdown('get value'),
+      format: (typeof format === "string" ? format : "5"),
       ringerCode: Meteor.uuid()
   };
   if (teamProfile.regular) {
     teamProfile.day = parseInt($('#dayChoiceSection .ui.dropdown').dropdown('get value'), 10);
-    teamProfile.day = teamProfile.day ? teamProfile.day : 0
+    teamProfile.day = teamProfile.day ? teamProfile.day : 0;
     teamProfile.sameTime = $('#sameTime')[0].checked;
     if (teamProfile.sameTime) teamProfile.time = new Date(0, 0, 0, parseInt(document.getElementById('timePickerHour').value, 10), parseInt(document.getElementById('timePickerMinute').value, 10));
   }
@@ -619,9 +622,11 @@ function saveTeamData(event) {
   if (currentTeamId)
     Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
   else {
+    console.log(teamProfile);
     var newTeamId = Teams.insert(teamProfile);
     if (Meteor.user().profile.team._ids.indexOf(newTeamId) < 0) {
       Router.current().route.teamIds.push(newTeamId);
+      Router.current().route.currentTeamId.set(newTeamId);
       Meteor.users.update(Meteor.userId(), {
         $push: {'profile.team._ids': newTeamId}
       }, function() {
@@ -629,6 +634,7 @@ function saveTeamData(event) {
         Subs.teams.stop();
         Subs.teams = Meteor.subscribe('teams');
         Router._controllerDep.changed();
+        setTeamData();
       });
     }
     else
@@ -637,4 +643,4 @@ function saveTeamData(event) {
   var teamNameHolder = document.querySelector('#teamNameHolder');
   Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
   return false;
-};
+}

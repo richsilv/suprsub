@@ -56,10 +56,11 @@ Router.map(function() {
       if (thisUser && thisUser.profile && thisUser.profile.team) {
         Router.current().route.teamIds = thisUser.profile.team._ids;
         if (!Router.current().route.currentTeamId) {
+          console.log("Calc:", thisUser.profile.team._ids, thisUser.profile.team._ids.length ? thisUser.profile.team._ids[0] : null);
           Router.current().route.currentTeamId = new suprsubDep(thisUser.profile.team._ids.length ? thisUser.profile.team._ids[0] : null);
         }
         else if (thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId.value) === -1)
-          Router.current().route.currentTeamId.set(null);
+          Router.current().route.currentTeamId.set(thisUser.profile.team._ids.length ? thisUser.profile.team._ids[0] : null);
       }
       else {
         Router.current().route.teamIds = [];
@@ -81,7 +82,7 @@ Router.map(function() {
       if (this.params.joinCode) {
         Router.current().route.codeEntered = clientFunctions.joinTeam(this.params.joinCode);
         this.redirect('/team');
-      };      
+      }
     }
   });
 

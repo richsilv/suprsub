@@ -95,8 +95,10 @@ clientFunctions = (function() {
 					appVars.mapCenter.set(defaultLocation);
 					pitchMap.setCenter(defaultLocation);
 				}, function() {
-					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
-				});
+					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");	
+					appVars.mapCenter.set(defaultLocation);
+					pitchMap.setCenter(defaultLocation);
+					});
 			}
 		}
 		else if (Router.current().route.name === "playerDetails") {
@@ -122,6 +124,8 @@ clientFunctions = (function() {
 					});
 				}, function() {
 					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
+					appVars.mapCenter.set(defaultLocation);
+					pitchMap.setCenter(defaultLocation);
 				});
 				appVars.circleChanged.set(true);
 			}
@@ -143,7 +147,7 @@ clientFunctions = (function() {
 			document.getElementById("pitchMap").style.display = "block";
 			google.maps.event.trigger(pitchMap, 'resize');
 			pitchMap.setCenter(defaultLocation);
-	   	});
+		});
 		if (appVars.circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);
 			else if (appVars.venues) {
