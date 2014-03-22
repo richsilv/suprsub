@@ -29,10 +29,11 @@ Meteor.publish('teams', function(ids) {
 	if (ids) return Teams.find({_id: {$in: ids}});
 	else {
 		var thisUser = Meteor.users.findOne(this.userId);
-		if (thisUser && thisUser.profile && thisUser.profile.team)
+		if (thisUser && thisUser.profile && thisUser.profile.team && thisUser.profile.team._ids &&thisUser.profile.team._ids.length) {
 			return Teams.find({_id: {$in: thisUser.profile.team._ids}});
+		}
 		else
-			return Teams.find({_id: 'nullId'});
+			return [];
 	}
 })
 

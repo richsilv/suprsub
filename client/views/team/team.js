@@ -69,9 +69,13 @@ Template.teamName.events({
 });
 
 Template.teamName.rendered = function() {
-    if (!this.renderedOnce) {
+    console.log("rerendering...");
+    if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
       teamNameDropdownInit();
-      this.renderedOnce = true;
+      if (!this.data.renderedOnce)
+        this.data.renderedOnce = new suprsubDep(true);
+      else
+        this.data.renderedOnce.set(true);
     }
 };
 
@@ -115,16 +119,26 @@ function leaveTeamFunction() {
       var newArray = _.without(Meteor.user().profile.team._ids, Router.current().route.currentTeamId.get()); 
       Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
       Router.current().route.currentTeamId.set(newArray.length ? newArray[0] : null);
+      Subs.teams.stop();
+      Subs.teams = Meteor.subscribe('teams');
       setTeamData();
     }
 }
-function deleteTeamFunction() {
-    if (Router.current().route.currentTeamId.get()) {
-      Meteor.call('deleteTeam', Router.current().route.currentTeamId.get(), function(err, res) {
-        if (!err) Router.current().route.teamIds = Meteor.user().profile.team._ids;
-      });
-      Router.current().route.currentTeamId.set(null);
-      setTeamData();
+deleteTeamFunction = function() {
+    var deleteTeamId = Router.current().route.currentTeamId.get(),
+        teamIds = Router.current().route.teamIds;
+    if (deleteTeamId) {
+      console.log("deleting...");
+      Teams.remove({_id: deleteTeamId});
+/*      Meteor.call('deleteTeam', deleteTeamId);
+      teamIds = _.without(teamIds, deleteTeamId);
+      if (teamIds.length) {
+        Router.current().route.currentTeamId.set(teamIds[0]);
+        $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());        
+      }
+      else
+        Router.current().route.currentTeamId.set(null);
+      setTeamData();*/
     }
 }
 
@@ -206,11 +220,14 @@ Template.teamSettings.events({
 });
 
 Template.teamSettings.rendered = function() {
-  if (!this.renderedOnce) {
+  if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
     $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
-    this.renderedOnce = true;
+    if (!this.data.renderedOnce)
+      this.data.renderedOnce = new suprsubDep(true);
+    else
+      this.data.renderedOnce.set(true);
   }
   $(this.findAll('.ui.dropdown:not(#teamChoice)')).dropdown({verbose: false, debug: false, performance: false});
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
@@ -603,8 +620,17 @@ function saveTeamData(event) {
     Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
   else {
     var newTeamId = Teams.insert(teamProfile);
-    if (Meteor.user().profile.team._ids.indexOf(newTeamId) < 0)
-      Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newTeamId}}, thisGlowCallback);
+    if (Meteor.user().profile.team._ids.indexOf(newTeamId) < 0) {
+      Router.current().route.teamIds.push(newTeamId);
+      Meteor.users.update(Meteor.userId(), {
+        $push: {'profile.team._ids': newTeamId}
+      }, function() {
+        thisGlowCallback.apply(this);
+        Subs.teams.stop();
+        Subs.teams = Meteor.subscribe('teams');
+        Router._controllerDep.changed();
+      });
+    }
     else
       thisGlowCallback();
   }

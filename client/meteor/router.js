@@ -9,9 +9,6 @@ Router.configure({
       // stop the rest of the before hooks and the action function 
       this.stop();
     }
-    else {
-      this.subscribe('userData');
-    }
   },
   after: function() {
     if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
@@ -32,7 +29,8 @@ Router.map(function() {
       'socialBox': {to: 'socialBox'}
     },
     waitOn: function() {
-      return [Meteor.subscribe('allPitches'), clientFunctions.loadGMaps()];
+
+      return [Subs.pitches, clientFunctions.loadGMaps()];
     },
     action: function() {
       this.render();
@@ -55,19 +53,22 @@ Router.map(function() {
     },
     waitOn: function() {
       var thisUser = Meteor.user();
-      subs = [Meteor.subscribe('allPitches'), clientFunctions.loadGMaps()];
       if (thisUser && thisUser.profile && thisUser.profile.team) {
-        subs.push(Meteor.subscribe('teams'));
         Router.current().route.teamIds = thisUser.profile.team._ids;
-        if (!Router.current().route.currentTeamId || thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId.value) === -1) {
-          Router.current().route.currentTeamId = new suprsubDep(thisUser.profile.team._ids ? thisUser.profile.team._ids[0] : null);
+        if (!Router.current().route.currentTeamId) {
+          Router.current().route.currentTeamId = new suprsubDep(thisUser.profile.team._ids.length ? thisUser.profile.team._ids[0] : null);
         }
+        else if (thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId.value) === -1)
+          Router.current().route.currentTeamId.set(null);
       }
       else {
         Router.current().route.teamIds = [];
-        Router.current().route.currentTeamId = new suprsubDep(null);
+        if (!Router.current().route.currentTeamId)
+          Router.current().route.currentTeamId = new suprsubDep(null);
+        else
+          Router.current().route.currentTeamId.set(null);
       }
-      return subs;
+      return [Subs.pitches, Subs.teams, clientFunctions.loadGMaps()];
     },
     action: function() {
       this.render();
@@ -105,8 +106,8 @@ Router.map(function() {
     },
     waitOn: function() {
       return [
-        Meteor.subscribe('allPitches'),
-        Meteor.subscribe('teams')
+        Subs.pitches,
+        Subs.teams
         ];
     },
     before: function() {
@@ -157,7 +158,7 @@ Router.map(function() {
         Meteor.subscribe('allEvents', 20),
         Meteor.subscribe('allTeams', 20),
         Meteor.subscribe('allTweets', 20),
-        Meteor.subscribe('allPitches'),
+        Subs.pitches,
         Meteor.subscribe('allUsers', 20)
       ];
     },
@@ -186,7 +187,7 @@ Router.map(function() {
     template: 'pitchesTemplate',
     waitOn: function() {
       return [
-        Meteor.subscribe('allPitches')
+        Subs.pitches
       ];
     },
     data: function() {
