@@ -59,7 +59,7 @@ Template.teamName.events({
         var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
         $('#teamName').val(teamData.name);
         $('#teamName').focus();
-      }
+      };
       renderOnce('teamName', myFunc);  
     }
   },
@@ -112,7 +112,7 @@ function addTeamFunction() {
     if (Router.current().route.currentTeamId.get())
       Router.current().route.currentTeamId.set(null);
       Spark.getDataContext(document.querySelector('#teamNameHolder')).nameEntryOverride.dep.changed();
-    setTeamData();
+    // setTeamData();
 }
 function leaveTeamFunction() {
     if (Router.current().route.currentTeamId.get()) {
@@ -121,7 +121,7 @@ function leaveTeamFunction() {
       Router.current().route.currentTeamId.set(newArray.length ? newArray[0] : null);
       Subs.teams.stop();
       Subs.teams = Meteor.subscribe('teams');
-      setTeamData();
+      // setTeamData();
     }
 }
 function deleteTeamFunction() {
@@ -133,13 +133,8 @@ function deleteTeamFunction() {
       teamIds = _.without(teamIds, deleteTeamId);
       Meteor.users.update(Meteor.userId(), {$set: {'profile.team._ids': teamIds}});
       Meteor.call('deleteTeam', deleteTeamId);
-/*      if (teamIds.length) {
-        Router.current().route.currentTeamId.set(teamIds[0]);
-        $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());        
-      }
-      else
-        Router.current().route.currentTeamId.set(null);
-*/      setTeamData();
+      Router.current().route.currentTeamId.set(teamIds.length ? teamIds[0] : null);
+      // setTeamData();
     }
 }
 
@@ -221,10 +216,12 @@ Template.teamSettings.events({
 });
 
 Template.teamSettings.rendered = function() {
+  console.log(this.data.renderedOnce, this.data.renderedOnce.get());
   if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
     $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
+    console.log("added event handlers:",regularDayCheckboxDisable, regularDayCheckboxEnable);
     if (!this.data.renderedOnce)
       this.data.renderedOnce = new suprsubDep(true);
     else
@@ -240,6 +237,13 @@ Template.teamSettings.rendered = function() {
     $('#teamName').val(teamData.name);
     $('#teamName').focus();
   }
+};
+
+Template.teamSettings.created = function() {
+  Deps.autorun(function() {
+    Router.current().route.currentTeamId.dep.depend();
+    setTeamData();
+  });
 };
 
 // **************************
@@ -494,23 +498,25 @@ Deps.autorun(function() {
 // ***************** HELPER FUNCTIONS **********************
 
 
-function regularDayCheckboxEnable() {
+regularDayCheckboxEnable = function() {
+  console.log("Enabled");
   if ($('#regDayCheckbox').css('opacity') === '1')
     $('#dayChoiceSection, #timeCheckbox').css({ opacity: 1 });
   else
     $('#regDayCheckbox').checkbox('disable');
 }
-function regularDayCheckboxDisable() {
+regularDayCheckboxDisable = function() {
+  console.log("Disabled");
   $('#dayChoiceSection, #timeCheckbox, #timeSection').css({ opacity: 0.1 });
   $('#timeCheckbox').checkbox('disable');
 }
 
-function regularTimeCheckboxEnable() {
+regularTimeCheckboxEnable = function() {
   if ($('#timeCheckbox').css('opacity') === '1')
     $('#timeSection').css({ opacity: 1 });
   else $('#timeCheckbox').checkbox('disable');
 }
-function regularTimeCheckboxDisable() {
+regularTimeCheckboxDisable = function() {
   if ($('#timeCheckbox').css('opacity') === '1')  
     $('#timeSection').css({ opacity: 0.1 });
 }
@@ -520,17 +526,16 @@ function teamNameDropdownInit() {
     verbose: false, debug: false, performance: false,
     onChange: function(value, text) {
       Router.current().route.currentTeamId.set(value);
-      setTeamData();
+      // setTeamData();
       Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.set(true);
     }
   });
   $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
 }
 
-function setTeamData() {
-  console.trace();
-  if (Router.current().route.currentTeamId.get()) {
-    var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
+function setTeamData(teamData) {
+  if (teamData || Router.current().route.currentTeamId.get()) {
+    teamData = teamData ? teamData : Teams.findOne(Router.current().route.currentTeamId.get());
     $('#teamName').val(teamData.name);
     $('#homeGround>input').attr('id', teamData.homeGround);
     var ground = Pitches.findOne({'_id': teamData.homeGround});
@@ -633,8 +638,8 @@ function saveTeamData(event) {
         thisGlowCallback.apply(this);
         Subs.teams.stop();
         Subs.teams = Meteor.subscribe('teams');
-        Router._controllerDep.changed();
-        setTeamData();
+        // Router._controllerDep.changed();
+        setTeamData(teamProfile);
       });
     }
     else
