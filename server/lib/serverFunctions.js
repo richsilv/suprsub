@@ -84,13 +84,13 @@ serverFunctions = (function() {
 	}
 
 	function categoriseToken(token) {
-		var output = {code: -1};
+		var output = {code: -1}, costVector = {insertion_cost: 0.3, deletion_cost: 1.5, substitution_cost: 1.5};
 		for (i = 0, l = appConfig.regexDict.length; i < l; i++)
 			if (appConfig.regexDict[i].regex.exec(token)) return {code: appConfig.regexDict[i].code, data: appConfig.regexDict[i].transform(token)};
 		var currentMatch = fuzzyMatch(token, appConfig.dictionary);
 		output = currentMatch;
 		if (output.code >= 0) {
-			if (output.code === 3) return {code: 3, data: (ouput.term === "pm" ? 1 : 0)};
+			if (output.code === 3) return {code: 3, data: (output.term === "pm" ? 1 : 0)};
 			else if (output.code < 5) return output;
 			switch (output.code) {
 				case 5:
@@ -126,27 +126,28 @@ serverFunctions = (function() {
 		if (currentMatch.code !== -1) return {code: 10};
 		var pitchData = Pitches.find({}).fetch();
 		var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
-		var match = fuzzyMatch(token, currentLookup, 0.75);
+		var match = fuzzyMatch(token, currentLookup, 0.7, costVector);
 		if (match.code !== -1) return {code: 9, data: match.code};
-		currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase() + ' ' + pitch.owner.toLowerCase()] = pitch._id; return dict;}, {});
-		match = fuzzyMatch(token, currentLookup, 0.75);
+		currentLookup = _.reduce(pitchData, function(dict, pitch) {if (pitch.owner) dict[pitch.name.toLowerCase() + ' ' + pitch.owner.toLowerCase()] = pitch._id; return dict;}, {});
+		match = fuzzyMatch(token, currentLookup, 0.7, costVector);
 		if (match.code !== -1) return {code: 9, data: match.code};
-		currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
-		match = fuzzyMatch(token, currentLookup, 0.75);
+		currentLookup = _.reduce(pitchData, function(dict, pitch) {if (pitch.owner) dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
+		match = fuzzyMatch(token, currentLookup, 0.7, costVector);
 		if (match.code !== -1) return {code: 9, data: match.code};
 		return {code: -1};
 	}
 
-	function fuzzyMatch(token, dict, threshold) {
+	function fuzzyMatch(token, dict, threshold, costVector) {
 		var bestMatch = 99, match = {code: -1};
-		var maxScore = threshold ? token.length * (1.0 - threshold) : (token.length * 0.2);
-	//	console.log("max score is " + maxScore);
+		var maxScore = threshold ? token.length * (1.0 - threshold) : (token.length * 0.3);
+		costVector = costVector ? costVector : {insertion_cost: 0.66, deletion_cost: 0.66, substitution_cost: 1}
+		// console.log("max score is " + maxScore);
 		for (var currentKey in dict) {
-			var thisDistance = appConfig.Natural.LevenshteinDistance(token, currentKey, {insertion_cost: 0.66, deletion_cost: 0.66, substitution_cost: 1});
-	//		console.log(token + " => " + currentKey + " : " + thisDistance);
+			var thisDistance = appConfig.Natural.LevenshteinDistance(token, currentKey, costVector);
+			// console.log(token + " => " + currentKey + " : " + thisDistance);
 			if (thisDistance <= maxScore && thisDistance < bestMatch) {
-				match = {code: dict[currentKey], term: currentKey};
-	//			console.log(currentKey, thisDistance, match);
+				match = {code: dict[currentKey], term: currentKey, score: thisDistance / token.length};
+				// console.log(currentKey, thisDistance, match);
 				bestMatch = thisDistance;
 			}
 		}	
