@@ -69,11 +69,12 @@ Template.teamName.events({
 });
 
 Template.teamName.rendered = function() {
-    console.log("rerendering...");
+    // console.log("rerendering...");
     if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
       teamNameDropdownInit();
-      if (!this.data.renderedOnce)
-        this.data.renderedOnce = new suprsubDep(true);
+      if (!this.data.renderedOnce) {
+        // this.data.renderedOnce = new suprsubDep(true);
+      }
       else
         this.data.renderedOnce.set(true);
     }
@@ -128,7 +129,7 @@ function deleteTeamFunction() {
     var deleteTeamId = Router.current().route.currentTeamId.get(),
         teamIds = Router.current().route.teamIds;
     if (deleteTeamId) {
-      console.log("deleting...");
+      // console.log("deleting...");
       Teams.remove({_id: deleteTeamId});
       teamIds = _.without(teamIds, deleteTeamId);
       Meteor.users.update(Meteor.userId(), {$set: {'profile.team._ids': teamIds}});
@@ -140,7 +141,7 @@ function deleteTeamFunction() {
 
 Template.teamButtons.events({
   'click #setDefault': function(event) {
-    console.log(event);
+    // console.log(event);
     if (!($(event.target).hasClass('disabled')))
       confirmModal("<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
         "<p>All future postings will be made on behalf of this team.</p>", defaultTeamFunction);
@@ -216,12 +217,11 @@ Template.teamSettings.events({
 });
 
 Template.teamSettings.rendered = function() {
-  console.log(this.data.renderedOnce, this.data.renderedOnce.get());
+  // console.log(this.data.renderedOnce, this.data.renderedOnce ? this.data.renderedOnce.get() : null);
   if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
     $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
-    console.log("added event handlers:",regularDayCheckboxDisable, regularDayCheckboxEnable);
     if (!this.data.renderedOnce)
       this.data.renderedOnce = new suprsubDep(true);
     else
@@ -240,11 +240,16 @@ Template.teamSettings.rendered = function() {
 };
 
 Template.teamSettings.created = function() {
-  Deps.autorun(function() {
+  this.autoRun = Deps.autorun(function() {
     Router.current().route.currentTeamId.dep.depend();
     setTeamData();
   });
 };
+
+Template.teamSettings.destroyed = function() {
+  console.log("destroyed");
+  this.autoRun.stop();
+}
 
 // **************************
 
@@ -499,14 +504,12 @@ Deps.autorun(function() {
 
 
 regularDayCheckboxEnable = function() {
-  console.log("Enabled");
   if ($('#regDayCheckbox').css('opacity') === '1')
     $('#dayChoiceSection, #timeCheckbox').css({ opacity: 1 });
   else
     $('#regDayCheckbox').checkbox('disable');
 }
 regularDayCheckboxDisable = function() {
-  console.log("Disabled");
   $('#dayChoiceSection, #timeCheckbox, #timeSection').css({ opacity: 0.1 });
   $('#timeCheckbox').checkbox('disable');
 }
@@ -534,7 +537,8 @@ function teamNameDropdownInit() {
 }
 
 function setTeamData(teamData) {
-  if (teamData || Router.current().route.currentTeamId.get()) {
+  if (teamData || (Router.current().route.currentTeamId.get() && Subs.teams.ready())) {
+    // console.log(teamData, Router.current().route.currentTeamId.get(), Teams.findOne(Router.current().route.currentTeamId.get()), teamData ? true : false)
     teamData = teamData ? teamData : Teams.findOne(Router.current().route.currentTeamId.get());
     $('#teamName').val(teamData.name);
     $('#homeGround>input').attr('id', teamData.homeGround);
@@ -627,7 +631,7 @@ function saveTeamData(event) {
   if (currentTeamId)
     Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
   else {
-    console.log(teamProfile);
+    // console.log(teamProfile);
     var newTeamId = Teams.insert(teamProfile);
     if (Meteor.user().profile.team._ids.indexOf(newTeamId) < 0) {
       Router.current().route.teamIds.push(newTeamId);

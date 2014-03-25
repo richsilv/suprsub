@@ -84,7 +84,7 @@ serverFunctions = (function() {
 	}
 
 	function categoriseToken(token) {
-		var output = {code: -1}, costVector = {insertion_cost: 0.3, deletion_cost: 1.5, substitution_cost: 1.5};
+		var output = {code: -1}, costVector = {insertion_cost: 0.33, deletion_cost: 0.95, substitution_cost: 1.25};
 		for (i = 0, l = appConfig.regexDict.length; i < l; i++)
 			if (appConfig.regexDict[i].regex.exec(token)) return {code: appConfig.regexDict[i].code, data: appConfig.regexDict[i].transform(token)};
 		var currentMatch = fuzzyMatch(token, appConfig.dictionary);

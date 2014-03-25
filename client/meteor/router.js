@@ -90,8 +90,7 @@ Router.map(function() {
     path: '/',
     template: 'mainTemplate',
     yieldTemplates: {
-      'homePage': {to: 'mainSection'},
-      'socialBox': {to: 'socialBox'}
+      'homePage': {to: 'mainSection'}
     },
     action: function() {
       this.redirect('/home');

@@ -23,7 +23,6 @@
 	<div id="wrapper">
 		{{> topbar}}
 		{{yield "mainSection"}}
-		{{yield "socialBox"}}
 	</div>
 </template>
 
@@ -49,7 +48,12 @@
 		<div id="toplogo-image-temp" style="display: none;">SuprSub</div>
 		<div class="right menu">
 			{{#if currentUser}}
-  			<div class="item">
+			<div class="svg item" id="socialItem">
+				<span><a target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Surbsub+-+Play+more+football.+Find+a+SuprSub+in+seconds.+Be+a+SuprSub+wherever+and+whenever+suits+you.&url=http://supsub.com" class="webicon twitter" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a></span>
+				<span><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></span>	
+				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>				
+			</div>
+			<div class="item">
     			<div class="ui red button show-for-large-up" id="delete-button">Delete Account</div>
   			</div>
   			<div class="item">

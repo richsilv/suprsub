@@ -107,5 +107,6 @@ Accounts.onCreateUser(function(options, user) {
 		user.profile = _.extend(options.profile, {contact: [2]});
 	}
 	user.profile.team =  {_ids: []};
+	user.profile.player = {};
 	return user;
 });
