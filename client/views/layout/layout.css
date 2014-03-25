@@ -79,7 +79,8 @@
 	width:100vw;
 	background-color: #c7e5ac;
 	overflow-y: scroll;
-	background: url('/images/footygame2.jpeg') no-repeat center center fixed;
+	/*background: url('/images/footygame2.jpeg') no-repeat center center fixed;*/
+	background-color: rgb(148, 153, 148);
 	background-size: cover;
 	-o-background-size: cover;
 	-moz-background-size: cover;
