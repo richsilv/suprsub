@@ -18,6 +18,18 @@
 	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+#benefitsList li {
+	line-height: 0.8em;
+	padding-top: 0;
+	padding-bottom: 0;
+	font-size: 0.8em;
+}
+
+.titleSection .suprsubHeader {
+	margin-bottom: -0.2em;
+	margin-top: 0.05em;
+}
+
 #fullPostingForm .field {
 	clear: none;
 }
