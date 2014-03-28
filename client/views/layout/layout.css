@@ -91,7 +91,8 @@
 @media only screen and (max-width: 40em) {
 
 	#main-background-image {
-		background: url('/images/footygame2small.jpeg') no-repeat center center fixed;
+		/*background: url('/images/footygame2small.jpeg') no-repeat center center fixed;*/
+		background-color: rgb(148, 153, 148);
 	}
 
 }
