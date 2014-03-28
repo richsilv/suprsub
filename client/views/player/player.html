@@ -1,8 +1,8 @@
 <template name="playerDetails">
 	<div id="main-background-image"></div>
 	<div class="gap row">
-		<div class="large-8 gap columns">
-			{{> playerForm}}
+		<div class="large-8 columns">
+			{{> playerForm dropdowns}}
 		</div>
 		<div class="large-8 columns">
 			<div class="large-16 columns">
@@ -26,6 +26,10 @@
 		</div>
 	</div>
 	<div class="gap row">
+		{{> playerMainButtons}}
+	</div>
+	<div class="cleared row"></div>
+	<div class="gap row">
 		<div class="medium-16 columns">
 			<div class="large-16 columns">
 				<div class="ui segment content whitetranslucent" id="areaDetails">
@@ -38,7 +42,6 @@
 							{{> pitchMapLarge}}
 						</div>
 					</div>
-					{{> playerAreaButtons}}
 				</div>
 			</div>
 		</div>
@@ -62,66 +65,53 @@
 			      	</div>
 			    </div>
 		  	</div>
-		  	<div class="ui grid">
-			    <div class="ui eleven wide column field">
-			      	<label>Preferred Contact</label>
-					<div class="ui fluid selection dropdown" title="This is how we'll send you messages and make you aware of relevant postings - you can select more than one">
-						<input type="hidden" name="contact">
-						<div class="text" id="selectedContact">None</div>
+		  	<div class="two fields">
+		    	<div class="field">
+		      		<label>Age</label>
+					<div class="ui fluid selection dropdown" id="ageDropdown">
+						<input type="hidden">
+						<div class="default text">Select</div>
 						<i class="dropdown icon"></i>
-					  	<div class="menu">
-					  		{{#if email 'verified'}}<div class="item active" data-value="2">Email{{#if contactActive 2}} (selected){{/if}}</div>{{/if}}
-					    	{{#if service 'facebook'}}<div class="item" data-value="1">Facebook{{#if contactActive 1}} (selected){{/if}}</div>{{/if}}
-					    	{{#if service 'twitter'}}<div class="item" data-value="0">Twitter{{#if contactActive 0}} (selected){{/if}}</div>{{/if}}
-					  	</div>
+						<div class="menu">
+							{{#each ageBands}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+						</div>
+					</div>
+		    	</div>
+			    <div class="field">
+			      	<label>Prefered Position</label>
+					<div class="ui fluid selection dropdown" id="positionDropDown">
+						<input type="hidden">
+						<div class="default text">Select</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							{{#each positions}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+						</div>
 					</div>
 			    </div>
-			    <div class="ui five wide column">
-			    	<div class="ui animated fluid positive attached withLabel button glowBase" id="saveButton" title="Save your profile">
-					  	<div class="visible content">Save</div>
-					  	<div class="hidden content">
-					    	<i class="save icon glowBase"></i>
-					  	</div>
-					</div>
-				</div>
 		  	</div>
-		  	<div class="row">
-		  		<ul class="small-block-grid-1 medium-block-grid-3 large-block-grid-1" id="linkTriple">
-			  		<li>
-				  		<div class="small ui fluid {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
-				  			<i class="facebook icon"></i>
-				  			{{#if service 'facebook'}}
-					  			Facebook Account Linked
-					  		{{else}}
-					  			Link Facebook Account
-					  		{{/if}}
-				  		</div>
-			  		</li>
-			  		<li>
-				  		<div class="small ui fluid {{#if service 'twitter'}}twitter {{/if}}button" id="twitterButton">
-				  			<i class="twitter icon"></i>
-				  			{{#if service 'twitter'}}
-					  			Twitter Account Linked
-				  			{{else}}
-					  			Link Twitter Account
-				  			{{/if}}
-				  		</div>
-		  			</li>
-			  		<li>
-				  		<div class="small ui fluid {{#if email 'verified'}}orange {{/if}} button" {{#if email}} title="{{email}}"{{/if}} id="emailButton">
-				  			<i class="mail icon"></i>
-				  			{{#if email 'verified'}}
-					  			Email address verified
-				  			{{else}}
-				  				{{#if email 'unverified'}}
-					  				Waiting for email verification
-					  			{{else}}
-					  				Link Email Account
-				  				{{/if}}
-				  			{{/if}}
-				  		</div>
-			  		</li>
-			  	</ul>
+		  	<div class="two fields">
+		    	<div class="field">
+		      		<label>Footedness</label>
+					<div class="ui fluid selection dropdown" id="footednessDropDown">
+						<input type="hidden">
+						<div class="default text">Select</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							{{#each footedness}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+						</div>
+					</div>
+		    	</div>
+			    <div class="field">
+			      	<label>Ability</label>
+					<div class="ui fluid selection dropdown" id="abilityDropDown">
+						<input type="hidden">
+						<div class="default text">Select</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							{{#each ability}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+						</div>
+					</div>
+			    </div>
 		  	</div>
 		</form>
 	</div>
@@ -198,52 +188,19 @@
 	</div>
 </template>
 
-<template name="linkModal">
-	<div class="ui small modal" id="linkModal">
-		<div class="ui row">
-			<div class="ui column">
-				<form class="ui form segment content grid">
-			  		<div class="inline field row">
-			      		<div class="ui input" id="email">
-			      			<input placeholder="Email Address" type="email" id="emailEntry" />
-			      		</div>
-			    	</div>
-					<div class="inline field row">
-			      		<div class="ui input" id="password">
-			      			<input placeholder="Password" type="password" id="passwordEntry" />
-			      		</div>
-			    	</div>
-			    	<div class="two fluid ui buttons row">
-	    		  		<div class="ui negative button" id="emailCancel">
-				  			<i class="remove icon"></i>
-				  			Cancel
-				  		</div>
-	    		  		<div class="ui orange button" id="emailSubmit">
-				  			<i class="mail icon"></i>
-				  			Submit
-				  		</div>
-				  	</div>
-		    	</form>
-			</div>    			
+<template name="playerMainButtons">
+	<div class="medium-4 medium-centered columns">
+		<div class="ui segment content whitetranslucent">
+			<div class="ui two fluid large buttons" id="cancelOrSave">
+				<div class="ui negative animated button" id="resetButton" title="Reset any changes you've made">
+					<div class="visible content">Reset</div>
+					<div class="hidden content"><i class="backward icon"></i></div>
+				</div>
+				<div class="ui positive animated{{#if disableSave}} disabled{{/if}} button" id="saveButton" title="Save these changes">
+					<div class="visible content">Save</div>
+					<div class="hidden content"><i class="save icon"></i></div>
+				</div>	
+			</div>
 		</div>
-	</div>
-</template>
-
-<template name="duplicateEmail">
-	<div class="ui row">
-		<div class="ui column">
-			<h3 class="ui dividing header">
-				E-mail already registered
-			</h3>
-			<p>That e-mail address is already registered on the system as a separate user.</p>
-			<p>If you would like to link it to this profile, you will need to do the following:</p>
-			<ul>
-				<li>Log out of this account.</li>
-				<li>Log back in using the e-mail <em>{{this.email}}</em>.</li>
-				<li>Select <strong>Close this Account</strong> from the system menu.</li>
-				<li>Log back into this account, from which you will now be able to link that e-mail address.</li>
-			</ul>
-			<p>Sorry about that, but this is necessary to prevent accounts being hijacked.</p>
-		</div>
-	</div>
+	</div>	
 </template>

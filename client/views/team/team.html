@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	<div class="gap row">
-		{{> mainButtons}}
+		{{> teamMainButtons}}
 	</div>
 	<div class="cleared row"></div>
 	<div class="gap row">
@@ -44,7 +44,7 @@
 			{{> playerButtons}}
 		</div>
 		{{#if teamId}}
-		<div class="ui fluid segment" id="memberRingerTable">
+		<div class="ui fluid green segment" id="memberRingerTable">
 			{{> playerTable}}
 		</div>
 		{{/if}}
@@ -195,7 +195,7 @@
 	</form>
 </template>
 
-<template name="mainButtons">
+<template name="teamMainButtons">
 	<div class="medium-4 medium-centered columns">
 		<div class="ui segment content whitetranslucent">
 			<div class="ui two fluid large buttons" id="cancelOrSave">
@@ -214,36 +214,38 @@
 
 <template name="otherInfo">
 	<div class="large-16 columns">
-		<div class="ui segment content whitetranslucent" id="otherInfo">
-			<div class="row">
-				<div class="large-8 columns">
-					<form class="ui form segment content">
-						<div class="ui grid">
-							<div class="field fourteen wide column">
-								<label>Home Ground</label>
-								<div class="ui left labeled icon input">
-									<input type="text" placeholder="Type a description or address" id="homeGroundSearch" title="You can find a venue either using its name (e.g. Powerleague Wembley), or by typing an address or place and hitting the search icon">
-									<i class="globe icon"></i>
+		<div class="medium-16 columns">
+			<div class="ui segment content whitetranslucent" id="otherInfo">
+				<div class="row">
+					<div class="large-8 columns">
+						<form class="ui form segment content">
+							<div class="ui grid">
+								<div class="field fourteen wide column">
+									<label>Home Ground</label>
+									<div class="ui left labeled icon input">
+										<input type="text" placeholder="Type a description or address" id="homeGroundSearch" title="You can find a venue either using its name (e.g. Powerleague Wembley), or by typing an address or place and hitting the search icon">
+										<i class="globe icon"></i>
+									</div>
+								</div>
+								<div class="two wide column">
+									<div class="ui right attached button withLabel" id="mapSearchButton" title="Pan to this location">
+										<div class="content"><i class="search icon"></i></div>
+									</div>
 								</div>
 							</div>
-							<div class="two wide column">
-								<div class="ui right attached button withLabel" id="mapSearchButton" title="Pan to this location">
-									<div class="content"><i class="search icon"></i></div>
-								</div>
-							</div>
+						</form>
+						<div id="matches"></div>
+						<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
+					</div>
+					<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
+					<div class="large-8 columns">
+						<div id="pitchMapContainerSmall">
+							{{#if tabChoices 'newVenue'}}
+							{{> newVenueBox}}
+							{{else}}
+							{{> pitchMapSmall}}
+							{{/if}}
 						</div>
-					</form>
-					<div id="matches"></div>
-					<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
-				</div>
-				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
-				<div class="large-8 columns">
-					<div id="pitchMapContainerSmall">
-						{{#if tabChoices 'newVenue'}}
-						{{> newVenueBox}}
-						{{else}}
-						{{> pitchMapSmall}}
-						{{/if}}
 					</div>
 				</div>
 			</div>

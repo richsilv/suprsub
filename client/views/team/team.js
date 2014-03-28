@@ -253,14 +253,14 @@ Template.teamSettings.destroyed = function() {
 
 // **************************
 
-Template.mainButtons.helpers({
+Template.teamMainButtons.helpers({
   disableSave: function() {
     if ('disableSave' in this) return this.disableSave.get();
     return true;
   }
 });
 
-Template.mainButtons.events({
+Template.teamMainButtons.events({
   'click #resetButton': function() {
     var teamNameHolder = document.querySelector('#teamNameHolder');
     Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
@@ -268,7 +268,7 @@ Template.mainButtons.events({
   'click #saveButton': saveTeamData
 });
 
-Template.mainButtons.created = function() {
+Template.teamMainButtons.created = function() {
   this.data.disableSave = new suprsubDep(true);
 };
 

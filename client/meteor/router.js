@@ -25,8 +25,7 @@ Router.map(function() {
     path: '/player',
     template: 'mainTemplate',
     yieldTemplates: {
-      'playerDetails': {to: 'mainSection'},
-      'socialBox': {to: 'socialBox'}
+      'playerDetails': {to: 'mainSection'}
     },
     waitOn: function() {
 
@@ -48,8 +47,7 @@ Router.map(function() {
     path: '/team/:joinCode?',
     template: 'mainTemplate',
     yieldTemplates: {
-      'teamInfo': {to: 'mainSection'},
-      'socialBox': {to: 'socialBox'}
+      'teamInfo': {to: 'mainSection'}
     },
     waitOn: function() {
       var thisUser = Meteor.user();
@@ -101,8 +99,7 @@ Router.map(function() {
     path: '/home',
     template: 'mainTemplate',
     yieldTemplates: {
-      'homePage': {to: 'mainSection'},
-      'socialBox': {to: 'socialBox'}
+      'homePage': {to: 'mainSection'}
     },
     waitOn: function() {
       return [
@@ -144,8 +141,15 @@ Router.map(function() {
     path: '/about',
     template: 'mainTemplate',
     yieldTemplates: {
-      'about': {to: 'mainSection'},
-      'socialBox': {to: 'socialBox'}
+      'about': {to: 'mainSection'}
+    }
+  });
+
+  this.route('settings', {
+    path: '/settings',
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'settings': {to: 'mainSection'}
     }
   });
 

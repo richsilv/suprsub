@@ -20,6 +20,37 @@ Template.playerDetails.helpers({
   "tabChoice": function(key, value) {
     if ('tabChoices' in appVars) return appVars.tabChoices.getKey(key) === value;
     else return false; 
+  },
+  "dropdowns": function() {
+    return {
+      ageBands: [
+        {code: 0, label: '16-18'},
+        {code: 1, label: '18-25'},
+        {code: 2, label: '25-35'},
+        {code: 3, label: '35-45'},
+        {code: 4, label: '45+'}
+      ],
+      positions: [
+        {code: 0, label: 'Goalkeeper'},
+        {code: 1, label: 'Defender'},
+        {code: 2, label: 'Midfield'},
+        {code: 3, label: 'Forward'},
+        {code: 4, label: 'Any Outfield'},
+        {code: 5, label: 'Any'},        
+      ],
+      footedness: [
+        {code: 0, label: 'Right'},
+        {code: 1, label: 'Left'},
+        {code: 2, label: 'Both'},
+      ],
+      ability: [
+        {code: 0, label: 'Beginner'},
+        {code: 1, label: 'OK'},
+        {code: 2, label: 'Good'},
+        {code: 3, label: 'Very Good'},
+        {code: 4, label: 'Excellent'},
+      ]
+    }
   }
 });
 
@@ -117,19 +148,6 @@ Template.playerForm.helpers({
   },
   last_name: function() {
     return (Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.last_name : null;
-  },
-  contactString: function() {
-    var cString = '', contactArray = Meteor.user().profile.contact;
-    if (!contactArray.length) return "None";
-    else {
-      for (var i = 0; i < contactArray.length; i++) cString += appVars.contactNames[contactArray[i]] + ", ";
-    }
-  return cString.substr(0, cString.length - 2);
-  },
-  contactActive: function(num) {
-    if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.contact) 
-      return (Meteor.user().profile.contact.indexOf(num) > -1);
-    else return false;
   }
 });
 
@@ -180,29 +198,22 @@ Template.playerForm.events({
           console.log(err);
       });
     }
-  },
-  'click .dropdown .menu .item': function(event) {
-    var clickedChoice = parseInt(event.target.attributes['data-value'].nodeValue, 10),
-        thisUser = Meteor.user();
-    if (thisUser.profile.contact.indexOf(clickedChoice) === -1)
-      Meteor.users.update(thisUser._id, {$push: {'profile.contact': clickedChoice}});
-    else if (thisUser.profile.contact.length > 1) 
-      Meteor.users.update(thisUser._id, {$pull: {'profile.contact': clickedChoice}});
-    $('.dropdown').dropdown('set text', clientFunctions.contactString()).dropdown('hide');
   }
+  // 'click .dropdown .menu .item': function(event) {
+  //   var clickedChoice = parseInt(event.target.attributes['data-value'].nodeValue, 10),
+  //       thisUser = Meteor.user();
+  //   if (thisUser.profile.contact.indexOf(clickedChoice) === -1)
+  //     Meteor.users.update(thisUser._id, {$push: {'profile.contact': clickedChoice}});
+  //   else if (thisUser.profile.contact.length > 1) 
+  //     Meteor.users.update(thisUser._id, {$pull: {'profile.contact': clickedChoice}});
+  //   $('.dropdown').dropdown('set text', clientFunctions.contactString()).dropdown('hide');
+  // }
 });
 
 Template.playerForm.rendered = function() {
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
-  $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, action: 'nothing'});
-  $(this.findAll('.ui.dropdown')).dropdown('set text', clientFunctions.contactString());
-  $(this.findAll('.ui.dropdown')).find('.item').each(function(i, elem) {
-    if (thisUser.profile.contact && thisUser.profile.contact.indexOf(parseInt(elem.attributes['data-value'].nodeValue, 10)) > -1)
-      $(elem).addClass('active');
-    else
-      $(elem).removeClass('active');
-  });
+  $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false});
 };
 
 // **************************
@@ -228,63 +239,25 @@ Template.availability.rendered = function() {
   }
 };
 
-// **************************
+// **********************************************
 
-Template.linkModal.events({
-  'click #emailCancel': function() {
-    $('.modal').filter(':visible').modal('hide');
-/*    var linkModal = $('#linkModal')[0]
-    Spark.finalize(linkModal);
-    $(linkModal).empty();
-    Deps.flush();
-    venues.dep.changed();*/
-  },
-  'click #emailSubmit': function() {
-    Meteor.call('emailExists', $('#emailEntry').val(), function(err, res) {
-      if (res) {
-        var duplicateEmail = $('#emailEntry').val();
-        $('#linkModal').html(Template.duplicateEmail({email: duplicateEmail}));
-      }
-      else {
-        Meteor.call('addEmailCredentials', {
-          email: $('#emailEntry').val(), 
-          srp: Package.srp.SRP.generateVerifier($('#passwordEntry').val())
-        }, function(err, res) {
-          if (!err) Meteor.call('sendVerificationEmail');
-        });
-        $('.modal').filter(':visible').modal('hide');
-      }
-    });
+Template.playerMainButtons.helpers({
+  disableSave: function() {
+    if ('disableSave' in this) return this.disableSave.get();
+    return true;
   }
 });
 
-Template.linkModal.rendered = function() {
-  $('#linkModal').modal({
-    onShow: function() {
-      $('body').dimmer({
-        debug: false,
-        performance: false,
-        verbose: false,
-        onHide: function() {
-          var linkModal = $('#linkModal')[0];
-          Spark.finalize(linkModal);
-          $(linkModal).empty();
-          Deps.flush();
-          appVars.venues.dep.changed();
-        }
-      });
-    },
-    onHide: function() {
-      var linkModal = $('#linkModal')[0];
-      Spark.finalize(linkModal);
-      $(linkModal).empty();
-      Deps.flush();
-      appVars.venues.dep.changed();
-    },
-    debug: false,
-    performance: false,
-    verbose: false
-  });
+Template.playerMainButtons.events({
+  'click #resetButton': function() {
+    var teamNameHolder = document.querySelector('#teamNameHolder');
+    Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+  },
+  'click #saveButton': savePlayerData
+});
+
+Template.playerMainButtons.created = function() {
+  this.data.disableSave = new suprsubDep(true);
 };
 
 // ***************** DEPS *************************
@@ -315,3 +288,9 @@ Deps.autorun(function() {
       }
     }
 });
+
+// ***************** DEPS *************************
+
+function savePlayerData() {
+  return false;
+}
