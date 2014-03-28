@@ -1,13 +1,19 @@
 <template name="teamInfo">
 	<div id="main-background-image"></div>
-	<div class="gap row">
-		<div class="large-16 columns">
-			{{> teamDetails}}
+	<div class="gap row teamHeight">
+		<div class="medium-8 columns">
+			<div class="large-16 columns">
+				{{> teamTopLevel}}
+			</div>
+		</div>
+		<div class="medium-8 columns">
+			<div class="large-16 columns">
+				{{> teamSecondLevel}}
+			</div>			
 		</div>
 	</div>
-		<div class="gap row">
-			{{> mainButtons}}
-		</div>
+	<div class="gap row">
+		{{> mainButtons}}
 	</div>
 	<div class="cleared row"></div>
 	<div class="gap row">
@@ -18,32 +24,31 @@
 	{{/if}}
 </template>
 
-<template name="teamDetails">
-	<div class="row">
-		<div class="ui segment content whitetranslucent">
-			<div class="medium-8 columns">
-				<form class="ui form segment content height225 teamForm">
-					<div class="small-10 columns">
-						{{> teamName}}
-					</div>
-					<div class="small-6 columns ui four buttons noMargin">
-						{{> teamButtons}}
-					</div>
-					<div class="row">
-						{{> playerButtons}}
-					</div>
-					{{#if teamId}}
-						<div class="ui fluid segment">
-							{{> playerTable}}
-						</div>
-					{{/if}}
-				</form>
-			</div>
-			<div class="medium-8 columns">
-				{{> teamSettings}}
-			</div>
+<template name="teamTopLevel">
+	<form class="ui form segment whitetranslucent teamForm">
+		<div class="small-10 columns">
+			{{> teamName}}
 		</div>
-		<div class="cleared row"></div>
+		<div class="small-6 columns ui four buttons noMargin">
+			{{> teamButtons}}
+		</div>
+		<div class="small-16 columns ui content segment">
+			{{> teamSettings}}
+		</div>
+	</form>
+</template>
+
+<template name="teamSecondLevel">
+	<div class="ui form segment content whitetranslucent teamForm">
+		<div class="row">
+			{{> playerButtons}}
+		</div>
+		{{#if teamId}}
+		<div class="ui fluid segment" id="memberRingerTable">
+			{{> playerTable}}
+		</div>
+		{{/if}}
+	</div>
 </template>
 
 <template name="teamName">
@@ -106,9 +111,8 @@
 </template>
 
 <template name="teamSettings">
-	<form class="ui form segment content height225 teamForm">
-		<h2 class="ui header">Settings</h2>
-		<div class="large-9 medium-14 small-8 medium-centered large-uncentered columns">
+	<form class="ui form whitetranslucent height225 teamForm">
+		<div class="large-10 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">
 				<div class="checkboxLabel">Friendly</div>
 				<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
@@ -118,7 +122,7 @@
 				<div class="checkboxLabel">Competitive</div>
 			</div>
 		</div>
-		<div class="large-7 medium-14 small-8 medium-centered large-uncentered columns">
+		<div class="large-6 medium-14 small-8 medium-centered large-uncentered columns">
 			<div class="field">
 				<label>Game Format</label>
 				<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">

@@ -1,7 +1,7 @@
 var tabChoices = new suprsubDep({
       newVenue: false,
       venueSearch: false,
-      membersRingers: false
+      membersRingers: true
     });
     ringerList = new suprsubDep([]);
     memberList = new suprsubDep([]);
@@ -25,7 +25,7 @@ Handlebars.registerHelper("codeEntered", function() {
 
 // **************************
 
-Template.teamDetails.events({
+Template.teamInfo.events({
    'submit form': function() {
     Deps.flush();
     if (!Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.get()) {

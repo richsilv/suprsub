@@ -54,6 +54,23 @@
 	min-height: 225px;
 }
 
+.teamHeight {
+	height: 387px;
+}
+
+.teamHeight > .columns {
+	overflow-y: auto;
+}
+
+.teamHeight .columns, .teamHeight .content {
+	height: 100%;
+}
+
+#memberRingerTable {
+	max-height: 340px;
+	overflow-y: auto;
+}
+
 .ui.button.bottomRight, .ui.buttons.bottomRight {
 	float: right;
 	margin-left: 1em;
@@ -65,6 +82,10 @@
 
  	.height225 {
  		min-height: 0;
+ 	}
+
+ 	.teamHeight {
+ 		height: auto;
  	}
 
 }
