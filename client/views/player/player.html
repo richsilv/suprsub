@@ -69,17 +69,17 @@
 		    	<div class="field">
 		      		<label>Age</label>
 					<div class="ui fluid selection dropdown" id="ageDropdown">
-						<input type="hidden">
-						<div class="default text">Select</div>
+						<input type="hidden" name="ageInuput">
+						<div class="text">Select</div>
 						<i class="dropdown icon"></i>
-						<div class="menu">
+						<div class="menu" id="ageMenu">
 							{{#each ageBands}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
 						</div>
 					</div>
 		    	</div>
 			    <div class="field">
 			      	<label>Prefered Position</label>
-					<div class="ui fluid selection dropdown" id="positionDropDown">
+					<div class="ui fluid selection dropdown" id="positionDropdown">
 						<input type="hidden">
 						<div class="default text">Select</div>
 						<i class="dropdown icon"></i>
@@ -92,7 +92,7 @@
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>Footedness</label>
-					<div class="ui fluid selection dropdown" id="footednessDropDown">
+					<div class="ui fluid selection dropdown" id="footednessDropdown">
 						<input type="hidden">
 						<div class="default text">Select</div>
 						<i class="dropdown icon"></i>
@@ -103,7 +103,7 @@
 		    	</div>
 			    <div class="field">
 			      	<label>Ability</label>
-					<div class="ui fluid selection dropdown" id="abilityDropDown">
+					<div class="ui fluid selection dropdown" id="abilityDropdown">
 						<input type="hidden">
 						<div class="default text">Select</div>
 						<i class="dropdown icon"></i>

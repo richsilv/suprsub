@@ -1,3 +1,5 @@
+var dataChange = new Deps.Dependency()
+
 Template.pitchData.helpers({
   getVenues: function() {
     if (appVars.venues && appVars.venues.get()) {
@@ -100,46 +102,6 @@ Template.playerAreaButtons.helpers({
   }
 });
 
-Template.playerAreaButtons.events({
-  'click #saveBoundsButton': function(event) {
-    appVars.circleChanged.set(false);
-    Meteor.users.update({_id: Meteor.userId()},
-      {$set: {'profile.player': {
-        center: {lat: appVars.mapCenter.get().lat(), lng: appVars.mapCenter.get().lng()},
-        size: appVars.circleSize.get(),
-        venues: appVars.venues.get().map(function(v) {return v._id;})
-      }}},
-      function(err) {
-        if (!err) {
-          var icon = $(event.target);
-          if (icon.prop("tagName") != "I") icon = icon.children('i');
-          icon.removeClass("save").addClass("checkmark fontGlow");
-          icon.parents('#saveButton').addClass('boxGlow');
-          Meteor.setTimeout(function() {
-            icon.addClass("save").removeClass("checkmark fontGlow")
-            icon.parents('#saveButton').removeClass('boxGlow');
-          }, 1000);
-        }
-      });
-    appVars.liveCircle.setOptions({ strokeColor: '#78db1c', fillColor: '#78db1c' });
-  },
-  'click #revertBoundsButton': function() {
-    appVars.tabChoices.setKey('playerTab', 'pitchData');
-    Deps.flush();
-    appVars.circleChanged.set(false);
-    var thisUser = Meteor.user();
-    if (thisUser && thisUser.profile && thisUser.profile.player) {
-      appVars.circleSize.set(thisUser.profile.player.size);
-      appVars.mapCenter.set(new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng));
-    }
-    else {
-      appVars.circleSize.set(8000);
-      appVars.mapCenter.set(defaultLocation);            
-    }
-    clientFunctions.updateCircle();
-  }
-});
-
 // **************************
 
 Template.playerForm.helpers({
@@ -174,46 +136,36 @@ Template.playerForm.events({
       }
     });
   },
-  'click #emailButton': function() {
-    var frag = Meteor.render(function() {
-      return Template.linkModal();
-    });
-    document.getElementById('linkModalHolder').appendChild(frag);
-    $('#linkModal').modal('show');
-  },
-  'click #facebookButton': function() {
-    if (!('facebook' in Meteor.user().services)) {
-      Meteor.loginWithFacebook({}, function (err) {
-        if (err)
-          Session.set('errorMessage', err.reason || 'Unknown error');
-          console.log(err);
-      });
-    }
-  },
-  'click #twitterButton': function() {
-    if (!('twitter' in Meteor.user().services)) {
-      Meteor.loginWithTwitter({}, function (err) {
-        if (err)
-          Session.set('errorMessage', err.reason || 'Unknown error');
-          console.log(err);
-      });
-    }
+  'keyup #firstname input, keyup #surname input': function() {
+    dataChange.changed();
   }
-  // 'click .dropdown .menu .item': function(event) {
-  //   var clickedChoice = parseInt(event.target.attributes['data-value'].nodeValue, 10),
-  //       thisUser = Meteor.user();
-  //   if (thisUser.profile.contact.indexOf(clickedChoice) === -1)
-  //     Meteor.users.update(thisUser._id, {$push: {'profile.contact': clickedChoice}});
-  //   else if (thisUser.profile.contact.length > 1) 
-  //     Meteor.users.update(thisUser._id, {$pull: {'profile.contact': clickedChoice}});
-  //   $('.dropdown').dropdown('set text', clientFunctions.contactString()).dropdown('hide');
-  // }
 });
 
 Template.playerForm.rendered = function() {
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
-  $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false});
+  $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, onChange: function() {
+    dataChange.changed();
+  }});
+  if (thisUser && thisUser.profile && thisUser.profile.player) {
+    if ('age' in thisUser.profile.player)
+      $('#ageDropdown').dropdown('set value', thisUser.profile.player.age.toString());
+    else
+      $('#ageDropdown').dropdown('restore default text');
+    if ('footed' in thisUser.profile.player)
+      $('#footednessDropdown').dropdown('set value', thisUser.profile.player.footed.toString());
+    else
+      $('#footednessDropdown').dropdown('restore default text');
+    if ('position' in thisUser.profile.player)
+      $('#positionDropdown').dropdown('set value', thisUser.profile.player.position.toString());
+    else
+      $('#positionDropdown').dropdown('restore default text');
+    if ('ability' in thisUser.profile.player)
+      $('#abilityDropdown').dropdown('set value', thisUser.profile.player.ability.toString());
+    else
+      $('#abilityDropdown').dropdown('restore default text');
+  }
+
 };
 
 // **************************
@@ -250,8 +202,19 @@ Template.playerMainButtons.helpers({
 
 Template.playerMainButtons.events({
   'click #resetButton': function() {
-    var teamNameHolder = document.querySelector('#teamNameHolder');
-    Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+    appVars.tabChoices.setKey('playerTab', 'pitchData');
+    Deps.flush();
+    appVars.circleChanged.set(false);
+    var thisUser = Meteor.user();
+    if (thisUser && thisUser.profile && thisUser.profile.player) {
+      appVars.circleSize.set(thisUser.profile.player.size);
+      appVars.mapCenter.set(new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng));
+    }
+    else {
+      appVars.circleSize.set(8000);
+      appVars.mapCenter.set(defaultLocation);            
+    }
+    clientFunctions.updateCircle();
   },
   'click #saveButton': savePlayerData
 });
@@ -289,8 +252,69 @@ Deps.autorun(function() {
     }
 });
 
+Deps.autorun(function() {
+  dataChange.depend();
+  appVars.circleChanged.dep.depend();
+  if ($('#cancelOrSave').length) {
+    var disableSave = Spark.getDataContext($('#cancelOrSave')[0]).disableSave;
+    disableSave.set(false);
+    if (!appVars.circleChanged || !appVars.circleChanged.get()) {
+      disableSave.set(true);
+    }
+    if (!dataOkay()) {
+      disableSave.set(true);
+    }
+  }
+});
+
 // ***************** DEPS *************************
 
 function savePlayerData() {
-  return false;
+  var availability = {},
+      tableElements = $('#availabilityTable input');
+  for (var i = 0, l = tableElements.length; i < l; i++) {
+    if (tableElements[i].checked) availability[tableElements[i].id] = true;
+  }
+  var pageData = {
+    age: parseInt($('#ageDropdown').dropdown('get value'), 10),
+    position: parseInt($('#positionDropdown').dropdown('get value'), 10),
+    footed: parseInt($('#footednessDropdown').dropdown('get value'), 10),
+    ability: parseInt($('#abilityDropdown').dropdown('get value'), 10)
+  }, update = {
+    'profile.first_name': $('#firstname input').val(), 
+    'profile.last_name': $('#surname input').val(),
+    'profile.player': {
+      center: {lat: appVars.mapCenter.get().lat(), lng: appVars.mapCenter.get().lng()},
+      size: appVars.circleSize.get(),
+      venues: appVars.venues.get().map(function(v) {return v._id;}),
+      age: pageData.age ? pageData.age : 0,
+      position: pageData.position ? pageData.position : 0,
+      footed: pageData.footed ? pageData.footed : 0,
+      ability: pageData.ability ? pageData.ability : 0
+    }
+  };
+  if (appVars.tabChoices.value.playerTab === 'availability') update['profile.player.availability'] = availability;
+  Meteor.users.update(Meteor.userId(), {$set: update}, function(err) {
+    if (!err) {
+      var icon = $(event.target);
+      if (icon.prop("tagName") != "I") icon = icon.children('i');
+      icon.removeClass("save").addClass("checkmark fontGlow");
+      icon.parents('#saveButton').addClass('boxGlow');
+      Meteor.setTimeout(function() {
+        icon.addClass("save").removeClass("checkmark fontGlow")
+        icon.parents('#saveButton').removeClass('boxGlow');
+      }, 1000)
+    }
+  });
+  appVars.circleChanged.set(false);
+  appVars.liveCircle.setOptions({ strokeColor: '#78db1c', fillColor: '#78db1c' });
+}
+
+dataOkay = function() {
+  var dropdownData = $('.dropdown.selection').dropdown('get value');
+  if (dropdownData.indexOf("") > -1)
+    return false;
+  if (!$('#firstname input').val() || !$('#surname input').val())
+    return false;
+  return true;
 }

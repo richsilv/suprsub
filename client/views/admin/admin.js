@@ -105,6 +105,10 @@ Template.pitchesBox.events({
 	}
 });
 
+Template.pitchesBox.rendered = function() {
+	console.log(this);
+}
+
 function getIndex(obj,i) {
 	return obj[i];
 }

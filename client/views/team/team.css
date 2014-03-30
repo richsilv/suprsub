@@ -17,6 +17,11 @@
 	margin-top: 1.5em;
 }
 
+#weeklyCheckBox {
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 #matches {
 	margin-bottom: 1.5em;
 }
@@ -55,11 +60,10 @@
 }
 
 .teamHeight {
-	height: 387px;
 }
 
 .teamHeight > .columns {
-	overflow-y: auto;
+	overflow-y: hidden;
 }
 
 .teamHeight .columns, .teamHeight .content {

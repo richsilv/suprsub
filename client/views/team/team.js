@@ -38,6 +38,12 @@ Template.teamInfo.events({
   } 
 });
 
+Template.teamInfo.rendered = function() {
+  $(document).ready(function() {
+    $('.teamHeight').css('height',$('.teamHeight')[0].offsetHeight);
+  });
+}
+
 // **************************
 
 Template.teamName.helpers({

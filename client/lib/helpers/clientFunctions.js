@@ -1,6 +1,6 @@
 clientFunctions = (function() {
 
-	var _libs = {}, joinTeamDep;
+	var _libs = {}, joinTeamDep, markersArray = [];
 
 	var contactString = function() {
 		var cString = '', contactArray = Meteor.user().profile.contact;
@@ -130,19 +130,17 @@ clientFunctions = (function() {
 				appVars.circleChanged.set(true);
 			}
 		}
-		var pitches = Pitches.find({}, {limit: appVars.maxPitches}).fetch();
-		for (var i=0; i < pitches.length; i++) {
-			var marker = new google.maps.Marker({
-				position: pitches[i].location,
-				map: pitchMap,
-				title:pitches[i].owner + " " + pitches[i].name,
-				icon: 'images/soccerv2.png',
-				pitch_ID: pitches[i]._id
-			});
-			if (!circle) {
-				attachMarkerEvent(marker, markerClickEvent);
+		google.maps.event.addListener(pitchMap, 'bounds_changed', function() {
+			var _thisTimeout = this.thisTimeout;
+			if (_thisTimeout) {
+				Meteor.clearTimeout(_thisTimeout);
 			}
-		}
+			_thisTimeout = Meteor.setTimeout(function() {
+				removeMarkers();
+				addMarkers(pitchMap.getBounds(), circle);
+				_thisTimeout = null;
+			}, 500);
+      	});
 		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
 			document.getElementById("pitchMap").style.display = "block";
 			google.maps.event.trigger(pitchMap, 'resize');
@@ -154,6 +152,38 @@ clientFunctions = (function() {
 				appVars.venues.set(res);
 			}
 		});
+	};
+
+	var addMarkers = function(bounds, circle, maxPitches) {
+		var neLat = bounds.getNorthEast().lat(),
+			neLng = bounds.getNorthEast().lng(),
+			swLat = bounds.getSouthWest().lat(),
+			swLng = bounds.getSouthWest().lng(),
+			pitches = Pitches.find({
+				'location.lat': {$gte: swLat, $lte: neLat},
+				'location.lng': {$gte: swLng, $lte: neLng}
+		}, {
+			limit: maxPitches ? maxPitches : appVars.maxPitches
+		}).fetch();
+		for (var i=0; i < pitches.length; i++) {
+			var marker = new google.maps.Marker({
+				position: pitches[i].location,
+				map: pitchMap,
+				title:pitches[i].owner + " " + pitches[i].name,
+				icon: 'images/soccerv2.png',
+				pitch_ID: pitches[i]._id
+			});
+			markersArray.push(marker);
+			if (!circle) {
+				attachMarkerEvent(marker, markerClickEvent);
+			}
+		}	
+	};
+
+	var removeMarkers = function() {
+	  	for (var i = 0; i < markersArray.length; i++ )
+	    	markersArray[i].setMap(null);
+	  	markersArray.length = 0;		
 	};
 
 	var updateCircle = function() {
@@ -272,6 +302,8 @@ clientFunctions = (function() {
 		contactString: contactString,
 		reIndexDatabase: reIndexDatabase,
 		attachMarkerEvent: attachMarkerEvent,
+		addMarkers: addMarkers,
+		removeMarkers: removeMarkers,
 		loadGoogleMaps: loadGoogleMaps,
 		loadGMaps: loadGMaps,
 		initialize: initialize,
