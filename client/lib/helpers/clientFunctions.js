@@ -135,7 +135,7 @@ clientFunctions = (function() {
 			if (_thisTimeout) {
 				Meteor.clearTimeout(_thisTimeout);
 			}
-			_thisTimeout = Meteor.setTimeout(function() {
+			this.thisTimeout = Meteor.setTimeout(function() {
 				removeMarkers();
 				addMarkers(pitchMap.getBounds(), circle);
 				_thisTimeout = null;

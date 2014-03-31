@@ -142,27 +142,30 @@ Template.playerForm.events({
 });
 
 Template.playerForm.rendered = function() {
+  console.log("playerForm rendering");
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, onChange: function() {
     dataChange.changed();
   }});
   if (thisUser && thisUser.profile && thisUser.profile.player) {
-    if ('age' in thisUser.profile.player)
+    if ('age' in thisUser.profile.player) 
       $('#ageDropdown').dropdown('set value', thisUser.profile.player.age.toString());
-    else
+    else if (typeof $('#ageDropdown').dropdown('get value') !== 'string')
       $('#ageDropdown').dropdown('restore default text');
     if ('footed' in thisUser.profile.player)
       $('#footednessDropdown').dropdown('set value', thisUser.profile.player.footed.toString());
-    else
+    else if (typeof $('#footednessDropdown').dropdown('get value') !== 'string') {
+      console.log("resetting footedness", $('#footednessDropdown').dropdown('get value'));
       $('#footednessDropdown').dropdown('restore default text');
+    }
     if ('position' in thisUser.profile.player)
       $('#positionDropdown').dropdown('set value', thisUser.profile.player.position.toString());
-    else
+    else if (typeof $('#positionDropdown').dropdown('get value') !== 'string')
       $('#positionDropdown').dropdown('restore default text');
     if ('ability' in thisUser.profile.player)
       $('#abilityDropdown').dropdown('set value', thisUser.profile.player.ability.toString());
-    else
+    else if (typeof $('#abilityDropdown').dropdown('get value') !== 'string')
       $('#abilityDropdown').dropdown('restore default text');
   }
 
