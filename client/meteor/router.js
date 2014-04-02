@@ -127,7 +127,7 @@ Router.map(function() {
       Template.twitterGenderModal.rendered = function() {
         $('#twitterGenderModal').modal('setting', {
           closable  : false,
-          onHide    : function(){
+          onHide    : function() {
             Template.twitterGenderModal.rendered = oldRendered;
             oldRendered && oldRendered.apply(this, arguments);
           }

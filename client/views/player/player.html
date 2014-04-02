@@ -2,27 +2,10 @@
 	<div id="main-background-image"></div>
 	<div class="gap row">
 		<div class="large-8 columns">
-			{{> playerForm dropdowns}}
+			{{> playerForm}}
 		</div>
 		<div class="large-8 columns">
-			<div class="large-16 columns">
-				<div class="ui segment content whitetranslucent height280" id="tabSpace">
-					<div class="ui tabular menu">
-						<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
-							Availability
-						</a>
-						<a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData" title="List the venues within your selected home area">
-							Selected Venues
-						</a>
-					</div>
-					{{#if tabChoice 'playerTab' 'pitchData'}}
-						{{> pitchData}}
-					{{/if}}
-					{{#if tabChoice 'playerTab' 'availability'}}
-						{{> availability}}
-					{{/if}}
-				</div>
-			</div>
+			{{> availabilityVenues}}
 		</div>
 	</div>
 	<div class="gap row">
@@ -50,7 +33,6 @@
 
 <template name="playerForm">
 	<div class="large-16 columns">
-		{{#constant}}
 		<form class="ui form segment content whitetranslucent height280">
 		  	<div class="two fields">
 		    	<div class="field">
@@ -66,58 +48,82 @@
 			      	</div>
 			    </div>
 		  	</div>
-		  	<div class="two fields">
-		    	<div class="field">
-		      		<label>Age</label>
-					<div class="ui fluid selection dropdown" id="ageDropdown">
-						<input type="hidden" name="ageInuput">
-						<div class="text">Select</div>
-						<i class="dropdown icon"></i>
-						<div class="menu" id="ageMenu">
-							{{#each ageBands}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
-						</div>
-					</div>
-		    	</div>
-			    <div class="field">
-			      	<label>Prefered Position</label>
-					<div class="ui fluid selection dropdown" id="positionDropdown">
-						<input type="hidden">
-						<div class="default text">Select</div>
-						<i class="dropdown icon"></i>
-						<div class="menu">
-							{{#each positions}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
-						</div>
-					</div>
-			    </div>
-		  	</div>
-		  	<div class="two fields">
-		    	<div class="field">
-		      		<label>Footedness</label>
-					<div class="ui fluid selection dropdown" id="footednessDropdown">
-						<input type="hidden">
-						<div class="default text">Select</div>
-						<i class="dropdown icon"></i>
-						<div class="menu">
-							{{#each footedness}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
-						</div>
-					</div>
-		    	</div>
-			    <div class="field">
-			      	<label>Ability</label>
-					<div class="ui fluid selection dropdown" id="abilityDropdown">
-						<input type="hidden">
-						<div class="default text">Select</div>
-						<i class="dropdown icon"></i>
-						<div class="menu">
-							{{#each ability}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
-						</div>
-					</div>
-			    </div>
-		  	</div>
+			{{> playerDropdowns dropdowns}}
 		</form>
-		{{/constant}}
 	</div>
 	<div id="linkModalHolder">
+	</div>
+</template>
+
+<template name="playerDropdowns">
+  	<div class="two fields">
+    	<div class="field">
+      		<label>Age</label>
+			<div class="ui fluid selection dropdown" id="ageDropdown">
+				<input type="hidden" name="ageInuput">
+				<div class="text">Select</div>
+				<i class="dropdown icon"></i>
+				<div class="menu" id="ageMenu">
+					{{#each ageBands}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+				</div>
+			</div>
+    	</div>
+	    <div class="field">
+	      	<label>Prefered Position</label>
+			<div class="ui fluid selection dropdown" id="positionDropdown">
+				<input type="hidden">
+				<div class="default text">Select</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					{{#each positions}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+				</div>
+			</div>
+	    </div>
+  	</div>
+  	<div class="two fields">
+    	<div class="field">
+      		<label>Footedness</label>
+			<div class="ui fluid selection dropdown" id="footednessDropdown">
+				<input type="hidden">
+				<div class="default text">Select</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					{{#each footedness}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+				</div>
+			</div>
+    	</div>
+	    <div class="field">
+	      	<label>Ability</label>
+			<div class="ui fluid selection dropdown" id="abilityDropdown">
+				<input type="hidden">
+				<div class="default text">Select</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					{{#each ability}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+				</div>
+			</div>
+	    </div>
+  	</div>
+</template>
+
+<template name="availabilityVenues">
+	<div class="large-16 columns">
+		<div class="ui segment content whitetranslucent height280" id="tabSpace">
+			<div class="ui tabular menu">
+				<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
+					Availability
+				</a>
+				<a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData" title="List the venues within your selected home area">
+					Selected Venues
+				</a>
+			</div>
+			{{#if tabChoice 'playerTab' 'pitchData'}}
+				{{> pitchData}}
+			{{/if}}
+			{{#if tabChoice 'playerTab' 'availability'}}
+				{{> availability}}
+			{{/if}}
+		</div>
 	</div>
 </template>
 

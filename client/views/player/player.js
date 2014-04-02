@@ -1,4 +1,4 @@
-var dataChange = new Deps.Dependency()
+var dataChange = new suprsubDep(false);
 
 Template.pitchData.helpers({
   getVenues: function() {
@@ -18,45 +18,14 @@ Template.pitchData.rendered = function() {
 
 // **************************
 
-Template.playerDetails.helpers({
+Template.availabilityVenues.helpers({
   "tabChoice": function(key, value) {
     if ('tabChoices' in appVars) return appVars.tabChoices.getKey(key) === value;
     else return false; 
-  },
-  "dropdowns": function() {
-    return {
-      ageBands: [
-        {code: 0, label: '16-18'},
-        {code: 1, label: '18-25'},
-        {code: 2, label: '25-35'},
-        {code: 3, label: '35-45'},
-        {code: 4, label: '45+'}
-      ],
-      positions: [
-        {code: 0, label: 'Goalkeeper'},
-        {code: 1, label: 'Defender'},
-        {code: 2, label: 'Midfield'},
-        {code: 3, label: 'Forward'},
-        {code: 4, label: 'Any Outfield'},
-        {code: 5, label: 'Any'},        
-      ],
-      footedness: [
-        {code: 0, label: 'Right'},
-        {code: 1, label: 'Left'},
-        {code: 2, label: 'Both'},
-      ],
-      ability: [
-        {code: 0, label: 'Beginner'},
-        {code: 1, label: 'OK'},
-        {code: 2, label: 'Good'},
-        {code: 3, label: 'Very Good'},
-        {code: 4, label: 'Excellent'},
-      ]
-    }
   }
 });
 
-Template.playerDetails.events({
+Template.availabilityVenues.events({
   'click #tabSpace div a': function(event, target) {
     appVars.tabChoices.setKey('playerTab', event.target.name);
   }
@@ -110,11 +79,42 @@ Template.playerForm.helpers({
   },
   last_name: function() {
     return (Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.last_name : null;
+  },
+  "dropdowns": function() {
+    return {
+      ageBands: [
+        {code: 0, label: '16-18'},
+        {code: 1, label: '18-25'},
+        {code: 2, label: '25-35'},
+        {code: 3, label: '35-45'},
+        {code: 4, label: '45+'}
+      ],
+      positions: [
+        {code: 0, label: 'Goalkeeper'},
+        {code: 1, label: 'Defender'},
+        {code: 2, label: 'Midfield'},
+        {code: 3, label: 'Forward'},
+        {code: 4, label: 'Any Outfield'},
+        {code: 5, label: 'Any'},        
+      ],
+      footedness: [
+        {code: 0, label: 'Right'},
+        {code: 1, label: 'Left'},
+        {code: 2, label: 'Both'},
+      ],
+      ability: [
+        {code: 0, label: 'Beginner'},
+        {code: 1, label: 'OK'},
+        {code: 2, label: 'Good'},
+        {code: 3, label: 'Very Good'},
+        {code: 4, label: 'Excellent'},
+      ]
+    }
   }
 });
 
 Template.playerForm.events({
-  'click #saveButton': function(event) {
+/*  'click #saveButton': function(event) {
     var availability = {},
         tableElements = $('#availabilityTable input');
     for (var i = 0, l = tableElements.length; i < l; i++) {
@@ -135,40 +135,40 @@ Template.playerForm.events({
         }, 1000)
       }
     });
-  },
+  },*/
   'keyup #firstname input, keyup #surname input': function() {
-    dataChange.changed();
+    dataChange.set(true);
   }
 });
 
-Template.playerForm.rendered = function() {
-  console.log("playerForm rendering");
+// ******************************
+
+Template.playerDropdowns.rendered = function() {
+  console.log("playerDropdowns rendering");
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, onChange: function() {
-    dataChange.changed();
+    dataChange.set(true);
+    dataChange.dep.changed();
   }});
   if (thisUser && thisUser.profile && thisUser.profile.player) {
     if ('age' in thisUser.profile.player) 
-      $('#ageDropdown').dropdown('set value', thisUser.profile.player.age.toString());
+      $('#ageDropdown').dropdown('set selected', thisUser.profile.player.age).dropdown('set value', thisUser.profile.player.age);
     else if (typeof $('#ageDropdown').dropdown('get value') !== 'string')
       $('#ageDropdown').dropdown('restore default text');
     if ('footed' in thisUser.profile.player)
-      $('#footednessDropdown').dropdown('set value', thisUser.profile.player.footed.toString());
-    else if (typeof $('#footednessDropdown').dropdown('get value') !== 'string') {
-      console.log("resetting footedness", $('#footednessDropdown').dropdown('get value'));
+      $('#footednessDropdown').dropdown('set selected', thisUser.profile.player.footed).dropdown('set value', thisUser.profile.player.footed);
+    else if (typeof $('#footednessDropdown').dropdown('get value') !== 'string')
       $('#footednessDropdown').dropdown('restore default text');
-    }
     if ('position' in thisUser.profile.player)
-      $('#positionDropdown').dropdown('set value', thisUser.profile.player.position.toString());
+      $('#positionDropdown').dropdown('set selected', thisUser.profile.player.position).dropdown('set value', thisUser.profile.player.position);
     else if (typeof $('#positionDropdown').dropdown('get value') !== 'string')
       $('#positionDropdown').dropdown('restore default text');
     if ('ability' in thisUser.profile.player)
-      $('#abilityDropdown').dropdown('set value', thisUser.profile.player.ability.toString());
+      $('#abilityDropdown').dropdown('set selected', thisUser.profile.player.ability).dropdown('set value', thisUser.profile.player.ability);
     else if (typeof $('#abilityDropdown').dropdown('get value') !== 'string')
       $('#abilityDropdown').dropdown('restore default text');
   }
-
 };
 
 // **************************
@@ -219,7 +219,10 @@ Template.playerMainButtons.events({
     }
     clientFunctions.updateCircle();
   },
-  'click #saveButton': savePlayerData
+  'click #saveButton': function(event) {
+    if (!$(event.target).hasClass('disabled') && !$(event.target).parents('#saveButton').hasClass('disabled'))
+      savePlayerData.apply(this);
+  }
 });
 
 Template.playerMainButtons.created = function() {
@@ -256,14 +259,15 @@ Deps.autorun(function() {
 });
 
 Deps.autorun(function() {
-  dataChange.depend();
+  dataChange.dep.depend();
   appVars.circleChanged.dep.depend();
   if ($('#cancelOrSave').length) {
     var disableSave = Spark.getDataContext($('#cancelOrSave')[0]).disableSave;
-    disableSave.set(false);
-    if (!appVars.circleChanged || !appVars.circleChanged.get()) {
-      disableSave.set(true);
-    }
+    disableSave.set(true);
+    if (appVars.circleChanged && appVars.circleChanged.get())
+      disableSave.set(false);
+    if (dataChange && dataChange.get())
+      disableSave.set(false);
     if (!dataOkay()) {
       disableSave.set(true);
     }
@@ -297,7 +301,9 @@ function savePlayerData() {
     }
   };
   if (appVars.tabChoices.value.playerTab === 'availability') update['profile.player.availability'] = availability;
-  Meteor.users.update(Meteor.userId(), {$set: update}, function(err) {
+  console.log(update);
+  window._update = update;
+  Meteor.users.update({_id: Meteor.userId()}, {$set: update}, function(err) {
     if (!err) {
       var icon = $(event.target);
       if (icon.prop("tagName") != "I") icon = icon.children('i');
@@ -306,8 +312,10 @@ function savePlayerData() {
       Meteor.setTimeout(function() {
         icon.addClass("save").removeClass("checkmark fontGlow")
         icon.parents('#saveButton').removeClass('boxGlow');
-      }, 1000)
+      }, 1000);
+      resetData.apply(this);
     }
+    else console.log(err);
   });
   appVars.circleChanged.set(false);
   appVars.liveCircle.setOptions({ strokeColor: '#78db1c', fillColor: '#78db1c' });
@@ -320,4 +328,15 @@ dataOkay = function() {
   if (!$('#firstname input').val() || !$('#surname input').val())
     return false;
   return true;
+}
+
+function resetData() {
+  var thisUser = Meteor.user();
+  if (thisUser && thisUser.profile && thisUser.profile.player) {
+    var player = thisUser.profile.player;
+    $('#ageDropdown').dropdown('set selected', player.age).dropdown('set value', player.age);
+    $('#positionDropdown').dropdown('set selected', player.position).dropdown('set value', player.position);
+    $('#footednessDropdown').dropdown('set selected', player.footed).dropdown('set value', player.footed);
+    $('#abilityDropdown').dropdown('set selected', player.ability).dropdown('set value', player.ability);
+  }
 }

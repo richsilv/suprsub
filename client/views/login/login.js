@@ -87,7 +87,8 @@ Template.twitterGenderModal.events({
         $('#twitterGenderModal').modal('hide');
         Meteor.setTimeout(function() {
             Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}});
-            Router.go('/player');
+            Router.current().redirect('/player');
+            location.reload();
         }, 600);
     }
 })

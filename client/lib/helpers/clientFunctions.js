@@ -163,7 +163,8 @@ clientFunctions = (function() {
 				'location.lat': {$gte: swLat, $lte: neLat},
 				'location.lng': {$gte: swLng, $lte: neLng}
 		}, {
-			limit: maxPitches ? maxPitches : appVars.maxPitches
+			limit: maxPitches ? maxPitches : appVars.maxPitches,
+			sort: {priority: 1}
 		}).fetch();
 		for (var i=0; i < pitches.length; i++) {
 			var marker = new google.maps.Marker({
