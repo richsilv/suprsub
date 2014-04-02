@@ -164,7 +164,7 @@ clientFunctions = (function() {
 				'location.lng': {$gte: swLng, $lte: neLng}
 		}, {
 			limit: maxPitches ? maxPitches : appVars.maxPitches,
-			sort: {priority: 1}
+			sort: {priority: -1}
 		}).fetch();
 		for (var i=0; i < pitches.length; i++) {
 			var marker = new google.maps.Marker({
