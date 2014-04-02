@@ -1,11 +1,13 @@
 @font-face {
 	font-family: "Collegiate";
 	src: url('/fonts/SF_Collegiate.ttf');
+	opacity:.99; 
 }
 
 html {
 	font-size: 14px;
 	height: 100%;
+	-webkit-font-smoothing: antialiased;
 }
 
 body {
