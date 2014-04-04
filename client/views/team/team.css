@@ -92,6 +92,22 @@
  		height: auto;
  	}
 
+	#pitchMap.small {
+		width: 100%;
+		margin-left: 0;
+		height: 325px;
+		left: 0;
+	}
+
+	#pitchMapContainerSmall {
+		width: 100%;
+		height: 325px;
+	}
+
+	.teamHeight .columns, .teamHeight .content {
+		height: auto;
+	}
+
 }
 
 /*For small and medium width screens*/

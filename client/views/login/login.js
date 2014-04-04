@@ -40,7 +40,7 @@ Template.loginScreen.helpers({
     }
 })
 Template.loginScreen.events({
-    'click #signup-button, keyup .form .input' : function(event) {
+    'click #signup-button, keyup #confirm-password' : function(event) {
         if (event.keyCode && event.keyCode !== 13) return false;
         if ($('#signup-password').val() !== $('#confirm-password').val()) {
             accountError.set("Passwords do not match");
@@ -68,6 +68,11 @@ Template.loginScreen.events({
                 Router.current().redirect('/player');
             }
         });
+    },
+    'keyup .form .field input' : function(event) {
+        if (event.keyCode === 13) {
+            $(event.target).parents('.field').next().find('input').focus();
+        }
     },
     'click #facebook-login': function(event) {
         Meteor.loginWithFacebook({requestPermissions: ['email']},
