@@ -221,7 +221,7 @@ Template.playerMainButtons.events({
   },
   'click #saveButton': function(event) {
     if (!$(event.target).hasClass('disabled') && !$(event.target).parents('#saveButton').hasClass('disabled'))
-      savePlayerData.apply(this);
+      savePlayerData.call(this, event);
   }
 });
 
@@ -276,7 +276,7 @@ Deps.autorun(function() {
 
 // ***************** DEPS *************************
 
-function savePlayerData() {
+function savePlayerData(event) {
   var availability = {},
       tableElements = $('#availabilityTable input');
   for (var i = 0, l = tableElements.length; i < l; i++) {
@@ -288,31 +288,36 @@ function savePlayerData() {
     footed: parseInt($('#footednessDropdown').dropdown('get value'), 10),
     ability: parseInt($('#abilityDropdown').dropdown('get value'), 10)
   }, update = {
-    'profile.first_name': $('#firstname input').val(), 
-    'profile.last_name': $('#surname input').val(),
-    'profile.player': {
-      center: {lat: appVars.mapCenter.get().lat(), lng: appVars.mapCenter.get().lng()},
-      size: appVars.circleSize.get(),
-      venues: appVars.venues.get().map(function(v) {return v._id;}),
-      age: pageData.age ? pageData.age : 0,
-      position: pageData.position ? pageData.position : 0,
-      footed: pageData.footed ? pageData.footed : 0,
-      ability: pageData.ability ? pageData.ability : 0
+    profile: {
+      first_name: $('#firstname input').val(), 
+      last_name: $('#surname input').val(),
+      player: {
+        center: {lat: appVars.mapCenter.get().lat(), lng: appVars.mapCenter.get().lng()},
+        size: appVars.circleSize.get(),
+        venues: appVars.venues.get().map(function(v) {return v._id;}),
+        age: pageData.age ? pageData.age : 0,
+        position: pageData.position ? pageData.position : 0,
+        footed: pageData.footed ? pageData.footed : 0,
+        ability: pageData.ability ? pageData.ability : 0
+      }
     }
   };
-  if (appVars.tabChoices.value.playerTab === 'availability') update['profile.player.availability'] = availability;
+  if (appVars.tabChoices.value.playerTab === 'availability') update.profile.player.availability = availability;
   console.log(update);
   window._update = update;
   Meteor.users.update({_id: Meteor.userId()}, {$set: update}, function(err) {
     if (!err) {
-      var icon = $(event.target);
-      if (icon.prop("tagName") != "I") icon = icon.children('i');
-      icon.removeClass("save").addClass("checkmark fontGlow");
-      icon.parents('#saveButton').addClass('boxGlow');
-      Meteor.setTimeout(function() {
-        icon.addClass("save").removeClass("checkmark fontGlow")
-        icon.parents('#saveButton').removeClass('boxGlow');
-      }, 1000);
+      if (event) {
+        var icon = $(event.target);
+        console.log(icon);
+        if (icon.prop("tagName") != "I") icon = icon.children('i');
+        icon.removeClass("save").addClass("checkmark fontGlow");
+        icon.parents('#saveButton').addClass('boxGlow');
+        Meteor.setTimeout(function() {
+          icon.addClass("save").removeClass("checkmark fontGlow")
+          icon.parents('#saveButton').removeClass('boxGlow');
+        }, 1000);
+      }
       resetData.apply(this);
     }
     else console.log(err);
