@@ -124,7 +124,21 @@ serverFunctions = (function() {
 		}
 		currentMatch = fuzzyMatch(token, appConfig.pitchSurnames);
 		if (currentMatch.code !== -1) return {code: 10};
-		var pitchData = Pitches.find({}).fetch();
+/*		var pitchData = Pitches.find({}).fetch();
+		var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
+		var match = fuzzyMatch(token, currentLookup, 0.7, costVector);
+		if (match.code !== -1) return {code: 9, data: match.code};
+		currentLookup = _.reduce(pitchData, function(dict, pitch) {if (pitch.owner) dict[pitch.name.toLowerCase() + ' ' + pitch.owner.toLowerCase()] = pitch._id; return dict;}, {});
+		match = fuzzyMatch(token, currentLookup, 0.7, costVector);
+		if (match.code !== -1) return {code: 9, data: match.code};
+		currentLookup = _.reduce(pitchData, function(dict, pitch) {if (pitch.owner) dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
+		match = fuzzyMatch(token, currentLookup, 0.7, costVector);
+		if (match.code !== -1) return {code: 9, data: match.code};*/
+		return {code: -1};
+	}
+
+	function categorisePitch(token) {
+		var pitchData = Pitches.find({}).fetch(), costVector = {insertion_cost: 0.25, deletion_cost: 0.95, substitution_cost: 1.25};;
 		var currentLookup = _.reduce(pitchData, function(dict, pitch) {dict[pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 		var match = fuzzyMatch(token, currentLookup, 0.7, costVector);
 		if (match.code !== -1) return {code: 9, data: match.code};
@@ -134,7 +148,7 @@ serverFunctions = (function() {
 		currentLookup = _.reduce(pitchData, function(dict, pitch) {if (pitch.owner) dict[pitch.owner.toLowerCase() + ' ' + pitch.name.toLowerCase()] = pitch._id; return dict;}, {});
 		match = fuzzyMatch(token, currentLookup, 0.7, costVector);
 		if (match.code !== -1) return {code: 9, data: match.code};
-		return {code: -1};
+		return {code: -1};		
 	}
 
 	function fuzzyMatch(token, dict, threshold, costVector) {
@@ -172,7 +186,13 @@ serverFunctions = (function() {
 				n++;
 			}
 			if (k.code < 0) {
-				richTokens[i] = {code: -1, data: tokens[i]};
+				k = categorisePitch(thisToken);
+				if (k.code < 0)
+					richTokens[i] = {code: -1, data: tokens[i]};
+				else {
+					richTokens[i] = {code: 9, data: k.data};
+					i += n - 1;
+				}
 			}
 			else {
 				richTokens[i] = {code: k.code, data: k.data};
@@ -180,7 +200,7 @@ serverFunctions = (function() {
 			}
 		}
 		richTokens = stripUseless(richTokens);
-		return richTokens;	
+		return richTokens;
 	}
 
 	function parseRequest(tokens, user) {
@@ -212,7 +232,15 @@ serverFunctions = (function() {
 					k.code = -1; // Force reassesment if there's still a word left in the location description.
 				n++;
 			}
-			if (k.code < 0) return new Meteor.Error(500, "Cannot understand '" + thisToken + "'.");
+			if (k.code < 0) {
+				k = categorisePitch(thisToken);
+				if (k.code < 0) {
+					return new Meteor.Error(500, "Cannot understand '" + thisToken + "'.");
+				}
+				else
+					richTokens[i] = {code: 9, data: k.data};
+				i += n - 1;
+			}
 			else {
 				richTokens[i] = {code: k.code, data: k.data};
 				i += n - 1;
@@ -618,19 +646,16 @@ serverFunctions = (function() {
 						tokens.push({code: 18, data: thisTeam.format});
 				}
 			}
-			console.log('DEFAULTS: ', tokens);
 			return tokens;
 		}
 		return [];
 	}
 
 	function mergeTokens(spec, defaults) {
-		console.log('IN: ', spec);
 		for (var i = 0, l = defaults.length; i < l; i += 1) {
 			if (!_.find(spec, function(token) {return token.code === defaults[i].code;}))
 				spec.push(defaults[i]);
 		}
-		console.log('OUT: ', spec);
 		return spec;
 	}
 

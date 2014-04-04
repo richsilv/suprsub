@@ -31,7 +31,7 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
 			);
 			return {
 				token: stampedToken.token,
-				id: loggedInUser._id,
+				_id: loggedInUser._id,
 				tokenExpires: Accounts._tokenExpiration(stampedToken.when)
 			};
 		}
@@ -56,7 +56,7 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
 			);
 			return {
 				token: stampedToken.token,
-				id: loggedInUser._id,
+				_id: loggedInUser._id,
 				tokenExpires: Accounts._tokenExpiration(stampedToken.when)
 			};
 		}
@@ -96,7 +96,7 @@ Accounts.onCreateUser(function(options, user) {
 			user.profile = _.extend(options.profile, {
 				first_name: names[0],
 				last_name: names[1],
-				contact: [0]
+				contact: [0],
 			});
 		}
 		else user.profile = {contact: [0]};
@@ -108,5 +108,6 @@ Accounts.onCreateUser(function(options, user) {
 	}
 	user.profile.team =  {_ids: []};
 	user.profile.player = {};
+	user.profile.postMe = true;
 	return user;
 });
