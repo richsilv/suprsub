@@ -25,6 +25,12 @@ Template.topbar.events({
     },
     'click #delete-button' : function() {
         Meteor.call('removeCurrentUser');
+    },
+    'keyup #login-email, keyup #login-password': function(events) {
+        if (event.keyCode === 13)    
+            Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
+                if (err) accountError.set(err.reason);
+            });      
     }
 });
 
@@ -58,6 +64,9 @@ Template.loginScreen.events({
                 console.log(err);
                 accountError.set(err.reason);
             }
+            else {
+                Router.current().redirect('/player');
+            }
         });
     },
     'click #facebook-login': function(event) {
@@ -75,6 +84,9 @@ Template.loginScreen.events({
                 accountError.set('Cannot login with Twitter');
             }
         });
+    },
+    'submit': function() {
+        return false;
     }
 });
 Template.loginScreen.rendered = function() {
