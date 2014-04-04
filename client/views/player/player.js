@@ -283,16 +283,17 @@ function savePlayerData(event) {
   for (var i = 0, l = tableElements.length; i < l; i++) {
     if (tableElements[i].checked) availability[tableElements[i].id] = true;
   }
-  var pageData = {
+  var thisUser = Meteor.user();
+    pageData = {
     age: parseInt($('#ageDropdown').dropdown('get value'), 10),
     position: parseInt($('#positionDropdown').dropdown('get value'), 10),
     footed: parseInt($('#footednessDropdown').dropdown('get value'), 10),
     ability: parseInt($('#abilityDropdown').dropdown('get value'), 10)
   }, update = {
-    profile: {
+    profile: _.extend(thisUser.profile, {
       first_name: $('#firstname input').val(), 
       last_name: $('#surname input').val(),
-      player: _.extend(Meteor.user().profile.player, {
+      player: _.extend(thisUser.profile.player, {
         center: {lat: appVars.mapCenter.get().lat(), lng: appVars.mapCenter.get().lng()},
         size: appVars.circleSize.get(),
         venues: appVars.venues.get().map(function(v) {return v._id;}),
@@ -301,7 +302,7 @@ function savePlayerData(event) {
         footed: pageData.footed ? pageData.footed : 0,
         ability: pageData.ability ? pageData.ability : 0
       })
-    }
+    })
   };
   if (appVars.tabChoices.value.playerTab === 'availability') update.profile.player.availability = availability;
   Meteor.users.update({_id: Meteor.userId()}, {$set: update}, function(err) {
