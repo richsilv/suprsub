@@ -31,7 +31,7 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
 			);
 			return {
 				token: stampedToken.token,
-				_id: loggedInUser._id,
+				id: loggedInUser._id,
 				tokenExpires: Accounts._tokenExpiration(stampedToken.when)
 			};
 		}
@@ -56,7 +56,7 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
 			);
 			return {
 				token: stampedToken.token,
-				_id: loggedInUser._id,
+				id: loggedInUser._id,
 				tokenExpires: Accounts._tokenExpiration(stampedToken.when)
 			};
 		}
@@ -66,7 +66,12 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
 		setAttr["services." + serviceName] = serviceData;
 		Meteor.users.update(loggedInUser._id, {$set: setAttr});
 	}
-	return orig_updateOrCreateUserFromExternalService.apply(this, arguments);
+	// try {
+		return orig_updateOrCreateUserFromExternalService.apply(this, arguments);
+	// }
+	// catch(err) {
+	// 	console.log(err);
+	// }
 };
 
 Accounts.config({

@@ -70,7 +70,7 @@ Template.loginScreen.events({
         });
     },
     'click #facebook-login': function(event) {
-        Meteor.loginWithFacebook({ requestPermissions: ['email']},
+        Meteor.loginWithFacebook({requestPermissions: ['email']},
             function (error) {
                 if (error) {
                     accountError.set('Cannot login with Facebook');                    

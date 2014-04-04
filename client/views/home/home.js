@@ -110,6 +110,7 @@ Template.fullPostingForm.events({
     $('#matchesFloat').hide();
   },
   'click #fullPostingFormSubmit': function(event) {
+    console.log("hello!");
       var thisUser = Meteor.user(),
         requestData = {
           players: null,
