@@ -110,14 +110,19 @@ Template.fullPostingForm.events({
     $('#matchesFloat').hide();
   },
   'click #fullPostingFormSubmit': function(event) {
-      var requestData = {
-        players: null,
-        dateTime: null,
-        location: null,
-        onlyRingers: false,
-        gender: 0,
-        price: 0
-      }
+      var thisUser = Meteor.user(),
+        requestData = {
+          players: null,
+          dateTime: null,
+          location: null,
+          onlyRingers: false,
+          gender: 0,
+          price: 0
+        };
+      if (!thisUser.profile.team._ids.length)
+        return "Player has no team";
+      else
+        requestData.team = thisUser.profile.team._ids[0];
       if (!verifyForm()) return false;
       requestData.players = parseInt($('#numberPlayers').dropdown('get value'), 10);
       requestData.dateTime = picker.getDate();
