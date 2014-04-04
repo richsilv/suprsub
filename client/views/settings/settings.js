@@ -68,6 +68,7 @@ Template.settingsBox.events({
 Template.settingsBox.rendered = function() {
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
+  clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
   $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, action: 'nothing'});
   $(this.findAll('.ui.dropdown')).dropdown('set text', clientFunctions.contactString());
   $(this.findAll('.ui.dropdown')).find('.item').each(function(i, elem) {
@@ -76,7 +77,24 @@ Template.settingsBox.rendered = function() {
     else
       $(elem).removeClass('active');
   });
+  if (thisUser.profile.postMe) $('#postUser').checkbox('enable');
 };
+
+// **************************
+
+Template.settingsMainButtons.events({
+  'click #resetButton': function() {
+    var thisUser = Meteor.user();
+    if (thisUser && thisUser.profile && thisUser.profile.player) {
+    }
+    else {
+    }
+  },
+  'click #saveButton': function(event) {
+    if (!$(event.target).hasClass('disabled') && !$(event.target).parents('#saveButton').hasClass('disabled'))
+      saveSettingsData.call(this, event);
+  }
+});
 
 // **************************
 
@@ -131,3 +149,28 @@ Template.linkModal.rendered = function() {
     verbose: false
   });
 };
+
+// ****************** UTILITY ************
+
+function saveSettingsData(event) {
+  var pageData = {
+    postMe: $('#postUser input')[0].checked
+  }, update = {
+    'profile.postMe': pageData.postMe
+  };
+  Meteor.users.update({_id: Meteor.userId()}, {$set: update}, function(err) {
+    if (!err) {
+      if (event) {
+        var icon = $(event.target);
+        if (icon.prop("tagName") != "I") icon = icon.children('i');
+        icon.removeClass("save").addClass("checkmark fontGlow");
+        icon.parents('#saveButton').addClass('boxGlow');
+        Meteor.setTimeout(function() {
+          icon.addClass("save").removeClass("checkmark fontGlow")
+          icon.parents('#saveButton').removeClass('boxGlow');
+        }, 1000);
+      }
+    }
+    else console.log(err);
+  });
+}

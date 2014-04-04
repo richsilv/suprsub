@@ -138,6 +138,7 @@ Template.playerForm.events({
   },*/
   'keyup #firstname input, keyup #surname input': function() {
     dataChange.set(true);
+    dataChange.dep.changed();
   }
 });
 
@@ -274,7 +275,7 @@ Deps.autorun(function() {
   }
 });
 
-// ***************** DEPS *************************
+// ***************** UTILITY *************************
 
 function savePlayerData(event) {
   var availability = {},
@@ -291,7 +292,7 @@ function savePlayerData(event) {
     profile: {
       first_name: $('#firstname input').val(), 
       last_name: $('#surname input').val(),
-      player: {
+      player: _.extend(Meteor.user().profile.player, {
         center: {lat: appVars.mapCenter.get().lat(), lng: appVars.mapCenter.get().lng()},
         size: appVars.circleSize.get(),
         venues: appVars.venues.get().map(function(v) {return v._id;}),
@@ -299,17 +300,14 @@ function savePlayerData(event) {
         position: pageData.position ? pageData.position : 0,
         footed: pageData.footed ? pageData.footed : 0,
         ability: pageData.ability ? pageData.ability : 0
-      }
+      })
     }
   };
   if (appVars.tabChoices.value.playerTab === 'availability') update.profile.player.availability = availability;
-  console.log(update);
-  window._update = update;
   Meteor.users.update({_id: Meteor.userId()}, {$set: update}, function(err) {
     if (!err) {
       if (event) {
         var icon = $(event.target);
-        console.log(icon);
         if (icon.prop("tagName") != "I") icon = icon.children('i');
         icon.removeClass("save").addClass("checkmark fontGlow");
         icon.parents('#saveButton').addClass('boxGlow');

@@ -18,7 +18,6 @@ twit
 moment
 http
 npm
-houston
 
 paginated-subscription
 spin
@@ -30,3 +29,6 @@ email
 
 Pikaday
 Dropzonejs
+
+
+houston

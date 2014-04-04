@@ -1,3 +1,7 @@
+#playerForm {
+	line-height: 2em;
+}
+
 #pitchMap.large {
 	width: 800px;
 	margin-left: -400px;
