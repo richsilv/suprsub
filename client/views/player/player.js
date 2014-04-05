@@ -1,4 +1,5 @@
-var dataChange = new suprsubDep(false);
+var dataChange = new suprsubDep(false),
+    disableSave = new suprsubDep(true);
 
 Template.pitchData.helpers({
   getVenues: function() {
@@ -145,7 +146,6 @@ Template.playerForm.events({
 // ******************************
 
 Template.playerDropdowns.rendered = function() {
-  console.log("playerDropdowns rendering");
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, onChange: function() {
@@ -199,8 +199,7 @@ Template.availability.rendered = function() {
 
 Template.playerMainButtons.helpers({
   disableSave: function() {
-    if ('disableSave' in this) return this.disableSave.get();
-    return true;
+    return disableSave.get();
   }
 });
 
@@ -227,11 +226,6 @@ Template.playerMainButtons.events({
 });
 
 Template.playerMainButtons.created = function() {
-  console.log(this);
-  if (this.data)
-    this.data.disableSave = new suprsubDep(true);
-  else
-    this.data = {disableSave: new suprsubDep(true)};
 };
 
 // ***************** DEPS *************************
@@ -267,7 +261,6 @@ Deps.autorun(function() {
   dataChange.dep.depend();
   appVars.circleChanged.dep.depend();
   if ($('#cancelOrSave').length) {
-    var disableSave = UI.getElementData($('#cancelOrSave')[0]).disableSave;
     disableSave.set(true);
     if (appVars.circleChanged && appVars.circleChanged.get())
       disableSave.set(false);

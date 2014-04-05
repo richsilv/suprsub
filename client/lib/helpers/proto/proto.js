@@ -64,14 +64,14 @@ function override(object, methodName, callback) {
   object[methodName] = callback(object[methodName])
 }
 
-funcRuns = {}
+/*funcRuns = {}
 
 override(Deps, 'autorun', after(function(f) {
     if (!(f in funcRuns))
         funcRuns[f] = {count: 1, example: this};
     else
         funcRuns[f] = {count: funcRuns[f].count + 1, example: this};
-}));
+}));*/
 
 formatFuncRuns = function(fr, limit) {
     var frPairs = _.pairs(fr).filter(function(x) {return x[1].count >= limit;}),
@@ -98,4 +98,4 @@ function logRenders() {
     });
 }
 
-logRenders();
+// logRenders();

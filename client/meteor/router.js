@@ -5,7 +5,6 @@ Router.configure({
   before: function (pause) {
     if (!Meteor.user()) {
       // render the login template but keep the url in the browser the same
-      console.log("trying to render login screen");
       this.render();
       this.render('loginScreen', {to: 'mainSection'});
       // stop the rest of the before hooks and the action function 
@@ -19,6 +18,8 @@ Router.configure({
   },
 });
 
+Router.onBeforeAction('loading');
+
 Router.map(function() {
 
   var subs;
@@ -30,8 +31,7 @@ Router.map(function() {
       'playerDetails': {to: 'mainSection'}
     },
     waitOn: function() {
-      window.loadGMaps = clientFunctions.loadGMaps()
-      return [Subs.pitches, window.loadGMaps];
+      return [Subs.pitches, clientFunctions.loadGMaps()];
     },
     action: function() {
       this.render();
