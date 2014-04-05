@@ -1,17 +1,18 @@
 Router.configure({
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
-  before: function () {
+  onBeforeAction: function () {
     if (!Meteor.user()) {
       // render the login template but keep the url in the browser the same
+      console.log("trying to render login screen");
       this.render();
       this.render('loginScreen', {to: 'mainSection'});
       // stop the rest of the before hooks and the action function 
       this.stop();
     }
   },
-  after: function() {
-    if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
+  onAfterAction: function() {
+    if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
       this.redirect('/gender');
     }
   },
@@ -38,7 +39,7 @@ Router.map(function() {
         Template.pitchMapLarge.rendered = null;
       };
     },
-    before: function() {
+    onBeforeAction: function() {
       appVars.circleSize = new suprsubDep(8000);
     }
   });
@@ -76,7 +77,7 @@ Router.map(function() {
         Template.pitchMapLarge.rendered = null;
       };
     },
-    after: function() {
+    onAfterAction: function() {
       if (this.params.joinCode) {
         Router.current().route.codeEntered = clientFunctions.joinTeam(this.params.joinCode);
         this.redirect('/team');
@@ -107,7 +108,7 @@ Router.map(function() {
         Subs.teams
         ];
     },
-    before: function() {
+    onBeforeAction: function() {
       if (!('postingsChoice' in Router.routes['home'])) {
         Router.routes['home'].postingsChoice = new suprsubDep('');
         Router.routes['home'].postingsUser = new suprsubDep(false);
@@ -122,7 +123,7 @@ Router.map(function() {
     yieldTemplates: {
       'twitterGenderModal': {to: 'mainSection'}
     },
-    after: function() {
+    onAfterAction: function() {
       var oldRendered = Template.twitterGenderModal.rendered;
       Template.twitterGenderModal.rendered = function() {
         $('#twitterGenderModal').modal('setting', {
@@ -180,7 +181,7 @@ Router.map(function() {
   this.route('uploadPitches', {
     path: '/uploadPitches',
     template: 'blank',
-    before: function() {
+    onBeforeAction: function() {
       Meteor.call('printLine');
       console.log(this.params);
     }

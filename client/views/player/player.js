@@ -263,7 +263,7 @@ Deps.autorun(function() {
   dataChange.dep.depend();
   appVars.circleChanged.dep.depend();
   if ($('#cancelOrSave').length) {
-    var disableSave = Spark.getDataContext($('#cancelOrSave')[0]).disableSave;
+    var disableSave = UI.getElementData($('#cancelOrSave')[0]).disableSave;
     disableSave.set(true);
     if (appVars.circleChanged && appVars.circleChanged.get())
       disableSave.set(false);

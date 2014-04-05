@@ -9,15 +9,15 @@ var tabChoices = new suprsubDep({
 
 // **************************
 
-Handlebars.registerHelper("tabChoices", function(key) {
+UI.registerHelper("tabChoices", function(key) {
   return tabChoices.getKey(key);
 });
 
-Handlebars.registerHelper("teamId", function() {
+UI.registerHelper("teamId", function() {
   return Router.current().route.currentTeamId.get();
 });
 
-Handlebars.registerHelper("codeEntered", function() {
+UI.registerHelper("codeEntered", function() {
   if (Router.current().route.codeEntered && Router.current().route.codeEntered.ready()) {
     return Router.current().route.codeEntered.info().code || null;
   }
@@ -28,7 +28,7 @@ Handlebars.registerHelper("codeEntered", function() {
 Template.teamInfo.events({
    'submit form': function() {
     Deps.flush();
-    if (!Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.get()) {
+    if (!UI.getElementData(document.querySelector('#cancelOrSave')).disableSave.get()) {
       saveTeamData({target: '#saveButton'});
       renderOnce('teamName', function() {
         $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
@@ -118,7 +118,7 @@ function defaultTeamFunction() {
 function addTeamFunction() {
     if (Router.current().route.currentTeamId.get())
       Router.current().route.currentTeamId.set(null);
-      Spark.getDataContext(document.querySelector('#teamNameHolder')).nameEntryOverride.dep.changed();
+      UI.getElementData(document.querySelector('#teamNameHolder')).nameEntryOverride.dep.changed();
     // setTeamData();
 }
 function leaveTeamFunction() {
@@ -269,7 +269,7 @@ Template.teamMainButtons.helpers({
 Template.teamMainButtons.events({
   'click #resetButton': function() {
     var teamNameHolder = document.querySelector('#teamNameHolder');
-    Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+    UI.getElementData(teamNameHolder).nameEntryOverride.set(false);
   },
   'click #saveButton': saveTeamData
 });
@@ -481,9 +481,9 @@ Deps.autorun(function() {
       teamName = $('#teamName').length ? $('#teamName').val() : $('#teamChoice').dropdown('get text'),
       node = document.querySelector('#cancelOrSave');
   if (node) {
-    if (!(homeGroundId && teamName)) Spark.getDataContext(node).disableSave.set(true);
+    if (!(homeGroundId && teamName)) UI.getElementData(node).disableSave.set(true);
     else {
-      Spark.getDataContext(node).disableSave.set(false);
+      UI.getElementData(node).disableSave.set(false);
     }
   }
 });
@@ -536,7 +536,7 @@ function teamNameDropdownInit() {
     onChange: function(value, text) {
       Router.current().route.currentTeamId.set(value);
       // setTeamData();
-      Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.set(true);
+      UI.getElementData(document.querySelector('#cancelOrSave')).disableSave.set(true);
     }
   });
   $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
@@ -656,6 +656,6 @@ function saveTeamData(event) {
       thisGlowCallback();
   }
   var teamNameHolder = document.querySelector('#teamNameHolder');
-  Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+  UI.getElementData(teamNameHolder).nameEntryOverride.set(false);
   return false;
 }

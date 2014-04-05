@@ -30,10 +30,11 @@ Template.settingsBox.events({
     });*/
   },
   'click #emailButton': function() {
-    var frag = Meteor.render(function() {
-      return Template.linkModal();
-    });
-    document.getElementById('linkModalHolder').appendChild(frag);
+    UI.insert(UI.render(Template.linkModal), document.getElementById('linkModalHolder'));
+    // var frag = Meteor.render(function() {
+    //   return Template.linkModal();
+    // });
+    // document.getElementById('linkModalHolder').appendChild(frag);
     $('#linkModal').modal('show');
   },
   'click #facebookButton': function() {
