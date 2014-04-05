@@ -1,17 +1,18 @@
 Router.configure({
+/*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
-  onBeforeAction: function () {
+  before: function (pause) {
     if (!Meteor.user()) {
       // render the login template but keep the url in the browser the same
       console.log("trying to render login screen");
       this.render();
       this.render('loginScreen', {to: 'mainSection'});
       // stop the rest of the before hooks and the action function 
-      this.stop();
+      pause();
     }
   },
-  onAfterAction: function() {
+  after: function() {
     if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
       this.redirect('/gender');
     }
@@ -29,8 +30,8 @@ Router.map(function() {
       'playerDetails': {to: 'mainSection'}
     },
     waitOn: function() {
-
-      return [Subs.pitches, clientFunctions.loadGMaps()];
+      window.loadGMaps = clientFunctions.loadGMaps()
+      return [Subs.pitches, window.loadGMaps];
     },
     action: function() {
       this.render();
@@ -39,7 +40,7 @@ Router.map(function() {
         Template.pitchMapLarge.rendered = null;
       };
     },
-    onBeforeAction: function() {
+    before: function() {
       appVars.circleSize = new suprsubDep(8000);
     }
   });
@@ -77,7 +78,7 @@ Router.map(function() {
         Template.pitchMapLarge.rendered = null;
       };
     },
-    onAfterAction: function() {
+    after: function() {
       if (this.params.joinCode) {
         Router.current().route.codeEntered = clientFunctions.joinTeam(this.params.joinCode);
         this.redirect('/team');
@@ -108,7 +109,7 @@ Router.map(function() {
         Subs.teams
         ];
     },
-    onBeforeAction: function() {
+    before: function() {
       if (!('postingsChoice' in Router.routes['home'])) {
         Router.routes['home'].postingsChoice = new suprsubDep('');
         Router.routes['home'].postingsUser = new suprsubDep(false);
@@ -123,7 +124,7 @@ Router.map(function() {
     yieldTemplates: {
       'twitterGenderModal': {to: 'mainSection'}
     },
-    onAfterAction: function() {
+    after: function() {
       var oldRendered = Template.twitterGenderModal.rendered;
       Template.twitterGenderModal.rendered = function() {
         $('#twitterGenderModal').modal('setting', {
@@ -181,7 +182,7 @@ Router.map(function() {
   this.route('uploadPitches', {
     path: '/uploadPitches',
     template: 'blank',
-    onBeforeAction: function() {
+    before: function() {
       Meteor.call('printLine');
       console.log(this.params);
     }

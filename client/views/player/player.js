@@ -227,7 +227,11 @@ Template.playerMainButtons.events({
 });
 
 Template.playerMainButtons.created = function() {
-  this.data.disableSave = new suprsubDep(true);
+  console.log(this);
+  if (this.data)
+    this.data.disableSave = new suprsubDep(true);
+  else
+    this.data = {disableSave: new suprsubDep(true)};
 };
 
 // ***************** DEPS *************************

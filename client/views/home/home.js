@@ -225,7 +225,7 @@ Template.activityFeed.helpers({
   }
 });
 Template.activityFeed.rendered = function() {
-  var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
+/*  var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
   if (eventDivs.length) {
     var frag = Template.fadeBox({
       height: lastEvent.offsetHeight,
@@ -233,8 +233,8 @@ Template.activityFeed.rendered = function() {
       left: lastEvent.offsetLeft,
       top: lastEvent.offsetTop,
     });
-//    $('#activityFeed').append(frag);
-  }
+   $('#activityFeed').append(frag);
+  }*/
 };
 Template.activityFeed.created = function() {
   this.rerender = Meteor.setInterval(function() {
@@ -265,6 +265,8 @@ setFormDefaults = function() {
   if (!teamList.length)
     return false;
   var teamProfile = Teams.findOne({_id: teamList[0]});
+  if (!teamProfile)
+    return false;
   if (teamProfile.format)
     $('#gameFormat').dropdown('set selected', teamProfile.format);
   if (teamProfile.homeGround) {
