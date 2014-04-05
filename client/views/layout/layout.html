@@ -87,24 +87,28 @@
 	</div>
 </template>
 
-<template name="generalConfirmModal">
+<template name="generalConfirmModalWrapper">
 	<div class="ui small modal" id="generalConfirmModal">
-		<div class="grid">
-			<div class="ui row">
-				<div class="ui column">
-					{{{message}}}
-				</div>
+	{{>generalConfirmModal}}
+	</div>	
+</template>
+
+<template name="generalConfirmModal">
+	<div class="grid">
+		<div class="ui row">
+			<div class="ui column">
+				{{{message}}}
 			</div>
-	  		<div class="ui negative button" id="generalConfirmCancel">
-	  			<i class="remove icon"></i>
-	  			Cancel
-	  		</div>
-	  		<div class="ui orange button" id="generalConfirmOkay">
-	  			<i class="checkmark icon"></i>
-	  			Okay
-	  		</div>
+		</div>
+  		<div class="ui negative button" id="generalConfirmCancel">
+  			<i class="remove icon"></i>
+  			Cancel
   		</div>
-	</div>			
+  		<div class="ui orange button" id="generalConfirmOkay">
+  			<i class="checkmark icon"></i>
+  			Okay
+  		</div>
+	</div>
 </template>
 
 <template name="socialBox">

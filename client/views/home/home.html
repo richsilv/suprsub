@@ -53,7 +53,7 @@
 		</div>
 	</div>
 	<div class="modalHolder">
-		{{> postingModal}}
+		{{> postingModalWrapper}}
 	</div>
 </template>
 
@@ -182,62 +182,66 @@
 	</div>
 </template>
 
-<template name="postingModal">
+<template name="postingModalWrapper">
 	<div class="ui small modal">
-		<div class="header">
-			New Posting
-		</div>
-		<div class="content">
-			<div class="ui raised segment">
+	{{>postingModal}}
+	</div>
+</template>
+
+<template name="postingModal">
+	<div class="header">
+		New Posting
+	</div>
+	<div class="content">
+		<div class="ui raised segment">
+			<div class="ui teal ribbon label">
+				Number of Players needed
+			</div>
+			<p>{{posting.players}}</p>
+			<div class="ui teal ribbon label">
+				Time and Date
+			</div>
+			<p>{{posting.dateTime}}</p>
+			<div class="ui teal ribbon label">
+				Location
+			</div>
+			<p>{{posting.location}}</p>
+			<div class="ui teal ribbon label">
+				Gender
+			</div>
+			<p>{{posting.gender}}</p>
+			{{#if posting.gameType}}
 				<div class="ui teal ribbon label">
-					Number of Players needed
+					Game Type
 				</div>
-				<p>{{posting.players}}</p>
+				<p>{{posting.gameType}}</p>
+			{{/if}}
+			{{#if posting.teamSize}}
 				<div class="ui teal ribbon label">
-					Time and Date
+					Players per side
 				</div>
-				<p>{{posting.dateTime}}</p>
-				<div class="ui teal ribbon label">
-					Location
-				</div>
-				<p>{{posting.location}}</p>
-				<div class="ui teal ribbon label">
-					Gender
-				</div>
-				<p>{{posting.gender}}</p>
-				{{#if posting.gameType}}
-					<div class="ui teal ribbon label">
-						Game Type
-					</div>
-					<p>{{posting.gameType}}</p>
+				<p>{{posting.teamSize}}</p>
+			{{/if}}
+			<div class="ui teal ribbon label">
+				Cost
+			</div>
+			<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
+			<div class="ui teal ribbon label">
+				Post to
+			</div>
+			<p>
+				{{#if posting.onlyRingers}}
+					My Preferred SuprSubs only
+				{{else}}
+					All potential Suprsubs
 				{{/if}}
-				{{#if posting.teamSize}}
-					<div class="ui teal ribbon label">
-						Players per side
-					</div>
-					<p>{{posting.teamSize}}</p>
-				{{/if}}
-				<div class="ui teal ribbon label">
-					Cost
-				</div>
-				<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
-				<div class="ui teal ribbon label">
-					Post to
-				</div>
-				<p>
-					{{#if posting.onlyRingers}}
-						My Preferred SuprSubs only
-					{{else}}
-						All potential Suprsubs
-					{{/if}}
-				</p>
-				<div class="ui grid">
-					<div class="four wide column"></div>
-					<div class="eight wide column">
-						<div class="2 ui fluid buttons">
-						  	<div class="ui positive button" id="makePosting">Post</div>
-						  	<div class="ui negative button" id="cancelPosting">Cancel</div>
-						</div>
+			</p>
+			<div class="ui grid">
+				<div class="four wide column"></div>
+				<div class="eight wide column">
+					<div class="2 ui fluid buttons">
+					  	<div class="ui positive button" id="makePosting">Post</div>
+					  	<div class="ui negative button" id="cancelPosting">Cancel</div>
 					</div>
 				</div>
 			</div>

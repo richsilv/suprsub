@@ -18,18 +18,21 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 	return true;
 };
 
-templateAttach = function(template, callback) {
+templateAttach = function(template, callback, data) {
+	console.log(callback);
+	console.log(data);
 	if (typeof template === "string") template = Template[template];
 	if (!template) return false;
-	document.body.appendChild(Spark.render(template));
+	if (data)
+		UI.insert(UI.renderWithData(template, data), document.body);
+	else
+		UI.insert(UI.render(template), document.body);
 	callback && callback.apply(this, arguments);
 };
 
 confirmModal = function(message, callback) {
-	templateAttach(function() {
-		return Template.generalConfirmModal({
-			message: message,
-			callback: callback
-		});
+	templateAttach(Template.generalConfirmModalWrapper, null, {
+		message: message,
+		callback: callback
 	});
-}
+};

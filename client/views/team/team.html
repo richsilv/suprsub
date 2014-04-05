@@ -278,25 +278,29 @@
 	</form>
 </template>
 
-<template name="chooseCodeTypeModal">
+<template name="chooseCodeTypeModalWrapper">
 	<div class="ui modal" id="chooseCodeTypeModal">
-		<i class="close icon"></i>
-		<div class="header">
-			Choose Invitation Type
+	{{> chooseCodeTypeModal}}
+	</div>
+</template>
+
+<template name="chooseCodeTypeModal">
+	<i class="close icon"></i>
+	<div class="header">
+		Choose Invitation Type
+	</div>
+	<div class="content">
+		<div class="left">
+			There are two sorts of invitation you can generate:
+			<ul>
+				<li>An invitation that will allow other players to join your team as a <em>teammate</em>, and will allow them to view and change your team settings.</li>
+				<li>An invitation to register as a <em>preferred Suprsub</em> for your team, meaning they can be posted first whenever you're looking for an extra player.  They won't be able to view or edit any of the team details though.</li>
+			</ul>
 		</div>
-		<div class="content">
-			<div class="left">
-				There are two sorts of invitation you can generate:
-				<ul>
-					<li>An invitation that will allow other players to join your team as a <em>teammate</em>, and will allow them to view and change your team settings.</li>
-					<li>An invitation to register as a <em>preferred Suprsub</em> for your team, meaning they can be posted first whenever you're looking for an extra player.  They won't be able to view or edit any of the team details though.</li>
-				</ul>
-			</div>
-		</div>
-		<div class="row">
-			<div class="ui button" id="inviteTeammates">Invite Teammates</div>
-			<div class="ui button" id="inviteSuprsubs">Invite Suprsubs</div>
-		</div>
+	</div>
+	<div class="row">
+		<div class="ui button" id="inviteTeammates">Invite Teammates</div>
+		<div class="ui button" id="inviteSuprsubs">Invite Suprsubs</div>
 	</div>
 </template>
 

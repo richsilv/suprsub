@@ -110,7 +110,6 @@ Template.fullPostingForm.events({
     $('#matchesFloat').hide();
   },
   'click #fullPostingFormSubmit': function(event) {
-    console.log("hello!");
       var thisUser = Meteor.user(),
         requestData = {
           players: null,
@@ -138,6 +137,7 @@ Template.fullPostingForm.events({
       if ($('#onlySuprsubs input')[0].checked)
         requestData.onlyRingers = true;
       requestData.gender = Meteor.user().profile.gender;
+      console.log(requestData);
       appVars.newPosting.set(requestData);
       Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
     }

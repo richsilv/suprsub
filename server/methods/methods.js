@@ -198,9 +198,10 @@ Meteor.methods({
 			});			
 		}
 	},
-	sendRingerCode: function(code, name) {
+	sendRingerCode: function(teamId, name) {
 		var contacts = Meteor.user().profile.contact,
-			team = Teams.findOne(code),
+			team = Teams.findOne(teamId),
+			code = team.ringerCode
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your potential Supsrubs - " + 
