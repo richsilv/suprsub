@@ -24,13 +24,13 @@
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.14.0",
-        "commit": "36a98dcdc50216949d2f55c8bebc62ef5cbb29ee"
+        "tag": "v0.15.2",
+        "commit": "aafa100ef174a644ebfc426c3f7ee922032e2a10"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.6.4",
-        "commit": "927bbaed1b87894fb6fb70807f74ff3a5bd89f29"
+        "tag": "v0.7.0",
+        "commit": "05f34bc48c4cad9fdaa366c1ddcabe6980232ece"
       },
       "twit": {
         "git": "https://github.com/subhog/meteor-twit.git",
@@ -44,13 +44,13 @@
       },
       "zurb-foundation": {
         "git": "https://github.com/MixinLabs/meteor-foundation.git",
-        "tag": "v0.1.10",
-        "commit": "545234bc38f7a747a5d69b48f75c5cc77ca8382f"
+        "tag": "v0.2.0",
+        "commit": "2fc8ecfe2756e178140aae281141c8e56f1c2606"
       },
       "houston": {
         "git": "https://github.com/gterrono/houston.git",
-        "tag": "v1.0.1",
-        "commit": "59653d3a345a438c83bfd5244b992a19c4b014d7"
+        "tag": "v1.0.2",
+        "commit": "c9af02ec7b52b5ea061a36d260386aa25644507d"
       },
       "smart-collections": {
         "git": "https://github.com/arunoda/meteor-smart-collections.git",
@@ -69,8 +69,8 @@
       },
       "handlebars-server": {
         "git": "https://github.com/EventedMind/meteor-handlebars-server.git",
-        "tag": "v1.1.0",
-        "commit": "ed99c8e9280894519f44a5b4c84f66ff596c5450"
+        "tag": "v1.2.0",
+        "commit": "1b72c4e9d82af66293e50be4516c487d15d97464"
       },
       "impicker": {
         "git": "https://github.com/wulx/impicker.git",
@@ -81,6 +81,11 @@
         "git": "https://github.com/devonbarrett/meteor-dropzone.git",
         "tag": "v1.0.1",
         "commit": "aa0e15055a519e72a97d02cffad4b052e840433d"
+      },
+      "blaze-layout": {
+        "git": "https://github.com/EventedMind/blaze-layout.git",
+        "tag": "v0.2.2",
+        "commit": "8bc53798fe5965669ae67c72f91829fcfdceabfd"
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",

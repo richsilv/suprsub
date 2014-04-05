@@ -178,21 +178,30 @@
 </template>
 
 <template name="pitchMapLarge">
-	{{#constant}}
 	<div class="ui row large" id="pitchMap" style="display: none;"></div>
-	{{/constant}}
 </template>
 
 <template name="playerAreaButtons">
 	<div class="ui two large buttons cancelOrSave" id="cancelOrSave">
-		<div class="ui red animated{{#if unmoved}} disabled{{/if}} button" id="revertBoundsButton"{{#unless unmoved}} title="Reset your area to the last time it was saved"{{/unless}}>
+		{{#if unmoved}}
+		<div class="ui red animateddisabled button" id="revertBoundsButton">
 			<div class="visible content">Reset</div>
 			<div class="hidden content"><i class="backward icon"></i></div>
 		</div>
-		<div class="ui green animated{{#if unmoved}} disabled{{/if}} button" id="saveBoundsButton"{{#unless unmoved}}  title="Save your home area as it appears on the map now"{{/unless}}>
+		<div class="ui green animated disabled button" id="saveBoundsButton">
 			<div class="visible content">Save</div>
 			<div class="hidden content"><i class="save icon"></i></div>
 		</div>	
+		{{else}}
+		<div class="ui red animated button" id="revertBoundsButton" title="Reset your area to the last time it was saved">
+			<div class="visible content">Reset</div>
+			<div class="hidden content"><i class="backward icon"></i></div>
+		</div>
+		<div class="ui green animated button" id="saveBoundsButton" title="Save your home area as it appears on the map now">
+			<div class="visible content">Save</div>
+			<div class="hidden content"><i class="save icon"></i></div>
+		</div>	
+		{{/if}}
 	</div>
 </template>
 
