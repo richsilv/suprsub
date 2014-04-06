@@ -61,16 +61,20 @@
 			<i class="dropdown icon"></i>
 			<div class="menu">
 				{{#each teams}}
-				<div class="item" data-value="{{_id}}">{{name}}</div>
+					{{> dropdownItem}}
 				{{/each}}
 			</div>
 		</div>
 		{{else}}
 		<div class="ui input">
-			<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings">
+			<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value="{{singleTeamName}}">
 		</div>
 		{{/if}}
 	</div>
+</template>
+
+<template name="dropdownItem">
+	<div class="item" data-value="{{_id}}">{{name}}</div>
 </template>
 
 <template name="teamButtons">

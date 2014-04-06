@@ -50,12 +50,17 @@ Template.teamInfo.rendered = function() {
 
 Template.teamName.helpers({
   dropdownTeams: function() {
+    Router.current().route.currentTeamId.dep.depend();
     return (Router.current().route.teamIds.length > 1 &&
      !!Router.current().route.currentTeamId.get() &&
      !nameEntryOverride.get());
   },
   teams: function() {
     return Teams.find();
+  },
+  singleTeamName: function() {
+    var thisTeam = Teams.findOne();
+    return thisTeam ? thisTeam.name : '';
   }
 });
 
@@ -73,13 +78,17 @@ Template.teamName.events({
   },
   'keyup input, click div': function() {
     appVars.saveCalc.changed();
+  },
+  'keydown input': function(event) {
+    if (event.keyCode === 13)
+      return false;
   }
 });
 
-Template.teamName.rendered = function() {
+Template.dropdownItem.rendered = function() {
     // console.log("rerendering...");
+    teamNameDropdownInit();
     if (!this.data || !this.data.renderedOnce || !this.data.renderedOnce.get()) {
-      teamNameDropdownInit();
       if (!this.data || !this.data.renderedOnce)
         this.data = this.data ? _.extend(this.data, {renderedOnce : new suprsubDep(true)}) : {renderedOnce : new suprsubDep(true)};
       else
@@ -112,8 +121,7 @@ function defaultTeamFunction() {
       Router.current().route.currentTeamId.dep.changed();
     }
 }
-function addTeamFunction() {
-  console.log("running callback");    
+function addTeamFunction() { 
   if (Router.current().route.currentTeamId.get())
     Router.current().route.currentTeamId.set(null);
     nameEntryOverride.dep.changed();
@@ -252,7 +260,6 @@ Template.teamSettings.created = function() {
 };
 
 Template.teamSettings.destroyed = function() {
-  console.log("destroyed");
   this.autoRun.stop();
 }
 
@@ -388,7 +395,6 @@ Template.newVenueBox.events({
 
 Template.chooseCodeTypeModal.events({
   'click #inviteTeammates': function() {
-    console.log("teammate invite clicked");
     Meteor.setTimeout(function() {
       $('#chooseCodeTypeModal').modal('hide');
       Meteor.call('sendTeamCode', Router.current().route.currentTeamId.get(), function(err) {
@@ -529,9 +535,11 @@ regularTimeCheckboxDisable = function() {
 }
 
 function teamNameDropdownInit() {
+  console.log("initialising dropdown");
   $('#teamChoice').dropdown({
     verbose: false, debug: false, performance: false,
     onChange: function(value, text) {
+      console.log("dropdown select event");
       Router.current().route.currentTeamId.set(value);
       // setTeamData();
       disableSave.set(true);
