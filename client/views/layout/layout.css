@@ -97,6 +97,16 @@
 		background-color: rgb(148, 153, 148);
 	}
 
+	#topbar a.item {
+		font-size: 0;
+		text-align: center;
+		width: 12%;
+	}
+
+	#topbar a.item i.icon {
+		font-size: 18px;
+	}
+
 }
 
 /*For small and medium width screens*/

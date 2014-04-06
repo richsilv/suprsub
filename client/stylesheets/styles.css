@@ -294,6 +294,13 @@ i.suprsub.icon:before{
 
 /*For small width screens only*/
 @media only screen and (max-width: 40em) {
+	html {
+		font-size: 18px;
+	}
+	#wrapper > .row {
+		padding-left: 3px;
+		padding-right: 3px;
+	}
 	.columns {
 		padding-left: 0;
 		padding-right: 0;
