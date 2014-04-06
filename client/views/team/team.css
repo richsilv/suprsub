@@ -63,7 +63,7 @@
 }
 
 .teamHeight > .columns {
-	overflow-y: hidden;
+	/*overflow-y: hidden;*/
 }
 
 .teamHeight .columns, .teamHeight .content {
