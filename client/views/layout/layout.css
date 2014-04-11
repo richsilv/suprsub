@@ -98,13 +98,23 @@
 	}
 
 	#topbar a.item {
-		font-size: 0;
+		font-size: 14px;
 		text-align: center;
-		width: 12%;
+		/*width: 12%;*/
 	}
 
 	#topbar a.item i.icon {
-		font-size: 18px;
+		font-size: 14px;
+	}
+
+	#logout-holder {
+		padding-right: 0.6em;
+		padding-left: 0.6em;
+	}
+
+	#logout-button {
+		padding-left: 1em;
+		padding-right: 1em;
 	}
 
 }
