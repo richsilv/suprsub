@@ -224,6 +224,12 @@ Template.activityFeed.helpers({
     return moment(this.createdAt).fromNow();
   }
 });
+Template.activityFeed.events({
+  'click .extra.text': function(event) {
+    var thisEvent = Events.findOne({_id: event.target.id});
+    console.log(thisEvent);
+  }
+});
 Template.activityFeed.rendered = function() {
 /*  var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
   if (eventDivs.length) {

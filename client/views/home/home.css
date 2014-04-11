@@ -89,6 +89,10 @@ label + .checkboxLabel {
 	 margin-bottom: -0.5em;
 }
 
+.event .extra.text {
+	cursor: pointer;
+}
+
 /*For small width screens only*/
 @media only screen and (max-width: 40em) {
  	.titleSection {

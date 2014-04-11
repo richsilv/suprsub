@@ -262,12 +262,63 @@
 		      	<div class="summary">
 		         	<a>{{teamName}}:</a>
 		      	</div>
-		      	<div class="extra text">
+		      	<div class="extra text" id={{_id}}>
 		      		{{message}}
 		      	</div>
 		    </div>
 		</div>
 	{{/each}}
+</template>
+
+<template name="signupModal">
+	<div class="header">
+		Posting Details
+	</div>
+	<div class="content">
+		<div class="ui raised segment">
+			<div class="ui teal ribbon label">
+				Number of Players needed
+			</div>
+			<p>{{posting.players}}</p>
+			<div class="ui teal ribbon label">
+				Time and Date
+			</div>
+			<p>{{posting.dateTime}}</p>
+			<div class="ui teal ribbon label">
+				Location
+			</div>
+			<p>{{posting.location}}</p>
+			<div class="ui teal ribbon label">
+				Gender
+			</div>
+			<p>{{posting.gender}}</p>
+			{{#if posting.gameType}}
+				<div class="ui teal ribbon label">
+					Game Type
+				</div>
+				<p>{{posting.gameType}}</p>
+			{{/if}}
+			{{#if posting.teamSize}}
+				<div class="ui teal ribbon label">
+					Players per side
+				</div>
+				<p>{{posting.teamSize}}</p>
+			{{/if}}
+			<div class="ui teal ribbon label">
+				Cost
+			</div>
+			<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
+			<div class="ui grid">
+				<div class="four wide column"></div>
+				<div class="eight wide column">
+					<div class="2 ui fluid buttons">
+					  	<div class="ui positive button" id="takePosting" title="I'll be your SuprSub!"></div>
+					  	<div class="ui negative button" id="cancelSignup">Cancel</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <template name="fadeBox">
