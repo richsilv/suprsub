@@ -30,7 +30,7 @@ appVars = (function() {
 		_libs: {},
 	    saveCalc: new Deps.Dependency(),
 	    maxInvalidate: 100,
-	    maxPitches: 40
+	    maxPitches: screen.width > 600 ? 40 : 25
 	};
 }
 )();

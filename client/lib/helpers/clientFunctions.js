@@ -1,6 +1,9 @@
 clientFunctions = (function() {
 
-	var _libs = {}, joinTeamDep, markersArray = [];
+	var _libs = {},
+		joinTeamDep,
+		markersArray = [],
+		venueDelay = screen.width > 600 ? 500 : 1000;
 
 	var contactString = function() {
 		var cString = '', contactArray = Meteor.user().profile.contact;
@@ -139,7 +142,7 @@ clientFunctions = (function() {
 				removeMarkers();
 				addMarkers(pitchMap.getBounds(), circle);
 				_thisTimeout = null;
-			}, 500);
+			}, venueDelay);
       	});
 		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
 			document.getElementById("pitchMap").style.display = "block";
@@ -217,7 +220,7 @@ clientFunctions = (function() {
 						Meteor.clearTimeout(self.circleTimeout);
 						self.circleTimeout = null;
 					    appVars.tabChoices.setKey('playerTab', 'pitchData');
-					}, 500);
+					}, venueDelay);
 				}
 				appVars.mapCenter.value = appVars.liveCircle.getCenter();
 				appVars.liveCircle.setOptions({ strokeColor: '#db781c', fillColor: '#db781c' });
