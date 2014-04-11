@@ -126,4 +126,8 @@
 		display: none;
 	}
 
+	#delete-holder {
+		display: none;
+	}
+
 }
