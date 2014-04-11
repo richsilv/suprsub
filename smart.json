@@ -1,7 +1,10 @@
 {
   "packages": {
     "semantic-ui": {},
-    "iron-router": {},
+    "iron-router": {
+      "git": "https://github.com/EventedMind/iron-router.git",
+      "tag": "v0.6.4"
+    },
     "twit": {},
     "moment": {},
     "zurb-foundation": {},
