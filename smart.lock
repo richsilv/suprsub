@@ -19,7 +19,8 @@
       },
       "handlebars-server": {},
       "impicker": {},
-      "Dropzonejs": {}
+      "Dropzonejs": {},
+      "fast-render": {}
     },
     "packages": {
       "semantic-ui": {
@@ -29,8 +30,8 @@
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.7.0",
-        "commit": "05f34bc48c4cad9fdaa366c1ddcabe6980232ece"
+        "tag": "v0.7.1",
+        "commit": "d1ffb3f06ea4c112132b030f2eb1a70b81675ecb"
       },
       "twit": {
         "git": "https://github.com/subhog/meteor-twit.git",
@@ -44,8 +45,8 @@
       },
       "zurb-foundation": {
         "git": "https://github.com/MixinLabs/meteor-foundation.git",
-        "tag": "v0.2.0",
-        "commit": "2fc8ecfe2756e178140aae281141c8e56f1c2606"
+        "tag": "v5.2.2-0.0.1",
+        "commit": "afe432020cc6246fa0a243a6d2e1e031f08d98e3"
       },
       "houston": {
         "git": "https://github.com/gterrono/houston.git",
@@ -82,10 +83,15 @@
         "tag": "v1.0.1",
         "commit": "aa0e15055a519e72a97d02cffad4b052e840433d"
       },
+      "fast-render": {
+        "git": "https://github.com/arunoda/meteor-fast-render.git",
+        "tag": "v0.2.2",
+        "commit": "2a7298d72a84b85e989ec2cc9300bbea7c159eb8"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
-        "tag": "v0.2.2",
-        "commit": "8bc53798fe5965669ae67c72f91829fcfdceabfd"
+        "tag": "v0.2.4",
+        "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
