@@ -1,4 +1,4 @@
-Router.configure({
+suprsubController = FastRender.RouteController.extend({
 /*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
@@ -26,6 +26,7 @@ Router.map(function() {
 
   this.route('playerDetails', {
     path: '/player',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'playerDetails': {to: 'mainSection'}
@@ -47,6 +48,7 @@ Router.map(function() {
 
   this.route('teamDetails', {
     path: '/team/:joinCode?',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'teamInfo': {to: 'mainSection'}
@@ -88,6 +90,7 @@ Router.map(function() {
 
   this.route('home', {
     path: '/',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'homePage': {to: 'mainSection'}
@@ -99,6 +102,7 @@ Router.map(function() {
 
   this.route('home', {
     path: '/home',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'homePage': {to: 'mainSection'}
@@ -106,20 +110,15 @@ Router.map(function() {
     waitOn: function() {
       return [
         Subs.pitches,
-        Subs.teams
+        Subs.teams,
+        Subs.events
         ];
-    },
-    before: function() {
-      if (!('postingsChoice' in Router.routes['home'])) {
-        Router.routes['home'].postingsChoice = new suprsubDep('');
-        Router.routes['home'].postingsUser = new suprsubDep(false);
-      }
-      this.subscribe('events', Router.routes['home'].postingsChoice.get(), Router.routes['home'].postingsUser.get());
     }
   });
 
   this.route('confirmGender', {
     path: '/gender',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'twitterGenderModal': {to: 'mainSection'}
@@ -141,6 +140,7 @@ Router.map(function() {
 
   this.route('about', {
     path: '/about',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'about': {to: 'mainSection'}
@@ -149,6 +149,7 @@ Router.map(function() {
 
   this.route('settings', {
     path: '/settings',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'settings': {to: 'mainSection'}
@@ -157,6 +158,7 @@ Router.map(function() {
 
   this.route('myAdmin', {
     path: '/myadmin',
+    controller: suprsubController,
     template: 'adminTemplate',
     waitOn: function() {
       this.objectHistory = [];
@@ -181,6 +183,7 @@ Router.map(function() {
 
   this.route('uploadPitches', {
     path: '/uploadPitches',
+    controller: suprsubController,
     template: 'blank',
     before: function() {
       Meteor.call('printLine');
@@ -190,6 +193,7 @@ Router.map(function() {
 
   this.route('addPitches', {
     path: '/addPitches',
+    controller: suprsubController,
     template: 'pitchesTemplate',
     waitOn: function() {
       return [

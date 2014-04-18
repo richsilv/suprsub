@@ -5,10 +5,10 @@ var postBoxText = new suprsubDep(false),
 
 Template.homePage.helpers({
   filter: function() {
-    return Router.routes['home'].postingsChoice.get();
+    return Subs.postingsChoice.get();
   },
   postingsUser: function() {
-    return Router.routes['home'].postingsUser.get();
+    return Subs.postingsUser.get();
   },
   postBoxText: function() {
     return postBoxText.get();
@@ -16,16 +16,16 @@ Template.homePage.helpers({
 });
 Template.homePage.events({
   'click #allFilter': function() {
-    Router.routes['home'].postingsChoice.set('');
-    Router.routes['home'].postingsUser.set(false);
+    Subs.postingsChoice.set('');
+    Subs.postingsUser.set(false);
   },
   'click #userFilter': function() {
-    Router.routes['home'].postingsChoice.set(Meteor.userId());
-    Router.routes['home'].postingsUser.set(false);
+    Subs.postingsChoice.set(Meteor.userId());
+    Subs.postingsUser.set(false);
   },
   'click #userPostings': function() {
-    Router.routes['home'].postingsChoice.set(Meteor.userId());
-    Router.routes['home'].postingsUser.set(true);
+    Subs.postingsChoice.set(Meteor.userId());
+    Subs.postingsUser.set(true);
   },  
   'click #postBoxTextChoice .item': function(event) {
     if (event.target.attributes.activate.value === "1")
