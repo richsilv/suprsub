@@ -52,9 +52,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="modalHolder">
-		{{> postingModalWrapper}}
-	</div>
 </template>
 
 <template name="postBox">
@@ -183,7 +180,7 @@
 </template>
 
 <template name="postingModalWrapper">
-	<div class="ui small modal">
+	<div class="ui small modal" id="postingModal">
 	{{>postingModal}}
 	</div>
 </template>
@@ -250,7 +247,7 @@
 </template>
 
 <template name="activityFeed">
-	{{#each events}}
+	{{#each eventList}}
 		<div class="event">
 		    <div class="label">
 		      	<i class="{{eventIcon}} icon"></i>
@@ -262,12 +259,18 @@
 		      	<div class="summary">
 		         	<a>{{teamName}}:</a>
 		      	</div>
-		      	<div class="extra text" id={{_id}}>
+		      	<div class="extra text {{#if available}}available{{/if}}" id={{_id}}>
 		      		{{message}}
 		      	</div>
 		    </div>
 		</div>
 	{{/each}}
+</template>
+
+<template name="signupModalHolder">
+	<div class="ui small modal" id="signupModal">
+	{{> signupModal}}
+	</div>
 </template>
 
 <template name="signupModal">
@@ -310,9 +313,9 @@
 			<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
 			<div class="ui grid">
 				<div class="four wide column"></div>
-				<div class="eight wide column">
+				<div class="ten wide column">
 					<div class="2 ui fluid buttons">
-					  	<div class="ui positive button" id="takePosting" title="I'll be your SuprSub!"></div>
+					  	<div class="ui positive button" id="takePosting" title="I'll be your SuprSub!">Sign Up!</div>
 					  	<div class="ui negative button" id="cancelSignup">Cancel</div>
 					</div>
 				</div>

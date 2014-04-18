@@ -1,4 +1,4 @@
-serverFunctions = (function() {
+	serverFunctions = (function() {
 
 	function twitterNameFromId(callback, id) {
 		var thisUser = Meteor.user();
@@ -563,6 +563,45 @@ serverFunctions = (function() {
 		return false;
 	}
 
+	function signupPlayer(thisUser, thisEvent) {
+		var thisEvent = (typeof thisEvent === "string" ? Events.find(thisEvent) : thisEvent),
+			teamCaptain = Meteor.users.findOne(thisEvent.userId),
+			teamCaptContactDeets, playerContactDeets;
+		if (!thisEvent || !teamCaptain || thisEvent.players <= 0)
+			throw new Meteor.Error(500, "Posting cannot be matched or is already filled", "EventID: " + (thisEvent ? thisEvent._id : "undefined") + ", Team Captain: " + (teamCaptain ? teamCaptain._id : "undefined"));
+		Events.update(thisEvent, {$push: {matched: thisUser._id}, $inc: {players: -1}}, function() {
+			Events.update({_id: thisEvent._id}, {$set: {sentence: describePosting(Events.findOne({_id: thisEvent._id}))}});
+		});
+		var playerContactDeets, teamCaptContactDeets;
+		if (thisUser.profile.contact.indexOf(0) > -1) playerContactDeets = '@' + thisUser.services.twitter.screenName;
+		else if (thisUser.profile.contact.indexOf(1) > -1) playerContactDeets = thisUser.services.facebook.link;
+		else playerContactDeets = thisUser.services.emails[0].address;
+		if (teamCaptain.profile.contact.indexOf(0) > -1) {
+			teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
+			Meteor.call('twitterReplyTweet', tweet.twitterId, teamCaptContactDeets + " your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets);		
+		}
+		else if (teamCaptain.profile.contact.indexOf(1) > -1) {
+			teamCaptContactDeets = teamCaptain.services.facebook.link;
+			// INSERT FACEBOOK CONTACT UPDATE //
+		}
+		else {
+			teamCaptContactDeets = teamCaptain.services.emails[0].address;
+			var fullUpText = (thisEvent.players === 0) ? ' Your posting is now filled.' : '';
+			Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "Your have a SuprSub!" + fullupText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
+		}
+		if (thisUser.profile.contact.indexOf(0) > -1) {
+			Meteor.call('twitterSendTweet', playerContactDeets + " thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets);		
+		}
+		else if (thisUser.profile.contact.indexOf(1) > -1) {
+			teamCaptContactDeets = teamCaptain.services.facebook.link;
+			// INSERT FACEBOOK CONTACT UPDATE //
+		}
+		else {
+			Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: playerContactDeets, subject: "You are now a SuprSub!", html: "Thanks, you are now a Suprsub!  Your team captain can be reached at  " + teamCaptContactDeets});
+		}
+		return true;
+	}
+
 	function distributeEvent(players, event) {
 		var team = Meteor.users.findOne({_id: event.userId});
 		for (var i = 0, l = players.length; i < l; i++) {
@@ -678,6 +717,7 @@ serverFunctions = (function() {
 		addRandomEvent: addRandomEvent,
 		hasCode: hasCode,
 		consumeTweet: consumeTweet,
+		signupPlayer: signupPlayer,
 		distributeEvent: distributeEvent,
 		removeHandles: removeHandles,
 		prettyDateTime: prettyDateTime,

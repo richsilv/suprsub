@@ -109,6 +109,10 @@ input[type=range]:active::-moz-range-thumb {
 	width: 100%;
 }
 
+#pitchTable thead tr {
+	width: 100%;
+}
+
 .height280 {
 	min-height: 280px;
 }
@@ -128,7 +132,7 @@ input[type=range]:active::-moz-range-thumb {
 }
 
 .tableLocation {
-	width: 280px;
+	width: 500px;
 }
 
 .tableSpaceBlock {

@@ -19,8 +19,6 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 };
 
 templateAttach = function(template, callback, data) {
-	console.log(callback);
-	console.log(data);
 	if (typeof template === "string") template = Template[template];
 	if (!template) return false;
 	if (data)
@@ -30,9 +28,23 @@ templateAttach = function(template, callback, data) {
 	callback && callback.apply(this, arguments);
 };
 
-confirmModal = function(message, callback) {
-	templateAttach(Template.generalConfirmModalWrapper, null, {
-		message: message,
-		callback: callback
-	});
+confirmModal = function(options, postRender) {
+	templateAttach(
+		Template.generalConfirmModalWrapper, 
+		function() {
+		  $('#generalConfirmModal').modal({
+		    onHide: function() {
+		      $('.ui.dimmer.page').remove();
+		      $('#generalConfirmModal').remove();
+		    },
+		    closable: options.noButtons ? true : false
+		  });
+		  postRender && postRender.apply(this, arguments);
+		},
+		{
+			message: options ? options.message : '',
+			callback: options ? options.callback : null,
+			noButtons: options ? options.noButtons : false
+		}
+	);
 };

@@ -129,11 +129,11 @@
 
 <template name="pitchData">
 	<table class="ui darkgreen table segment" id="pitchTable">
-		<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
+		<thead><tr><th class="tableLocation">Location Name</th></tr></thead>
 		<div id="pitchTableDiv">
 			<tbody>
 				{{#each getVenues}}
-					<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
+					<tr><td class="tableLocation">{{this}}</td></tr>
 				{{/each}}
 			</tbody>
 		</div>
@@ -142,8 +142,7 @@
 
 <template name="availability">
 	<table class="ui green table segment" id="availabilityTable">
-		<thead><tr><td class="tableSpaceBlock"></td>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
-		<div style="display: block; max-height: 100px;">
+		<thead><tr><th class="tableSpaceBlock"></th>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
 			<tbody>
 				{{#each periods}}
 					<tr>
@@ -152,7 +151,6 @@
 					</tr>
 				{{/each}}
 			</tbody>
-		</div>
 	</table>
 </template>
 
@@ -162,6 +160,7 @@
 			<div class="ui">
 				<input type="checkbox" id="{{../periodCode}}/{{dayCode}}">
 				<label for="{{../periodCode}}/{{dayCode}}"></label>
+				<div class="checkboxDiv"></div>
 			</div>
 		</td>
 	{{/each}}

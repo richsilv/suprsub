@@ -5,7 +5,7 @@ Meteor.methods({
 		var lat = center.lat * ratio;
 		var width = Math.acos(Math.pow(Math.cos(lat), 2) * Math.cos(ratio) + Math.pow(Math.sin(lat), 2)) * 6371 / 111;
 		var d2 = Math.pow(distance/111000, 2);
-		return Pitches.find().fetch().filter(function(p) {return (Math.pow(p.location.lat - center.lat, 2) + Math.pow((p.location.lng - center.lng) * width, 2) < d2);});
+		return Pitches.find({}, {sort: {name: 1}}).fetch().filter(function(p) {return (Math.pow(p.location.lat - center.lat, 2) + Math.pow((p.location.lng - center.lng) * width, 2) < d2);});
 	},
 	deleteTeam: function(teamId) {
 		Meteor.users.update({'profile.team._ids': teamId}, {$pull: {'profile.team._ids': teamId}}, {multi: true});
@@ -253,6 +253,9 @@ Meteor.methods({
 			return {code: 2, teamName: memberTeam.name};
 		}
 		return {code: 3};	
+	},
+	signupPlayer: function(thisUser, thisEvent) {
+		return serverFunctions.signupPlayer(thisUser, thisEvent);
 	},
 	parsePitches: function(pitches) {
 		var pitchList, thisPitch, i, j, success = [], failure = [];

@@ -155,22 +155,34 @@ Template.teamButtons.events({
   'click #setDefault': function(event) {
     // console.log(event);
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
-        "<p>All future postings will be made on behalf of this team.</p>", defaultTeamFunction);
+      confirmModal({
+        message : "<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
+          "<p>All future postings will be made on behalf of this team.</p>", 
+        callback: defaultTeamFunction
+      });
   },
   'click #addNewTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Do you want to <strong>create</strong> a new team?</p>", addTeamFunction);
+      confirmModal({
+        message: "<p>Do you want to <strong>create</strong> a new team?</p>",
+        callback: addTeamFunction
+      });
   },
   'click #leaveTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Do you want to <strong>leave</strong> this team?</p><p>Other members of the team will be unaffected, but " +
-        "you will no longer be able to view or alter the team settings.", leaveTeamFunction);
+      confirmModal({
+        message: "<p>Do you want to <strong>leave</strong> this team?</p><p>Other members of the team will be unaffected, but " +
+          "you will no longer be able to view or alter the team settings.",
+        callback: leaveTeamFunction
+      });
   },  
   'click #deleteTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Are you sure you want to delete this team? The team will be removed for <strong>all</strong> " +
-        "team members.</p><p>Use the minus icon if you just want to leave the team.</p>", deleteTeamFunction);
+      confirmModal({
+        message: "<p>Are you sure you want to delete this team? The team will be removed for <strong>all</strong> " +
+          "team members.</p><p>Use the minus icon if you just want to leave the team.</p>",
+        callback: deleteTeamFunction
+      });
   }
 });
 
@@ -218,6 +230,10 @@ Template.teamSettings.events({
       }
     });
     google.maps.event.trigger(pitchMap, 'resize');
+  },
+  'change #timePickerMinute': function(event) {
+    if (parseInt(event.target.value, 10) < 10)
+      event.target.value = '0' + event.target.value;
   },
   'click .checkbox, click .dropdown': function(event) {
     appVars.saveCalc.changed();
@@ -288,7 +304,7 @@ Template.otherInfo.events({
       if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
         var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
-        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>';});
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + prettyLocation(pitch) + '</a>';});
         $('#matches').html(pitchElement + '</div></div></div>');
       }
    }

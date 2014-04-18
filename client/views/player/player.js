@@ -4,7 +4,7 @@ var dataChange = new suprsubDep(false),
 Template.pitchData.helpers({
   getVenues: function() {
     if (appVars.venues && appVars.venues.get()) {
-      return appVars.venues.get();
+      return appVars.venues.get().map(function(v) {return prettyLocation(v)});
     }
     else return []; 
   }

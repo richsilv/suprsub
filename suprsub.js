@@ -11,11 +11,16 @@ colloquialDateTime = function(dateTime) {
 	return padNum(dateTime.getHours(), 2) + ':' + padNum(dateTime.getMinutes(), 2) + ' on ' + dateTime.toDateString();
 };
 
-prettyLocation = function(locationId) {
-	var location;
-	location = Pitches.findOne({_id: locationId});
-	if (!location) return '';
-	else return location.owner + ' - ' + location.name;
+prettyLocation = function(pitch) {
+	if (typeof pitch === "string") {
+		pitch = Pitches.findOne({_id: pitch});
+	}
+	if (!pitch)
+		return "";
+	else if (!pitch.owner)
+		return pitch.name;
+	else
+		return pitch.owner + ' - ' + pitch.name;
 };
 
 padNum = function(number, digits) {

@@ -8,11 +8,16 @@ Template.generalConfirmModal.events({
 	}
 });
 
-Template.generalConfirmModal.rendered = function() {
-  $('#generalConfirmModal').modal({
-    onHide: function() {
-      $('.ui.dimmer.page').remove();
-    },
-    closable: false
-  }).modal('show');
-};
+Template.mainTemplate.helpers({
+	'smallScreen': function() {
+		return screen.width < 640.1;
+	}
+})
+
+Template.sidebar.rendered = function() {
+	$('.overlay.sidebar')
+  		.sidebar({
+    		overlay: true
+  		})
+  		.sidebar('toggle');
+}

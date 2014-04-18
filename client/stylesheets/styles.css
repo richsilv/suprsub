@@ -181,6 +181,7 @@ i.suprsub.icon {
 	font-size: 1.5em;
 	margin-top: -0.4em;
 	display: block;
+	padding-top: 0.1em;
 }
 
 i.suprsub.icon:before{
@@ -281,6 +282,33 @@ i.suprsub.icon:before{
 	-moz-box-shadow: 0 0 10px rgba(0, 255, 0, 1) !important;	
 }
 
+input[type=checkbox] {
+   position: absolute;
+   opacity: 0;
+   margin-top: 1px;
+   margin-left: -14px;
+   width: 30px;
+   height: 20px;
+   /* For mobile, it's typically better to position checkbox on top of clickable
+      area and turn opacity to 0 instead. */
+}
+
+/* Default State */
+.checkboxDiv {
+   background: rgba(0, 0, 0, .095);
+   width: 30px;
+   height: 20px;
+   line-height: 20px;
+   color: white;
+   text-align: center;
+   border-radius: 2px;
+}
+
+/* Toggled State */
+input[type=checkbox]:checked ~ .checkboxDiv {
+   background: hsl(120, 75%, 43%);
+}
+
 /*For small and medium width screens*/
 @media only screen and (max-width: 64em) {
 	.rotate {
@@ -307,6 +335,12 @@ i.suprsub.icon:before{
 	}
 	.ui.segment {
 		border-radius: 0;
+	}
+	.rotated_cell {
+		height: 130px;
+	}
+	.rotate {
+		margin-top: -30px;
 	}
 }
 
