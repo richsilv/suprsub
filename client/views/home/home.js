@@ -291,6 +291,9 @@ Template.signupModal.helpers({
     if ('gameType' in postingData) output.gameType = ['Friendly', 'Competitive'][postingData.gameType];
     if ('teamSize' in postingData) output.teamSize = postingData.teamSize + '-a-side';   
     return output;
+  },
+  myPosting: function() {
+    return (Meteor.user().profile.team._ids.indexOf(this.postingData.team) > -1);
   }
 });
 
@@ -308,12 +311,32 @@ Template.signupModal.events({
             console.log(err);
           else {
             confirmModal({
-              message: "<h2>SUCCESS!</h2><p>You've just become a SuprSub!  The team captain's contact details have been sent to you.",
+              message: "<h2>SUCCESS!</h2><p>You've just become a SuprSub!  The team captain's contact details have been sent to you.</p>",
               callback: null,
               noButtons: true
-            }, function() { Meteor.setInterval(function() {$('#generalConfirmModal').modal('show'); }, 250);}
+            }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250);}
             );
           }
+        });
+      }
+    });
+    $('#signupModal').modal('hide');
+  },
+  'click #removePosting': function() {
+    self = this;
+    $('#signupModal').modal({
+      onHidden: function() {
+        Meteor.call('removePosting', self.postingData, function(err, res) {
+          if (err)
+           console.log(err);
+           else {
+             confirmModal({
+               message: "<h2>SUCCESS!</h2><p>Your posting has been removed.</p>",
+               callback: null,
+               noButtons: true
+             }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250);}
+            );
+          }      
         });
       }
     });

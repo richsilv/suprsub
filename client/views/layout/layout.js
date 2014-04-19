@@ -8,16 +8,39 @@ Template.generalConfirmModal.events({
 	}
 });
 
+// ******************************
+
 Template.mainTemplate.helpers({
 	'smallScreen': function() {
 		return screen.width < 640.1;
 	}
-})
+});
+
+// ******************************
+
+Template.sidebar.events({
+	'click .item': function() {
+		$('#sidebar').sidebar('hide');
+		Meteor.setTimeout(function() {
+			$('#miniTopbar .item').removeClass('offScreen');
+		}, 500);	
+	}
+});
 
 Template.sidebar.rendered = function() {
-	$('.overlay.sidebar')
+	$('#sidebar')
   		.sidebar({
     		overlay: true
   		})
-  		.sidebar('toggle');
-}
+};
+
+// ******************************
+
+Template.miniTopbar.events({
+	'click #miniTopbar .suprsub.icon': function() {
+		$('#miniTopbar .item').addClass('offScreen');
+		Meteor.setTimeout(function() {
+			$('#sidebar').sidebar('show');
+		}, 500);
+	}
+})

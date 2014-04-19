@@ -257,6 +257,14 @@ Meteor.methods({
 	signupPlayer: function(thisUser, thisEvent) {
 		return serverFunctions.signupPlayer(thisUser, thisEvent);
 	},
+	removePosting: function(thisEvent) {
+		if (Meteor.user().profile.team._ids.indexOf(thisEvent.team) > -1) {
+			Events.update(thisEvent, {$set: {cancelled: true}});
+			return true;
+		}
+		else
+			throw new Meteor.Error(500, "User is not a member of the team that made this posting");
+	},
 	parsePitches: function(pitches) {
 		var pitchList, thisPitch, i, j, success = [], failure = [];
 		pitchList = pitches.split('\n');

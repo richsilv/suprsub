@@ -315,8 +315,12 @@
 				<div class="four wide column"></div>
 				<div class="ten wide column">
 					<div class="2 ui fluid buttons">
+						{{#if myPosting}}
+						<div class="ui negative button" id="removePosting" title="Cancel this posting">Cancel</div>
+						{{else}}
 					  	<div class="ui positive button" id="takePosting" title="I'll be your SuprSub!">Sign Up!</div>
-					  	<div class="ui negative button" id="cancelSignup">Cancel</div>
+					  	{{/if}}
+					  	<div class="ui button" id="cancelSignup">Close</div>
 					</div>
 				</div>
 			</div>

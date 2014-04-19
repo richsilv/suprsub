@@ -29,6 +29,7 @@
 			{{> topbar}}
 		{{else}}
 			{{> sidebar}}
+			{{> miniTopbar}}
 		{{/unless}}
 		{{> yield region='mainSection'}}
 	</div>
@@ -91,8 +92,37 @@
 	</div>
 </template>
 
+<template name="miniTopbar">
+	<div class="ui darkgreen fixed inverted main menu" id="miniTopbar">
+		<span class="item">
+			<i class="suprsub icon"></i>
+		</span>	
+	</div>
+</template>
+
 <template name="sidebar">
-	<div class="ui overlay thin sidebar">This is a sidebar</div>
+	<div class="ui inverted darkgreen overlay thin sidebar menu" id="sidebar">
+		<div class="item" href="{{pathFor 'home'}}">
+			<i class="suprsub icon"></i>
+		</div><hr>
+		{{#if currentUser}}	
+		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
+			<i class="home icon"></i> Home
+		</a>
+		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
+			<i class="user icon"></i> Player
+		</a>
+		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'teamDetails'}}">
+			<i class="users icon"></i> Team
+		</a>
+		<a class="{{#if option "/about"}}active {{/if}}item" href="{{pathFor 'about'}}">
+			<i class="book icon"></i> About
+		</a>
+		<a class="{{#if option "/settings"}}active {{/if}}item" href="{{pathFor 'settings'}}">
+			<i class="settings icon"></i> Settings
+		</a>
+		{{/if}}
+	</div>
 </template>
 
 <template name="generalConfirmModalWrapper">
