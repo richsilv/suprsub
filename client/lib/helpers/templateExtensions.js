@@ -6,7 +6,6 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 	template.rendered = function() {
 		if (afterwards) {
 			oldRender && oldRender.apply(this, arguments);
-			console.log("between");
 			oneTimeFunc.apply(this, arguments);
 		}
 		else {

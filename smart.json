@@ -16,6 +16,7 @@
     "handlebars-server": {},
     "impicker": {},
     "Dropzonejs": {},
-    "fast-render": {}
+    "fast-render": {},
+    "hopscotch": {}
   }
 }
