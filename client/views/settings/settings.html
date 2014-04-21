@@ -1,14 +1,10 @@
 <template name="settings">
 	<div id="main-background-image"></div>
-	<div class="gap row">
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
+	<div class="row">
+		<div class="medium-8 master columns">
 				{{> settingsBox}}
-			</div>
 		</div>
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
-			</div>			
+		<div class="medium-8 master columns">		
 		</div>
 	</div>
 	<div class="gap row">
@@ -17,7 +13,6 @@
 </template>
 
 <template name="settingsBox">
-	<div class="large-16 columns">
 		<form class="ui form segment content whitetranslucent">
 		  	<div class="row">
 		  		<ul class="small-block-grid-1 medium-block-grid-3 large-block-grid-1" id="linkTriple">
@@ -91,7 +86,6 @@
 				</div>
 			</div>
 		</form>
-	</div>
 	<div id="linkModalHolder">
 	</div>
 </template>

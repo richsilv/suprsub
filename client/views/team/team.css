@@ -93,14 +93,15 @@
  	}
 
 	#pitchMap.small {
-		width: 100%;
+		width: auto;
 		margin-left: 0;
+		margin-right: 0;
 		height: 325px;
 		left: 0;
 	}
 
 	#pitchMapContainerSmall {
-		width: 100%;
+		width: auto;
 		height: 325px;
 	}
 

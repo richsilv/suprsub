@@ -169,7 +169,7 @@ input[type=range]:active::-moz-range-thumb {
 	#distanceWriteLabel {
 		/*margin-left: 5em;*/
 		text-align: center;
-		top: 2em;
+		position: static;
 	}
 	#distanceWriteLabel h3, #distanceWriteLabel h4 {
 		display: inline;

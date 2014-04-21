@@ -1,15 +1,11 @@
 <template name="teamInfo">
 	<div id="main-background-image"></div>
-	<div class="gap row teamHeight">
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
+	<div class="row teamHeight">
+		<div class="medium-8 master columns">
 				{{> teamTopLevel}}
-			</div>
 		</div>
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
-				{{> teamSecondLevel}}
-			</div>			
+		<div class="medium-8 master columns">
+				{{> teamSecondLevel}}		
 		</div>
 	</div>
 	<div class="gap row">
@@ -116,17 +112,17 @@
 
 <template name="teamSettings">
 	<form class="ui form whitetranslucent height225 teamForm">
-		<div class="large-10 medium-14 small-8 medium-centered large-uncentered columns">
+		<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
 			<div class="field">
 				<div class="checkboxLabel">Friendly</div>
 				<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
 					<input type="checkbox">
 					<label></label>
 				</div>
-				<div class="checkboxLabel">Competitive</div>
+				<div class="checkboxLabel">Comp<span class="show-for-small">.</span><span class="show-for-medium-up">etitive</span></div>
 			</div>
 		</div>
-		<div class="large-6 medium-14 small-8 medium-centered large-uncentered columns">
+		<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
 			<div class="field">
 				<label>Game Format</label>
 				<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
@@ -170,14 +166,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="two fields">
-			<div class="field">
+		<div class="fields">
+			<div class="small-7 columns field">
 				<div class="ui toggle checkbox opacity" id="timeCheckbox" title="Do your matches kick off at the same time every week?">
 					<input type="checkbox" id="sameTime">
-					<label>Same time<br class="show-for-medium-only"> each week?</label>
+					<label>Same time<br class="show-for-medium-only"><span class="show-for-medium-up"> each week</span>?</label>
 				</div>
 			</div>
-			<div class="field opacity" id="timeSection">
+			<div class="small-9 columns field opacity" id="timeSection">
 				<label>Kick-off</label>
 				<div class="row">
 					<div class="small-9 columns" style="margin: 0;">
@@ -215,8 +211,6 @@
 </template>
 
 <template name="otherInfo">
-	<div class="large-16 columns">
-		<div class="medium-16 columns">
 			<div class="ui segment content whitetranslucent" id="otherInfo">
 				<div class="row">
 					<div class="large-8 columns">
@@ -240,7 +234,7 @@
 						<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 					</div>
 					<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
-					<div class="large-8 columns">
+					<div class="large-8 master columns">
 						<div id="pitchMapContainerSmall">
 							{{#if tabChoices 'newVenue'}}
 							{{> newVenueBox}}
@@ -251,8 +245,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
 </template>
 
 <template name="pitchMapSmall">

@@ -3,7 +3,7 @@
     text-decoration: none;
 }
 
-.columns .row.instructionsRow {
+.columns .row.instructionsRow > .grid {
 	margin-bottom: 0.9375em;
 	font-size: 1.2em;
 	line-height: 1.5em;
@@ -26,6 +26,10 @@
 .instructionsRow a:hover {
     color: rgb(0, 153, 145);
     cursor: pointer;	
+}
+
+#instructionsMenu {
+	margin-bottom: 0.9375em;
 }
 
 #instructionsMenu .label {
