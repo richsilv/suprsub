@@ -159,14 +159,14 @@ Template.teamButtons.events({
         message : "<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
           "<p>All future postings will be made on behalf of this team.</p>", 
         callback: defaultTeamFunction
-      });
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   },
   'click #addNewTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
       confirmModal({
         message: "<p>Do you want to <strong>create</strong> a new team?</p>",
         callback: addTeamFunction
-      });
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   },
   'click #leaveTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
@@ -174,7 +174,7 @@ Template.teamButtons.events({
         message: "<p>Do you want to <strong>leave</strong> this team?</p><p>Other members of the team will be unaffected, but " +
           "you will no longer be able to view or alter the team settings.",
         callback: leaveTeamFunction
-      });
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   },  
   'click #deleteTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
@@ -182,7 +182,7 @@ Template.teamButtons.events({
         message: "<p>Are you sure you want to delete this team? The team will be removed for <strong>all</strong> " +
           "team members.</p><p>Use the minus icon if you just want to leave the team.</p>",
         callback: deleteTeamFunction
-      });
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   }
 });
 
