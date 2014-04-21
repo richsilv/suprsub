@@ -1,10 +1,10 @@
 <template name="playerDetails">
 	<div id="main-background-image"></div>
-	<div class="gap row">
-		<div class="large-8 columns">
+	<div class="row">
+		<div class="large-8 master columns">
 			{{> playerForm}}
 		</div>
-		<div class="large-8 columns">
+		<div class="large-8 master columns">
 			{{> availabilityVenues}}
 		</div>
 	</div>
@@ -32,8 +32,8 @@
 </template>
 
 <template name="playerForm">
-	<div class="large-16 columns">
-		<form class="ui form segment content whitetranslucent height280" id="playerForm">
+	<!-- <div class="large-16 columns"> -->
+		<form class="ui form segment content whitetranslucent noGap height280" id="playerForm">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>First Name</label>
@@ -50,7 +50,7 @@
 		  	</div>
 			{{> playerDropdowns dropdowns}}
 		</form>
-	</div>
+	<!-- </div> -->
 	<div id="linkModalHolder">
 	</div>
 </template>
@@ -107,8 +107,8 @@
 </template>
 
 <template name="availabilityVenues">
-	<div class="large-16 columns">
-		<div class="ui segment content whitetranslucent height280" id="tabSpace">
+	<!-- <div class="large-16 columns"> -->
+		<div class="ui segment content whitetranslucent noGap height280" id="tabSpace">
 			<div class="ui tabular menu">
 				<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
 					Availability
@@ -124,7 +124,7 @@
 				{{> availability}}
 			{{/if}}
 		</div>
-	</div>
+	<!-- </div> -->
 </template>
 
 <template name="pitchData">

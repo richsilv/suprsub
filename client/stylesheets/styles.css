@@ -41,6 +41,8 @@ body {
 	position: relative;
 	font-size: 100px;
 	top: 0px;
+	padding-top: 0.1em;
+	margin-bottom: -0.5em;
 }
 
 .backgroundShadowBig {
@@ -63,6 +65,15 @@ body {
 
 .gap.button {
 	margin-top: 0.9375em;	
+}
+
+.minipadding.columns {
+	padding-left: 0.3125em;
+	padding-right: 0.3125em;
+}
+
+.segment.noGap {
+	margin-bottom: 0;
 }
 
 .lowered.button {
@@ -323,9 +334,20 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 /*For small width screens only*/
 @media only screen and (max-width: 40em) {
 	html {
-		font-size: 18px;
+		font-size: 12px;
+		/*width: 640px;*/
 	}
-	#wrapper > .row {
+	html body {
+		/*width: 640px;*/
+	}
+	.suprsubHeader {
+		font-size: 72px;
+	}
+	.master.columns, .master.column {
+		padding-left: 0;
+		padding-right: 0;
+	}
+/*	#wrapper > .row {
 		padding-left: 3px;
 		padding-right: 3px;
 	}
@@ -333,6 +355,10 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 		padding-left: 0;
 		padding-right: 0;
 	}
+	.row .columns, .row .column {
+		padding-left: 0.9375em;
+		padding-right: 0.9375em;
+	}*/
 	.ui.segment {
 		border-radius: 0;
 	}

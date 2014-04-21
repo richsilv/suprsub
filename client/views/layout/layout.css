@@ -15,7 +15,7 @@
 }
 
 #miniTopbar+div+div {
-	margin-top: 75px;
+	margin-top: 60px;
 }
 
 #toplogo-image {
@@ -53,8 +53,8 @@
 
 #miniTopbar {
 	top: 0;
-	z-index: 500;
-	height: 72px;
+	z-index: 950;
+	height: 56px;
 	font-size: 18px;
 }
 
