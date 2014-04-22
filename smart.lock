@@ -21,7 +21,8 @@
       "impicker": {},
       "Dropzonejs": {},
       "fast-render": {},
-      "hopscotch": {}
+      "hopscotch": {},
+      "reactive-relations": {}
     },
     "packages": {
       "semantic-ui": {
@@ -93,6 +94,11 @@
         "git": "https://github.com/Dsyko/meteor-hopscotch.git",
         "tag": "v0.1.2",
         "commit": "2f9ed5cf2813198fbb6ed6030ced40f0b84775a8"
+      },
+      "reactive-relations": {
+        "git": "https://github.com/dburles/reactive-relations.git",
+        "tag": "v0.1.6",
+        "commit": "457f270d945b212b55cae50800a0c8851f35fcba"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

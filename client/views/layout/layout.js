@@ -42,5 +42,19 @@ Template.miniTopbar.events({
 		Meteor.setTimeout(function() {
 			$('#sidebar').sidebar('show');
 		}, 500);
-	}
+	},
+    'click #login-button' : function() {
+        Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
+          if (err) accountError.set(err.reason);
+        });
+    },
+    'keyup #login-email, keyup #login-password': function(events) {
+        if (event.keyCode === 13)    
+            Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
+                if (err) accountError.set(err.reason);
+            });      
+    },
+    'click #logout-button' : function() {
+        Meteor.logout();
+    }
 })

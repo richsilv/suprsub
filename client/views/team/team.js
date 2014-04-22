@@ -324,9 +324,11 @@ Template.otherInfo.events({
     var pitch = Pitches.findOne({'_id': event.target.id});
     if (pitch) {
       pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
-      $('#homeGround input').val(pitch.owner + ' - ' + pitch.name);
+      $('#homeGround input').val(prettyLocation(pitch));
       $('#homeGround input').attr('id', pitch._id);
-      location.href = "#homeGround";
+      $('html, body').animate({
+        scrollTop: ($('#homeGround').first().offset().top - (window.innerHeight/2))
+      },500);
       window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
       appVars.saveCalc.changed();
     }

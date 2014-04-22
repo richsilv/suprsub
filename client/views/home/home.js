@@ -38,7 +38,7 @@ Template.homePage.events({
 Template.postBox.helpers({
   'teamRegistered': function() {
     var thisUser = Meteor.user();
-    return (thisUser && thisUser.profile && thisUser.profile.team);   
+    return (thisUser && thisUser.profile && thisUser.profile.team._ids.length);   
   }
 });
 Template.postBox.events({
@@ -47,8 +47,25 @@ Template.postBox.events({
       if (err) console.log(err);
       else if (!Meteor.user().profile.team._ids.length) console.log("This user has no team");
       else {
-        res = _.extend(res, {team: Meteor.user().profile.team._ids[0]});
-        appVars.newPosting.set(res);
+        var requestData = {
+          players: null,
+          dateTime: null,
+          location: null,
+          onlyRingers: false,
+          gender: 0,
+          price: 0
+        };
+        requestData = _.extend(requestData, res, {team: Meteor.user().profile.team._ids[0]});
+        appVars.newPosting.set(requestData);
+        console.log(requestData);
+        UI.insert(UI.render(Template.postingModalWrapper), document.body);
+        $('#postingModal').modal('setting', {
+          onHide: function() {
+            Meteor.setTimeout(function() {
+              $('.ui.dimmer.page').remove();
+            }, 200);
+          }
+        });
         Meteor.setTimeout(function() {$('#postingModal').modal('show');}, 200);
       }
     });
@@ -83,7 +100,7 @@ Template.fullPostingForm.helpers({
   },
   'teamRegistered': function() {
     var thisUser = Meteor.user();
-    return (thisUser && thisUser.profile && thisUser.profile.team);   
+    return (thisUser && thisUser.profile && thisUser.profile.team._ids.length);;   
   }
 })
 

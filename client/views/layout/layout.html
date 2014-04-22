@@ -99,10 +99,35 @@
 
 <template name="miniTopbar">
 	<div class="ui darkgreen fixed inverted main menu" id="miniTopbar">
-		<span class="item">
+		{{#if currentUser}}
+		<span class="item leftItem">
 			<i class="reorder icon"></i>
 			<i class="suprsub icon"></i>
-		</span>	
+		</span>
+		<div class="right small-5 columns item">
+  			<div class="item" id="logout-holde">
+    			<div class="ui tiny button" id="logout-button">Log Out</div>
+  			</div>
+  		</div>
+		{{else}}
+			<div class="item" id="phoneLogin">
+				<div class="item small-6 columns">
+					<div class="ui icon input">
+						<input type="email" placeholder="Email" id="login-email">
+						<i class="user link icon"></i>
+					</div>
+				</div>
+				<div class="item small-6 columns">
+					<div class="ui icon input">
+						<input type="password" placeholder="Password" id="login-password">
+						<i class="lock link icon"></i>
+					</div>
+				</div>
+	  			<div class="item small-4 columns">
+	    			<div class="ui tiny button" id="login-button">Log In</div>
+	  			</div>
+			</div>
+		{{/if}}
 	</div>
 </template>
 

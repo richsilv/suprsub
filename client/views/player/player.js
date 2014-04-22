@@ -34,6 +34,15 @@ Template.availabilityVenues.events({
 
 // **************************
 
+Template.availabilityDays.events({
+  'click .tableCheckboxHolder': function() {
+    dataChange.set(true);
+    dataChange.dep.changed();
+  }
+})
+
+// **************************
+
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
     appVars.tabChoices.setKey('playerTab', 'pitchData');
@@ -264,11 +273,12 @@ Deps.autorun(function() {
     disableSave.set(true);
     if (appVars.circleChanged && appVars.circleChanged.get())
       disableSave.set(false);
-    if (dataChange && dataChange.get())
+    if (dataChange && dataChange.get()) {
       disableSave.set(false);
-    if (!dataOkay()) {
-      disableSave.set(true);
+      dataChange.value = false;
     }
+    if (!dataOkay())
+      disableSave.set(true);
   }
 });
 

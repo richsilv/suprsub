@@ -218,7 +218,7 @@
 			thisUser = user ? user : Meteor.user();
 
 		if (!thisUser || !thisUser.profile || !thisUser.profile.team || !thisUser.profile.team._ids || !thisUser.profile.team._ids.length)
-			return new Meteor.Error(500, "No user logged in or no team data for logged-in user");
+			throw new Meteor.Error(500, "No user logged in or no team data for logged-in user");
 		var defaultTokens = getDefaultTokens(thisUser.profile.team._ids[0]);
 
 		// GET TOKEN COLLECTION
@@ -235,7 +235,7 @@
 			if (k.code < 0) {
 				k = categorisePitch(thisToken);
 				if (k.code < 0) {
-					return new Meteor.Error(500, "Cannot understand '" + thisToken + "'.");
+					throw new Meteor.Error(500, "Cannot understand '" + thisToken + "'.");
 				}
 				else
 					richTokens[i] = {code: 9, data: k.data};
@@ -254,7 +254,7 @@
 		//PROCEED WITH ANALYSIS
 		if (_.some(richTokens, function(token) {return token.code === 11;})) return {cancel: true};
 		else if (_.some(richTokens, function(token) {return token.code === 13;})) return {suprsub: true};
-		if (richTokens[0].code !== 6) return new Meteor.Error(500, "Number of players must come first.");
+		if (richTokens[0].code !== 6) throw new Meteor.Error(500, "Number of players must come first.");
 		requestData.players = richTokens[0].data;
 		richTokens.shift();
 		var priceTokens = _.filter(richTokens, function(k) {return k.code === 17;});
@@ -263,10 +263,10 @@
 		if (_.filter(richTokens, function(k) {return k.code === 16;}).length)
 			requestData.onlyRingers = true;	
 		var ampmTokens = _.filter(richTokens, function(k) {return k.code === 3;});
-		if (ampmTokens.length > 1) return new Meteor.Error(500, "Only specify am/pm once.");
+		if (ampmTokens.length > 1) throw new Meteor.Error(500, "Only specify am/pm once.");
 		var dayTokens = _.filter(richTokens, function(k) {return k.code === 5;});
 		var today = new Date();
-		if (dayTokens.length > 1) return new Meteor.Error(500, "Only specify day once.");
+		if (dayTokens.length > 1) throw new Meteor.Error(500, "Only specify day once.");
 		else if (dayTokens.length === 1) {
 			requestData.dateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 			requestData.dateTime.setDate(requestData.dateTime.getDate() + (((dayTokens[0].data - today.getDay()) % 7) + 7) % 7);
@@ -276,7 +276,7 @@
 		}
 		var numberTokens = _.filter(richTokens, function(k) {return k.code === 6;});
 		var timeTokens = _.filter(richTokens, function(k) {return k.code === 7;});
-		if (timeTokens.length > 1 || numberTokens.length + timeTokens.length > 2) return new Meteor.Error(500, "Cannot understand time.");
+		if (timeTokens.length > 1 || numberTokens.length + timeTokens.length > 2) throw new Meteor.Error(500, "Cannot understand time.");
 		if (timeTokens.length) {
 			requestData.dateTime.setHours(timeTokens[0].data.hours);
 			requestData.dateTime.setMinutes(timeTokens[0].data.mins);
@@ -292,7 +292,7 @@
 		// Push forward one week if requested time is more than 30 minutes ago (or one day ahead if no date specified)
 		if (new Date().getTime() - 1800000 > requestData.dateTime.getTime()) requestData.dateTime.setDate(requestData.dateTime.getDate() + (dayTokens.length === 1 ? 7 : 1));
 		var placeTokens = _.filter(richTokens, function(k) {return k.code === 9;});
-		if (placeTokens.length > 1) return new Meteor.Error(500, "Only specify one location.");
+		if (placeTokens.length > 1) throw new Meteor.Error(500, "Only specify one location.");
 		if (placeTokens.length) requestData.location = placeTokens[0].data;
 		var genderTokens = _.filter(richTokens, function(k) {return k.code === 14;});
 		if (genderTokens.length) requestData.gender = genderTokens[0].data;
@@ -335,6 +335,8 @@
 		sentence += ". " + ['Male', 'Female'][posting.gender];
 		if (posting.teamSize) sentence += ", " + posting.teamSize + "-a-side";
 		if (posting.gameType) sentence += ", " + ["friendly", "competitive"][posting.gameType];
+		if (posting.price) sentence += ", £" + posting.price;
+		else sentence += ", free";
 		return sentence;
 	}
 
@@ -489,12 +491,12 @@
 			return false;
 		}
 		tokens = _.map(appConfig.Tokenizer.tokenize(mainText), function(token) {return token.toLowerCase();});
-		posting = parseRequest(tokens, thisUser);
-		if ('error' in posting) {
+		console.log(tokens);
+		if (tokens.indexOf('error') > -1) {
 			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " there was a problem with your request: " + posting.reason);
 			return false;
 		}
-		else if ('cancel' in posting) {
+		else if (tokens.indexOf('cancel') > -1) {
 			replyPosting = Tweets.findOne({twitterId: tweet.replyTo});
 			if (!replyPosting) {
 				Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, I don't know what you're trying to cancel.  Please reply to the confirmation tweet I sent you.");
@@ -509,7 +511,7 @@
 			Events.update({twitterId: origPosting.twitterId}, {$set: {cancelled: true}});
 			return false;
 		}
-		else if ('suprsub' in posting) {
+		else if (tokens.indexOf('suprsub') > -1) {
 			replyPosting = Tweets.findOne({twitterId: tweet.replyTo});
 			console.log("replyPosting:", replyPosting);
 			if (!replyPosting) {
@@ -557,7 +559,9 @@
 		}
 		else if (!thisUser.profile.team._ids.length)
 			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, but you don't have a team set up on SuprSub.com! Please log on to add one and you can then make postings.");
+		posting = parseRequest(tokens, thisUser);
 		posting = _.extend(posting, {team: thisUser.profile.team._ids[0]});
+		console.log(posting);
 		var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
 		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
 		return false;

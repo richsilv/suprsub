@@ -17,6 +17,7 @@
     "impicker": {},
     "Dropzonejs": {},
     "fast-render": {},
-    "hopscotch": {}
+    "hopscotch": {},
+    "reactive-relations": {}
   }
 }

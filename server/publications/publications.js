@@ -61,3 +61,5 @@ Meteor.publish("tweets", function(userId) {
 Meteor.publish("allTweets", function(x) {
 	return Tweets.find({}, {limit: x});
 });
+
+Meteor.publishReactive('feed');

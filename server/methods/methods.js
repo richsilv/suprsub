@@ -48,11 +48,15 @@ Meteor.methods({
 	},
 	analysePosting: function(string) {
 		var tokens = _.map(appConfig.Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
-		return (null, serverFunctions.parseRequest(tokens));
+		return serverFunctions.parseRequest(tokens);
 	},
 	analyseText: function(string) {
 		var tokens = _.map(appConfig.Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
-		return (null, serverFunctions.parseTokens(tokens));
+		return serverFunctions.parseTokens(tokens);
+	},
+	returnTokens: function(string) {
+		var tokens = _.map(appConfig.Tokenizer.tokenize(string), function(token) {return token.toLowerCase();});
+		return tokens;		
 	},
 	categoriseToken: function(token) {
 		return serverFunctions.categoriseToken(token);

@@ -58,7 +58,7 @@
 	font-size: 18px;
 }
 
-#miniTopbar .item {
+#miniTopbar .leftItem {
 	font-size: 1.4rem;
 	margin-left: 0px;
 	-webkit-transition: margin-left 0.5s;
@@ -66,18 +66,22 @@
 	margin-top: -0.3em;
 }
 
-#miniTopbar .item.offScreen {
+#miniTopbar .leftItem.offScreen {
 	margin-left: -100px;
 }
 
-#miniTopbar .item .icon {
+#miniTopbar .leftItem .icon {
 	display: inline-block;
 	vertical-align: middle;
 	font-size: 1.5em;
 }
 
-#miniTopbar .item .icon:not(.suprsub) {
-	/*vertical-align: middle;*/
+#miniTopbar #phoneLogin {
+	font-size: 0.4em;
+}
+
+#miniTopbar #logout-holder {
+	margin-top: 0.1em;
 }
 
 #socialBox {
