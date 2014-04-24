@@ -368,6 +368,12 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 	.rotate {
 		margin-top: -30px;
 	}
+	.checkboxDiv {
+	   width: 25px;
+	}
+	input[type=checkbox] {
+	   width: 25px;
+	}
 }
 
 /*Correct Semantic-UI small-screen table nonsense*/

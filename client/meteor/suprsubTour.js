@@ -33,8 +33,13 @@ Router.Tour = (function($) {
 		buttonClass: 'ui button',
 		buttonText: 'Next',
 		triangleSize: 20,
-		gapSize: 5
-	};
+		gapSize: 5,
+		width: 300
+	}
+
+	function setConfig(configObject) {
+		config = _.extend(config, configObject);
+	}
 
 	function loadTour(tour) {
 		tourDetails = tour;
@@ -65,24 +70,16 @@ Router.Tour = (function($) {
 			thisStep = tourDetails.steps[_index],
 			renderFunc = function() {
 				var target = $(thisStep.target)[0],
-					parent = target ? target.parentNode : document.body,
-					context = _.extend(config, thisStep);
-/*				UI.materialize(
-					HTML.DIV({class: "tourMain " + config.mainClass, style: "opacity: 0; position: absolute;"},
-						HTML.DIV({class: "tourInternal " + config.internalClass}, 
-							HTML.H3({class: "tourTitle " + config.titleClass}, thisStep.title), 
-							HTML.P({class: "tourContent " + config.contentClass}, thisStep.content),
-							HTML.DIV({class: "tourButton " + config.buttonClass}, thisStep.buttonText ? thisStep.buttonText : config.buttonText)
-							)
-						),
-					parent);*/
-				UI.insert(UI.renderWithData(Template.tourStep, context), parent);
+					parent = /*target ? target.parentNode :*/ document.body,
+					direction = screen.width > 640 ? thisStep.placement : thisStep.mobilePlacement || thisStep.placement,
+					context = _.extend(config, {direction: direction, tourWidth: config.width}, thisStep);
+				UI.insert(UI.renderWithData(Template.tourStep, context), /*parent*/ document.body);
 				var tourMain = $('.tourMain'),
 					dimensions = {
 						width: tourMain[0].scrollWidth,
 						height: tourMain[0].scrollHeight
 					},
-					offsets = getOffsets(target ? target : document.body, tourMain[0], thisStep.placement);
+					offsets = getOffsets(target ? target : document.body, tourMain[0], direction );
 				tourMain
 					.css('top', offsets.top)
 					.css('left', offsets.left);
@@ -105,41 +102,48 @@ Router.Tour = (function($) {
 			renderFunc.apply(this, arguments);
 	}
 
-	function getOffsets(parent, node, position) {
-		var width = node.scrollWidth,
-			height = node.scrollHeight,
-			offsets = {top: 0, left: 0};
+	function getOffsets(target, node, boxPosition) {
+		var targetWidth = target.scrollWidth,
+			targetHeight = target.scrollHeight,
+			nodeWidth = node.scrollWidth,
+			nodeHeight = node.scrollHeight,
+			offsets = $(target).offset();
 
-		switch (position) {
+		switch (boxPosition) {
 
 			case 'top':
-				offsets.top = - config.triangleSize - config.gapSize;
-				offsets.left = (parent.offsetWidth - width) / 2;
+				offsets.top += - nodeHeight - config.triangleSize - config.gapSize;
+				offsets.left += (targetWidth - nodeWidth) / 2;
 				break;
 
 			case 'bottom':
-				offsets.top = parent.offsetHeight + config.triangleSize + config.gapSize;
-				offsets.left = (parent.offsetWidth - width) / 2;
+				offsets.top += - nodeHeight + targetHeight + config.triangleSize + config.gapSize;
+				offsets.left +=  (targetWidth - nodeWidth) / 2;
 				break;
 
 			case 'left':
-				offsets.left = - config.triangleSize - config.gapSize;
-				offsets.top = (parent.offsetHeight - height) / 2;
+				offsets.left += - nodeWidth - config.triangleSize - config.gapSize;
+				offsets.top += (targetHeight / 2) - nodeHeight;
 				break;
 
 			case 'right':
-				offsets.left = parent.offsetWidth + config.triangleSize + config.gapSize;
-				offsets.top = (parent.offsetHeight - height) / 2;
+				offsets.left += targetWidth + config.triangleSize + config.gapSize;
+				offsets.top += (targetHeight / 2) - nodeHeight;
 				break;
 
 			default:
 			break;
 		}
 
+		offsets.left = Math.min( Math.max(0, offsets.left), screen.width - config.width );
+
+		console.log(target, boxPosition, offsets)
+
 		return offsets;
 	}
 
 	return {
+		setConfig: setConfig,
 		loadTour: loadTour,
 		getTour: getTour,
 		nextStep: nextStep,

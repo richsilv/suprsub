@@ -7,6 +7,7 @@ var tour = {
 			target: "#fullPostingForm",
 			targetTemplate: "homePage",
 			placement: "right",
+			mobilePlacement: "bottom",
 			page: 'home'
 		},
 
@@ -16,6 +17,7 @@ var tour = {
 			target: "#activityHeader",
 			targetTemplate: "activityFeed",
 			placement: "bottom",
+			mobilePlacement: "top",
 			page: 'home'
 		},
 
@@ -25,6 +27,7 @@ var tour = {
 			target: "#playerForm",
 			targetTemplate: "playerForm",
 			placement: "right",
+			mobilePlacement: "bottom",
 			page: 'playerDetails'		
 		},
 
@@ -34,6 +37,7 @@ var tour = {
 			target: "#gameFormat",
 			targetTemplate: "teamSettings",
 			placement: "right",
+			mobilePlacement: "bottom",
 			page: 'teamDetails'
 		},
 
@@ -43,6 +47,7 @@ var tour = {
 			target: "#toggleTeammates",
 			targetTemplate: "playerButtons",
 			placement: "left",
+			mobilePlacement: "top",
 			page: 'teamDetails'
 		},
 
@@ -52,6 +57,7 @@ var tour = {
 			target: "#selectedContact",
 			targetTemplate: "settingsBox",
 			placement: "right",
+			mobilePlacement: "bottom",
 			page: 'settings',
 			buttonText: 'Done'
 		},

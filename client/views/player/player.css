@@ -191,6 +191,8 @@ input[type=range]:active::-moz-range-thumb {
 	width: auto;
 	margin-left: 0;
 	}
+
+	
 }
 
 /*For medium width screens only*/
