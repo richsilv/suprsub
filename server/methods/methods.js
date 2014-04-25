@@ -81,9 +81,9 @@ Meteor.methods({
 		}, function(err, res) {fut.return({err: err, res: res});});
 		return fut.wait();
 	},
-	twitterSendMessage: function(string) {
+	twitterSendMessage: function(string, twitterId) {
 		var user = Meteor.user().services.twitter, fut = new Future();
-		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
+		if (!(user || twitterId)) return new Meteor.Error(500, "User has not linked their Twitter account.");
 		var Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
 			consumer_secret:      appConfig.twitterconfig.secret,
@@ -92,7 +92,7 @@ Meteor.methods({
 		});
 		Twit.post('direct_messages/new', 
 		{
-			user_id: user.id,
+			user_id: twitterId ? twitterId : user.id,
 			text: string
 		}, function(err, res) {fut.return({err: err, res: res});});
 		return fut.wait();

@@ -18,6 +18,7 @@
     "Dropzonejs": {},
     "fast-render": {},
     "hopscotch": {},
-    "reactive-relations": {}
+    "reactive-relations": {},
+    "iron-router-tour": {"path": "packages/iron-router-tour"}
   }
 }

@@ -542,8 +542,8 @@
 				else if (thisUser.profile.contact.indexOf(1) > -1) playerContactDeets = thisUser.services.facebook.link;
 				else playerContactDeets = thisUser.services.emails[0].address;
 				if (teamCaptain.profile.contact.indexOf(0) > -1) {
-					teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
-					Meteor.call('twitterReplyTweet', tweet.twitterId, teamCaptContactDeets + " your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets);		
+					teamCaptContactDeets = teamCaptain.services.twitter.screenName;
+					Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptContactDeets);		
 				}
 				else if (teamCaptain.profile.contact.indexOf(1) > -1) {
 					teamCaptContactDeets = teamCaptain.services.facebook.link;
@@ -554,7 +554,7 @@
 					var fullUpText = (thisEvent.players === 0) ? ' Your posting is now filled.' : '';
 					Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "Your have a SuprSub!" + fullupText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
 				}
-				Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets);
+				Meteor.call('twitterSendMessage', "Thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets, tweet.userName);
 			}
 		}
 		else if (!thisUser.profile.team._ids.length)

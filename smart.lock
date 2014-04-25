@@ -22,13 +22,16 @@
       "Dropzonejs": {},
       "fast-render": {},
       "hopscotch": {},
-      "reactive-relations": {}
+      "reactive-relations": {},
+      "iron-router-tour": {
+        "path": "packages/iron-router-tour"
+      }
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.15.2",
-        "commit": "aafa100ef174a644ebfc426c3f7ee922032e2a10"
+        "tag": "v0.16.1",
+        "commit": "46da3245561e5e64f03b1e2c8807cc6125aa4d98"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
@@ -42,8 +45,8 @@
       },
       "moment": {
         "git": "https://github.com/acreeger/meteor-moment.git",
-        "tag": "v2.5.1",
-        "commit": "8c9bc5d3fc96705057737cb9743d555417f6e551"
+        "tag": "v2.6.0",
+        "commit": "26156df681750fd6e6ed77043eef32b6653ebbdf"
       },
       "zurb-foundation": {
         "git": "https://github.com/MixinLabs/meteor-foundation.git",
@@ -52,8 +55,8 @@
       },
       "houston": {
         "git": "https://github.com/gterrono/houston.git",
-        "tag": "v1.0.2",
-        "commit": "c9af02ec7b52b5ea061a36d260386aa25644507d"
+        "tag": "v1.0.3",
+        "commit": "5aa4106512550887cd8756dc60c75ed03e9086d1"
       },
       "smart-collections": {
         "git": "https://github.com/arunoda/meteor-smart-collections.git",
@@ -99,6 +102,9 @@
         "git": "https://github.com/dburles/reactive-relations.git",
         "tag": "v0.1.6",
         "commit": "457f270d945b212b55cae50800a0c8851f35fcba"
+      },
+      "iron-router-tour": {
+        "path": "packages/iron-router-tour"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
