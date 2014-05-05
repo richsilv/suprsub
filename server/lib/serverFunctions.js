@@ -65,6 +65,7 @@
 			console.log("Warning from Twitter.");
 			console.log(warning);		
 		});
+		appConfig.activeStream = stream;
 		return stream;
 	}
 
