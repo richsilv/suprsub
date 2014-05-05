@@ -70,7 +70,7 @@ Meteor.methods({
 	},
 	fbSendRequest: function(string) {
 		var user = Meteor.user().services.facebook, fut = new Future();
-		if (!user) return new Meteor.Error(500, "User has not linked their Facebook account.");
+		if (!user) throw new Meteor.Error(500, "User has not linked their Facebook account.");
 		HTTP.call('POST', 'https://graph.facebook.com/' + user.id + '/apprequests', {params: 
 			{
 				access_token: user.accessToken,
@@ -83,7 +83,7 @@ Meteor.methods({
 	},
 	twitterSendMessage: function(string, twitterId) {
 		var user = Meteor.user().services.twitter, fut = new Future();
-		if (!(user || twitterId)) return new Meteor.Error(500, "User has not linked their Twitter account.");
+		if (!(user || twitterId)) throw new Meteor.Error(500, "User has not linked their Twitter account.");
 		var Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
 			consumer_secret:      appConfig.twitterconfig.secret,
@@ -127,7 +127,7 @@ Meteor.methods({
 	twitterBefriendSuprSub: function(user) {
 		var fut = new Future();
 		if (!user) user = Meteor.user().services.twitter;
-		if (!user) return new Meteor.Error(500, "User has not linked their Twitter account.");
+		if (!user) throw new Meteor.Error(500, "User has not linked their Twitter account.");
 		var Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
 			consumer_secret:      appConfig.twitterconfig.secret,
@@ -146,6 +146,9 @@ Meteor.methods({
 			});
 		});
 		return fut.wait();
+	},
+	twitterStreaming: function() {
+		return appConfig.streaming === true;
 	},
 	addRandomPlayer: function(n) {
 		serverFunctions.addRandomPlayer(n);

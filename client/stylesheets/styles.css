@@ -223,6 +223,7 @@ i.suprsub.icon:before{
 	-o-transform: rotate(90deg);
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
 	margin-top:-25px;
+	width: 20px;
 }
 .rotated_cell {
 	height:90px;
