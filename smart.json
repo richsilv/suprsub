@@ -17,8 +17,7 @@
     "impicker": {},
     "Dropzonejs": {},
     "fast-render": {},
-    "hopscotch": {},
     "reactive-relations": {},
-    "iron-router-tour": {"path": "packages/iron-router-tour"}
+    "iron-router-tour": {}
   }
 }

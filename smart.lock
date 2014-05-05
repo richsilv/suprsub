@@ -21,11 +21,8 @@
       "impicker": {},
       "Dropzonejs": {},
       "fast-render": {},
-      "hopscotch": {},
       "reactive-relations": {},
-      "iron-router-tour": {
-        "path": "packages/iron-router-tour"
-      }
+      "iron-router-tour": {}
     },
     "packages": {
       "semantic-ui": {
@@ -55,8 +52,8 @@
       },
       "houston": {
         "git": "https://github.com/gterrono/houston.git",
-        "tag": "v1.0.3",
-        "commit": "5aa4106512550887cd8756dc60c75ed03e9086d1"
+        "tag": "v1.0.4",
+        "commit": "e76bda40587ac80ce51ee417047be8272664625c"
       },
       "smart-collections": {
         "git": "https://github.com/arunoda/meteor-smart-collections.git",
@@ -90,13 +87,8 @@
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
-        "tag": "v0.2.3",
-        "commit": "d56bd4a4d222bf176241cd6e756aa349cb24c260"
-      },
-      "hopscotch": {
-        "git": "https://github.com/Dsyko/meteor-hopscotch.git",
-        "tag": "v0.1.2",
-        "commit": "2f9ed5cf2813198fbb6ed6030ced40f0b84775a8"
+        "tag": "v0.2.4",
+        "commit": "160a64bd61792f53a7c8848c5e979a953be13564"
       },
       "reactive-relations": {
         "git": "https://github.com/dburles/reactive-relations.git",
@@ -104,7 +96,9 @@
         "commit": "457f270d945b212b55cae50800a0c8851f35fcba"
       },
       "iron-router-tour": {
-        "path": "packages/iron-router-tour"
+        "git": "https://github.com/richsilv/iron-router-tour.git",
+        "tag": "v0.1.2",
+        "commit": "652974147e971edb4e6a2831e44422a13f3ae867"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
@@ -113,13 +107,18 @@
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
-        "tag": "v0.1.2",
-        "commit": "35e0c6112df2b4cfeb60b559276a93cac5ee2dd6"
+        "tag": "v0.2.0",
+        "commit": "0ac0fede45bbc87003f13363f7bf50dfb4102cf5"
       },
       "spin": {
         "git": "https://github.com/SachaG/meteor-spin.git",
         "tag": "v0.2.2",
         "commit": "3f655f0016228e4195acc784c45d3e3a247dc39f"
+      },
+      "scss": {
+        "git": "https://github.com/fourseven/meteor-scss.git",
+        "tag": "v0.8.4",
+        "commit": "11af0da643944d241fe7d173af76162c4b670dee"
       }
     }
   }
