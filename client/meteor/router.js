@@ -205,5 +205,21 @@ Router.map(function() {
         pitches: Pitches.find({}, {sort: {name: 1}})
       }
     }
+  });
+
+  this.route('logging', {
+    path: '/logging',
+    controller: suprsubController,
+    template: 'logging',
+    waitOn: function() {
+      return [
+        Subs.logging
+      ];
+    },
+    data: function() {
+      return {
+        logs: Logging.find()
+      }
+    }
   }); 
 });

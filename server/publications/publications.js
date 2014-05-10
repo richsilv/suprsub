@@ -62,4 +62,8 @@ Meteor.publish("allTweets", function(x) {
 	return Tweets.find({}, {limit: x});
 });
 
+Meteor.publish("logging", function() {
+	return Logging.find({dateTime: {$gte: new Date(new Date().getTime() - 6000000)}});
+});
+
 Meteor.publishReactive('feed');

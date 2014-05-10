@@ -1,3 +1,10 @@
+var sendToLogger = {
+	log: function(s) {
+		console.log(s);
+		Logging.insert({dateTime: new Date(), log: s});
+	}
+}
+
 Meteor.methods({
 	pitchesWithin: function(center, distance) {
 		var ratio = 6.283184 / 360;
@@ -319,5 +326,18 @@ Meteor.methods({
 	},
 	evaluate: function(string) {
 		return eval(string);
+	},
+	logThis: function(log) {
+		var console = sendToLogger;
+		console.log(log);
+	},
+	runFunction: function(funcName, args) {
+		var func = global, dotLoc = funcName.indexOf('.');
+		while ((typeof func != undefined) && dotLoc > -1) {
+			func = func[funcName.slice(0, dotLoc)];
+			dotLoc = funcName.indexOf('.');
+			funcName = funcName.slice(dotLoc + 1);
+		}
+		return (func && func.apply(this, args));
 	}
 });

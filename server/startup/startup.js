@@ -12,32 +12,6 @@ Meteor.startup(function() {
 
 	// COLLECTION OBSERVERS
 
-	var watchTweets, watchEvents;
-
-	Meteor.setInterval(function() {
-		if (watchTweets)
-			watchTweets.stop();
-		if (watchEvents)
-			watchEvents.stop();
-
-		watchTweets = Tweets.find({consumed: {$exists: false}}).observeChanges({
-			added: function(tweetId) {
-				var tweet = Tweets.findOne(tweetId);
-				serverFunctions.consumeTweet(Tweets.findOne(tweetId));
-				Tweets.update(tweet, {$set: {consumed: true}});
-			}
-		});
-		watchEvents = Events.find({posted: {$exists: false}}).observeChanges({
-			added: function(eventId) {
-				var thisEvent = Events.findOne(eventId);
-				Events.update(thisEvent, {$set: {period: serverFunctions.getPeriodCode(thisEvent.dateTime)}});
-				var players = serverFunctions.matchingPlayers(eventId);
-				if (players.length)	serverFunctions.distributeEvent(players, Events.findOne(eventId));
-				Events.update(eventId, {$set: {posted: true}});
-			}
-		})
-	}, 300000);;
-
 	// STARTUP PROCESSES
 	Pitches._ensureIndex({ location : "2d" });
 	if (Meteor.settings && Meteor.settings.streamTwitter) {

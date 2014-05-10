@@ -22,7 +22,8 @@
       "Dropzonejs": {},
       "fast-render": {},
       "reactive-relations": {},
-      "iron-router-tour": {}
+      "iron-router-tour": {},
+      "collection-hooks": {}
     },
     "packages": {
       "semantic-ui": {
@@ -87,8 +88,8 @@
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
-        "tag": "v0.2.4",
-        "commit": "160a64bd61792f53a7c8848c5e979a953be13564"
+        "tag": "v0.2.5",
+        "commit": "93e2fb334e55fbe9b5ebb2a2e65964018658f43e"
       },
       "reactive-relations": {
         "git": "https://github.com/dburles/reactive-relations.git",
@@ -100,6 +101,11 @@
         "tag": "v0.1.2",
         "commit": "652974147e971edb4e6a2831e44422a13f3ae867"
       },
+      "collection-hooks": {
+        "git": "https://github.com/matb33/meteor-collection-hooks.git",
+        "tag": "v0.6.7",
+        "commit": "f1d2ac629864edda09df6c955fa5ff3df26f739c"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.4",
@@ -107,8 +113,8 @@
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
-        "tag": "v0.2.0",
-        "commit": "0ac0fede45bbc87003f13363f7bf50dfb4102cf5"
+        "tag": "v0.2.1",
+        "commit": "f44d171badcc2e6f87c752580be16c955cdb3bb8"
       },
       "spin": {
         "git": "https://github.com/SachaG/meteor-spin.git",

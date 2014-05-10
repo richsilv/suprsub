@@ -331,6 +331,7 @@ Template.otherInfo.events({
       },500);
       window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
       appVars.saveCalc.changed();
+      google.maps.event.trigger(pitchMap, 'bounds_changed');
     }
   },
   'click #addVenue': function() {

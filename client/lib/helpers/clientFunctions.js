@@ -34,7 +34,8 @@ clientFunctions = (function() {
 		$('#homeGround input').val(m.title);
 		$('#homeGround input').attr('id', m.pitch_ID);
 		appVars.saveCalc.changed();
-		window.scrollTo(window.scrollX, 0);
+		google.maps.event.trigger(pitchMap, 'bounds_changed');
+		// window.scrollTo(window.scrollX, 0);
 	};
 
 	var loadGoogleMaps = function(circle) {
@@ -162,21 +163,25 @@ clientFunctions = (function() {
 			neLng = bounds.getNorthEast().lng(),
 			swLat = bounds.getSouthWest().lat(),
 			swLng = bounds.getSouthWest().lng(),
+			currentPitch = $('#homeGround input').attr('id'); // Router.current().route.currentTeamId ? Teams.findOne(Router.current().route.currentTeamId.value).homeGround : null,
 			pitches = Pitches.find({
 				'location.lat': {$gte: swLat, $lte: neLat},
-				'location.lng': {$gte: swLng, $lte: neLng}
+				'location.lng': {$gte: swLng, $lte: neLng},
+				_id: {$ne: currentPitch}
 		}, {
 			limit: maxPitches ? maxPitches : appVars.maxPitches,
 			sort: {priority: -1}
 		}).fetch();
+		if (currentPitch) pitches.unshift(Pitches.findOne(currentPitch));
 		for (var i=0; i < pitches.length; i++) {
 			var marker = new google.maps.Marker({
 				position: pitches[i].location,
 				map: pitchMap,
 				title:pitches[i].owner + " " + pitches[i].name,
-				icon: 'images/soccerv2.png',
+				icon: (pitches[i]._id === currentPitch) ? 'images/soccerv3.png' : 'images/soccerv2.png',
 				pitch_ID: pitches[i]._id
 			});
+			if (pitches[i]._id === currentPitch) marker.setZIndex(1000);
 			markersArray.push(marker);
 			if (!circle) {
 				attachMarkerEvent(marker, markerClickEvent);

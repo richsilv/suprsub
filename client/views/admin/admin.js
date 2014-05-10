@@ -128,20 +128,20 @@ function objectFill(obj, elem, parent, path, previous) {
 	var keys = (!obj || obj instanceof Array) ? [] : Object.getOwnPropertyNames(obj);
 	if (keys.length) {
 		var	propertyString = keys.reduce(function(s, r) {
-			var t = s + SPAN({cls: 'keyName'}, [r + ': ']).outerHTML;
+			var t = s + HTML.SPAN({cls: 'keyName'}, [r + ': ']).outerHTML;
 			if (objPath(obj, r) instanceof Array) {
 				return capString(objPath(obj, r).reduce(function(u, v) {
-					return u + SPAN({cls: "objId"}, [ v.toString() ]).outerHTML + ', ';
+					return u + HTML.SPAN({cls: "objId"}, [ v.toString() ]).outerHTML + ', ';
 				}, t));
 			}
 			else if (isId(objPath(obj, r))) {
-				return t + SPAN({cls: "objId"}, [ objPath(obj, r).toString() ]).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN({cls: "objId"}, [ objPath(obj, r).toString() ]).outerHTML + HTML.BR().outerHTML;
 			}
 			else if (isTwitterId(objPath(obj, r))) {
-				return t + SPAN({cls: "twitterId"}, [ objPath(obj, r).toString() ]).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN({cls: "twitterId"}, [ objPath(obj, r).toString() ]).outerHTML + HTML.BR().outerHTML;
 			}
 			else if (objPath(obj, r) instanceof Date) {
-				return  t + objPath(obj, r).toString() + BR().outerHTML;
+				return  t + objPath(obj, r).toString() + HTML.BR().outerHTML;
 			}
 			else if (objPath(obj, r) instanceof Object) {
 				var params = {
@@ -149,7 +149,7 @@ function objectFill(obj, elem, parent, path, previous) {
 					path: (path ? path + '.' : '') + r,
 					parent: parent
 				};
-				return t + SPAN(params, ['Object']).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN(params, ['Object']).outerHTML + HTML.BR().outerHTML;
 			}
 			else if (parent) {
 				var params = {
@@ -157,10 +157,10 @@ function objectFill(obj, elem, parent, path, previous) {
 					path: (path ? path + '.' : '') + r,
 					parent: parent
 				};
-				return t + SPAN(params, [ objPath(obj, r).toString() ]).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN(params, [ objPath(obj, r).toString() ]).outerHTML + HTML.BR().outerHTML;
 			}
 			else
-				return  t + objPath(obj, r) + BR().outerHTML;
+				return  t + objPath(obj, r) + HTML.BR().outerHTML;
 		}, '');
 		$(elem).html(propertyString);
 	}
@@ -168,7 +168,7 @@ function objectFill(obj, elem, parent, path, previous) {
 		var	propertyString = obj.reduce(function(s, r) {
 			var t = s;
 			if (isId(r)) {
-				return t + SPAN({cls: "objId"}, [ r.toString() ]).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN({cls: "objId"}, [ r.toString() ]).outerHTML + HTML.BR().outerHTML;
 			}
 			else if (r instanceof Object) {
 				var params = {
@@ -176,7 +176,7 @@ function objectFill(obj, elem, parent, path, previous) {
 					path: (path ? path + '.' : '') + r,
 					parent: parent
 				};
-				return t + SPAN(params, ['Object']).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN(params, ['Object']).outerHTML + HTML.BR().outerHTML;
 			}
 			else if (parent) {
 				var params = {
@@ -184,10 +184,10 @@ function objectFill(obj, elem, parent, path, previous) {
 					path: (path ? path + '.' : '') + r,
 					parent: parent
 				};
-				return t + SPAN(params, [ r.toString() ]).outerHTML + BR().outerHTML;
+				return t + HTML.SPAN(params, [ r.toString() ]).outerHTML + HTML.BR().outerHTML;
 			}
 			else
-				return  t + r + BR().outerHTML;
+				return  t + r + HTML.BR().outerHTML;
 		}, '');
 		$(elem).html(propertyString);		
 	}

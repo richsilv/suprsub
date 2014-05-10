@@ -30,7 +30,18 @@ appConfig = (function() {
 			{name: 'price', regex: /^(?:£)([0-9]+\.?[0-9]{0,2})$/, code: 17, transform: function(token) {return parseFloat(/^(?:£)([0-9]+\.?[0-9]{0,2})$/.exec(token)[1], 10);}}
 					],
 		Natural: Natural,
-		Tokenizer: new Natural.RegexpTokenizer( { pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/ } )
+		Tokenizer: new Natural.RegexpTokenizer( { pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/ } ),
+		sendToLogger: {
+			log: function() {
+				console.log(arguments);
+				var e = new Error('dummy'),
+					stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
+					.replace(/^\s+at\s+/gm, '')
+					.replace(/^Object.<anonymous>\s*\(/gm, '{anonymous}()@')
+					.split('\n');
+				Logging.insert({dateTime: new Date(), log: arguments, stack: stack});
+			}
+		}
 
 	};
 

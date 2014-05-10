@@ -29,6 +29,7 @@
 		var stream = Twit.stream('user', {with: 'user'});
 		stream.on('tweet', Meteor.bindEnvironment(
 			function (tweet) {
+				var console = appConfig.sendToLogger;
 				var thisString = "Received " + tweet.id_str;
 				if (tweet.in_reply_to_status_id) thisString += ", reply to " + tweet.in_reply_to_status_id_str;
 					console.log(thisString + ", sent by " + tweet.user.screen_name);
@@ -360,9 +361,11 @@
 		if (!event || !event.dateTime || !event.location) return [];
 		var periodCode = getPeriodCode(event.dateTime),
 			query = {'profile.player.venues': event.location};
+		appConfig.sendToLogger.log("Looking for players available at " + event.location + " at time code " + periodCode);
 		query['profile.player.availability.' + periodCode] = {$exists: true};
 		query._id = {$ne: event.userId};
-		return Meteor.users.find(query, {fields: {_id: true}}).fetch();
+		var results = Meteor.users.find(query, {fields: {_id: true}}).fetch();
+		return results;
 	}
 
 	function allMatches() {
@@ -473,7 +476,9 @@
 
 	function consumeTweet(tweet) {
 		var thisUser, posting, results, replyPosting,
-			mainText = removeHandles(tweet.text);
+			mainText = removeHandles(tweet.text),
+			console = appConfig.sendToLogger;
+		console.log("Consuming tweet: " + mainText);
 		if (tweet.userTwitterId === appConfig.twitterToken.id) {
 			console.log("Tweet sent by SuprSub");
 			var outGoing = parseTokens(appConfig.Tokenizer.tokenize(tweet.text)),
@@ -564,14 +569,15 @@
 		posting = _.extend(posting, {team: thisUser.profile.team._ids[0]});
 		console.log(posting);
 		var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
-		Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + ' you just posted: "' + newPosting.sentence + '" Thanks!');
+		Meteor.call('twitterReplyTweet', tweet.twitterId, ('@' + tweet.userName + '  posted: "' + newPosting.sentence + '" Tks!').slice(0,140));
 		return false;
 	}
 
 	function signupPlayer(thisUser, thisEvent) {
 		var thisEvent = (typeof thisEvent === "string" ? Events.find(thisEvent) : thisEvent),
 			teamCaptain = Meteor.users.findOne(thisEvent.userId),
-			teamCaptContactDeets, playerContactDeets;
+			teamCaptContactDeets, playerContactDeets,
+			console = appConfig.sendToLogger;
 		if (!thisEvent || !teamCaptain || thisEvent.players <= 0)
 			throw new Meteor.Error(500, "Posting cannot be matched or is already filled", "EventID: " + (thisEvent ? thisEvent._id : "undefined") + ", Team Captain: " + (teamCaptain ? teamCaptain._id : "undefined"));
 		Events.update(thisEvent, {$push: {matched: thisUser._id}, $inc: {players: -1}}, function() {
@@ -608,13 +614,17 @@
 	}
 
 	function distributeEvent(players, event) {
-		var team = Meteor.users.findOne({_id: event.userId});
+		if (typeof event === "string") event = Events.findOne({_id: event});
+		var team = Teams.findOne({_id: event.team}),
+			console = appConfig.sendToLogger;
 		for (var i = 0, l = players.length; i < l; i++) {
 			var thisPlayer = Meteor.users.findOne({_id: players[i]._id});
+			console.log("Sending to ", thisPlayer);
 			for (var j = 0, m = thisPlayer.profile.contact.length; j < m; j++) {
 				switch (thisPlayer.profile.contact[j]) {
 					case 0:
-						var tweetText = "@" + thisPlayer.services.twitter.screenName + ' ' + team.profile.team.name + ": " + event.sentence + ' _id' + event._id;
+						var tweetText = "@" + thisPlayer.services.twitter.screenName + ' ' + event.sentence + ' _id' + event._id;
+						if (tweetText.length > 140) tweetText = tweetText.slice(0,137) + '...';
 						console.log("Tweeting: " + tweetText);
 						Meteor.call('twitterSendTweet', tweetText);
 						break;
