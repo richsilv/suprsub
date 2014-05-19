@@ -24,7 +24,7 @@ templateAttach = function(template, callback, data) {
 		UI.insert(UI.renderWithData(template, data), document.body);
 	else
 		UI.insert(UI.render(template), document.body);
-	callback && callback.apply(this, arguments);
+	return callback && callback.apply(this, arguments);
 };
 
 confirmModal = function(options, postRender) {

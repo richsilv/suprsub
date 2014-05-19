@@ -217,17 +217,21 @@ i.suprsub.icon:before{
 }
 
 .rotate {
+	margin-top:-25px;
+	width: 20px;
 	-webkit-transform: rotate(90deg);
 	-moz-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
-	margin-top:-25px;
-	width: 20px;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	transform: translate3d(0,0,0);
 }
 .rotated_cell {
 	height:90px;
 	vertical-align:bottom
+	transform: translate3d(0,0,0);
 }
 
 .semitranslucent {

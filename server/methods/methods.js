@@ -105,6 +105,7 @@ Meteor.methods({
 		return fut.wait();
 	},
 	twitterSendTweet: function(string) {
+		var console = appConfig.sendToLogger;
 		console.log("sending tweet: " + string);
 		var fut = new Future(), Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
@@ -119,6 +120,7 @@ Meteor.methods({
 		fut.wait();
 	},
 	twitterReplyTweet: function(tweetId, string) {
+		var console = appConfig.sendToLogger;
 		console.log("sending reply: " + string + " to tweetId " + tweetId);
 		var fut = new Future(), Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
@@ -180,6 +182,7 @@ Meteor.methods({
 		return "done";
 	},
 	sendTeamCode: function(code) {
+		var console = appConfig.sendToLogger;
 		var contacts = Meteor.user().profile.contact,
 			team = Teams.findOne(code),
 			suprsubRoot = Meteor.absoluteUrl();
@@ -213,6 +216,7 @@ Meteor.methods({
 		}
 	},
 	sendRingerCode: function(teamId, name) {
+		var console = appConfig.sendToLogger;
 		var contacts = Meteor.user().profile.contact,
 			team = Teams.findOne(teamId),
 			code = team.ringerCode
@@ -256,6 +260,7 @@ Meteor.methods({
 		return (team && team.ringers) ? Meteor.users.find({_id: {$in: team.ringers}}, {fields: {'profile.name': true}}).fetch() : [];
 	},
 	joinTeam: function(teamCode) {
+		var console = appConfig.sendToLogger;
 		var ringerTeam = Teams.findOne({ringerCode: teamCode});
 		if (ringerTeam) {
 			Teams.update(ringerTeam, {$push: {ringers: Meteor.userId()}});
@@ -328,7 +333,7 @@ Meteor.methods({
 		return eval(string);
 	},
 	logThis: function(log) {
-		var console = sendToLogger;
+		var console = appConfig.sendToLogger;
 		console.log(log);
 	},
 	runFunction: function(funcName, args) {

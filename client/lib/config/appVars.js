@@ -1,5 +1,5 @@
 var tour = {
-	id: "hello-hopscotch",
+	id: "welcome",
 	steps: [
 		{
 			title: "Welcome",

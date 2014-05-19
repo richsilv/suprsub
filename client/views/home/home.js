@@ -213,6 +213,7 @@ Template.postingModal.events({
   'click #makePosting': function() {
     Meteor.call('makePosting', appVars.newPosting.get(), {source: 'web'}, function(err, res) {
       if (err) alert("Could not make posting!");
+      console.log(err);
       $('#postingModal').modal('hide');
     });
   },
