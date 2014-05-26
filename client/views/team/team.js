@@ -402,7 +402,7 @@ Template.newVenueBox.events({
     var locationName = $('#locationName').val(),
         locationAddress = $('#locationAddress').val();
     if (locationName && locationAddress && !NewVenues.findOne({name: locationName, address: locationAddress})) {
-      NewVenues.insert({name: locationName, address: locationAddress});
+      NewVenues.insert({name: locationName, address: locationAddress, user: Meteor.userId()});
       var newdiv = HTML.DIV({cls: "ui purple label"}, ["Your location has been added to the approval queue!"]);
       UI.materialize(newdiv, $('#newVenueBox .ui.grid .column')[0]);
       Meteor.setTimeout(function() {tabChoices.setKey('newVenue', false);}, 2000);

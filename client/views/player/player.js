@@ -1,5 +1,10 @@
 var dataChange = new suprsubDep(false),
     disableSave = new suprsubDep(true);
+/*    appVars.availabilitySession = new suprsubDep({
+      "0/0": false, "0/1": false, "0/2": false, "0/3": false, "0/4": false, "0/5": false, "0/6": false,
+      "1/0": false, "1/1": false, "1/2": false, "1/3": false, "1/4": false, "1/5": false, "1/6": false, 
+      "2/0": false, "2/1": false, "2/2": false, "2/3": false, "2/4": false, "2/5": false, "2/6": false, 
+      });*/
 
 Template.pitchData.helpers({
   getVenues: function() {
@@ -35,11 +40,12 @@ Template.availabilityVenues.events({
 // **************************
 
 Template.availabilityDays.events({
-  'click .tableCheckboxHolder': function() {
+  'click input': function(event) {
+    appVars.availabilitySession.setKey(event.currentTarget.id, event.currentTarget.checked);
     dataChange.set(true);
     dataChange.dep.changed();
   }
-})
+});
 
 // **************************
 
@@ -190,19 +196,16 @@ Template.availability.helpers({
   periods: function() {
     return appVars.periods;
   },
-  extendedData: function() {
-    return {periodCode: this.periodCode, days: appVars.days};
+  extendedData: function(periodCode) {
+    var avail = appVars.availabilitySession.get(), days = [];
+    _.each(avail, function(value, key) {
+      if (key.slice(0,1) === periodCode.toString()) days.push({period: key, value: value});
+    });
+    return {
+      days: days
+    };
   }
 });
-
-Template.availability.rendered = function() {
-  var thisUser = Meteor.user();
-  if (thisUser && thisUser.profile && thisUser.profile.player && thisUser.profile.player.availability) {
-    for (var i in thisUser.profile.player.availability) {
-      if (thisUser.profile.player.availability[i]) document.getElementById(i).checked = true;
-    }
-  }
-};
 
 // **********************************************
 
@@ -285,11 +288,11 @@ Deps.autorun(function() {
 // ***************** UTILITY *************************
 
 function savePlayerData(event) {
-  var availability = {},
+  var availability = appVars.availabilitySession.get(),
       tableElements = $('#availabilityTable input');
-  for (var i = 0, l = tableElements.length; i < l; i++) {
+/*  for (var i = 0, l = tableElements.length; i < l; i++) {
     if (tableElements[i].checked) availability[tableElements[i].id] = true;
-  }
+  }*/
   var thisUser = Meteor.user();
     pageData = {
     age: parseInt($('#ageDropdown').dropdown('get value'), 10),

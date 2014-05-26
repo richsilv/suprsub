@@ -147,7 +147,7 @@
 				{{#each periods}}
 					<tr>
 						<td class="tablePeriod">{{this.name}}</td>
-						{{> availabilityDays extendedData}}
+						{{> availabilityDays extendedData this.periodCode}}
 					</tr>
 				{{/each}}
 			</tbody>
@@ -158,8 +158,8 @@
 	{{#each days}}
 		<td class="tableCheckboxHolder">
 			<div class="ui">
-				<input type="checkbox" id="{{../periodCode}}/{{dayCode}}">
-				<label for="{{../periodCode}}/{{dayCode}}"></label>
+				<input type="checkbox" id="{{period}}" checked={{value}}>
+				<label for="{{period}}"></label>
 				<div class="checkboxDiv"></div>
 			</div>
 		</td>

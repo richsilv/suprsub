@@ -43,6 +43,7 @@ Router.map(function() {
     },
     before: function() {
       appVars.circleSize = new suprsubDep(8000);
+      appVars.availabilitySession = new suprsubDep(Meteor.user().profile.player.availability);
     }
   });
 
@@ -134,7 +135,7 @@ Router.map(function() {
       console.log(this.params.eventCode);
       var thisEvent = Events.findOne({_id: this.params.eventCode});
       if (thisEvent) thisEvent.pitch = null;
-      if (thisEvent  && thisEvent.players > 0) {
+      if (thisEvent && thisEvent.players > 0) {
         UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
         $('#signupModal').modal('setting', {
           onHidden: function() {
