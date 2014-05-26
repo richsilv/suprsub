@@ -550,6 +550,7 @@
 				if (thisUser.profile.contact.indexOf(0) > -1) playerContactDeets = '@' + thisUser.services.twitter.screenName;
 				else if (thisUser.profile.contact.indexOf(1) > -1) playerContactDeets = thisUser.services.facebook.link;
 				else playerContactDeets = thisUser.services.emails[0].address;
+				console.log("Notifying:", teamCaptain.profile.contact);
 				if (teamCaptain.profile.contact.indexOf(0) > -1) {
 					teamCaptContactDeets = teamCaptain.services.twitter.screenName;
 					Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.id);		
@@ -559,21 +560,24 @@
 					// INSERT FACEBOOK CONTACT UPDATE //
 				}
 				else {
-					teamCaptContactDeets = teamCaptain.services.emails[0].address;
+					teamCaptContactDeets = teamCaptain.emails && teamCaptain.emails.length && teamCaptain.emails[0].address;
 					var fullUpText = (thisEvent.players === 0) ? ' Your posting is now filled.' : '';
-					Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "You have a SuprSub!" + fullupText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
+					Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "You have a SuprSub!" + fullUpText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
 				}
 				Meteor.call('twitterSendMessage', "Thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets, tweet.userTwitterId);
+				return false;
 			}
 		}
-		else if (!thisUser.profile.team._ids.length)
+		else if (!thisUser.profile.team._ids.length) {
 			Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, but you don't have a team set up on SuprSub.com! Please log on to add one and you can then make postings.");
+		}
 		posting = parseRequest(tokens, thisUser);
 		posting = _.extend(posting, {team: thisUser.profile.team._ids[0]});
 		console.log(posting);
 		if (!posting.error) {
 			var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
 			Meteor.call('twitterReplyTweet', tweet.twitterId, ('@' + tweet.userName + '  posted: "' + newPosting.sentence + '" Tks!').slice(0,140));
+			return false;
 		}
 		else {
 			Meteor.call('twitterReplyTweet', tweet.twitterId, ('@' + tweet.userName + ' ' + posting.reason).slice(0,140));
