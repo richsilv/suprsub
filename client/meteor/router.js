@@ -131,8 +131,9 @@ Router.map(function() {
         ];
     },
     after: function() {
+      console.log(this.params.eventCode);
       var thisEvent = Events.findOne({_id: this.params.eventCode});
-      thisEvent.pitch = null;
+      if (thisEvent) thisEvent.pitch = null;
       if (thisEvent  && thisEvent.players > 0) {
         UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
         $('#signupModal').modal('setting', {
@@ -141,7 +142,10 @@ Router.map(function() {
           }
         });
         Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);
-      }      
+      }
+      else {
+        this.redirect('/home');
+      }  
     }
   });
 

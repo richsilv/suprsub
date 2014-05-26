@@ -403,8 +403,8 @@ Template.newVenueBox.events({
         locationAddress = $('#locationAddress').val();
     if (locationName && locationAddress && !NewVenues.findOne({name: locationName, address: locationAddress})) {
       NewVenues.insert({name: locationName, address: locationAddress});
-      var newdiv = DIV({cls: "ui purple label"}, ["Your location has been added to the approval queue!"]);
-      $('#newVenueBox .ui.grid .column')[0].appendChild(newdiv);
+      var newdiv = HTML.DIV({cls: "ui purple label"}, ["Your location has been added to the approval queue!"]);
+      UI.materialize(newdiv, $('#newVenueBox .ui.grid .column')[0]);
       Meteor.setTimeout(function() {tabChoices.setKey('newVenue', false);}, 2000);
     }
   }

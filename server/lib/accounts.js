@@ -80,6 +80,18 @@ Accounts.config({
 });
 /* End of Login Service Section */
 
+Accounts.emailTemplates.siteName = "SuprSub.com";
+Accounts.emailTemplates.from = "Suprsub Accounts <accounts@suprsub.com>";
+Accounts.emailTemplates.verifyEmail.subject = function(user) {
+	return "Verifying your e-mail address for SuprSub.com";
+};
+Accounts.emailTemplates.verifyEmail.html = function(user, url) {
+	var text = "<p>Hello, " + user.profile.name + "!</p><p>Welcome to <strong>SuprSub</strong>, helping you get more out of the beautiful game.</p>";
+	text += "<p>To get started, please click the following link to confirm your e-mail address.</p>";
+	text += "<p>" + url + "</p>";
+	return text;
+};
+
 Accounts.onCreateUser(function(options, user) {
 	if ('facebook' in user.services) {
 		if (options.profile) user.profile = _.extend(options.profile, {
