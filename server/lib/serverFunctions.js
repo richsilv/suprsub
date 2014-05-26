@@ -465,6 +465,7 @@
 				createdAt: new Date(now.getTime() - (Math.random() * 86400000)),
 				dateTime: someTime(),
 				players: 1 + Math.floor(Math.random() * 3),
+				tweetedTo: [],
 				source: 'web'
 			};
 			newEvent.sentence = describePosting(newEvent);

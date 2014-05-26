@@ -71,7 +71,7 @@ Meteor.methods({
 	makePosting: function(posting, data, user) {
 		if (!user) user = Meteor.userId();
 		var sentence = serverFunctions.describePosting(posting);
-		_.extend(posting, data, {createdAt: new Date(), userId: user, sentence: sentence});
+		_.extend(posting, data, {createdAt: new Date(), userId: user, sentence: sentence, tweetedTo: []});
 		Events.insert(posting);
 		return posting;
 	},
