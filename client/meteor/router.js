@@ -116,6 +116,35 @@ Router.map(function() {
     }
   });
 
+  this.route('eventSignUp', {
+    path: '/home/:eventCode?',
+    controller: suprsubController,
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'homePage': {to: 'mainSection'}
+    },
+    waitOn: function() {
+      return [
+        Subs.pitches,
+        Subs.teams,
+        Subs.events
+        ];
+    },
+    after: function() {
+      var thisEvent = Events.findOne({_id: this.params.eventCode});
+      thisEvent.pitch = null;
+      if (thisEvent) {
+        UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
+        $('#signupModal').modal('setting', {
+          onHidden: function() {
+            $('.ui.dimmer.page').remove();
+          }
+        });
+        Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);
+      }      
+    }
+  });
+
   this.route('confirmGender', {
     path: '/gender',
     controller: suprsubController,
@@ -218,7 +247,7 @@ Router.map(function() {
     },
     data: function() {
       return {
-        logs: Logging.find()
+        logs: Logging.find({}, {sort: {dateTime: -1}})
       }
     }
   }); 

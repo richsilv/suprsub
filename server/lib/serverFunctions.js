@@ -1,5 +1,22 @@
 	serverFunctions = (function() {
 
+	function processTweet(tweet) {
+		var console = appConfig.sendToLogger;
+		var thisString = "Received " + tweet.id_str;
+		if (tweet.in_reply_to_status_id) thisString += ", reply to " + tweet.in_reply_to_status_id_str;
+			console.log(thisString + ", sent by " + tweet.user.screen_name);
+		Tweets.insert({
+			twitterCreated: new Date(tweet.created_at),
+			twitterId: tweet.id_str,
+			source: tweet.source === '<a href=\"http://suprsub.meteor.com\" rel=\"nofollow\">SuprSub</a>' ? 'suprsub' : tweet.source,
+			userTwitterId: tweet.user.id,
+			userName: tweet.user.screen_name,
+			text: tweet.text,
+			replyTo: tweet.in_reply_to_status_id_str,
+			refUser: tweet.in_reply_to_user_id
+		});
+	}
+
 	function twitterNameFromId(callback, id) {
 		var thisUser = Meteor.user();
 		if (!('twitter' in thisUser.services)) return null;
@@ -28,22 +45,7 @@
 		});
 		var stream = Twit.stream('user', {with: 'user'});
 		stream.on('tweet', Meteor.bindEnvironment(
-			function (tweet) {
-				var console = appConfig.sendToLogger;
-				var thisString = "Received " + tweet.id_str;
-				if (tweet.in_reply_to_status_id) thisString += ", reply to " + tweet.in_reply_to_status_id_str;
-					console.log(thisString + ", sent by " + tweet.user.screen_name);
-				Tweets.insert({
-					twitterCreated: new Date(tweet.created_at),
-					twitterId: tweet.id_str,
-					source: tweet.source === '<a href=\"http://suprsub.meteor.com\" rel=\"nofollow\">SuprSub</a>' ? 'suprsub' : tweet.source,
-					userTwitterId: tweet.user.id,
-					userName: tweet.user.screen_name,
-					text: tweet.text,
-					replyTo: tweet.in_reply_to_status_id_str,
-					refUser: tweet.in_reply_to_user_id
-				});
-			},
+			processTweet,
 			function (e) {
 				console.log("Bind Error!");
 				console.trace();
@@ -114,7 +116,7 @@
 			}
 		}
 		var time = appConfig.timeRegex.exec(token);
-		if (time) {
+/*		if (time) {
 			var hours = parseInt(time[1]), mins = time[2] ? parseInt(time[2], 10) : 0;
 			if (hours > 23 || mins > 59) return {code: -1};
 			if (time[3] === "pm" && time[1] < 12) hours += 12;
@@ -123,7 +125,7 @@
 			output.data = {hours: hours, mins: mins};
 			output.code = 7;
 			return output;
-		}
+		}*/
 		currentMatch = fuzzyMatch(token, appConfig.pitchSurnames);
 		if (currentMatch.code !== -1) return {code: 10};
 /*		var pitchData = Pitches.find({}).fetch();
@@ -237,7 +239,7 @@
 			if (k.code < 0) {
 				k = categorisePitch(thisToken);
 				if (k.code < 0) {
-					throw new Meteor.Error(500, "Cannot understand '" + thisToken + "'.");
+					return new Meteor.Error(500, "Cannot understand '" + thisToken + "'.");
 				}
 				else
 					richTokens[i] = {code: 9, data: k.data};
@@ -568,8 +570,14 @@
 		posting = parseRequest(tokens, thisUser);
 		posting = _.extend(posting, {team: thisUser.profile.team._ids[0]});
 		console.log(posting);
-		var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
-		Meteor.call('twitterReplyTweet', tweet.twitterId, ('@' + tweet.userName + '  posted: "' + newPosting.sentence + '" Tks!').slice(0,140));
+		if (!posting.error) {
+			var newPosting = Meteor.call('makePosting', posting, {source: 'twitter', twitterId: tweet.twitterId}, thisUser._id);
+			Meteor.call('twitterReplyTweet', tweet.twitterId, ('@' + tweet.userName + '  posted: "' + newPosting.sentence + '" Tks!').slice(0,140));
+		}
+		else {
+			Meteor.call('twitterReplyTweet', tweet.twitterId, ('@' + tweet.userName + ' ' + posting.reason).slice(0,140));
+
+		}
 		return false;
 	}
 
@@ -620,7 +628,7 @@
 			email;
 		for (var i = 0, l = players.length; i < l; i++) {
 			var thisPlayer = Meteor.users.findOne({_id: players[i]._id});
-			console.log("Sending to ", thisPlayer);
+			console.log("Sending to ", thisPlayer.profile.first_name + ' ' + thisPlayer.profile.last_name);
 			for (var j = 0, m = thisPlayer.profile.contact.length; j < m; j++) {
 				switch (thisPlayer.profile.contact[j]) {
 					case 0:
@@ -630,18 +638,20 @@
 						Meteor.call('twitterSendTweet', tweetText);
 						break;
 
-					case 1:
-						email = thisPlayer.services;
-					case 2: 
+					case 2:
+						email = thisPlayer.emails && thisPlayer.emails.length && thisPlayer.emails[0].address;
+					case 1: 
 						if (!email)
-							email = thisPlayer.services;
-/*						Email.send({
-							from: 'SuprSub Postings <postings@suprsub.com>', 
-							to: email, 
-							subject: "You have a SuprSub!" + fullupText, 
-							html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText
-						});*/
-
+							email = thisPlayer.services.facebook && thisPlayer.services.facebook.email;
+						if (email) {
+							Email.send({
+								from: 'SuprSub Postings <postings@suprsub.com>', 
+								to: email, 
+								subject: event.sentence, 
+								html: "<h2>New Posting in Your Neighbourhood</h2><p>" + event.sentence + "</p>" + 
+									  '<p><a href="' + Meteor.absoluteUrl() + 'home/' + event._id +'">Click here to sign up</a></p>'
+							});
+						}
 						break;
 				}
 			}
@@ -746,7 +756,8 @@
 		colloquialDateTime: colloquialDateTime,
 		prettyLocation: prettyLocation,
 		padNum: padNum,
-		getPeriodCode: getPeriodCode
+		getPeriodCode: getPeriodCode,
+		processTweet: processTweet
 	};
 
 })();

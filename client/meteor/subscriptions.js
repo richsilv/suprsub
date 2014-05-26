@@ -5,6 +5,9 @@ Subs = {
 
 Deps.autorun(function() {
   if (Meteor.user()) {
+    for (sub in Subs) {
+        if (sub.stop) sub.stop();
+    }
     Subs.teams = Meteor.subscribe('teams');
     Subs.pitches = Meteor.subscribe('allPitches');
     Subs.userData = Meteor.subscribe('userData');

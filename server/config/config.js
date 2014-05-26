@@ -27,7 +27,12 @@ appConfig = (function() {
 			{name: 'twitterHandle', regex: /^@[A-Za-z0-9_]+$/, code: 20, transform: function(token) {return token;}},
 			{name: 'eventId', regex: /^_id[A-Za-z0-9]+$/, code: 19, transform: function(token) {return token.substr(3);}},
 			{name: 'teamSize', regex: /^(\d+)(?:as|-a-side)$/, code: 18, transform: function(token) {return parseInt(/^(\d+)(?:as|-a-side)$/.exec(token)[1], 10);}},
-			{name: 'price', regex: /^(?:£)([0-9]+\.?[0-9]{0,2})$/, code: 17, transform: function(token) {return parseFloat(/^(?:£)([0-9]+\.?[0-9]{0,2})$/.exec(token)[1], 10);}}
+			{name: 'price', regex: /^(?:£)([0-9]+\.?[0-9]{0,2})$/, code: 17, transform: function(token) {return parseFloat(/^(?:£)([0-9]+\.?[0-9]{0,2})$/.exec(token)[1], 10);}},
+			{name: 'timeString', regex: /^([1|2]?[0-9])((\.|\:)([0-9]{1,2}))?(am|pm)$/, code: 7, transform: function(token) {
+				var details = /^([1|2]?[0-9])((\.|\:)([0-9]{1,2}))?(am|pm)$/.exec(token);
+				if (details[1] > 23) throw new Meteor.Error(500, "Hour too high.");
+				return {hours: parseInt(details[1], 10) + (((parseInt(details[1], 10) < 12) && (details[5] === 'pm')) ? 12 : 0), mins: details[4] ? details[4] : 0};
+			}},
 					],
 		Natural: Natural,
 		Tokenizer: new Natural.RegexpTokenizer( { pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/ } ),

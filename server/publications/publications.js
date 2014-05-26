@@ -22,7 +22,7 @@ Meteor.publish('events', function(id, userPostings) {
 });
 
 Meteor.publish('allEvents', function(x) {
-	return Events.find({}, {limit: x});
+	return Events.find({}, {limit: x, sort: {dateTime: -1}});
 });
 
 Meteor.publish('teams', function(ids) {
@@ -59,7 +59,7 @@ Meteor.publish("tweets", function(userId) {
 });
 
 Meteor.publish("allTweets", function(x) {
-	return Tweets.find({}, {limit: x});
+	return Tweets.find({}, {limit: x, sort: {twitterCreated: -1}});
 });
 
 Meteor.publish("logging", function() {

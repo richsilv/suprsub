@@ -1,9 +1,9 @@
 var sendToLogger = {
 	log: function(s) {
 		console.log(s);
-		Logging.insert({dateTime: new Date(), log: s});
+		Logging.insert({dateTime: new Date(), log: s['0'] || s});
 	}
-}
+}, oldConsole = console;
 
 Meteor.methods({
 	pitchesWithin: function(center, distance) {
@@ -97,6 +97,7 @@ Meteor.methods({
 			access_token:         appConfig.twitterToken.token,
 			access_token_secret:  appConfig.twitterToken.secret
 		});
+		if (!appConfig.streaming) return {err: null, res: null};
 		Twit.post('direct_messages/new', 
 		{
 			user_id: twitterId ? twitterId : user.id,
@@ -113,8 +114,34 @@ Meteor.methods({
 			access_token:         appConfig.twitterToken.token,
 			access_token_secret:  appConfig.twitterToken.secret
 		});
+		if (!appConfig.streaming) {
+			var tweet = {
+				id_str: Meteor.uuid(),
+				user: {
+					id: appConfig.twitterToken.id,
+					screen_name: "notsuprsub"
+				},
+				created_at: new Date(),
+				source: "admin",
+				text: string,
+				in_reply_to_status_id_str: null
+			},
+			target = /^@(\w+)( .*)?$/.exec(string);
+			if (target) {
+				Meteor.call('twitterGetDetails', target[1], function(err, res) {
+					tweet.in_reply_to_user_id = res.id;
+					console.log("Tweeting:", tweet);
+					Meteor.call('processTweet', tweet);
+				});
+			}
+			else {
+				console.log("Tweeting:", tweet);
+				Meteor.call('processTweet', tweet);				
+			}			
+			return {err: null, res: null};
+		}
 		Twit.post('statuses/update', { status: string }, function(err, res) {
-			console.log("probably sent: " + string);
+			oldConsole.log("probably sent: " + string);
 			fut.return({err: err, res: res});
 		});
 		fut.wait();
@@ -128,10 +155,64 @@ Meteor.methods({
 			access_token:         appConfig.twitterToken.token,
 			access_token_secret:  appConfig.twitterToken.secret
 		});
+		if (!appConfig.streaming) {
+			var tweet = {
+				id_str: Meteor.uuid(),
+				user: {
+					id: appConfig.twitterToken.id,
+					screen_name: "notsuprsub"
+				},
+				created_at: new Date(),
+				source: "admin",
+				text: string,
+				in_reply_to_status_id_str: tweetId
+			},
+			repliedTo = Tweets.findOne({twitterId: tweetId}),
+			target = /^@(\w+)( .*)?$/.exec(string) || (repliedTo ? ['', repliedTo.userName] : null);
+			if (target) {
+				Meteor.call('twitterGetDetails', target[1], function(err, res) {
+					tweet.in_reply_to_user_id = res.id;
+					console.log("Tweeting:", tweet);
+					Meteor.call('processTweet', tweet);
+				});
+			}
+			else {
+				console.log("Tweeting:", tweet);
+				Meteor.call('processTweet', tweet);				
+			}
+			return {err: null, res: null};			
+		}
 		Twit.post('statuses/update', { status: string, in_reply_to_status_id: tweetId }, function(err, res) {
 			fut.return({err: err, res: res});
 		});
 		fut.wait();
+	},
+	twitterGetDetails: function(userString) {
+		var console = appConfig.sendToLogger;
+		console.log("getting details of " + userString);
+		var fut = new Future(),
+			Twit = new TwitMaker({
+			consumer_key:         appConfig.twitterconfig.consumerKey,
+			consumer_secret:      appConfig.twitterconfig.secret,
+			access_token:         appConfig.twitterToken.token,
+			access_token_secret:  appConfig.twitterToken.secret
+			}),
+			params = {include_entities: false};
+		if (typeof userString === "number") {
+			params.user_id = userString;
+		}
+		else {
+			params.screen_name = userString;
+		}
+		Twit.get('users/show', params, function(err, res) {
+			if (err) {
+				fut.throw(err);
+			}
+			else {
+				fut.return(res);
+			}
+		});
+		return fut.wait();
 	},
 	twitterBefriendSuprSub: function(user) {
 		var fut = new Future();
@@ -143,6 +224,7 @@ Meteor.methods({
 			access_token:         user.accessToken,
 			access_token_secret:  user.accessTokenSecret
 		});
+		if (!appConfig.streaming) return {err: null, res: null};
 		Twit.post('friendships/create', {user_id: appConfig.twitterAccountId, follow: true}, function(errOne, resOne) {
 			var secondTwit = new TwitMaker({
 				consumer_key:         appConfig.twitterconfig.consumerKey,
@@ -158,6 +240,10 @@ Meteor.methods({
 	},
 	twitterStreaming: function() {
 		return appConfig.streaming === true;
+	},
+	processTweet: function(tweet) {
+		tweet.in_reply_to_user_id = appConfig.twitterToken.id;
+		serverFunctions.processTweet(tweet);
 	},
 	addRandomPlayer: function(n) {
 		serverFunctions.addRandomPlayer(n);
@@ -345,4 +431,4 @@ Meteor.methods({
 		}
 		return (func && func.apply(this, args));
 	}
-});
+});	

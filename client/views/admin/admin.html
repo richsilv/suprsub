@@ -6,28 +6,43 @@
 			<input type="text" id="tweetText">
 			<input type="submit" id="tweetSubmit">
 		</form>
-		<div class="medium-5 columns">
-			<h2>EVENTS</h2>
-			{{> eventsBox}}
+		<div class="row">
+			<div class="medium-5 columns">
+				<h2>EVENTS</h2>
+				{{> eventsBox}}
+			</div>
+			<div class="medium-6 columns">
+				<h2>TWEETS</h2>
+				{{> tweetsBox}}
+			</div>
+			<div class="medium-5 columns">
+				<h2>TEAMS</h2>
+				{{> teamsBox}}
+			</div>
+			<div class="medium-5 columns">
+				<h2>USERS</h2>
+				{{> usersBox}}
+			</div>
+			<div class="medium-5 columns">
+				<h2>PITCHES</h2>
+				{{> pitchesBox}}
+				<input type="button" value="Delete" id="deletePitch">
+			</div>
 		</div>
-		<div class="medium-6 columns">
-			<h2>TWEETS</h2>
-			{{> tweetsBox}}
+		<div class="row">
+			<div class="medium-8 medium-centered columns">
+				<h2>INJECT TWEET</h2>
+				{{> tweetInjector}}
+			</div>
 		</div>
-		<div class="medium-5 columns">
-			<h2>TEAMS</h2>
-			{{> teamsBox}}
-		</div>
-		<div class="medium-5 columns">
-			<h2>USERS</h2>
-			{{> usersBox}}
-		</div>
-		<div class="medium-5 columns">
-			<h2>PITCHES</h2>
-			{{> pitchesBox}}
-			<input type="button" value="Delete" id="deletePitch">
-		</div>	
 	</div>
+</template>
+
+<template name="tweetInjector">
+	<input type="textbox" id="tweetInput" placeholder="tweet text here">
+	<input type="textbox" id="tweetSender" placeholder="from this twitter user">
+	<input type="textbox" id="replyTo" placeholder="id of tweet this replies to">
+	<input type="button" id="injectTweet" value="Inject Tweet">
 </template>
 
 <template name="eventsBox">
