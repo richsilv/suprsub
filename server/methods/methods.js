@@ -89,9 +89,9 @@ Meteor.methods({
 		return fut.wait();
 	},
 	twitterSendMessage: function(string, twitterId) {
-		var user = Meteor.user().services.twitter, fut = new Future(),
+		var fut = new Future(),
 			console = appConfig.sendToLogger;
-		if (!(user || twitterId)) throw new Meteor.Error(500, "User has not linked their Twitter account.");
+		if (!(twitterId)) throw new Meteor.Error(500, "I need a twitter id to send a message.");
 		var Twit = new TwitMaker({
 			consumer_key:         appConfig.twitterconfig.consumerKey,
 			consumer_secret:      appConfig.twitterconfig.secret,
@@ -104,7 +104,7 @@ Meteor.methods({
 		}
 		Twit.post('direct_messages/new', 
 		{
-			user_id: twitterId.toString() ? twitterId : user.id,
+			user_id: twitterId.toString(),
 			text: string
 		}, function(err, res) {fut.return({err: err, res: res});});
 		return fut.wait();
