@@ -600,7 +600,7 @@
 		var playerContactDeets, teamCaptContactDeets;
 		if (thisUser.profile.contact.indexOf(0) > -1) playerContactDeets = '@' + thisUser.services.twitter.screenName;
 		else if (thisUser.profile.contact.indexOf(1) > -1) playerContactDeets = thisUser.services.facebook.link;
-		else playerContactDeets = thisUser.services.email.verificationTokens[0].address;
+		else playerContactDeets = thisUser.emails[0].address;
 		if (teamCaptain.profile.contact.indexOf(0) > -1) {
 			teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
 			Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.screenName);		
