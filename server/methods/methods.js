@@ -278,7 +278,7 @@ Meteor.methods({
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your teammates - " + 
-				suprsubRoot + "team/" + code);
+				suprsubRoot + "team/" + code, Meteor.user().services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
 			Email.send({
@@ -313,7 +313,7 @@ Meteor.methods({
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your potential Supsrubs - " + 
-				suprsubRoot + "team/" + code);
+				suprsubRoot + "team/" + code, Meteor.user().services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
 			Email.send({
