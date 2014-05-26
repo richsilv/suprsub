@@ -150,7 +150,7 @@ Router.map(function() {
     controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
-      'twitterGenderModal': {to: 'mainSection'}
+      'twitterGenderModalHolder': {to: 'mainSection'}
     },
     after: function() {
       var oldRendered = Template.twitterGenderModal.rendered;

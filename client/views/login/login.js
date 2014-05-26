@@ -22,6 +22,7 @@ Template.topbar.events({
     },
     'click #logout-button' : function() {
         Meteor.logout();
+        Router.current().redirect('/');
     },
     'click #delete-button' : function() {
         Meteor.call('removeCurrentUser');
@@ -104,6 +105,7 @@ Template.loginScreen.rendered = function() {
 
 Template.twitterGenderModal.events({
     'click #genderConfirmButton': function(event) {
+        console.log('click');
         $('#twitterGenderModal').modal('hide');
         Meteor.setTimeout(function() {
             Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}});

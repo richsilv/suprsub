@@ -87,20 +87,24 @@
 			</div>
 		</div>
 	</div>
-	{{> twitterGenderModal}}
+	{{> twitterGenderModalHolder}}
+</template>
+
+<template name="twitterGenderModalHolder">
+	<div class="ui modal" id="twitterGenderModal">
+		{{>twitterGenderModal}}
+	</div>
 </template>
 
 <template name="twitterGenderModal">
-	<div class="ui modal" id="twitterGenderModal">
-		<div class="ui segment"><p>In order to comply with Football Association regulations, we can only match players with teams of the same gender - please confirm your gender below.</p></div>
-		<div class="field" id="mfSubBox">
-			<div class="checkboxLabel">Male</div>
-			<div class="ui toggle checkbox neutral">
-				<input type="checkbox" id="maleFemaleModal">
-				<label></label>
-			</div>
-			<div class="checkboxLabel">Female</div>
+	<div class="ui segment"><p>In order to comply with Football Association regulations, we can only match players with teams of the same gender - please confirm your gender below.</p></div>
+	<div class="field" id="mfSubBox">
+		<div class="checkboxLabel">Male</div>
+		<div class="ui toggle checkbox neutral">
+			<input type="checkbox" id="maleFemaleModal">
+			<label></label>
 		</div>
-		<div class="ui rightF blue submit button" id="genderConfirmButton">Confirm</div>
+		<div class="checkboxLabel">Female</div>
 	</div>
+	<div class="ui rightF blue submit button" id="genderConfirmButton">Confirm</div>
 </template>

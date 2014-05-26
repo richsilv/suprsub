@@ -104,7 +104,7 @@ Meteor.methods({
 		}
 		Twit.post('direct_messages/new', 
 		{
-			user_id: twitterId ? twitterId : user.id,
+			user_id: twitterId.toString() ? twitterId : user.id,
 			text: string
 		}, function(err, res) {fut.return({err: err, res: res});});
 		return fut.wait();

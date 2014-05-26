@@ -364,7 +364,7 @@
 		var periodCode = getPeriodCode(event.dateTime),
 			query = {'profile.player.venues': event.location};
 		appConfig.sendToLogger.log("Looking for players available at " + event.location + " at time code " + periodCode);
-		query['profile.player.availability.' + periodCode] = {$exists: true};
+		query['profile.player.availability.' + periodCode] = true;
 		query._id = {$ne: event.userId};
 		var results = Meteor.users.find(query, {fields: {_id: true}}).fetch();
 		return results;
@@ -549,10 +549,11 @@
 				var playerContactDeets, teamCaptContactDeets;
 				if (thisUser.profile.contact.indexOf(0) > -1) playerContactDeets = '@' + thisUser.services.twitter.screenName;
 				else if (thisUser.profile.contact.indexOf(1) > -1) playerContactDeets = thisUser.services.facebook.link;
-				else playerContactDeets = thisUser.services.emails[0].address;
+				else playerContactDeets = thisUser.emails && thisUser.emails.length && thisUser.emails[0].address;
 				console.log("Notifying:", teamCaptain.profile.contact);
 				if (teamCaptain.profile.contact.indexOf(0) > -1) {
 					teamCaptContactDeets = teamCaptain.services.twitter.screenName;
+					console.log(thisUser.profile.name, playerContactDeets, teamCaptain.services.twitter.id, teamCaptContactDeets);
 					Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.id);		
 				}
 				else if (teamCaptain.profile.contact.indexOf(1) > -1) {
@@ -637,10 +638,12 @@
 			for (var j = 0, m = thisPlayer.profile.contact.length; j < m; j++) {
 				switch (thisPlayer.profile.contact[j]) {
 					case 0:
-						var tweetText = "@" + thisPlayer.services.twitter.screenName + ' ' + event.sentence + ' _id' + event._id;
-						if (tweetText.length > 140) tweetText = tweetText.slice(0,137) + '...';
-						console.log("Tweeting: " + tweetText);
-						Meteor.call('twitterSendTweet', tweetText);
+						if (thisPlayer.services.twitter) {
+							var tweetText = "@" + thisPlayer.services.twitter.screenName + ' ' + event.sentence + ' _id' + event._id;
+							if (tweetText.length > 140) tweetText = tweetText.slice(0,137) + '...';
+							console.log("Tweeting: " + tweetText);
+							Meteor.call('twitterSendTweet', tweetText);
+						}
 						break;
 
 					case 2:
