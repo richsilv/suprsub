@@ -534,7 +534,7 @@
 				return false;
 			}
 			if (thisEvent.players === 0) {
-				Meteor.call('twitterSendMessage', "Sorry, that posting has already been filled. Thanks for responding though!", tweet.userName);
+				Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " Sorry, that posting has already been filled. Thanks for responding though!");
 				return false;
 			}
 			else {
@@ -553,14 +553,13 @@
 				console.log("Notifying:", teamCaptain.profile.contact);
 				if (teamCaptain.profile.contact.indexOf(0) > -1) {
 					teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
-					console.log(thisUser.profile.name, playerContactDeets, teamCaptain.services.twitter.id, teamCaptContactDeets);
 					Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.id);		
 				}
-				else if (teamCaptain.profile.contact.indexOf(1) > -1) {
+				if (teamCaptain.profile.contact.indexOf(1) > -1) {
 					teamCaptContactDeets = teamCaptain.services.facebook.link;
 					// INSERT FACEBOOK CONTACT UPDATE //
 				}
-				else {
+				if (teamCaptain.profile.contact.indexOf(2) > -1) {
 					teamCaptContactDeets = teamCaptain.emails && teamCaptain.emails.length && teamCaptain.emails[0].address;
 					var fullUpText = (thisEvent.players === 0) ? ' Your posting is now filled.' : '';
 					Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "You have a SuprSub!" + fullUpText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
@@ -603,25 +602,25 @@
 		else playerContactDeets = thisUser.emails[0].address;
 		if (teamCaptain.profile.contact.indexOf(0) > -1) {
 			teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
-			Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.screenName);		
+			Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.id);		
 		}
-		else if (teamCaptain.profile.contact.indexOf(1) > -1) {
+		if (teamCaptain.profile.contact.indexOf(1) > -1) {
 			teamCaptContactDeets = teamCaptain.services.facebook.link;
 			// INSERT FACEBOOK CONTACT UPDATE //
 		}
-		else {
-			teamCaptContactDeets = teamCaptain.services.emails[0].address;
+		if (teamCaptain.profile.contact.indexOf(2) > -1) {
+			teamCaptContactDeets = teamCaptain.emails && teamCaptain.emails.length && teamCaptain.emails[0].address;
 			var fullUpText = (thisEvent.players === 0) ? ' Your posting is now filled.' : '';
-			Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "You have a SuprSub!" + fullupText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
+			Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: teamCaptContactDeets, subject: "You have a SuprSub!" + fullUpText, html: "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets + ' .' + fullUpText});
 		}
 		if (thisUser.profile.contact.indexOf(0) > -1) {
-			Meteor.call('twitterSendMessage', "Thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets, thisUser.services.twitter.screenName);		
+			Meteor.call('twitterSendMessage', "Thanks, you are now a Suprsub! Your team captain can be reached at " + teamCaptContactDeets, thisUser.services.twitter.id);		
 		}
-		else if (thisUser.profile.contact.indexOf(1) > -1) {
+		if (thisUser.profile.contact.indexOf(1) > -1) {
 			teamCaptContactDeets = teamCaptain.services.facebook.link;
 			// INSERT FACEBOOK CONTACT UPDATE //
 		}
-		else {
+		if (thisUser.profile.contact.indexOf(2) > -1) {
 			Email.send({from: 'SuprSub Postings <postings@suprsub.com>', to: playerContactDeets, subject: "You are now a SuprSub!", html: "Thanks, you are now a Suprsub!  Your team captain can be reached at  " + teamCaptContactDeets});
 		}
 		return true;
