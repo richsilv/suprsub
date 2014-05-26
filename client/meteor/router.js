@@ -132,7 +132,6 @@ Router.map(function() {
         ];
     },
     after: function() {
-      console.log(this.params.eventCode);
       var thisEvent = Events.findOne({_id: this.params.eventCode});
       if (thisEvent) thisEvent.pitch = null;
       if (thisEvent && thisEvent.players > 0) {
@@ -144,9 +143,31 @@ Router.map(function() {
         });
         Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);
       }
-      else {
+      else if (thisEvent && thisEvent.players <= 0) {
         this.redirect('/home');
+      }
+      else {
+        var eventWait = Events.find({_id: this.params.eventCode}).observe({
+          added: function(doc) {
+            if (doc.players > 0) {
+              eventWait.stop();
+              eventWait = null;
+              UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: doc}), document.body);
+              $('#signupModal').modal('setting', {
+                onHidden: function() {
+                  $('.ui.dimmer.page').remove();
+                }
+              });
+              Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);         
+            }
+            else this.redirect('/home');
+          }
+        });
       }  
+    },
+    unload: function() {
+      if (eventWait) eventWait.stop();
+      eventWait = null;
     }
   });
 
