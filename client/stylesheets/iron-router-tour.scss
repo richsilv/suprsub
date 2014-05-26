@@ -1,0 +1,12 @@
+$suprsub-colour-scheme: hsl(120, 75%, 43%);
+$suprsub-colour-shadow: rgba(63, 255, 63, 0.4);
+
+$tour-border-color: $suprsub-colour-scheme;
+$tour-box-shadow: 0 0 5px $suprsub-colour-shadow;
+
+.tourButton {
+	display: inline-block;
+	padding: 0.5em;
+}
+
+@import "packages/iron-router-tour/iron-router-tour";

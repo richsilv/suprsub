@@ -109,6 +109,10 @@ input[type=range]:active::-moz-range-thumb {
 	width: 100%;
 }
 
+#pitchTable thead tr {
+	width: 100%;
+}
+
 .height280 {
 	min-height: 280px;
 }
@@ -128,7 +132,7 @@ input[type=range]:active::-moz-range-thumb {
 }
 
 .tableLocation {
-	width: 280px;
+	width: 500px;
 }
 
 .tableSpaceBlock {
@@ -163,11 +167,9 @@ input[type=range]:active::-moz-range-thumb {
 		-webkit-appearance: none;
 	}
 	#distanceWriteLabel {
-		margin-left: 5em;
-		left: 50%;
-		right: 50%;
-		top: 2em;
-		width: 15em;
+		/*margin-left: 5em;*/
+		text-align: center;
+		position: static;
 	}
 	#distanceWriteLabel h3, #distanceWriteLabel h4 {
 		display: inline;
@@ -186,9 +188,11 @@ input[type=range]:active::-moz-range-thumb {
 /*For small width screens only*/
 @media only screen and (max-width: 40em) {
  	#pitchMap.large {
-	width: 100%;
+	width: auto;
 	margin-left: 0;
 	}
+
+	
 }
 
 /*For medium width screens only*/

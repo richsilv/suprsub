@@ -1,21 +1,24 @@
-Router.configure({
+suprsubController = FastRender.RouteController.extend({
+/*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
-  before: function () {
+  before: function (pause) {
     if (!Meteor.user()) {
       // render the login template but keep the url in the browser the same
       this.render();
       this.render('loginScreen', {to: 'mainSection'});
       // stop the rest of the before hooks and the action function 
-      this.stop();
+      pause();
     }
   },
   after: function() {
-    if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
+    if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
       this.redirect('/gender');
     }
   },
 });
+
+Router.onBeforeAction('loading');
 
 Router.map(function() {
 
@@ -23,12 +26,12 @@ Router.map(function() {
 
   this.route('playerDetails', {
     path: '/player',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'playerDetails': {to: 'mainSection'}
     },
     waitOn: function() {
-
       return [Subs.pitches, clientFunctions.loadGMaps()];
     },
     action: function() {
@@ -45,6 +48,7 @@ Router.map(function() {
 
   this.route('teamDetails', {
     path: '/team/:joinCode?',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'teamInfo': {to: 'mainSection'}
@@ -86,6 +90,7 @@ Router.map(function() {
 
   this.route('home', {
     path: '/',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'homePage': {to: 'mainSection'}
@@ -97,6 +102,7 @@ Router.map(function() {
 
   this.route('home', {
     path: '/home',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'homePage': {to: 'mainSection'}
@@ -104,20 +110,44 @@ Router.map(function() {
     waitOn: function() {
       return [
         Subs.pitches,
-        Subs.teams
+        Subs.teams,
+        Subs.events
+        ];
+    }
+  });
+
+  this.route('eventSignUp', {
+    path: '/home/:eventCode?',
+    controller: suprsubController,
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'homePage': {to: 'mainSection'}
+    },
+    waitOn: function() {
+      return [
+        Subs.pitches,
+        Subs.teams,
+        Subs.events
         ];
     },
-    before: function() {
-      if (!('postingsChoice' in Router.routes['home'])) {
-        Router.routes['home'].postingsChoice = new suprsubDep('');
-        Router.routes['home'].postingsUser = new suprsubDep(false);
-      }
-      this.subscribe('events', Router.routes['home'].postingsChoice.get(), Router.routes['home'].postingsUser.get());
+    after: function() {
+      var thisEvent = Events.findOne({_id: this.params.eventCode});
+      thisEvent.pitch = null;
+      if (thisEvent) {
+        UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
+        $('#signupModal').modal('setting', {
+          onHidden: function() {
+            $('.ui.dimmer.page').remove();
+          }
+        });
+        Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);
+      }      
     }
   });
 
   this.route('confirmGender', {
     path: '/gender',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'twitterGenderModal': {to: 'mainSection'}
@@ -139,6 +169,7 @@ Router.map(function() {
 
   this.route('about', {
     path: '/about',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'about': {to: 'mainSection'}
@@ -147,6 +178,7 @@ Router.map(function() {
 
   this.route('settings', {
     path: '/settings',
+    controller: suprsubController,
     template: 'mainTemplate',
     yieldTemplates: {
       'settings': {to: 'mainSection'}
@@ -155,6 +187,7 @@ Router.map(function() {
 
   this.route('myAdmin', {
     path: '/myadmin',
+    controller: suprsubController,
     template: 'adminTemplate',
     waitOn: function() {
       this.objectHistory = [];
@@ -179,6 +212,7 @@ Router.map(function() {
 
   this.route('uploadPitches', {
     path: '/uploadPitches',
+    controller: suprsubController,
     template: 'blank',
     before: function() {
       Meteor.call('printLine');
@@ -188,6 +222,7 @@ Router.map(function() {
 
   this.route('addPitches', {
     path: '/addPitches',
+    controller: suprsubController,
     template: 'pitchesTemplate',
     waitOn: function() {
       return [
@@ -197,6 +232,22 @@ Router.map(function() {
     data: function() {
       return {
         pitches: Pitches.find({}, {sort: {name: 1}})
+      }
+    }
+  });
+
+  this.route('logging', {
+    path: '/logging',
+    controller: suprsubController,
+    template: 'logging',
+    waitOn: function() {
+      return [
+        Subs.logging
+      ];
+    },
+    data: function() {
+      return {
+        logs: Logging.find({}, {sort: {dateTime: -1}})
       }
     }
   }); 

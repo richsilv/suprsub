@@ -41,6 +41,8 @@ body {
 	position: relative;
 	font-size: 100px;
 	top: 0px;
+	padding-top: 0.1em;
+	margin-bottom: -0.5em;
 }
 
 .backgroundShadowBig {
@@ -63,6 +65,15 @@ body {
 
 .gap.button {
 	margin-top: 0.9375em;	
+}
+
+.minipadding.columns {
+	padding-left: 0.3125em;
+	padding-right: 0.3125em;
+}
+
+.segment.noGap {
+	margin-bottom: 0;
 }
 
 .lowered.button {
@@ -181,6 +192,7 @@ i.suprsub.icon {
 	font-size: 1.5em;
 	margin-top: -0.4em;
 	display: block;
+	padding-top: 0.1em;
 }
 
 i.suprsub.icon:before{
@@ -205,16 +217,21 @@ i.suprsub.icon:before{
 }
 
 .rotate {
+	margin-top:-25px;
+	width: 20px;
 	-webkit-transform: rotate(90deg);
 	-moz-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
-	margin-top:-25px;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	transform: translate3d(0,0,0);
 }
 .rotated_cell {
 	height:90px;
 	vertical-align:bottom
+	transform: translate3d(0,0,0);
 }
 
 .semitranslucent {
@@ -281,6 +298,33 @@ i.suprsub.icon:before{
 	-moz-box-shadow: 0 0 10px rgba(0, 255, 0, 1) !important;	
 }
 
+input[type=checkbox] {
+   position: absolute;
+   opacity: 0;
+   margin-top: 1px;
+   margin-left: -14px;
+   width: 30px;
+   height: 20px;
+   /* For mobile, it's typically better to position checkbox on top of clickable
+      area and turn opacity to 0 instead. */
+}
+
+/* Default State */
+.checkboxDiv {
+   background: rgba(0, 0, 0, .095);
+   width: 30px;
+   height: 20px;
+   line-height: 20px;
+   color: white;
+   text-align: center;
+   border-radius: 2px;
+}
+
+/* Toggled State */
+input[type=checkbox]:checked ~ .checkboxDiv {
+   background: hsl(120, 75%, 43%);
+}
+
 /*For small and medium width screens*/
 @media only screen and (max-width: 64em) {
 	.rotate {
@@ -294,12 +338,46 @@ i.suprsub.icon:before{
 
 /*For small width screens only*/
 @media only screen and (max-width: 40em) {
+	html {
+		font-size: 12px;
+		/*width: 640px;*/
+	}
+	html body {
+		/*width: 640px;*/
+	}
+	.suprsubHeader {
+		font-size: 72px;
+	}
+	.master.columns, .master.column {
+		padding-left: 0;
+		padding-right: 0;
+	}
+/*	#wrapper > .row {
+		padding-left: 3px;
+		padding-right: 3px;
+	}
 	.columns {
 		padding-left: 0;
 		padding-right: 0;
 	}
+	.row .columns, .row .column {
+		padding-left: 0.9375em;
+		padding-right: 0.9375em;
+	}*/
 	.ui.segment {
 		border-radius: 0;
+	}
+	.rotated_cell {
+		height: 130px;
+	}
+	.rotate {
+		margin-top: -30px;
+	}
+	.checkboxDiv {
+	   width: 25px;
+	}
+	input[type=checkbox] {
+	   width: 25px;
 	}
 }
 

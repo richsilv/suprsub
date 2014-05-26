@@ -1,9 +1,10 @@
-var dataChange = new suprsubDep(false);
+var dataChange = new suprsubDep(false),
+    disableSave = new suprsubDep(true);
 
 Template.pitchData.helpers({
   getVenues: function() {
     if (appVars.venues && appVars.venues.get()) {
-      return appVars.venues.get();
+      return appVars.venues.get().map(function(v) {return prettyLocation(v)});
     }
     else return []; 
   }
@@ -30,6 +31,15 @@ Template.availabilityVenues.events({
     appVars.tabChoices.setKey('playerTab', event.target.name);
   }
 });
+
+// **************************
+
+Template.availabilityDays.events({
+  'click .tableCheckboxHolder': function() {
+    dataChange.set(true);
+    dataChange.dep.changed();
+  }
+})
 
 // **************************
 
@@ -145,7 +155,6 @@ Template.playerForm.events({
 // ******************************
 
 Template.playerDropdowns.rendered = function() {
-  console.log("playerDropdowns rendering");
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
   $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, onChange: function() {
@@ -199,8 +208,7 @@ Template.availability.rendered = function() {
 
 Template.playerMainButtons.helpers({
   disableSave: function() {
-    if ('disableSave' in this) return this.disableSave.get();
-    return true;
+    return disableSave.get();
   }
 });
 
@@ -227,7 +235,6 @@ Template.playerMainButtons.events({
 });
 
 Template.playerMainButtons.created = function() {
-  this.data.disableSave = new suprsubDep(true);
 };
 
 // ***************** DEPS *************************
@@ -263,15 +270,15 @@ Deps.autorun(function() {
   dataChange.dep.depend();
   appVars.circleChanged.dep.depend();
   if ($('#cancelOrSave').length) {
-    var disableSave = Spark.getDataContext($('#cancelOrSave')[0]).disableSave;
     disableSave.set(true);
     if (appVars.circleChanged && appVars.circleChanged.get())
       disableSave.set(false);
-    if (dataChange && dataChange.get())
+    if (dataChange && dataChange.get()) {
       disableSave.set(false);
-    if (!dataOkay()) {
-      disableSave.set(true);
+      dataChange.value = false;
     }
+    if (!dataOkay())
+      disableSave.set(true);
   }
 });
 

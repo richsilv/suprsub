@@ -6,7 +6,6 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 	template.rendered = function() {
 		if (afterwards) {
 			oldRender && oldRender.apply(this, arguments);
-			console.log("between");
 			oneTimeFunc.apply(this, arguments);
 		}
 		else {
@@ -18,18 +17,33 @@ renderOnce = function(template, oneTimeFunc, afterwards) {
 	return true;
 };
 
-templateAttach = function(template, callback) {
+templateAttach = function(template, callback, data) {
 	if (typeof template === "string") template = Template[template];
 	if (!template) return false;
-	document.body.appendChild(Spark.render(template));
-	callback && callback.apply(this, arguments);
+	if (data)
+		UI.insert(UI.renderWithData(template, data), document.body);
+	else
+		UI.insert(UI.render(template), document.body);
+	return callback && callback.apply(this, arguments);
 };
 
-confirmModal = function(message, callback) {
-	templateAttach(function() {
-		return Template.generalConfirmModal({
-			message: message,
-			callback: callback
-		});
-	});
-}
+confirmModal = function(options, postRender) {
+	templateAttach(
+		Template.generalConfirmModalWrapper, 
+		function() {
+		  $('#generalConfirmModal').modal({
+		    onHide: function() {
+		      $('.ui.dimmer.page').remove();
+		      $('#generalConfirmModal').remove();
+		    },
+		    closable: options.noButtons ? true : false
+		  });
+		  postRender && postRender.apply(this, arguments);
+		},
+		{
+			message: options ? options.message : '',
+			callback: options ? options.callback : null,
+			noButtons: options ? options.noButtons : false
+		}
+	);
+};

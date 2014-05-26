@@ -1,3 +1,74 @@
+var tour = {
+	id: "welcome",
+	steps: [
+		{
+			title: "Welcome",
+			content: "Here’s where you look for a player.  It will populate with your default game when you save it in Team.",
+			target: "#fullPostingForm",
+			targetTemplate: "homePage",
+			placement: "right",
+			mobilePlacement: "bottom",
+			page: 'home'
+		},
+
+		{
+			title: "Activity Feed",
+			content: "This is our feed containing all postings, which you can filter",
+			target: "#activityHeader",
+			targetTemplate: "activityFeed",
+			placement: "bottom",
+			mobilePlacement: "top",
+			page: 'home'
+		},
+
+		{
+			title: "Player Tab",
+			content: "If you want to play more footy, here’s where you enter your availability and neighbourhood (where you live and how far you are willing to travel).",
+			target: "#playerForm",
+			targetTemplate: "playerForm",
+			placement: "right",
+			mobilePlacement: "bottom",
+			page: 'playerDetails'		
+		},
+
+		{
+			title: "Team Tab",
+			content: "Save your regular games here. Any info left off a player post or tweet will be populated by your default game.",
+			target: "#gameFormat",
+			targetTemplate: "teamSettings",
+			placement: "right",
+			mobilePlacement: "bottom",
+			page: 'teamDetails'
+		},
+
+		{
+			title: "Invite Teammates",
+			content: "Invite your team mates and regular ringers so that you can contact them with one click.",
+			target: "#toggleTeammates",
+			targetTemplate: "playerButtons",
+			placement: "left",
+			mobilePlacement: "top",
+			page: 'teamDetails'
+		},
+
+		{
+			title: "Settings",
+			content: "Manage your contact preferences here.",
+			target: "#selectedContact",
+			targetTemplate: "settingsBox",
+			placement: "right",
+			mobilePlacement: "bottom",
+			page: 'settings',
+			buttonText: 'Done'
+		},
+
+		{
+			page: 'playerDetails'
+		}
+
+	]
+};
+
 appVars = (function() {
 
 	TimeKeeper = {};
@@ -30,7 +101,8 @@ appVars = (function() {
 		_libs: {},
 	    saveCalc: new Deps.Dependency(),
 	    maxInvalidate: 100,
-	    maxPitches: 40
+	    maxPitches: screen.width > 1000 ? 60 : screen.width > 600 ? 40 : 25,
+	    tour: tour
 	};
 }
 )();

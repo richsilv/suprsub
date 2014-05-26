@@ -11,26 +11,13 @@ Meteor.startup(function() {
     }*/
 
 	// COLLECTION OBSERVERS
-	Tweets.find({consumed: {$exists: false}}).observeChanges({
-		added: function(tweetId) {
-			var tweet = Tweets.findOne(tweetId);
-			serverFunctions.consumeTweet(Tweets.findOne(tweetId));
-			Tweets.update(tweet, {$set: {consumed: true}});
-		}
-	});
-	Events.find({posted: {$exists: false}}).observeChanges({
-		added: function(eventId) {
-			var thisEvent = Events.findOne(eventId);
-			Events.update(thisEvent, {$set: {period: serverFunctions.getPeriodCode(thisEvent.dateTime)}});
-			var players = serverFunctions.matchingPlayers(eventId);
-			if (players.length)	serverFunctions.distributeEvent(players, Events.findOne(eventId));
-			Events.update(eventId, {$set: {posted: true}});
-		}
-	});
 
 	// STARTUP PROCESSES
 	Pitches._ensureIndex({ location : "2d" });
-	serverFunctions.streamTwitter();
+	if (Meteor.settings && Meteor.settings.streamTwitter) {
+		serverFunctions.streamTwitter();
+		appConfig.streaming = true;
+	}
 
 	// ACCOUNTS INJECTION ON SERVER STARTUP
 	Accounts.loginServiceConfiguration.remove({

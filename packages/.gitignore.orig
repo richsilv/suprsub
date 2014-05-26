@@ -74,6 +74,12 @@
 /zurb-foundation
 /houston
 /handlebars-server
+<<<<<<< HEAD
+/semantic-ui
+/zurb-foundation
+/houston
+/handlebars-server
+=======
 /blaze-layout
 /iron-router
 /iron-router
@@ -93,3 +99,4 @@
 /scss
 /foundation5-sass
 /collection-hooks
+>>>>>>> newmobilelayout

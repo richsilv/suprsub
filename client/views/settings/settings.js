@@ -30,11 +30,17 @@ Template.settingsBox.events({
     });*/
   },
   'click #emailButton': function() {
-    var frag = Meteor.render(function() {
-      return Template.linkModal();
+    templateAttach(Template.linkModalWrapper, function() {
+      $('#linkModal').modal({
+        onHide: function() {
+          $('.ui.dimmer.page').remove();
+          $('#linkModal').remove();
+        },
+        closable: true
+      });
+      $('#linkModal').modal('show');
     });
-    document.getElementById('linkModalHolder').appendChild(frag);
-    $('#linkModal').modal('show');
+    // UI.insert(UI.render(Template.linkModal), document.getElementById('linkModalHolder'));
   },
   'click #facebookButton': function() {
     if (!('facebook' in Meteor.user().services)) {
@@ -106,6 +112,7 @@ Template.linkModal.events({
     Meteor.call('emailExists', $('#emailEntry').val(), function(err, res) {
       if (res) {
         var duplicateEmail = $('#emailEntry').val();
+        // TODO SORT THIS OUT USING UI.toHTML...
         $('#linkModal').html(Template.duplicateEmail({email: duplicateEmail}));
       }
       else {
@@ -121,7 +128,7 @@ Template.linkModal.events({
   }
 });
 
-Template.linkModal.rendered = function() {
+/*Template.linkModal.rendered = function() {
   $('#linkModal').modal({
     onShow: function() {
       $('body').dimmer({
@@ -129,26 +136,21 @@ Template.linkModal.rendered = function() {
         performance: false,
         verbose: false,
         onHide: function() {
-          var linkModal = $('#linkModal')[0];
-          Spark.finalize(linkModal);
-          $(linkModal).empty();
-          Deps.flush();
+          console.log("hidden");
+          $(linkModal).remove();
           appVars.venues.dep.changed();
         }
       });
     },
     onHide: function() {
-      var linkModal = $('#linkModal')[0];
-      Spark.finalize(linkModal);
-      $(linkModal).empty();
-      Deps.flush();
+      $(linkModal).remove();
       appVars.venues.dep.changed();
     },
     debug: false,
     performance: false,
     verbose: false
   });
-};
+};*/
 
 // ****************** UTILITY ************
 

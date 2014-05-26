@@ -18,6 +18,10 @@
     },
     "handlebars-server": {},
     "impicker": {},
-    "Dropzonejs": {}
+    "Dropzonejs": {},
+    "fast-render": {},
+    "reactive-relations": {},
+    "iron-router-tour": {},
+    "collection-hooks": {}
   }
 }

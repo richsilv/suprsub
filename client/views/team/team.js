@@ -2,22 +2,24 @@ var tabChoices = new suprsubDep({
       newVenue: false,
       venueSearch: false,
       membersRingers: true
-    });
-    ringerList = new suprsubDep([]);
-    memberList = new suprsubDep([]);
-    memberRefresh = new Deps.Dependency();
+    }),
+    ringerList = new suprsubDep([]),
+    memberList = new suprsubDep([]),
+    memberRefresh = new Deps.Dependency(),
+    nameEntryOverride = new suprsubDep(false),
+    disableSave = new suprsubDep(true);
 
 // **************************
 
-Handlebars.registerHelper("tabChoices", function(key) {
+UI.registerHelper("tabChoices", function(key) {
   return tabChoices.getKey(key);
 });
 
-Handlebars.registerHelper("teamId", function() {
+UI.registerHelper("teamId", function() {
   return Router.current().route.currentTeamId.get();
 });
 
-Handlebars.registerHelper("codeEntered", function() {
+UI.registerHelper("codeEntered", function() {
   if (Router.current().route.codeEntered && Router.current().route.codeEntered.ready()) {
     return Router.current().route.codeEntered.info().code || null;
   }
@@ -28,7 +30,7 @@ Handlebars.registerHelper("codeEntered", function() {
 Template.teamInfo.events({
    'submit form': function() {
     Deps.flush();
-    if (!Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.get()) {
+    if (!UI.getElementData(document.querySelector('#cancelOrSave')).disableSave.get()) {
       saveTeamData({target: '#saveButton'});
       renderOnce('teamName', function() {
         $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
@@ -48,19 +50,24 @@ Template.teamInfo.rendered = function() {
 
 Template.teamName.helpers({
   dropdownTeams: function() {
+    Router.current().route.currentTeamId.dep.depend();
     return (Router.current().route.teamIds.length > 1 &&
      !!Router.current().route.currentTeamId.get() &&
-     !this.nameEntryOverride.get());
+     !nameEntryOverride.get());
   },
   teams: function() {
     return Teams.find();
+  },
+  singleTeamName: function() {
+    var thisTeam = Teams.findOne();
+    return thisTeam ? thisTeam.name : '';
   }
 });
 
 Template.teamName.events({
   'click #teamChoice .text': function() {
     if ($('#teamChoice').dropdown('is visible') === true) {
-      this.nameEntryOverride.set(true);
+      nameEntryOverride.set(true);
       var myFunc = function() {
         var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
         $('#teamName').val(teamData.name);
@@ -71,23 +78,22 @@ Template.teamName.events({
   },
   'keyup input, click div': function() {
     appVars.saveCalc.changed();
+  },
+  'keydown input': function(event) {
+    if (event.keyCode === 13)
+      return false;
   }
 });
 
-Template.teamName.rendered = function() {
+Template.dropdownItem.rendered = function() {
     // console.log("rerendering...");
-    if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
-      teamNameDropdownInit();
-      if (!this.data.renderedOnce) {
-        // this.data.renderedOnce = new suprsubDep(true);
-      }
+    teamNameDropdownInit();
+    if (!this.data || !this.data.renderedOnce || !this.data.renderedOnce.get()) {
+      if (!this.data || !this.data.renderedOnce)
+        this.data = this.data ? _.extend(this.data, {renderedOnce : new suprsubDep(true)}) : {renderedOnce : new suprsubDep(true)};
       else
         this.data.renderedOnce.set(true);
     }
-};
-
-Template.teamName.created = function() {
-  this.data.nameEntryOverride = new suprsubDep(false);
 };
 
 // **************************
@@ -115,33 +121,33 @@ function defaultTeamFunction() {
       Router.current().route.currentTeamId.dep.changed();
     }
 }
-function addTeamFunction() {
-    if (Router.current().route.currentTeamId.get())
-      Router.current().route.currentTeamId.set(null);
-      Spark.getDataContext(document.querySelector('#teamNameHolder')).nameEntryOverride.dep.changed();
-    // setTeamData();
+function addTeamFunction() { 
+  if (Router.current().route.currentTeamId.get())
+    Router.current().route.currentTeamId.set(null);
+    nameEntryOverride.dep.changed();
+  // setTeamData();
 }
 function leaveTeamFunction() {
-    if (Router.current().route.currentTeamId.get()) {
-      var newArray = _.without(Meteor.user().profile.team._ids, Router.current().route.currentTeamId.get()); 
-      Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
-      Router.current().route.currentTeamId.set(newArray.length ? newArray[0] : null);
-      Subs.teams.stop();
-      Subs.teams = Meteor.subscribe('teams');
-      // setTeamData();
-    }
+  if (Router.current().route.currentTeamId.get()) {
+    var newArray = _.without(Meteor.user().profile.team._ids, Router.current().route.currentTeamId.get()); 
+    Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
+    Router.current().route.currentTeamId.set(newArray.length ? newArray[0] : null);
+    Subs.teams.stop();
+    Subs.teams = Meteor.subscribe('teams');
+    // setTeamData();
+  }
 }
 function deleteTeamFunction() {
-    var deleteTeamId = Router.current().route.currentTeamId.get(),
-        teamIds = Router.current().route.teamIds;
-    if (deleteTeamId) {
-      // console.log("deleting...");
-      Teams.remove({_id: deleteTeamId});
-      teamIds = _.without(teamIds, deleteTeamId);
-      Meteor.users.update(Meteor.userId(), {$set: {'profile.team._ids': teamIds}});
-      Meteor.call('deleteTeam', deleteTeamId);
-      Router.current().route.currentTeamId.set(teamIds.length ? teamIds[0] : null);
-      // setTeamData();
+  var deleteTeamId = Router.current().route.currentTeamId.get(),
+      teamIds = Router.current().route.teamIds;
+  if (deleteTeamId) {
+    // console.log("deleting...");
+    Teams.remove({_id: deleteTeamId});
+    teamIds = _.without(teamIds, deleteTeamId);
+    Meteor.users.update(Meteor.userId(), {$set: {'profile.team._ids': teamIds}});
+    Meteor.call('deleteTeam', deleteTeamId);
+    Router.current().route.currentTeamId.set(teamIds.length ? teamIds[0] : null);
+    // setTeamData();
     }
 }
 
@@ -149,22 +155,34 @@ Template.teamButtons.events({
   'click #setDefault': function(event) {
     // console.log(event);
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
-        "<p>All future postings will be made on behalf of this team.</p>", defaultTeamFunction);
+      confirmModal({
+        message : "<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
+          "<p>All future postings will be made on behalf of this team.</p>", 
+        callback: defaultTeamFunction
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   },
   'click #addNewTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Do you want to <strong>create</strong> a new team?</p>", addTeamFunction);
+      confirmModal({
+        message: "<p>Do you want to <strong>create</strong> a new team?</p>",
+        callback: addTeamFunction
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   },
   'click #leaveTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Do you want to <strong>leave</strong> this team?</p><p>Other members of the team will be unaffected, but " +
-        "you will no longer be able to view or alter the team settings.", leaveTeamFunction);
+      confirmModal({
+        message: "<p>Do you want to <strong>leave</strong> this team?</p><p>Other members of the team will be unaffected, but " +
+          "you will no longer be able to view or alter the team settings.",
+        callback: leaveTeamFunction
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   },  
   'click #deleteTeam': function(event) {
     if (!($(event.target).hasClass('disabled')))
-      confirmModal("<p>Are you sure you want to delete this team? The team will be removed for <strong>all</strong> " +
-        "team members.</p><p>Use the minus icon if you just want to leave the team.</p>", deleteTeamFunction);
+      confirmModal({
+        message: "<p>Are you sure you want to delete this team? The team will be removed for <strong>all</strong> " +
+          "team members.</p><p>Use the minus icon if you just want to leave the team.</p>",
+        callback: deleteTeamFunction
+      }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250); });
   }
 });
 
@@ -213,6 +231,10 @@ Template.teamSettings.events({
     });
     google.maps.event.trigger(pitchMap, 'resize');
   },
+  'change #timePickerMinute': function(event) {
+    if (parseInt(event.target.value, 10) < 10)
+      event.target.value = '0' + event.target.value;
+  },
   'click .checkbox, click .dropdown': function(event) {
     appVars.saveCalc.changed();
   },
@@ -224,12 +246,12 @@ Template.teamSettings.events({
 
 Template.teamSettings.rendered = function() {
   // console.log(this.data.renderedOnce, this.data.renderedOnce ? this.data.renderedOnce.get() : null);
-  if (!this.data.renderedOnce || !this.data.renderedOnce.get()) {
+  if (!this.data || !this.data.renderedOnce || !this.data.renderedOnce.get()) {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
     $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
-    if (!this.data.renderedOnce)
-      this.data.renderedOnce = new suprsubDep(true);
+    if (!this.data || !this.data.renderedOnce)
+      this.data = this.data ? _.extend(this.data, {renderedOnce: new suprsubDep(true)}) : {renderedOnce: new suprsubDep(true)};
     else
       this.data.renderedOnce.set(true);
   }
@@ -240,7 +262,8 @@ Template.teamSettings.rendered = function() {
   if (Router.current().route.currentTeamId.get()) {
     $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
     var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
-    $('#teamName').val(teamData.name);
+    if (teamData) 
+      $('#teamName').val(teamData.name);
     $('#teamName').focus();
   }
 };
@@ -253,7 +276,6 @@ Template.teamSettings.created = function() {
 };
 
 Template.teamSettings.destroyed = function() {
-  console.log("destroyed");
   this.autoRun.stop();
 }
 
@@ -261,22 +283,17 @@ Template.teamSettings.destroyed = function() {
 
 Template.teamMainButtons.helpers({
   disableSave: function() {
-    if ('disableSave' in this) return this.disableSave.get();
-    return true;
+    return disableSave.get();
   }
 });
 
 Template.teamMainButtons.events({
   'click #resetButton': function() {
     var teamNameHolder = document.querySelector('#teamNameHolder');
-    Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+    nameEntryOverride.set(false);
   },
   'click #saveButton': saveTeamData
 });
-
-Template.teamMainButtons.created = function() {
-  this.data.disableSave = new suprsubDep(true);
-};
 
 // **************************
 
@@ -287,7 +304,7 @@ Template.otherInfo.events({
       if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
         var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
-        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>';});
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + prettyLocation(pitch) + '</a>';});
         $('#matches').html(pitchElement + '</div></div></div>');
       }
    }
@@ -307,11 +324,14 @@ Template.otherInfo.events({
     var pitch = Pitches.findOne({'_id': event.target.id});
     if (pitch) {
       pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
-      $('#homeGround input').val(pitch.owner + ' - ' + pitch.name);
+      $('#homeGround input').val(prettyLocation(pitch));
       $('#homeGround input').attr('id', pitch._id);
-      location.href = "#homeGround";
+      $('html, body').animate({
+        scrollTop: ($('#homeGround').first().offset().top - (window.innerHeight/2))
+      },500);
       window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
       appVars.saveCalc.changed();
+      google.maps.event.trigger(pitchMap, 'bounds_changed');
     }
   },
   'click #addVenue': function() {
@@ -344,7 +364,7 @@ Template.playerButtons.events({
   },
   'click #sendInvitation': function() {
     if (Router.current().route.currentTeamId.get()) {
-      templateAttach('chooseCodeTypeModal', function() {
+      templateAttach('chooseCodeTypeModalWrapper', function() {
         $('#chooseCodeTypeModal').modal('setting', {
           onHide: function() {
             $('.ui.dimmer.page').remove();
@@ -409,10 +429,11 @@ Template.chooseCodeTypeModal.events({
     }, 250);
   },
   'click #inviteSuprsubs': function() {
+    console.log("suprsub invite clicked");
     Meteor.setTimeout(function() {
       var thisTeam = Teams.findOne(Router.current().route.currentTeamId.get());
       $('#chooseCodeTypeModal').modal('hide');
-      Meteor.call('sendRingerCode', thisTeam.ringerCode, Meteor.user().name, function(err) {
+      Meteor.call('sendRingerCode', Router.current().route.currentTeamId.get(), Meteor.user().name, function(err) {
         if (!err)
           templateAttach('suprsubInvitationModal', function() {
             $('#suprsubInvitationModal').modal('setting', {
@@ -421,6 +442,8 @@ Template.chooseCodeTypeModal.events({
               },
             });
           });
+        else
+          console.log(err);
       });
     }, 250);
   }  
@@ -481,9 +504,9 @@ Deps.autorun(function() {
       teamName = $('#teamName').length ? $('#teamName').val() : $('#teamChoice').dropdown('get text'),
       node = document.querySelector('#cancelOrSave');
   if (node) {
-    if (!(homeGroundId && teamName)) Spark.getDataContext(node).disableSave.set(true);
+    if (!(homeGroundId && teamName)) disableSave.set(true);
     else {
-      Spark.getDataContext(node).disableSave.set(false);
+      disableSave.set(false);
     }
   }
 });
@@ -531,12 +554,14 @@ regularTimeCheckboxDisable = function() {
 }
 
 function teamNameDropdownInit() {
+  console.log("initialising dropdown");
   $('#teamChoice').dropdown({
     verbose: false, debug: false, performance: false,
     onChange: function(value, text) {
+      console.log("dropdown select event");
       Router.current().route.currentTeamId.set(value);
       // setTeamData();
-      Spark.getDataContext(document.querySelector('#cancelOrSave')).disableSave.set(true);
+      disableSave.set(true);
     }
   });
   $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
@@ -552,7 +577,7 @@ function setTeamData(teamData) {
     if (ground) {
       $('#homeGround>input').val(ground.owner + ' ' + ground.name);
       var googleCallback = Meteor.setInterval(function() {
-        if (typeof google !== 'undefined' && pitchMap && 'panTo' in pitchMap) {
+        if (typeof google !== 'undefined' && window.pitchMap && 'panTo' in pitchMap) {
           pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));
           Meteor.clearInterval(googleCallback);
         }
@@ -656,6 +681,6 @@ function saveTeamData(event) {
       thisGlowCallback();
   }
   var teamNameHolder = document.querySelector('#teamNameHolder');
-  Spark.getDataContext(teamNameHolder).nameEntryOverride.set(false);
+  nameEntryOverride.set(false);
   return false;
 }

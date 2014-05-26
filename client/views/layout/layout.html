@@ -20,13 +20,23 @@
 	<link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png" />
 	<link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png" />
 	<link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png" />
-	<meta name="viewport" content="width=640, user-scalable=no">
+	<!-- <meta name="viewport" content="width=640, user-scalable=no"> -->
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 </head>
 
 <template name="mainTemplate">
 	<div id="wrapper">
-		{{> topbar}}
-		{{yield "mainSection"}}
+		{{#unless smallScreen}}
+			{{> topbar}}
+		{{else}}
+			{{> sidebar}}
+			{{> miniTopbar}}
+		{{/unless}}
+		{{> yield region='mainSection'}}
+		<h1 id="header"></h1>
+        <div id="content">
+          <p></p>
+        </div>
 	</div>
 </template>
 
@@ -60,10 +70,10 @@
 				<span><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></span>	
 				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>				
 			</div>
-			<div class="item">
-    			<div class="ui red button show-for-large-up" id="delete-button">Delete Account</div>
+			<div class="item" id="delete-holder">
+    			<div class="ui red button" id="delete-button">Delete Account</div>
   			</div>
-  			<div class="item">
+  			<div class="item" id="logout-holder">
     			<div class="ui button" id="logout-button">Log Out</div>
   			</div>
 			{{else}}
@@ -87,24 +97,89 @@
 	</div>
 </template>
 
-<template name="generalConfirmModal">
-	<div class="ui small modal" id="generalConfirmModal">
-		<div class="grid">
-			<div class="ui row">
-				<div class="ui column">
-					{{{message}}}
-				</div>
-			</div>
-	  		<div class="ui negative button" id="generalConfirmCancel">
-	  			<i class="remove icon"></i>
-	  			Cancel
-	  		</div>
-	  		<div class="ui orange button" id="generalConfirmOkay">
-	  			<i class="checkmark icon"></i>
-	  			Okay
-	  		</div>
+<template name="miniTopbar">
+	<div class="ui darkgreen fixed inverted main menu" id="miniTopbar">
+		{{#if currentUser}}
+		<span class="item leftItem">
+			<i class="reorder icon"></i>
+			<i class="suprsub icon"></i>
+		</span>
+		<div class="right small-5 columns item">
+  			<div class="item" id="logout-holde">
+    			<div class="ui tiny button" id="logout-button">Log Out</div>
+  			</div>
   		</div>
-	</div>			
+		{{else}}
+			<div class="item" id="phoneLogin">
+				<div class="item small-6 columns">
+					<div class="ui icon input">
+						<input type="email" placeholder="Email" id="login-email">
+						<i class="user link icon"></i>
+					</div>
+				</div>
+				<div class="item small-6 columns">
+					<div class="ui icon input">
+						<input type="password" placeholder="Password" id="login-password">
+						<i class="lock link icon"></i>
+					</div>
+				</div>
+	  			<div class="item small-4 columns">
+	    			<div class="ui tiny button" id="login-button">Log In</div>
+	  			</div>
+			</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="sidebar">
+	<div class="ui inverted darkgreen overlay thin sidebar menu" id="sidebar">
+		<div class="item" href="{{pathFor 'home'}}">
+			<i class="suprsub icon"></i>
+		</div><hr>
+		{{#if currentUser}}	
+		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
+			<i class="home icon"></i> Home
+		</a>
+		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
+			<i class="user icon"></i> Player
+		</a>
+		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'teamDetails'}}">
+			<i class="users icon"></i> Team
+		</a>
+		<a class="{{#if option "/about"}}active {{/if}}item" href="{{pathFor 'about'}}">
+			<i class="book icon"></i> About
+		</a>
+		<a class="{{#if option "/settings"}}active {{/if}}item" href="{{pathFor 'settings'}}">
+			<i class="settings icon"></i> Settings
+		</a>
+		{{/if}}
+	</div>
+</template>
+
+<template name="generalConfirmModalWrapper">
+	<div class="ui small modal" id="generalConfirmModal">
+	{{>generalConfirmModal}}
+	</div>	
+</template>
+
+<template name="generalConfirmModal">
+	<div class="grid">
+		<div class="ui row">
+			<div class="ui column">
+				{{{message}}}
+			</div>
+		</div>
+		{{#unless noButtons}}
+  		<div class="ui negative button" id="generalConfirmCancel">
+  			<i class="remove icon"></i>
+  			Cancel
+  		</div>
+  		<div class="ui orange button" id="generalConfirmOkay">
+  			<i class="checkmark icon"></i>
+  			Okay
+  		</div>
+  		{{/unless}}
+	</div>
 </template>
 
 <template name="socialBox">

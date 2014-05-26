@@ -65,7 +65,10 @@ Template.loginScreen.events({
                 accountError.set(err.reason);
             }
             else {
-                Router.current().redirect('/player');
+                if (Router.Tour.loadTour(appVars.tour)) 
+                    Meteor.setTimeout(function() {
+                        Router.Tour.nextStep();
+                    }, 500);
             }
         });
     },

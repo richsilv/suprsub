@@ -1,15 +1,11 @@
 <template name="teamInfo">
 	<div id="main-background-image"></div>
-	<div class="gap row teamHeight">
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
+	<div class="row teamHeight">
+		<div class="medium-8 master columns">
 				{{> teamTopLevel}}
-			</div>
 		</div>
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
-				{{> teamSecondLevel}}
-			</div>			
+		<div class="medium-8 master columns">
+				{{> teamSecondLevel}}		
 		</div>
 	</div>
 	<div class="gap row">
@@ -61,16 +57,20 @@
 			<i class="dropdown icon"></i>
 			<div class="menu">
 				{{#each teams}}
-				<div class="item" data-value="{{_id}}">{{name}}</div>
+					{{> dropdownItem}}
 				{{/each}}
 			</div>
 		</div>
 		{{else}}
 		<div class="ui input">
-			<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings">
+			<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value="{{singleTeamName}}">
 		</div>
 		{{/if}}
 	</div>
+</template>
+
+<template name="dropdownItem">
+	<div class="item" data-value="{{_id}}">{{name}}</div>
 </template>
 
 <template name="teamButtons">
@@ -112,17 +112,17 @@
 
 <template name="teamSettings">
 	<form class="ui form whitetranslucent height225 teamForm">
-		<div class="large-10 medium-14 small-8 medium-centered large-uncentered columns">
+		<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
 			<div class="field">
 				<div class="checkboxLabel">Friendly</div>
 				<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
 					<input type="checkbox">
 					<label></label>
 				</div>
-				<div class="checkboxLabel">Competitive</div>
+				<div class="checkboxLabel">Comp<span class="show-for-small">.</span><span class="show-for-medium-up">etitive</span></div>
 			</div>
 		</div>
-		<div class="large-6 medium-14 small-8 medium-centered large-uncentered columns">
+		<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
 			<div class="field">
 				<label>Game Format</label>
 				<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
@@ -143,20 +143,18 @@
 		</div>
 		<div class="field">
 			<label>Home Ground</label>
-			{{#constant}}
 			<div class="ui input" id="homeGround">
 				<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">
 			</div>
-			{{/constant}}
 		</div>
-		<div class="two fields">
-			<div class="field" id="weeklyCheckBox">
+		<div class="fields">
+			<div class="small-9 columns field" id="weeklyCheckBox">
 				<div class="ui toggle checkbox" id="regDayCheckbox" title="Does your team play on the same day every week?">
 					<input type="checkbox" id="weekly">
 					<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
 				</div>
 			</div>
-			<div class="field opacity" id="dayChoiceSection">
+			<div class="small-7 columns field opacity" id="dayChoiceSection">
 				<label>Day</label>
 				<div class="ui selection dropdown">
 					<input type="hidden" id="day">
@@ -168,14 +166,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="two fields">
-			<div class="field">
+		<div class="fields">
+			<div class="small-7 columns field">
 				<div class="ui toggle checkbox opacity" id="timeCheckbox" title="Do your matches kick off at the same time every week?">
 					<input type="checkbox" id="sameTime">
-					<label>Same time<br class="show-for-medium-only"> each week?</label>
+					<label>Same time<br class="show-for-medium-only"><span class="show-for-medium-up"> each week</span>?</label>
 				</div>
 			</div>
-			<div class="field opacity" id="timeSection">
+			<div class="small-9 columns field opacity" id="timeSection">
 				<label>Kick-off</label>
 				<div class="row">
 					<div class="small-9 columns" style="margin: 0;">
@@ -213,8 +211,6 @@
 </template>
 
 <template name="otherInfo">
-	<div class="large-16 columns">
-		<div class="medium-16 columns">
 			<div class="ui segment content whitetranslucent" id="otherInfo">
 				<div class="row">
 					<div class="large-8 columns">
@@ -238,7 +234,7 @@
 						<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 					</div>
 					<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
-					<div class="large-8 columns">
+					<div class="large-8 master columns">
 						<div id="pitchMapContainerSmall">
 							{{#if tabChoices 'newVenue'}}
 							{{> newVenueBox}}
@@ -249,14 +245,10 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
 </template>
 
 <template name="pitchMapSmall">
-	{{#constant}}
 	<div class="ui row small" id="pitchMap" style="display: none;"></div>
-	{{/constant}}
 </template>
 
 <template name="newVenueBox">
@@ -282,25 +274,29 @@
 	</form>
 </template>
 
-<template name="chooseCodeTypeModal">
+<template name="chooseCodeTypeModalWrapper">
 	<div class="ui modal" id="chooseCodeTypeModal">
-		<i class="close icon"></i>
-		<div class="header">
-			Choose Invitation Type
+	{{> chooseCodeTypeModal}}
+	</div>
+</template>
+
+<template name="chooseCodeTypeModal">
+	<i class="close icon"></i>
+	<div class="header">
+		Choose Invitation Type
+	</div>
+	<div class="content">
+		<div class="left">
+			There are two sorts of invitation you can generate:
+			<ul>
+				<li>An invitation that will allow other players to join your team as a <em>teammate</em>, and will allow them to view and change your team settings.</li>
+				<li>An invitation to register as a <em>preferred Suprsub</em> for your team, meaning they can be posted first whenever you're looking for an extra player.  They won't be able to view or edit any of the team details though.</li>
+			</ul>
 		</div>
-		<div class="content">
-			<div class="left">
-				There are two sorts of invitation you can generate:
-				<ul>
-					<li>An invitation that will allow other players to join your team as a <em>teammate</em>, and will allow them to view and change your team settings.</li>
-					<li>An invitation to register as a <em>preferred Suprsub</em> for your team, meaning they can be posted first whenever you're looking for an extra player.  They won't be able to view or edit any of the team details though.</li>
-				</ul>
-			</div>
-		</div>
-		<div class="row">
-			<div class="ui button" id="inviteTeammates">Invite Teammates</div>
-			<div class="ui button" id="inviteSuprsubs">Invite Suprsubs</div>
-		</div>
+	</div>
+	<div class="row">
+		<div class="ui button" id="inviteTeammates">Invite Teammates</div>
+		<div class="ui button" id="inviteSuprsubs">Invite Suprsubs</div>
 	</div>
 </template>
 
@@ -373,6 +369,5 @@
 		<div class="actions">	
 			<div class="ui button">OK</div>
 		</div>
-	</div>
 	</div>
 </template>

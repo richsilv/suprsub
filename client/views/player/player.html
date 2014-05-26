@@ -1,10 +1,10 @@
 <template name="playerDetails">
 	<div id="main-background-image"></div>
-	<div class="gap row">
-		<div class="large-8 columns">
+	<div class="row">
+		<div class="large-8 master columns">
 			{{> playerForm}}
 		</div>
-		<div class="large-8 columns">
+		<div class="large-8 master columns">
 			{{> availabilityVenues}}
 		</div>
 	</div>
@@ -13,8 +13,8 @@
 	</div>
 	<div class="cleared row"></div>
 	<div class="gap row">
-		<div class="medium-16 columns">
-			<div class="large-16 columns">
+<!-- 		<div class="medium-16 columns">
+			<div class="large-16 columns"> -->
 				<div class="ui segment content whitetranslucent" id="areaDetails">
 					<div class="row">
 						<div class="ui vertical divider show-for-large-only" style="left: 25%"><i class="map icon"></i></div>
@@ -26,14 +26,14 @@
 						</div>
 					</div>
 				</div>
-			</div>
-		</div>
+<!-- 			</div>
+		</div> -->
 	</div>
 </template>
 
 <template name="playerForm">
-	<div class="large-16 columns">
-		<form class="ui form segment content whitetranslucent height280" id="playerForm">
+	<!-- <div class="large-16 columns"> -->
+		<form class="ui form segment content whitetranslucent noGap height280" id="playerForm">
 		  	<div class="two fields">
 		    	<div class="field">
 		      		<label>First Name</label>
@@ -50,7 +50,7 @@
 		  	</div>
 			{{> playerDropdowns dropdowns}}
 		</form>
-	</div>
+	<!-- </div> -->
 	<div id="linkModalHolder">
 	</div>
 </template>
@@ -107,8 +107,8 @@
 </template>
 
 <template name="availabilityVenues">
-	<div class="large-16 columns">
-		<div class="ui segment content whitetranslucent height280" id="tabSpace">
+	<!-- <div class="large-16 columns"> -->
+		<div class="ui segment content whitetranslucent noGap height280" id="tabSpace">
 			<div class="ui tabular menu">
 				<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
 					Availability
@@ -124,16 +124,16 @@
 				{{> availability}}
 			{{/if}}
 		</div>
-	</div>
+	<!-- </div> -->
 </template>
 
 <template name="pitchData">
 	<table class="ui darkgreen table segment" id="pitchTable">
-		<thead><tr><th class="tableProvider">Provider</th><th class="tableLocation">Location</th></tr></thead>
+		<thead><tr><th class="tableLocation">Location Name</th></tr></thead>
 		<div id="pitchTableDiv">
 			<tbody>
 				{{#each getVenues}}
-					<tr><td class="tableProvider">{{this.owner}}</td><td class="tableLocation">{{this.name}}</td></tr>
+					<tr><td class="tableLocation">{{this}}</td></tr>
 				{{/each}}
 			</tbody>
 		</div>
@@ -142,8 +142,7 @@
 
 <template name="availability">
 	<table class="ui green table segment" id="availabilityTable">
-		<thead><tr><td class="tableSpaceBlock"></td>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
-		<div style="display: block; max-height: 100px;">
+		<thead><tr><th class="tableSpaceBlock"></th>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
 			<tbody>
 				{{#each periods}}
 					<tr>
@@ -152,7 +151,6 @@
 					</tr>
 				{{/each}}
 			</tbody>
-		</div>
 	</table>
 </template>
 
@@ -162,6 +160,7 @@
 			<div class="ui">
 				<input type="checkbox" id="{{../periodCode}}/{{dayCode}}">
 				<label for="{{../periodCode}}/{{dayCode}}"></label>
+				<div class="checkboxDiv"></div>
 			</div>
 		</td>
 	{{/each}}
@@ -170,7 +169,7 @@
 <template name="defineBounds">
 	<form class="ui form segment content whitetranslucent">
 		<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
-		<div id="distanceWriteLabel"><h4 class="ui header">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></div>
+		<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></div>
 		<div class="field">
 			<input id="distanceWrite" type="range" min="0" max="250" />
 		</div>
@@ -178,21 +177,30 @@
 </template>
 
 <template name="pitchMapLarge">
-	{{#constant}}
 	<div class="ui row large" id="pitchMap" style="display: none;"></div>
-	{{/constant}}
 </template>
 
 <template name="playerAreaButtons">
 	<div class="ui two large buttons cancelOrSave" id="cancelOrSave">
-		<div class="ui red animated{{#if unmoved}} disabled{{/if}} button" id="revertBoundsButton"{{#unless unmoved}} title="Reset your area to the last time it was saved"{{/unless}}>
+		{{#if unmoved}}
+		<div class="ui red animateddisabled button" id="revertBoundsButton">
 			<div class="visible content">Reset</div>
 			<div class="hidden content"><i class="backward icon"></i></div>
 		</div>
-		<div class="ui green animated{{#if unmoved}} disabled{{/if}} button" id="saveBoundsButton"{{#unless unmoved}}  title="Save your home area as it appears on the map now"{{/unless}}>
+		<div class="ui green animated disabled button" id="saveBoundsButton">
 			<div class="visible content">Save</div>
 			<div class="hidden content"><i class="save icon"></i></div>
 		</div>	
+		{{else}}
+		<div class="ui red animated button" id="revertBoundsButton" title="Reset your area to the last time it was saved">
+			<div class="visible content">Reset</div>
+			<div class="hidden content"><i class="backward icon"></i></div>
+		</div>
+		<div class="ui green animated button" id="saveBoundsButton" title="Save your home area as it appears on the map now">
+			<div class="visible content">Save</div>
+			<div class="hidden content"><i class="save icon"></i></div>
+		</div>	
+		{{/if}}
 	</div>
 </template>
 

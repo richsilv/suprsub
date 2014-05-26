@@ -1,8 +1,8 @@
 <template name="homePage">
 	<div id="main-background-image"></div>
 	<div class="row">
-		<div class="large-8 gap columns">
-			<div class="row titleSection">
+		<div class="large-8 gap master columns">
+			<div class="titleSection">
 				<div class="suprsubFont suprsubHeader backgroundShadowBig">SuprSub</div>
 				<!-- <div class="ui divider" style="position: relative"></div> -->
 				<ul class="ui backgroundShadowSmall rightList show-for-medium-up" id="benefitsList">
@@ -14,7 +14,7 @@
 				  	<li class="shortDivider"></li>
 				</ul>
 			</div>
-			<div class="row">
+			<div class="">
 				<div class="ui tabular menu" id="postBoxTextChoice">
 				  	<a class="{{#unless postBoxText}}active {{/unless}}item ui popup" activate="0" title="Make a posting using an easy-to-fill form">
 				    	Form
@@ -23,19 +23,19 @@
 				    	Text
 				  	</a>
 			  	</div>
-				<div class="medium-16 columns">
-					<div class="large-16 columns">
+<!-- 				<div class="medium-16 columns">
+					<div class="large-16 columns"> -->
 						{{#if postBoxText}}
 							{{> postBox}}
 						{{else}}
 							{{> fullPostingForm}}
 						{{/if}}
-					</div>
-				</div>
+<!-- 					</div>
+				</div> -->
 			</div>
 		</div>
-		<div class="large-8 columns">
-			<div class="medium-16 columns">
+		<div class="large-8 master columns">
+			<div class="">
 				<div class="ui feed segment whitetranslucent" id="activityFeed">
 			      	<h2 class="ui header" id="activityHeader">Latest Activity</h2>
 			      	<span id="toggleBox">
@@ -51,9 +51,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="modalHolder">
-		{{> postingModal}}
 	</div>
 </template>
 
@@ -78,8 +75,8 @@
 <template name="fullPostingForm">
 	<div class="ui segment content whitetranslucent">
 		<form class="ui reply form" id="fullPostingForm">
-			<div class="underlineRow ui grid">
-				<div class="field six wide column">
+			<div class="underlineRow ui row">
+				<div class="field small-6 columns">
 					<label>No. of players</label>
 					<div class="ui fluid selection dropdown" id="numberPlayers" title="The number of SuprSubs your team is looking for">
 						<input type="hidden" id="players">
@@ -96,7 +93,7 @@
 						</div>
 					</div>					
 				</div>
-				<div class="field ten wide column">
+				<div class="field small-10 columns">
 					<label>Location</label>
 					<div class="ui left labeled icon input" title="The match location. If you can't find your venue, you can make a request for it to be added on the Team page">
 						<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
@@ -105,24 +102,24 @@
 					<div id="matchesFloat"></div>
 				</div>
 			</div>
-			<div class="underlineRow ui grid">
-				<div class="field eight wide column">
+			<div class="underlineRow ui row">
+				<div class="field small-8 columns">
 					<label>Date</label>
 					<div class="ui left labeled icon input" title="The date of your match">
 						<input id="datepicker">
 						<i class="calendar icon"></i>
 					</div>
 				</div>
-				<div class="field eight wide column" id="timeSection" title="Kick-off time">
+				<div class="field small-8 columns" id="timeSection" title="Kick-off time">
 					<label>Kick-off</label>
 					<div class="row">
-						<div class="small-9 columns" style="margin: 0;">
+						<div class="small-9 columns minipadding">
 							<div class="ui left icon input">
 								<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
 								<i class="time icon"></i>
 							</div>
 						</div>
-						<div class="small-7 columns" style="margin: 0;">
+						<div class="small-7 columns">
 							<div class="ui input">
 								<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
 							</div>
@@ -130,16 +127,16 @@
 					</div>
 				</div>
 			</div>
-			<div class="underlineRow ui grid">
-				<div class="field eight wide column">
+			<div class="underlineRow ui row">
+				<div class="field small-8 columns">
 					<div class="checkboxLabel">Friendly</div>
 					<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
 						<input type="checkbox">
 						<label></label>
 					</div>
-					<div class="checkboxLabel">Competitive</div>
+					<div class="checkboxLabel"><span class="show-for-medium-up">Competitive</span><span class="show-for-small-only">Comp.</span></div>
 				</div>
-				<div class="field eight wide column">
+				<div class="field small-8 columns">
 					<label>Game Format</label>
 					<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
 						<input type="hidden" id="format">
@@ -157,15 +154,15 @@
 					</div>
 				</div>
 			</div>
-			<div class="underlineRow ui grid">
-				<div class="field seven wide column" id="cost">
+			<div class="underlineRow ui row">
+				<div class="field small-7 columns" id="cost">
 					<label>Cost</label>
 					<div class="ui left icon input" title="Will you expect your SubrSub(s) to pay to play?  If you leave this blank, we will assume not.">
 						<input id="costInput" type="number" min="0" max="20" class="input" placeholder="free">
 						<i class="pound icon"></i>
 					</div>
 				</div>
-				<div class="field nine wide column">
+				<div class="field small-9 columns">
 					<label>Send to:</label>
 					<div class="checkboxLabel">Everyone</div>
 					<div class="ui toggle checkbox neutral" id="onlySuprsubs" title="Do you want to notify everybody of this posting, or only those you've already specified as preferred SubrSubs?">
@@ -174,70 +171,74 @@
 					</div>
 					<div class="checkboxLabel">My SuprSubs</div>
 				</div>
-			</div>{{#isolate}}
+			</div>
 			<div class="ui lowered button bottomRight teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="fullPostingFormSubmit" title="{{#if teamRegistered}}Submit this posting{{else}}You need to enter your team details on the Team tab before you can make a posting{{/if}}">
 					<i class="icon edit"></i> Make a Posting Now!
-			</div>{{/isolate}}
+			</div>
 		</form>
 	</div>
 </template>
 
+<template name="postingModalWrapper">
+	<div class="ui small modal" id="postingModal">
+	{{>postingModal}}
+	</div>
+</template>
+
 <template name="postingModal">
-	<div class="ui small modal">
-		<div class="header">
-			New Posting
-		</div>
-		<div class="content">
-			<div class="ui raised segment">
+	<div class="header">
+		New Posting
+	</div>
+	<div class="content">
+		<div class="ui raised segment">
+			<div class="ui teal ribbon label">
+				Number of Players needed
+			</div>
+			<p>{{posting.players}}</p>
+			<div class="ui teal ribbon label">
+				Time and Date
+			</div>
+			<p>{{posting.dateTime}}</p>
+			<div class="ui teal ribbon label">
+				Location
+			</div>
+			<p>{{posting.location}}</p>
+			<div class="ui teal ribbon label">
+				Gender
+			</div>
+			<p>{{posting.gender}}</p>
+			{{#if posting.gameType}}
 				<div class="ui teal ribbon label">
-					Number of Players needed
+					Game Type
 				</div>
-				<p>{{posting.players}}</p>
+				<p>{{posting.gameType}}</p>
+			{{/if}}
+			{{#if posting.teamSize}}
 				<div class="ui teal ribbon label">
-					Time and Date
+					Players per side
 				</div>
-				<p>{{posting.dateTime}}</p>
-				<div class="ui teal ribbon label">
-					Location
-				</div>
-				<p>{{posting.location}}</p>
-				<div class="ui teal ribbon label">
-					Gender
-				</div>
-				<p>{{posting.gender}}</p>
-				{{#if posting.gameType}}
-					<div class="ui teal ribbon label">
-						Game Type
-					</div>
-					<p>{{posting.gameType}}</p>
+				<p>{{posting.teamSize}}</p>
+			{{/if}}
+			<div class="ui teal ribbon label">
+				Cost
+			</div>
+			<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
+			<div class="ui teal ribbon label">
+				Post to
+			</div>
+			<p>
+				{{#if posting.onlyRingers}}
+					My Preferred SuprSubs only
+				{{else}}
+					All potential Suprsubs
 				{{/if}}
-				{{#if posting.teamSize}}
-					<div class="ui teal ribbon label">
-						Players per side
-					</div>
-					<p>{{posting.teamSize}}</p>
-				{{/if}}
-				<div class="ui teal ribbon label">
-					Cost
-				</div>
-				<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
-				<div class="ui teal ribbon label">
-					Post to
-				</div>
-				<p>
-					{{#if posting.onlyRingers}}
-						My Preferred SuprSubs only
-					{{else}}
-						All potential Suprsubs
-					{{/if}}
-				</p>
-				<div class="ui grid">
-					<div class="four wide column"></div>
-					<div class="eight wide column">
-						<div class="2 ui fluid buttons">
-						  	<div class="ui positive button" id="makePosting">Post</div>
-						  	<div class="ui negative button" id="cancelPosting">Cancel</div>
-						</div>
+			</p>
+			<div class="ui grid">
+				<div class="four wide column"></div>
+				<div class="eight wide column">
+					<div class="2 ui fluid buttons">
+					  	<div class="ui positive button" id="makePosting">Post</div>
+					  	<div class="ui negative button" id="cancelPosting">Cancel</div>
 					</div>
 				</div>
 			</div>
@@ -246,7 +247,7 @@
 </template>
 
 <template name="activityFeed">
-	{{#each events}}
+	{{#each eventList}}
 		<div class="event">
 		    <div class="label">
 		      	<i class="{{eventIcon}} icon"></i>
@@ -258,12 +259,73 @@
 		      	<div class="summary">
 		         	<a>{{teamName}}:</a>
 		      	</div>
-		      	<div class="extra text">
+		      	<div class="extra text {{#if available}}available{{/if}}" id={{_id}}>
 		      		{{message}}
 		      	</div>
 		    </div>
 		</div>
 	{{/each}}
+</template>
+
+<template name="signupModalHolder">
+	<div class="ui small modal" id="signupModal">
+	{{> signupModal}}
+	</div>
+</template>
+
+<template name="signupModal">
+	<div class="header">
+		Posting Details
+	</div>
+	<div class="content">
+		<div class="ui raised segment">
+			<div class="ui teal ribbon label">
+				Number of Players needed
+			</div>
+			<p>{{posting.players}}</p>
+			<div class="ui teal ribbon label">
+				Time and Date
+			</div>
+			<p>{{posting.dateTime}}</p>
+			<div class="ui teal ribbon label">
+				Location
+			</div>
+			<p>{{posting.location}}</p>
+			<div class="ui teal ribbon label">
+				Gender
+			</div>
+			<p>{{posting.gender}}</p>
+			{{#if posting.gameType}}
+				<div class="ui teal ribbon label">
+					Game Type
+				</div>
+				<p>{{posting.gameType}}</p>
+			{{/if}}
+			{{#if posting.teamSize}}
+				<div class="ui teal ribbon label">
+					Players per side
+				</div>
+				<p>{{posting.teamSize}}</p>
+			{{/if}}
+			<div class="ui teal ribbon label">
+				Cost
+			</div>
+			<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
+			<div class="ui grid">
+				<div class="four wide column"></div>
+				<div class="ten wide column">
+					<div class="2 ui fluid buttons">
+						{{#if myPosting}}
+						<div class="ui negative button" id="removePosting" title="Cancel this posting">Cancel</div>
+						{{else}}
+					  	<div class="ui positive button" id="takePosting" title="I'll be your SuprSub!">Sign Up!</div>
+					  	{{/if}}
+					  	<div class="ui button" id="cancelSignup">Close</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <template name="fadeBox">

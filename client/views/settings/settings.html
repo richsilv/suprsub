@@ -1,14 +1,10 @@
 <template name="settings">
 	<div id="main-background-image"></div>
-	<div class="gap row">
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
+	<div class="row">
+		<div class="medium-8 master columns">
 				{{> settingsBox}}
-			</div>
 		</div>
-		<div class="medium-8 columns">
-			<div class="large-16 columns">
-			</div>			
+		<div class="medium-8 master columns">		
 		</div>
 	</div>
 	<div class="gap row">
@@ -17,7 +13,6 @@
 </template>
 
 <template name="settingsBox">
-	<div class="large-16 columns">
 		<form class="ui form segment content whitetranslucent">
 		  	<div class="row">
 		  		<ul class="small-block-grid-1 medium-block-grid-3 large-block-grid-1" id="linkTriple">
@@ -42,18 +37,24 @@
 				  		</div>
 		  			</li>
 			  		<li>
-				  		<div class="small ui fluid {{#if email 'verified'}}orange {{/if}} button" {{#if email}} title="{{email}}"{{/if}} id="emailButton">
+			  			{{#if email 'verified'}}
+				  		<div class="small ui fluid orange button" title={{email}} id="emailButton">
 				  			<i class="mail icon"></i>
-				  			{{#if email 'verified'}}
-					  			Email address verified
-				  			{{else}}
-				  				{{#if email 'unverified'}}
-					  				Waiting for email verification
-					  			{{else}}
-					  				Link Email Account
-				  				{{/if}}
-				  			{{/if}}
+					  		Email address verified
 				  		</div>
+			  			{{else}}
+			  				{{#if email 'unverified'}}
+					  		<div class="small ui fluid button" title={{email}} id="emailButton">
+					  			<i class="mail icon"></i>
+						  		Waiting for email verification
+					  		</div>
+			  				{{else}}
+			  				<div class="small ui fluid button" id="emailButton">
+					  			<i class="mail icon"></i>
+						  		Link Email Account
+					  		</div>
+			  				{{/if}}
+			  			{{/if}}
 			  		</li>
 			  	</ul>
 		  	</div>
@@ -85,7 +86,6 @@
 				</div>
 			</div>
 		</form>
-	</div>
 	<div id="linkModalHolder">
 	</div>
 </template>
@@ -107,34 +107,38 @@
 	</div>	
 </template>
 
-<template name="linkModal">
+<template name="linkModalWrapper">
 	<div class="ui small modal" id="linkModal">
-		<div class="ui row">
-			<div class="ui column">
-				<form class="ui form">
-			  		<div class="inline field">
-			      		<div class="ui input" id="email">
-			      			<input placeholder="Email Address" type="email" id="emailEntry" />
-			      		</div>
-			    	</div>
-					<div class="inline field">
-			      		<div class="ui input" id="password">
-			      			<input placeholder="Password" type="password" id="passwordEntry" />
-			      		</div>
-			    	</div>
-			    	<div class="two fluid ui buttons">
-	    		  		<div class="ui negative button" id="emailCancel">
-				  			<i class="remove icon"></i>
-				  			Cancel
-				  		</div>
-	    		  		<div class="ui orange button" id="emailSubmit">
-				  			<i class="mail icon"></i>
-				  			Submit
-				  		</div>
-				  	</div>
-		    	</form>
-			</div>    			
-		</div>
+	{{> linkModal}}
+	</div>
+</template>
+
+<template name="linkModal">
+	<div class="ui row">
+		<div class="ui column">
+			<form class="ui form">
+		  		<div class="inline field">
+		      		<div class="ui input" id="email">
+		      			<input placeholder="Email Address" type="email" id="emailEntry" />
+		      		</div>
+		    	</div>
+				<div class="inline field">
+		      		<div class="ui input" id="password">
+		      			<input placeholder="Password" type="password" id="passwordEntry" />
+		      		</div>
+		    	</div>
+		    	<div class="two fluid ui buttons">
+    		  		<div class="ui negative button" id="emailCancel">
+			  			<i class="remove icon"></i>
+			  			Cancel
+			  		</div>
+    		  		<div class="ui orange button" id="emailSubmit">
+			  			<i class="mail icon"></i>
+			  			Submit
+			  		</div>
+			  	</div>
+	    	</form>
+		</div>    			
 	</div>
 </template>
 

@@ -10,7 +10,6 @@ accounts-base
 accounts-password
 accounts-facebook
 accounts-twitter
-iron-router
 
 twit
 
@@ -31,6 +30,9 @@ Pikaday
 
 
 houston
+<<<<<<< HEAD
+
+=======
 blaze-layout
 
 iron-router
@@ -44,3 +46,4 @@ Dropzonejs
 reactive-relations
 iron-router-tour
 collection-hooks
+>>>>>>> newmobilelayout

@@ -3,7 +3,10 @@
   "dependencies": {
     "basePackages": {
       "semantic-ui": {},
-      "iron-router": {},
+      "iron-router": {
+        "git": "https://github.com/EventedMind/iron-router.git",
+        "tag": "v0.6.4"
+      },
       "twit": {},
       "moment": {},
       "zurb-foundation": {},
@@ -28,8 +31,13 @@
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
+<<<<<<< HEAD
+        "tag": "v0.15.2",
+        "commit": "aafa100ef174a644ebfc426c3f7ee922032e2a10"
+=======
         "tag": "v0.16.1",
         "commit": "46da3245561e5e64f03b1e2c8807cc6125aa4d98"
+>>>>>>> newmobilelayout
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
@@ -48,6 +56,15 @@
       },
       "zurb-foundation": {
         "git": "https://github.com/MixinLabs/meteor-foundation.git",
+<<<<<<< HEAD
+        "tag": "v0.2.0",
+        "commit": "2fc8ecfe2756e178140aae281141c8e56f1c2606"
+      },
+      "houston": {
+        "git": "https://github.com/gterrono/houston.git",
+        "tag": "v1.0.2",
+        "commit": "c9af02ec7b52b5ea061a36d260386aa25644507d"
+=======
         "tag": "v5.2.2-0.0.1",
         "commit": "afe432020cc6246fa0a243a6d2e1e031f08d98e3"
       },
@@ -55,6 +72,7 @@
         "git": "https://github.com/gterrono/houston.git",
         "tag": "v1.0.4",
         "commit": "e76bda40587ac80ce51ee417047be8272664625c"
+>>>>>>> newmobilelayout
       },
       "smart-collections": {
         "git": "https://github.com/arunoda/meteor-smart-collections.git",

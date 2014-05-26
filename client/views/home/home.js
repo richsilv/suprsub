@@ -5,10 +5,10 @@ var postBoxText = new suprsubDep(false),
 
 Template.homePage.helpers({
   filter: function() {
-    return Router.routes['home'].postingsChoice.get();
+    return Subs.postingsChoice.get();
   },
   postingsUser: function() {
-    return Router.routes['home'].postingsUser.get();
+    return Subs.postingsUser.get();
   },
   postBoxText: function() {
     return postBoxText.get();
@@ -16,16 +16,16 @@ Template.homePage.helpers({
 });
 Template.homePage.events({
   'click #allFilter': function() {
-    Router.routes['home'].postingsChoice.set('');
-    Router.routes['home'].postingsUser.set(false);
+    Subs.postingsChoice.set('');
+    Subs.postingsUser.set(false);
   },
   'click #userFilter': function() {
-    Router.routes['home'].postingsChoice.set(Meteor.userId());
-    Router.routes['home'].postingsUser.set(false);
+    Subs.postingsChoice.set(Meteor.userId());
+    Subs.postingsUser.set(false);
   },
   'click #userPostings': function() {
-    Router.routes['home'].postingsChoice.set(Meteor.userId());
-    Router.routes['home'].postingsUser.set(true);
+    Subs.postingsChoice.set(Meteor.userId());
+    Subs.postingsUser.set(true);
   },  
   'click #postBoxTextChoice .item': function(event) {
     if (event.target.attributes.activate.value === "1")
@@ -38,7 +38,7 @@ Template.homePage.events({
 Template.postBox.helpers({
   'teamRegistered': function() {
     var thisUser = Meteor.user();
-    return (thisUser && thisUser.profile && thisUser.profile.team);   
+    return (thisUser && thisUser.profile && thisUser.profile.team._ids.length);   
   }
 });
 Template.postBox.events({
@@ -47,9 +47,26 @@ Template.postBox.events({
       if (err) console.log(err);
       else if (!Meteor.user().profile.team._ids.length) console.log("This user has no team");
       else {
-        res = _.extend(res, {team: Meteor.user().profile.team._ids[0]});
-        appVars.newPosting.set(res);
-        Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
+        var requestData = {
+          players: null,
+          dateTime: null,
+          location: null,
+          onlyRingers: false,
+          gender: 0,
+          price: 0
+        };
+        requestData = _.extend(requestData, res, {team: Meteor.user().profile.team._ids[0]});
+        appVars.newPosting.set(requestData);
+        console.log(requestData);
+        UI.insert(UI.render(Template.postingModalWrapper), document.body);
+        $('#postingModal').modal('setting', {
+          onHide: function() {
+            Meteor.setTimeout(function() {
+              $('.ui.dimmer.page').remove();
+            }, 200);
+          }
+        });
+        Meteor.setTimeout(function() {$('#postingModal').modal('show');}, 200);
       }
     });
   }
@@ -83,7 +100,7 @@ Template.fullPostingForm.helpers({
   },
   'teamRegistered': function() {
     var thisUser = Meteor.user();
-    return (thisUser && thisUser.profile && thisUser.profile.team);   
+    return (thisUser && thisUser.profile && thisUser.profile.team._ids.length);;   
   }
 })
 
@@ -98,11 +115,15 @@ Template.fullPostingForm.events({
       if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
         var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
-        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.owner + ' - ' + pitch.name + '</a>';});
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + prettyLocation(pitch) + '</a>';});
         $('#matchesFloat').html(pitchElement + '</div></div></div>');
         $('#matchesFloat').show();
       }
     }
+  },
+  'change #timePickerMinute': function(event) {
+    if (parseInt(event.target.value, 10) < 10)
+      event.target.value = '0' + event.target.value;
   },
   'click .pitchEntry.item': function(event) {
     $('#homeGroundSearch').val(event.target.innerText);
@@ -110,7 +131,6 @@ Template.fullPostingForm.events({
     $('#matchesFloat').hide();
   },
   'click #fullPostingFormSubmit': function(event) {
-    console.log("hello!");
       var thisUser = Meteor.user(),
         requestData = {
           players: null,
@@ -129,7 +149,7 @@ Template.fullPostingForm.events({
       requestData.dateTime = picker.getDate();
       requestData.dateTime = new Date(requestData.dateTime.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() * 60000));
       requestData.location = $('#homeGroundSearch').attr('data-value');
-      requestData.gameType = $('#friendlyCompetitive input')[0].checked;
+      requestData.gameType = $('#friendlyCompetitive input')[0].checked ? 1 : 0;
       var teamSize = parseInt($('#gameFormat').dropdown('get value'), 10);
       if (teamSize)
         requestData.teamSize = teamSize;
@@ -139,7 +159,16 @@ Template.fullPostingForm.events({
         requestData.onlyRingers = true;
       requestData.gender = Meteor.user().profile.gender;
       appVars.newPosting.set(requestData);
-      Meteor.setTimeout(function() {$('.ui.modal').modal('show');}, 200);
+      console.log(document.body);
+      UI.insert(UI.render(Template.postingModalWrapper), document.body);
+      $('#postingModal').modal('setting', {
+        onHide: function() {
+          Meteor.setTimeout(function() {
+            $('.ui.dimmer.page').remove();
+          }, 200);
+        }
+      });
+      Meteor.setTimeout(function() {$('#postingModal').modal('show');}, 200);
     }
 });
 
@@ -184,17 +213,18 @@ Template.postingModal.events({
   'click #makePosting': function() {
     Meteor.call('makePosting', appVars.newPosting.get(), {source: 'web'}, function(err, res) {
       if (err) alert("Could not make posting!");
-      $('.dimmer').dimmer('hide');
+      console.log(err);
+      $('#postingModal').modal('hide');
     });
   },
   'click #cancelPosting': function() {
     appVars.newPosting.set(null);
-    $('.dimmer').dimmer('hide');
+    $('#postingModal').modal('hide');
   }  
 });
 
 Template.activityFeed.helpers({
-  events: function() {
+  eventList: function() {
     return Events.find({cancelled: {$exists: false}}, {limit: 10, sort: {createdAt: -1}});
   },
   eventIcon: function() {
@@ -222,10 +252,26 @@ Template.activityFeed.helpers({
   timeAgo: function() {
     TimeKeeper._dep.depend();
     return moment(this.createdAt).fromNow();
+  },
+  available: function() {
+    return (this.players > 0);
+  }
+});
+Template.activityFeed.events({
+  'click .extra.text.available': function(event) {
+    var thisEvent = Events.findOne({_id: event.target.id});
+    thisEvent.pitch = null;
+    UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
+    $('#signupModal').modal('setting', {
+      onHidden: function() {
+        $('.ui.dimmer.page').remove();
+      }
+    });
+    Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);
   }
 });
 Template.activityFeed.rendered = function() {
-  var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
+/*  var eventDivs = this.findAll('.event'), lastEvent = eventDivs[eventDivs.length - 1];
   if (eventDivs.length) {
     var frag = Template.fadeBox({
       height: lastEvent.offsetHeight,
@@ -233,8 +279,8 @@ Template.activityFeed.rendered = function() {
       left: lastEvent.offsetLeft,
       top: lastEvent.offsetTop,
     });
-//    $('#activityFeed').append(frag);
-  }
+   $('#activityFeed').append(frag);
+  }*/
 };
 Template.activityFeed.created = function() {
   this.rerender = Meteor.setInterval(function() {
@@ -244,6 +290,79 @@ Template.activityFeed.created = function() {
 Template.activityFeed.destroyed = function() {
   Meteor.clearInterval(this.rerender);
 };
+
+// *********************************
+
+Template.signupModal.helpers({
+  posting: function(){
+    var postingData = this.postingData;
+    if (!postingData) return {};
+    output = {
+      players: postingData.players + ' player',
+      dateTime: prettyDateTime(postingData.dateTime),
+      location: prettyLocation(postingData.location),
+      gender: postingData.gender ? "Female" : "Male",
+      price: postingData.price,
+      onlyRingers: postingData.onlyRingers
+    };
+    if (postingData.players > 1) output.players += 's';
+    if ('gameType' in postingData) output.gameType = ['Friendly', 'Competitive'][postingData.gameType];
+    if ('teamSize' in postingData) output.teamSize = postingData.teamSize + '-a-side';   
+    return output;
+  },
+  myPosting: function() {
+    return (Meteor.user().profile.team._ids.indexOf(this.postingData.team) > -1);
+  }
+});
+
+Template.signupModal.events({
+  'click #cancelSignup': function() {
+    $('#signupModal').modal('hide');
+  },
+  'click #takePosting': function() {
+    self = this;
+    $('#signupModal').modal({
+      onHidden: function() {
+        $('.ui.dimmer.page').remove();
+        Meteor.call('signupPlayer', Meteor.user(), self.postingData, function(err, res) {     
+          if (err)
+            console.log(err);
+          else {
+            confirmModal({
+              message: "<h2>SUCCESS!</h2><p>You've just become a SuprSub!  The team captain's contact details have been sent to you.</p>",
+              callback: null,
+              noButtons: true
+            }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250);}
+            );
+          }
+        });
+      }
+    });
+    $('#signupModal').modal('hide');
+  },
+  'click #removePosting': function() {
+    self = this;
+    $('#signupModal').modal({
+      onHidden: function() {
+        Meteor.call('removePosting', self.postingData, function(err, res) {
+          if (err)
+           console.log(err);
+           else {
+             confirmModal({
+               message: "<h2>SUCCESS!</h2><p>Your posting has been removed.</p>",
+               callback: null,
+               noButtons: true
+             }, function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250);}
+            );
+          }      
+        });
+      }
+    });
+    $('#signupModal').modal('hide');
+  }
+})
+
+// *********************************
 
 function verifyForm() {
   if (!parseInt($('#numberPlayers').dropdown('get value'), 10))
@@ -265,12 +384,14 @@ setFormDefaults = function() {
   if (!teamList.length)
     return false;
   var teamProfile = Teams.findOne({_id: teamList[0]});
+  if (!teamProfile)
+    return false;
   if (teamProfile.format)
     $('#gameFormat').dropdown('set selected', teamProfile.format);
   if (teamProfile.homeGround) {
     var homeGround = Pitches.findOne({_id: teamProfile.homeGround});
     if (homeGround) {
-      $('#homeGroundSearch').val(homeGround.owner + " - " + homeGround.name);
+      $('#homeGroundSearch').val(prettyLocation(homeGround));
       $('#homeGroundSearch').attr('data-value', homeGround._id);
     }
   }
