@@ -133,7 +133,7 @@ Router.map(function() {
     after: function() {
       var thisEvent = Events.findOne({_id: this.params.eventCode});
       thisEvent.pitch = null;
-      if (thisEvent) {
+      if (thisEvent  && thisEvent.players > 0) {
         UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
         $('#signupModal').modal('setting', {
           onHidden: function() {
