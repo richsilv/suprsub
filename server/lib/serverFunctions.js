@@ -552,7 +552,7 @@
 				else playerContactDeets = thisUser.emails && thisUser.emails.length && thisUser.emails[0].address;
 				console.log("Notifying:", teamCaptain.profile.contact);
 				if (teamCaptain.profile.contact.indexOf(0) > -1) {
-					teamCaptContactDeets = teamCaptain.services.twitter.screenName;
+					teamCaptContactDeets = '@' + teamCaptain.services.twitter.screenName;
 					console.log(thisUser.profile.name, playerContactDeets, teamCaptain.services.twitter.id, teamCaptContactDeets);
 					Meteor.call('twitterSendMessage', "Your posting has been filled by Suprsub " + thisUser.profile.name + ", who can be reached at " + playerContactDeets, teamCaptain.services.twitter.id);		
 				}
