@@ -7,12 +7,7 @@
       "twit": {},
       "moment": {},
       "zurb-foundation": {},
-      "houston": {},
       "smart-collections": {},
-      "jquery-transit": {
-        "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
-        "branch": "master"
-      },
       "Pikaday": {
         "git": "https://github.com/richsilv/Pikaday.git",
         "branch": "master"
@@ -28,8 +23,8 @@
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.16.1",
-        "commit": "46da3245561e5e64f03b1e2c8807cc6125aa4d98"
+        "tag": "v0.17.0",
+        "commit": "820b4a05267733aa8124ba6ebc5b88eaf93361c4"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
@@ -51,20 +46,10 @@
         "tag": "v5.2.2-0.0.1",
         "commit": "afe432020cc6246fa0a243a6d2e1e031f08d98e3"
       },
-      "houston": {
-        "git": "https://github.com/gterrono/houston.git",
-        "tag": "v1.0.4",
-        "commit": "e76bda40587ac80ce51ee417047be8272664625c"
-      },
       "smart-collections": {
         "git": "https://github.com/arunoda/meteor-smart-collections.git",
         "tag": "v0.4.0",
         "commit": "da25a5e88c3b5e3c1cb3bd44fd7fdc3234448526"
-      },
-      "jquery-transit": {
-        "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
-        "branch": "master",
-        "commit": "d3b8a4149ab40b14b125edd473c3850177895fb5"
       },
       "Pikaday": {
         "git": "https://github.com/richsilv/Pikaday.git",
@@ -111,20 +96,10 @@
         "tag": "v0.2.4",
         "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
       },
-      "paginated-subscription": {
-        "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
-        "tag": "v0.2.1",
-        "commit": "f44d171badcc2e6f87c752580be16c955cdb3bb8"
-      },
-      "spin": {
-        "git": "https://github.com/SachaG/meteor-spin.git",
-        "tag": "v0.2.2",
-        "commit": "3f655f0016228e4195acc784c45d3e3a247dc39f"
-      },
       "scss": {
         "git": "https://github.com/fourseven/meteor-scss.git",
-        "tag": "v0.8.4",
-        "commit": "11af0da643944d241fe7d173af76162c4b670dee"
+        "tag": "v0.8.7",
+        "commit": "d085b7272eacc20866abff61b25c915a22ddbcf4"
       }
     }
   }

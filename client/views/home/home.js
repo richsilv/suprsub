@@ -328,6 +328,7 @@ Template.signupModal.events({
           if (err)
             console.log(err);
           else {
+            Router.current().redirect('/home');
             confirmModal({
               message: "<h2>SUCCESS!</h2><p>You've just become a SuprSub!  The team captain's contact details have been sent to you.</p>",
               callback: null,

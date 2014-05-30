@@ -5,16 +5,11 @@
     "twit": {},
     "moment": {},
     "zurb-foundation": {},
-    "houston": {},
     "smart-collections": {},
-    "jquery-transit": {
-      "git": "https://github.com/noorderstorm/meteor-jquery-transit.git"
-    },
     "Pikaday": {
       "git": "https://github.com/richsilv/Pikaday.git"
     },
     "handlebars-server": {},
-    "impicker": {},
     "Dropzonejs": {},
     "fast-render": {},
     "reactive-relations": {},

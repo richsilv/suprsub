@@ -22,7 +22,7 @@ Router.onBeforeAction('loading');
 
 Router.map(function() {
 
-  var subs;
+  var subs, eventWait;
 
   this.route('playerDetails', {
     path: '/player',
@@ -134,7 +134,7 @@ Router.map(function() {
     after: function() {
       var thisEvent = Events.findOne({_id: this.params.eventCode});
       if (thisEvent) thisEvent.pitch = null;
-      if (thisEvent && thisEvent.players > 0) {
+      if (thisEvent && thisEvent.players > 0  && (!thisEvent.matched || thisEvent.matched.indexOf(Meteor.userId()) === 1)) {
         UI.insert(UI.renderWithData(Template.signupModalHolder, {postingData: thisEvent}), document.body);
         $('#signupModal').modal('setting', {
           onHidden: function() {
@@ -143,11 +143,8 @@ Router.map(function() {
         });
         Meteor.setTimeout(function() {$('#signupModal').modal('show');}, 200);
       }
-      else if (thisEvent && thisEvent.players <= 0) {
-        this.redirect('/home');
-      }
-      else {
-        var eventWait = Events.find({_id: this.params.eventCode}).observe({
+      else if (!thisEvent) {
+        eventWait = Events.find({_id: this.params.eventCode}).observe({
           added: function(doc) {
             if (doc.players > 0) {
               eventWait.stop();
@@ -164,6 +161,9 @@ Router.map(function() {
           }
         });
       }  
+      else {
+        this.redirect('/home');
+      }
     },
     unload: function() {
       if (eventWait) eventWait.stop();
