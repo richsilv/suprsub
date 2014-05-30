@@ -176,8 +176,9 @@
 	}
 
 	#logout-holder {
-		padding-right: 0.6em;
-		padding-left: 0.6em;
+		padding-top: 1em;
+		width: 100%;
+		text-align: center;
 	}
 
 	#logout-button {

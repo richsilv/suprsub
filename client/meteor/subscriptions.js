@@ -16,5 +16,6 @@ Deps.autorun(function() {
     Subs.liveUsers = Meteor.subscribe('liveUsers');
     Subs.reactiveFeed = Meteor.subscribeReactive('feed', 20);
     Subs.logging = Meteor.subscribe('logging');
+    Subs.userData = Meteor.subscribe('userData');
   }
 });

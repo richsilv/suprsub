@@ -234,8 +234,7 @@
 				{{/if}}
 			</p>
 			<div class="ui grid">
-				<div class="four wide column"></div>
-				<div class="eight wide column">
+				<div class="medium-10 small-16 medium-offset-6 columns">
 					<div class="2 ui fluid buttons">
 					  	<div class="ui positive button" id="makePosting">Post</div>
 					  	<div class="ui negative button" id="cancelPosting">Cancel</div>
@@ -311,12 +310,11 @@
 				Cost
 			</div>
 			<p>{{#if posting.price}}£{{posting.price}}{{else}}Free{{/if}}</p>
-			<div class="ui grid">
-				<div class="four wide column"></div>
-				<div class="ten wide column">
+			<div class="row">
+				<div class="medium-10 small-16 medium-offset-6 columns">
 					<div class="2 ui fluid buttons">
 						{{#if myPosting}}
-						<div class="ui negative button" id="removePosting" title="Cancel this posting">Cancel</div>
+						<div class="ui negative button" id="removePosting" title="Cancel this posting">Delete</div>
 						{{else}}
 					  	<div class="ui positive button" id="takePosting" title="I'll be your SuprSub!">Sign Up!</div>
 					  	{{/if}}

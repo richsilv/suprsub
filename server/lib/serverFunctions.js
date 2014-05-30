@@ -362,7 +362,10 @@
 		if (typeof event === "string") event = Events.findOne({_id: event});
 		if (!event || !event.dateTime || !event.location) return [];
 		var periodCode = getPeriodCode(event.dateTime),
-			query = {'profile.player.venues': event.location};
+			query = {
+				'profile.player.venues': event.location,
+				'profile.postMe': true
+			};
 		appConfig.sendToLogger.log("Looking for players available at " + event.location + " at time code " + periodCode);
 		query['profile.player.availability.' + periodCode] = true;
 		query._id = {$ne: event.userId};
@@ -544,7 +547,8 @@
 					Meteor.call('twitterReplyTweet', tweet.twitterId, '@' + tweet.userName + " sorry, the user that made that posting appears to have left Suprsub!");
 					return false;
 				}
-				thisEvent = Events.update(thisEvent, {$push: {matched: thisUser._id}, $inc: {players: -1}});
+				Events.update(thisEvent, {$push: {matched: thisUser._id}, $inc: {players: -1}});
+				thisEvent = Events.findOne({_id: thisEvent._id});
 				if (thisEvent.players > 0) Events.update(thisEvent._id, {$set: {sentence: describePosting(thisEvent)}});
 				var playerContactDeets, teamCaptContactDeets;
 				if (thisUser.profile.contact.indexOf(0) > -1) playerContactDeets = '@' + thisUser.services.twitter.screenName;

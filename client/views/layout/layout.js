@@ -37,7 +37,7 @@ Template.sidebar.rendered = function() {
 // ******************************
 
 Template.miniTopbar.events({
-	'click #miniTopbar .suprsub.icon': function() {
+	'click #miniTopbar .suprsub.icon, click #miniTopbar .reorder.icon': function() {
 		$('#miniTopbar .item').addClass('offScreen');
 		Meteor.setTimeout(function() {
 			$('#sidebar').sidebar('show');

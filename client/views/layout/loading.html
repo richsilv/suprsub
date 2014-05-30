@@ -1,6 +1,11 @@
 <template name="loading">
 	<div id="wrapper">
-		{{> topbar}}
+		{{#unless smallScreen}}
+			{{> topbar}}
+		{{else}}
+			{{> sidebar}}
+			{{> miniTopbar}}
+		{{/unless}}
 		<div id="main-background-image"></div>
 		<div class="row">
 			<div class="grid">

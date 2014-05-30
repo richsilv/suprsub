@@ -104,11 +104,11 @@
 			<i class="reorder icon"></i>
 			<i class="suprsub icon"></i>
 		</span>
-		<div class="right small-5 columns item">
-  			<div class="item" id="logout-holde">
+<!-- 		<div class="right small-5 columns item">
+  			<div class="item" id="logout-holder">
     			<div class="ui tiny button" id="logout-button">Log Out</div>
   			</div>
-  		</div>
+  		</div> -->
 		{{else}}
 			<div class="item" id="phoneLogin">
 				<div class="item small-6 columns">
@@ -152,6 +152,9 @@
 		<a class="{{#if option "/settings"}}active {{/if}}item" href="{{pathFor 'settings'}}">
 			<i class="settings icon"></i> Settings
 		</a>
+  		<div class="item" id="logout-holder">
+    			<span><div class="ui tiny button" id="logout-button">Log Out</div></span>
+  		</div>
 		{{/if}}
 	</div>
 </template>

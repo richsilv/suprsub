@@ -176,7 +176,7 @@ Template.fullPostingForm.events({
 });
 
 Template.fullPostingForm.rendered = function() {
-  var tomorrow = new Date();
+  var tomorrow = new Date(), renderDep;
   tomorrow.setDate(tomorrow.getDate() + 1);
   if (picker) picker.destroy();
   picker = new Pikaday({
@@ -189,7 +189,12 @@ Template.fullPostingForm.rendered = function() {
   $('#fullPostingForm .dropdown').dropdown({verbose: false, debug: false, performance: false});;
   $('.ui.neutral.checkbox').checkbox({verbose: false, debug: false, performance: false});
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-  setFormDefaults();
+  renderDep = Deps.autorun(function() {
+    if (Meteor.user()) {
+      setFormDefaults();
+      this.stop();
+    }
+  });
 };
 
 // ****************************
