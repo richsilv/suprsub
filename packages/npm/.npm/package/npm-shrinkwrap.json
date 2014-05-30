@@ -1,8 +1,5 @@
 {
   "dependencies": {
-    "github": {
-      "version": "0.1.8"
-    },
     "natural": {
       "version": "0.1.25",
       "dependencies": {
@@ -16,9 +13,6 @@
           "version": "1.5.2"
         }
       }
-    },
-    "redis": {
-      "version": "0.8.2"
     }
   }
 }

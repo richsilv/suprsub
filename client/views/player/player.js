@@ -288,6 +288,7 @@ Deps.autorun(function() {
 // ***************** UTILITY *************************
 
 function savePlayerData(event) {
+  console.log("saving player data");
   var availability = appVars.availabilitySession.get(),
       tableElements = $('#availabilityTable input');
 /*  for (var i = 0, l = tableElements.length; i < l; i++) {

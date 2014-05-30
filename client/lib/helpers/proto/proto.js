@@ -1,9 +1,10 @@
 window._allDeps = [];
 
-suprsubDep = function(initial) {
+suprsubDep = function(initial, name) {
   this.value = initial;
   this.count = 0;
   this.dep = new Deps.Dependency();
+  this.name = name;
   window._allDeps.push(this);
 };
 

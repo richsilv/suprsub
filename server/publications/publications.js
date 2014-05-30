@@ -14,7 +14,7 @@ Meteor.publish('events', function(id, userPostings) {
 		else if (userPostings)
 			return Events.find({team: {$in: thisUser.profile.team._ids}}, {sort: {createdAt: -1}, limit: 20});
 		else
-			return thisUser.profile.player.availability ? Events.find({periodCode: {$in: Object.keys(thisUser.profile.player.availability)}}, {sort: {createdAt: -1}, limit: 20}) : null;
+			return thisUser.profile.player.availability ? Events.find({periodCode: {$in: _.reduce(thisUser.profile.player.availability, function(q, v, i) {if (v) q.push(i); return q;}, [])}}, {sort: {createdAt: -1}, limit: 20}) : null;
 	}
 	else {
 		return Events.find({}, {sort: {createdAt: -1}, limit: 20});

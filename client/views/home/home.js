@@ -12,6 +12,9 @@ Template.homePage.helpers({
   },
   postBoxText: function() {
     return postBoxText.get();
+  },
+  genderName: function() {
+    return ["Men's", "Women's"][Meteor.user().profile.gender];
   }
 });
 Template.homePage.events({

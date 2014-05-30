@@ -36,6 +36,11 @@ appConfig = (function() {
 					],
 		Natural: Natural,
 		Tokenizer: new Natural.RegexpTokenizer( { pattern: /[\,\.]?[\s(?:\r\n)]*(?:\s|(?:\r\n)|$)/ } ),
+		availabilityTemplate: {
+	      	"0/0": false, "0/1": false, "0/2": false, "0/3": false, "0/4": false, "0/5": false, "0/6": false,
+	      	"1/0": false, "1/1": false, "1/2": false, "1/3": false, "1/4": false, "1/5": false, "1/6": false, 
+	      	"2/0": false, "2/1": false, "2/2": false, "2/3": false, "2/4": false, "2/5": false, "2/6": false, 
+	    },
 		sendToLogger: {
 			log: function() {
 				console.log(arguments);

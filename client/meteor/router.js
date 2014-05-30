@@ -1,15 +1,28 @@
+var dep;
+
 suprsubController = FastRender.RouteController.extend({
 /*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
   before: function (pause) {
-    if (!Meteor.user()) {
-      // render the login template but keep the url in the browser the same
-      this.render();
-      this.render('loginScreen', {to: 'mainSection'});
-      // stop the rest of the before hooks and the action function 
-      pause();
+    var that = this;
+    if (dep) dep.stop();
+    if (Router.Tour.getTour()) {
+      Router.Tour.loadTour();
+      Router.Tour.nextStep();
     }
+    dep = Deps.autorun(function() {
+      if (!Meteor.user()) {
+        // render the login template but keep the url in the browser the same
+        that.render('mainTemplate');
+        that.render('loginScreen', {to: 'mainSection'});
+        // stop the rest of the before hooks and the action function 
+        pause();
+      }
+      else {
+        that.render();
+      }
+    });
   },
   after: function() {
     if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
@@ -43,7 +56,8 @@ Router.map(function() {
     },
     before: function() {
       appVars.circleSize = new suprsubDep(8000);
-      appVars.availabilitySession = new suprsubDep(Meteor.user().profile.player.availability);
+      console.log(Meteor.user().profile.player.availability);
+      appVars.availabilitySession = new suprsubDep(Meteor.user().profile.player.availability, 'routerAvailability');
     }
   });
 
