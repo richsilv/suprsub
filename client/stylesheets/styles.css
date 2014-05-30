@@ -217,16 +217,15 @@ i.suprsub.icon:before{
 }
 
 .rotate {
-	margin-top:-25px;
-	width: 20px;
+	margin-top:-35px;
+	margin-left: 10px;
+	width: 0px;
 	-webkit-transform: rotate(90deg);
 	-moz-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
 	-webkit-transform-style: preserve-3d;
-	transform-style: preserve-3d;
-	transform: translate3d(0,0,0);
 }
 .rotated_cell {
 	height:90px;
@@ -367,6 +366,9 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 	.ui.segment {
 		border-radius: 0;
 	}
+	.ui.table tr > td {
+		padding: 0.25em 0.5em;
+	}
 	.rotated_cell {
 		height: 130px;
 	}
@@ -374,10 +376,10 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 		margin-top: -30px;
 	}
 	.checkboxDiv {
-	   width: 25px;
+	   width: 20px;
 	}
 	input[type=checkbox] {
-	   width: 25px;
+	   width: 20px;
 	}
 }
 
