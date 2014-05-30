@@ -143,11 +143,16 @@ Template.fullPostingForm.events({
           gender: 0,
           price: 0
         };
-      if (!thisUser.profile.team._ids.length)
-        return "Player has no team";
+      if (!thisUser.profile.team._ids.length) {
+        console.log("Player has no team");
+        return;
+      }
       else
         requestData.team = thisUser.profile.team._ids[0];
-      if (!verifyForm()) return false;
+      if (!verifyForm()) {
+        console.log("form verification error");
+        return false;
+      }
       requestData.players = parseInt($('#numberPlayers').dropdown('get value'), 10);
       requestData.dateTime = picker.getDate();
       requestData.dateTime = new Date(requestData.dateTime.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() * 60000));
@@ -162,7 +167,7 @@ Template.fullPostingForm.events({
         requestData.onlyRingers = true;
       requestData.gender = Meteor.user().profile.gender;
       appVars.newPosting.set(requestData);
-      console.log(document.body);
+      console.log(requestData);
       UI.insert(UI.render(Template.postingModalWrapper), document.body);
       $('#postingModal').modal('setting', {
         onHide: function() {

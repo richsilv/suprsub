@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "natural": {
-      "version": "0.1.25",
+      "version": "0.1.27",
       "dependencies": {
         "sylvester": {
           "version": "0.0.21"
@@ -10,7 +10,7 @@
           "version": "0.0.8"
         },
         "underscore": {
-          "version": "1.5.2"
+          "version": "1.6.0"
         }
       }
     }

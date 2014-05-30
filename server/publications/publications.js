@@ -7,17 +7,31 @@ Meteor.publish('allPitches', function() {
 });
 
 Meteor.publish('events', function(id, userPostings) {
+	var events, eventsList, teamList, userList,
+		thisUser = Meteor.users.findOne(this.userId),
+		gender = thisUser ? thisUser.profile.gender: 0;
 	if (id) {
 		var thisUser = Meteor.users.findOne(id);
 		if (!thisUser)
-			return Events.find({}, {sort: {createdAt: -1}, limit: 20});
+			events = Events.find({gender: gender}, {sort: {createdAt: -1}, limit: 20});
 		else if (userPostings)
-			return Events.find({team: {$in: thisUser.profile.team._ids}}, {sort: {createdAt: -1}, limit: 20});
+			events = Events.find({gender: gender, team: {$in: thisUser.profile.team._ids}}, {sort: {createdAt: -1}, limit: 20});
 		else
-			return thisUser.profile.player.availability ? Events.find({periodCode: {$in: _.reduce(thisUser.profile.player.availability, function(q, v, i) {if (v) q.push(i); return q;}, [])}}, {sort: {createdAt: -1}, limit: 20}) : null;
+			events = thisUser.profile.player.availability ? Events.find({gender: gender, periodCode: {$in: _.reduce(thisUser.profile.player.availability, function(q, v, i) {if (v) q.push(i); return q;}, [])}}, {sort: {createdAt: -1}, limit: 20}) : null;
 	}
 	else {
-		return Events.find({}, {sort: {createdAt: -1}, limit: 20});
+		events = Events.find({gender: gender}, {sort: {createdAt: -1}, limit: 20});
+	}
+	if (events) {
+		eventsList = events.fetch();
+		userList = _.pluck(eventsList, 'userId');
+		teamList = _.pluck(eventsList, 'team');
+		events.rewind();
+		return [
+			events, 
+			Meteor.users.find({_id: {$in: userList}}, {fields: {profile: true}}),
+			Teams.find({_id: {$in: teamList}})
+		];
 	}
 });
 
@@ -66,4 +80,4 @@ Meteor.publish("logging", function() {
 	return Logging.find({dateTime: {$gte: new Date(new Date().getTime() - 6000000)}});
 });
 
-Meteor.publishReactive('feed');
+// Meteor.publishReactive('feed');
