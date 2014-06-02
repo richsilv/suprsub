@@ -24,7 +24,8 @@
       "reactive-relations": {},
       "iron-router-tour": {},
       "collection-hooks": {},
-      "accounts-meld": {}
+      "accounts-meld": {},
+      "kadira": {}
     },
     "packages": {
       "semantic-ui": {
@@ -111,6 +112,11 @@
         "git": "https://github.com/splendido/meteor-accounts-meld.git",
         "tag": "v1.0.0",
         "commit": "9b6cb73374fe9f46a4dd7fabdaddabf847630289"
+      },
+      "kadira": {
+        "git": "https://github.com/meteorhacks/kadira.git",
+        "tag": "v2.1.1",
+        "commit": "d15bb5299c898d2534b9f0d3ab07daf266a8928a"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

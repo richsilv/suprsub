@@ -20,6 +20,7 @@
     "reactive-relations": {},
     "iron-router-tour": {},
     "collection-hooks": {},
-    "accounts-meld": {}
+    "accounts-meld": {},
+    "kadira": {}
   }
 }
