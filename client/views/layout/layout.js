@@ -24,7 +24,10 @@ Template.sidebar.events({
 		Meteor.setTimeout(function() {
 			$('#miniTopbar .item').removeClass('offScreen');
 		}, 500);	
-	}
+	},
+    'click #logout-button' : function() {
+        Meteor.logout();
+    }
 });
 
 Template.sidebar.rendered = function() {
@@ -53,8 +56,5 @@ Template.miniTopbar.events({
             Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
                 if (err) accountError.set(err.reason);
             });      
-    },
-    'click #logout-button' : function() {
-        Meteor.logout();
     }
 })

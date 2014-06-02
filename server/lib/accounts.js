@@ -1,7 +1,7 @@
 /*
 Login system amendment to allow addition of extra services to a given account.
 */
-var crypto = Npm.require('crypto');
+/*var crypto = Npm.require('crypto');
 var hashLoginToken = function (loginToken) {
   var hash = crypto.createHash('sha256');
   hash.update(loginToken);
@@ -73,7 +73,7 @@ Accounts.updateOrCreateUserFromExternalService = function(serviceName, serviceDa
 	// 	console.log(err);
 	// }
 };
-
+*/
 Accounts.config({
   sendVerificationEmail: true,
   forbidClientAccountCreation: false

@@ -23,13 +23,14 @@
       "fast-render": {},
       "reactive-relations": {},
       "iron-router-tour": {},
-      "collection-hooks": {}
+      "collection-hooks": {},
+      "accounts-meld": {}
     },
     "packages": {
       "semantic-ui": {
         "git": "https://github.com/nooitaf/meteor-semantic-ui.git",
-        "tag": "v0.16.1",
-        "commit": "46da3245561e5e64f03b1e2c8807cc6125aa4d98"
+        "tag": "v0.17.0",
+        "commit": "820b4a05267733aa8124ba6ebc5b88eaf93361c4"
       },
       "iron-router": {
         "git": "https://github.com/EventedMind/iron-router.git",
@@ -106,6 +107,11 @@
         "tag": "v0.6.7",
         "commit": "f1d2ac629864edda09df6c955fa5ff3df26f739c"
       },
+      "accounts-meld": {
+        "git": "https://github.com/splendido/meteor-accounts-meld.git",
+        "tag": "v1.0.0",
+        "commit": "9b6cb73374fe9f46a4dd7fabdaddabf847630289"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.4",
@@ -113,8 +119,8 @@
       },
       "paginated-subscription": {
         "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
-        "tag": "v0.2.1",
-        "commit": "f44d171badcc2e6f87c752580be16c955cdb3bb8"
+        "tag": "v0.2.2",
+        "commit": "2133a2163575f569f90253f81314f21b2bf08d20"
       },
       "spin": {
         "git": "https://github.com/SachaG/meteor-spin.git",
@@ -123,8 +129,8 @@
       },
       "scss": {
         "git": "https://github.com/fourseven/meteor-scss.git",
-        "tag": "v0.8.4",
-        "commit": "11af0da643944d241fe7d173af76162c4b670dee"
+        "tag": "v0.8.7",
+        "commit": "d085b7272eacc20866abff61b25c915a22ddbcf4"
       }
     }
   }

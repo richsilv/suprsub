@@ -19,6 +19,7 @@
     "fast-render": {},
     "reactive-relations": {},
     "iron-router-tour": {},
-    "collection-hooks": {}
+    "collection-hooks": {},
+    "accounts-meld": {}
   }
 }
