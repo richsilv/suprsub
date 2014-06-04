@@ -18,8 +18,6 @@ moment
 http
 npm
 
-paginated-subscription
-spin
 htmljs
 
 
@@ -30,7 +28,6 @@ Pikaday
 
 
 
-houston
 blaze-layout
 
 iron-router
@@ -41,8 +38,7 @@ Dropzonejs
 
 
 
-reactive-relations
 iron-router-tour
-collection-hooks
 accounts-meld
 kadira
+collection-hooks

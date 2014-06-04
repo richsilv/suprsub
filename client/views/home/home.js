@@ -14,7 +14,7 @@ Template.homePage.helpers({
     return postBoxText.get();
   },
   genderName: function() {
-    return ["Men's", "Women's"][Meteor.user().profile.gender];
+    return ["Men's", "Women's"][(Meteor.user() && Meteor.user().profile) ? Meteor.user().profile.gender : 0];
   }
 });
 Template.homePage.events({

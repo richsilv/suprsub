@@ -270,7 +270,7 @@ Template.teamSettings.rendered = function() {
 
 Template.teamSettings.created = function() {
   this.autoRun = Deps.autorun(function() {
-    Router.current().route.currentTeamId.dep.depend();
+    Router.current().route.currentTeamId && Router.current().route.currentTeamId.dep.depend();
     setTeamData();
   });
 };
@@ -568,7 +568,7 @@ function teamNameDropdownInit() {
 }
 
 function setTeamData(teamData) {
-  if (teamData || (Router.current().route.currentTeamId.get() && Subs.teams.ready())) {
+  if (teamData || (Router.current().route.currentTeamId && Router.current().route.currentTeamId.get() && Subs.teams.ready())) {
     // console.log(teamData, Router.current().route.currentTeamId.get(), Teams.findOne(Router.current().route.currentTeamId.get()), teamData ? true : false)
     teamData = teamData ? teamData : Teams.findOne(Router.current().route.currentTeamId.get());
     $('#teamName').val(teamData.name);

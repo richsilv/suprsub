@@ -62,7 +62,11 @@ clientFunctions = (function() {
 				ready: false,
 				readyDep: new Deps.Dependency()
 			};
-			$.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyDmSBUaNyV0mQrcJj87Ga1OwzhxdxVrHjI&sensor=false&callback=clientFunctions.gMapsCallback', function() {
+			$.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyDmSBUaNyV0mQrcJj87Ga1OwzhxdxVrHjI&sensor=false&callback=clientFunctions.gMapsCallback', function( data, textStatus, jqxhr ) {
+				console.log( data ); // Data returned
+				console.log( textStatus ); // Success
+				console.log( jqxhr.status ); // 200
+				console.log( "Load was performed." );
 			});
 		}
 		handle = {

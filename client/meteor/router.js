@@ -7,7 +7,8 @@ suprsubController = FastRender.RouteController.extend({
   before: function (pause) {
     var that = this;
     if (dep) dep.stop();
-    if (Router.Tour.getTour()) {
+    if (Router.Tour.getTour() && Router.Tour.currentPage() !== this.route.name) {
+      console.log("Stopping tour", Router.Tour.currentPage(), this.route.name);
       Router.Tour.loadTour();
       Router.Tour.nextStep();
     }
@@ -47,17 +48,16 @@ Router.map(function() {
     waitOn: function() {
       return [Subs.pitches, clientFunctions.loadGMaps()];
     },
+    onBeforeAction: function() {
+      appVars.circleSize = new suprsubDep(8000);
+      appVars.availabilitySession = new suprsubDep(Meteor.user().profile.player.availability, 'routerAvailability');
+    },
     action: function() {
       this.render();
       Template.pitchMapLarge.rendered = function() {
         clientFunctions.initialize(true);
         Template.pitchMapLarge.rendered = null;
       };
-    },
-    before: function() {
-      appVars.circleSize = new suprsubDep(8000);
-      console.log(Meteor.user().profile.player.availability);
-      appVars.availabilitySession = new suprsubDep(Meteor.user().profile.player.availability, 'routerAvailability');
     }
   });
 

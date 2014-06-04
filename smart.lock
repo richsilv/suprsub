@@ -7,25 +7,15 @@
       "twit": {},
       "moment": {},
       "zurb-foundation": {},
-      "houston": {},
-      "smart-collections": {},
-      "jquery-transit": {
-        "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
-        "branch": "master"
-      },
-      "Pikaday": {
-        "git": "https://github.com/richsilv/Pikaday.git",
-        "branch": "master"
-      },
+      "pikaday": {},
       "handlebars-server": {},
       "impicker": {},
       "Dropzonejs": {},
       "fast-render": {},
-      "reactive-relations": {},
       "iron-router-tour": {},
-      "collection-hooks": {},
       "accounts-meld": {},
-      "kadira": {}
+      "kadira": {},
+      "collection-hooks": {}
     },
     "packages": {
       "semantic-ui": {
@@ -53,25 +43,10 @@
         "tag": "v5.2.2-0.0.1",
         "commit": "afe432020cc6246fa0a243a6d2e1e031f08d98e3"
       },
-      "houston": {
-        "git": "https://github.com/gterrono/houston.git",
-        "tag": "v1.0.4",
-        "commit": "e76bda40587ac80ce51ee417047be8272664625c"
-      },
-      "smart-collections": {
-        "git": "https://github.com/arunoda/meteor-smart-collections.git",
-        "tag": "v0.4.0",
-        "commit": "da25a5e88c3b5e3c1cb3bd44fd7fdc3234448526"
-      },
-      "jquery-transit": {
-        "git": "https://github.com/noorderstorm/meteor-jquery-transit.git",
-        "branch": "master",
-        "commit": "d3b8a4149ab40b14b125edd473c3850177895fb5"
-      },
-      "Pikaday": {
+      "pikaday": {
         "git": "https://github.com/richsilv/Pikaday.git",
-        "branch": "master",
-        "commit": "984f2e4d17d43b6232343f9ef5b54f17685188c0"
+        "tag": "v0.1.0",
+        "commit": "de333e4b405125829a3ce2d6048a4a0014c80510"
       },
       "handlebars-server": {
         "git": "https://github.com/EventedMind/meteor-handlebars-server.git",
@@ -93,20 +68,10 @@
         "tag": "v0.2.5",
         "commit": "93e2fb334e55fbe9b5ebb2a2e65964018658f43e"
       },
-      "reactive-relations": {
-        "git": "https://github.com/dburles/reactive-relations.git",
-        "tag": "v0.1.6",
-        "commit": "457f270d945b212b55cae50800a0c8851f35fcba"
-      },
       "iron-router-tour": {
         "git": "https://github.com/richsilv/iron-router-tour.git",
-        "tag": "v0.1.2",
-        "commit": "652974147e971edb4e6a2831e44422a13f3ae867"
-      },
-      "collection-hooks": {
-        "git": "https://github.com/matb33/meteor-collection-hooks.git",
-        "tag": "v0.6.7",
-        "commit": "f1d2ac629864edda09df6c955fa5ff3df26f739c"
+        "tag": "v0.1.3",
+        "commit": "b5f36ab7858f55c64b19a4e39e0c4da0df4f24c7"
       },
       "accounts-meld": {
         "git": "https://github.com/splendido/meteor-accounts-meld.git",
@@ -115,23 +80,18 @@
       },
       "kadira": {
         "git": "https://github.com/meteorhacks/kadira.git",
-        "tag": "v2.1.1",
-        "commit": "d15bb5299c898d2534b9f0d3ab07daf266a8928a"
+        "tag": "v2.1.3",
+        "commit": "ebf969395e6a834a790b9899cd8538dfc9f665f8"
+      },
+      "collection-hooks": {
+        "git": "https://github.com/matb33/meteor-collection-hooks.git",
+        "tag": "v0.6.7",
+        "commit": "f1d2ac629864edda09df6c955fa5ff3df26f739c"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.4",
         "commit": "b40e9b0612329288d75cf52ad14a7da64bb8618f"
-      },
-      "paginated-subscription": {
-        "git": "https://github.com/tmeasday/meteor-paginated-subscription.git",
-        "tag": "v0.2.2",
-        "commit": "2133a2163575f569f90253f81314f21b2bf08d20"
-      },
-      "spin": {
-        "git": "https://github.com/SachaG/meteor-spin.git",
-        "tag": "v0.2.2",
-        "commit": "3f655f0016228e4195acc784c45d3e3a247dc39f"
       },
       "scss": {
         "git": "https://github.com/fourseven/meteor-scss.git",
