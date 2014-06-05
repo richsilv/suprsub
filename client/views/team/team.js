@@ -56,7 +56,7 @@ Template.teamName.helpers({
      !nameEntryOverride.get());
   },
   teams: function() {
-    return Teams.find();
+    return Teams.find({_id: {$in: Router.current().route.teamIds}});
   },
   singleTeamName: function() {
     var thisTeam = Teams.findOne({_id: Router.current().route.currentTeamId.value});
