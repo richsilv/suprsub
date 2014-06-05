@@ -125,8 +125,7 @@ Template.fullPostingForm.events({
     }
   },
   'change #timePickerMinute': function(event) {
-    if (parseInt(event.target.value, 10) < 10)
-      event.target.value = '0' + event.target.value;
+    event.target.value = clientFunctions.padToTwo(event.target.value);
   },
   'click .pitchEntry.item': function(event) {
     $('#homeGroundSearch').val(event.target.innerText);
@@ -419,8 +418,8 @@ setFormDefaults = function() {
     if (date)
       picker.setDate(date);
     if (teamProfile.sameTime) {
-      $('#timePickerHour').val(teamProfile.time.getHours());
-      $('#timePickerMinute').val(teamProfile.time.getMinutes());
+      $('#timePickerHour').val(clientFunctions.padToTwo(teamProfile.time.getHours()));
+      $('#timePickerMinute').val(clientFunctions.padToTwo(teamProfile.time.getMinutes()));
     }
   }
 }

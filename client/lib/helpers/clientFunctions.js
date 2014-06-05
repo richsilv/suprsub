@@ -308,6 +308,12 @@ clientFunctions = (function() {
 		return handle;
 	};
 
+
+	var padToTwo = function(number) {
+	  if (number<=99) { number = ("0"+number).slice(-2); }
+	  return number;
+	};
+
 	return {
 		_libs: _libs,
 		contactString: contactString,
@@ -322,7 +328,8 @@ clientFunctions = (function() {
 		updateCircle: updateCircle,
 		logTemplateEvents: logTemplateEvents,
 		suprsubPlugins: suprsubPlugins,
-		joinTeam: joinTeam
+		joinTeam: joinTeam,
+		padToTwo: padToTwo
 	};
 
 })();

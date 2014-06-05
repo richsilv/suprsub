@@ -13,6 +13,7 @@
     "iron-router-tour": {},
     "accounts-meld": {},
     "kadira": {},
-    "collection-hooks": {}
+    "collection-hooks": {},
+    "moment-timezone": {}
   }
 }

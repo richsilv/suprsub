@@ -327,10 +327,10 @@
 			if (Math.random() > 0.66) sentence += ', ';
 			else if (Math.random() > 0.5) sentence += ' at ';
 			else sentence += ' ';
-			sentence += moment(posting.dateTime).format('HH:mm on ddd, D MMM');
+			sentence += moment.tz(posting.dateTime, "Europe/London").format('HH:mm on ddd, D MMM');
 		}
 		else {
-			sentence += moment(posting.dateTime).format('HH:mm on ddd, D MMM');
+			sentence += moment.tz(posting.dateTime, "Europe/London").format('HH:mm on ddd, D MMM');
 			if (Math.random() > 0.66) sentence += ', ';
 			else if (Math.random() > 0.5) sentence += ' at ';
 			else sentence += ' ';

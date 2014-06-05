@@ -232,7 +232,7 @@ Template.teamSettings.events({
     google.maps.event.trigger(pitchMap, 'resize');
   },
   'change #timePickerMinute': function(event) {
-    event.target.value = padToTwo(event.target.value);
+    event.target.value = clientFunctions.padToTwo(event.target.value);
   },
   'click .checkbox, click .dropdown': function(event) {
     appVars.saveCalc.changed();
@@ -599,8 +599,8 @@ function setTeamData(teamData) {
       $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', teamData.day ? teamData.day : 0);
     }
     if (teamData.time != null) {
-      $('#timePickerHour').val(padToTwo(teamData.time.getHours()));
-      $('#timePickerMinute').val(padToTwo(teamData.time.getMinutes()));
+      $('#timePickerHour').val(clientFunctions.padToTwo(teamData.time.getHours()));
+      $('#timePickerMinute').val(clientFunctions.padToTwo(teamData.time.getMinutes()));
     }
     else {
       $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});
@@ -614,7 +614,7 @@ function setTeamData(teamData) {
     $('#homeGround>input').val('');
     $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', 0);
     $('timePickerHour').val(19);
-    $('timePickerMinute').val(padToTwo(0));
+    $('timePickerMinute').val(clientFunctions.padToTwo(0));
   }
   return false;
 }
@@ -672,9 +672,4 @@ function saveTeamData(event) {
   var teamNameHolder = document.querySelector('#teamNameHolder');
   nameEntryOverride.set(false);
   return false;
-}
-
-function padToTwo(number) {
-  if (number<=99) { number = ("0"+number).slice(-2); }
-  return number;
 }
