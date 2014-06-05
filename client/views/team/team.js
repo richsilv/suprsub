@@ -595,8 +595,10 @@ function setTeamData(teamData) {
     else
       $('#friendlyCompetitive').checkbox('disable');
     $('#gameFormat').dropdown('set selected', teamData.format);
+    $('#gameFormat').dropdown('set value', teamData.format);
     if (teamData.day != null) {
       $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', teamData.day ? teamData.day : 0);
+      $('#dayChoiceSection>.ui.dropdown').dropdown('set value', teamData.day ? teamData.day : 0);
     }
     if (teamData.time != null) {
       $('#timePickerHour').val(clientFunctions.padToTwo(teamData.time.getHours()));
@@ -613,6 +615,7 @@ function setTeamData(teamData) {
     $('#homeGround>input').attr('id', '');
     $('#homeGround>input').val('');
     $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', 0);
+    $('#dayChoiceSection>.ui.dropdown').dropdown('set value', 0);
     $('timePickerHour').val(19);
     $('timePickerMinute').val(clientFunctions.padToTwo(0));
   }

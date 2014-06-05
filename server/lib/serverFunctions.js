@@ -639,6 +639,7 @@
 			var thisPlayer = Meteor.users.findOne({_id: players[i]._id});
 			console.log("Sending to ", thisPlayer.profile.first_name + ' ' + thisPlayer.profile.last_name);
 			for (var j = 0, m = thisPlayer.profile.contact.length; j < m; j++) {
+				console.log("distribution number ", j, thisPlayer.profile.contact[j]);
 				switch (thisPlayer.profile.contact[j]) {
 					case 0:
 						if (thisPlayer.services.twitter) {
@@ -654,6 +655,7 @@
 					case 1: 
 						if (!email)
 							email = thisPlayer.services.facebook && thisPlayer.services.facebook.email;
+						console.log("sending Email", email);
 						if (email) {
 							Email.send({
 								from: 'SuprSub Postings <postings@suprsub.com>', 

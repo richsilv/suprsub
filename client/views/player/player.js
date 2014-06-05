@@ -168,20 +168,28 @@ Template.playerDropdowns.rendered = function() {
     dataChange.dep.changed();
   }});
   if (thisUser && thisUser.profile && thisUser.profile.player) {
-    if ('age' in thisUser.profile.player) 
+    if ('age' in thisUser.profile.player) {
       $('#ageDropdown').dropdown('set selected', thisUser.profile.player.age).dropdown('set value', thisUser.profile.player.age);
+      $('#ageDropdown').dropdown('set value', thisUser.profile.player.age).dropdown('set value', thisUser.profile.player.age);
+    }
     else if (typeof $('#ageDropdown').dropdown('get value') !== 'string')
       $('#ageDropdown').dropdown('restore default text');
-    if ('footed' in thisUser.profile.player)
+    if ('footed' in thisUser.profile.player) {
       $('#footednessDropdown').dropdown('set selected', thisUser.profile.player.footed).dropdown('set value', thisUser.profile.player.footed);
+      $('#footednessDropdown').dropdown('set value', thisUser.profile.player.footed).dropdown('set value', thisUser.profile.player.footed);
+    }
     else if (typeof $('#footednessDropdown').dropdown('get value') !== 'string')
       $('#footednessDropdown').dropdown('restore default text');
-    if ('position' in thisUser.profile.player)
+    if ('position' in thisUser.profile.player) {
       $('#positionDropdown').dropdown('set selected', thisUser.profile.player.position).dropdown('set value', thisUser.profile.player.position);
+      $('#positionDropdown').dropdown('set value', thisUser.profile.player.position).dropdown('set value', thisUser.profile.player.position);
+    }
     else if (typeof $('#positionDropdown').dropdown('get value') !== 'string')
       $('#positionDropdown').dropdown('restore default text');
-    if ('ability' in thisUser.profile.player)
+    if ('ability' in thisUser.profile.player) {
       $('#abilityDropdown').dropdown('set selected', thisUser.profile.player.ability).dropdown('set value', thisUser.profile.player.ability);
+      $('#abilityDropdown').dropdown('set value', thisUser.profile.player.ability).dropdown('set value', thisUser.profile.player.ability);
+    }
     else if (typeof $('#abilityDropdown').dropdown('get value') !== 'string')
       $('#abilityDropdown').dropdown('restore default text');
   }

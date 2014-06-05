@@ -399,8 +399,10 @@ setFormDefaults = function() {
   var teamProfile = Teams.findOne({_id: teamList[0]});
   if (!teamProfile)
     return false;
-  if (teamProfile.format)
+  if (teamProfile.format) {
     $('#gameFormat').dropdown('set selected', teamProfile.format);
+    $('#gameFormat').dropdown('set value', teamProfile.format);
+  }
   if (teamProfile.homeGround) {
     var homeGround = Pitches.findOne({_id: teamProfile.homeGround});
     if (homeGround) {
