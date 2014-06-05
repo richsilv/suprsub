@@ -16,7 +16,8 @@ body {
 }
 
 #wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
-	font-family: 'Molengo', sans-serif;
+	font-family: Arial, sans-serif;
+	/*font-family: 'Molengo', sans-serif;*/
 }
 
 .pageCenter {
@@ -217,8 +218,9 @@ i.suprsub.icon:before{
 }
 
 .rotate {
-	margin-top:-35px;
-	margin-left: 10px;
+	font-size: 0.9em;
+	margin-top:-45px;
+	margin-left: 15px;
 	width: 0px;
 	-webkit-transform: rotate(90deg);
 	-moz-transform: rotate(90deg);
@@ -370,10 +372,11 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 		padding: 0.25em 0.5em;
 	}
 	.rotated_cell {
-		height: 130px;
+		height: 80px;
 	}
 	.rotate {
-		margin-top: -30px;
+		margin-top: -40px;
+		margin-left: 10px;
 	}
 	.checkboxDiv {
 	   width: 20px;
