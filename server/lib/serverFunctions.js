@@ -295,6 +295,8 @@
 		}
 		// Push forward one week if requested time is more than 30 minutes ago (or one day ahead if no date specified)
 		if (new Date().getTime() - 1800000 > requestData.dateTime.getTime()) requestData.dateTime.setDate(requestData.dateTime.getDate() + (dayTokens.length === 1 ? 7 : 1));
+		// Convert to UK Time!!!
+		requestData.dateTime = toMomentInTimezone(moment(requestData.dateTime), "Europe/London").toDate();
 		var placeTokens = _.filter(richTokens, function(k) {return k.code === 9;});
 		if (placeTokens.length > 1) throw new Meteor.Error(500, "Only specify one location.");
 		if (placeTokens.length) requestData.location = placeTokens[0].data;
@@ -741,6 +743,18 @@
 				spec.push(defaults[i]);
 		}
 		return spec;
+	}
+
+	function toMomentInTimezone(sourceMoment, timezone) {
+		var result = moment.tz(timezone);
+		result.year(sourceMoment.year());
+		result.month(sourceMoment.month());
+		result.date(sourceMoment.date());
+		result.hour(sourceMoment.hour());
+		result.minute(sourceMoment.minute());
+		result.second(sourceMoment.second());
+		result.millisecond(sourceMoment.millisecond());
+		return result;
 	}
 
 	return {
