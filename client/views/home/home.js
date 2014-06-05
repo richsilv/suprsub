@@ -392,6 +392,7 @@ function verifyForm() {
 
 setFormDefaults = function() {
   var tomorrow = new Date();
+  if (!Meteor.userId()) return;
   tomorrow.setDate(tomorrow.getDate() + 1);
   var teamList = Meteor.user().profile.team._ids;
   if (!teamList.length)
