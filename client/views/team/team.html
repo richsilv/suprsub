@@ -148,12 +148,12 @@
 			</div>
 		</div>
 		<div class="fields">
-			<div class="small-9 columns field" id="weeklyCheckBox">
+<!-- 			<div class="small-9 columns field" id="weeklyCheckBox">
 				<div class="ui toggle checkbox" id="regDayCheckbox" title="Does your team play on the same day every week?">
 					<input type="checkbox" id="weekly">
 					<label>Regular weekly<br class="show-for-medium-only"> fixtures?</label>
 				</div>
-			</div>
+			</div> -->
 			<div class="small-7 columns field opacity" id="dayChoiceSection">
 				<label>Day</label>
 				<div class="ui selection dropdown">
@@ -163,14 +163,6 @@
 					<div class="menu">
 						{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="fields">
-			<div class="small-7 columns field">
-				<div class="ui toggle checkbox opacity" id="timeCheckbox" title="Do your matches kick off at the same time every week?">
-					<input type="checkbox" id="sameTime">
-					<label>Same time<br class="show-for-medium-only"><span class="show-for-medium-up"> each week</span>?</label>
 				</div>
 			</div>
 			<div class="small-9 columns field opacity" id="timeSection">
@@ -189,6 +181,14 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="fields">
+<!-- 			<div class="small-7 columns field">
+				<div class="ui toggle checkbox opacity" id="timeCheckbox" title="Do your matches kick off at the same time every week?">
+					<input type="checkbox" id="sameTime">
+					<label>Same time<br class="show-for-medium-only"><span class="show-for-medium-up"> each week</span>?</label>
+				</div>
+			</div> -->
 		</div>
 	</form>
 </template>

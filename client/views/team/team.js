@@ -59,7 +59,7 @@ Template.teamName.helpers({
     return Teams.find();
   },
   singleTeamName: function() {
-    var thisTeam = Teams.findOne();
+    var thisTeam = Teams.findOne({_id: Router.current().route.currentTeamId.value});
     return thisTeam ? thisTeam.name : '';
   }
 });
@@ -232,8 +232,7 @@ Template.teamSettings.events({
     google.maps.event.trigger(pitchMap, 'resize');
   },
   'change #timePickerMinute': function(event) {
-    if (parseInt(event.target.value, 10) < 10)
-      event.target.value = '0' + event.target.value;
+    event.target.value = padToTwo(event.target.value);
   },
   'click .checkbox, click .dropdown': function(event) {
     appVars.saveCalc.changed();
@@ -248,8 +247,8 @@ Template.teamSettings.rendered = function() {
   // console.log(this.data.renderedOnce, this.data.renderedOnce ? this.data.renderedOnce.get() : null);
   if (!this.data || !this.data.renderedOnce || !this.data.renderedOnce.get()) {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
-    $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
-    $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
+    // $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
+    // $(this.find('#timeCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularTimeCheckboxEnable, onDisable: regularTimeCheckboxDisable});
     if (!this.data || !this.data.renderedOnce)
       this.data = this.data ? _.extend(this.data, {renderedOnce: new suprsubDep(true)}) : {renderedOnce: new suprsubDep(true)};
     else
@@ -569,8 +568,8 @@ function teamNameDropdownInit() {
 
 function setTeamData(teamData) {
   if (teamData || (Router.current().route.currentTeamId && Router.current().route.currentTeamId.get() && Subs.teams.ready())) {
-    // console.log(teamData, Router.current().route.currentTeamId.get(), Teams.findOne(Router.current().route.currentTeamId.get()), teamData ? true : false)
     teamData = teamData ? teamData : Teams.findOne(Router.current().route.currentTeamId.get());
+    if (!teamData) return;
     $('#teamName').val(teamData.name);
     $('#homeGround>input').attr('id', teamData.homeGround);
     var ground = Pitches.findOne({'_id': teamData.homeGround});
@@ -591,20 +590,12 @@ function setTeamData(teamData) {
     else
       $('#friendlyCompetitive').checkbox('disable');
     $('#gameFormat').dropdown('set value', teamData.format);
-    if (teamData.regular) {
-      $('#regDayCheckbox').checkbox('enable');
+    if (teamData.day) {
       $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', teamData.day ? teamData.day : 0);
-      $('#dayChoiceSection, #timeCheckbox').css({opacity: 1});
-      if (teamData.sameTime) {
-        $('#timeCheckbox').checkbox('enable');
-        $('#timePickerHour').val(teamData.time.getHours());
-        $('#timePickerMinute').val(teamData.time.getMinutes());
-        $('#timeSection').css({opacity: 1});
-      }
-      else {
-        $('#timeCheckbox').checkbox('disable');
-        $('#timeSection').css({opacity: 0.1});
-      }
+    }
+    if (teamData.time) {
+      $('#timePickerHour').val(padToTwo(teamData.time.getHours()));
+      $('#timePickerMinute').val(padToTwo(teamData.time.getMinutes()));
     }
     else {
       $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});
@@ -618,10 +609,7 @@ function setTeamData(teamData) {
     $('#homeGround>input').val('');
     $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', 0);
     $('timePickerHour').val(19);
-    $('timePickerMinute').val(0);
-    $('#dayChoiceSection, #timeCheckbox, #timeSection').css({opacity: 0.1});
-    $('#regDayCheckbox').checkbox('disable');
-    $('#timeCheckbox').checkbox('disable');
+    $('timePickerMinute').val(padToTwo(0));
   }
   return false;
 }
@@ -647,17 +635,13 @@ function saveTeamData(event) {
   teamProfile = {
       name: $('#teamName').val(),
       homeGround: homeGroundId,
-      regular: $('#weekly')[0].checked,
       type: $('#friendlyCompetitive input')[0].checked,
       format: (typeof format === "string" ? format : "5"),
       ringerCode: Meteor.uuid()
   };
-  if (teamProfile.regular) {
-    teamProfile.day = parseInt($('#dayChoiceSection .ui.dropdown').dropdown('get value'), 10);
-    teamProfile.day = teamProfile.day ? teamProfile.day : 0;
-    teamProfile.sameTime = $('#sameTime')[0].checked;
-    if (teamProfile.sameTime) teamProfile.time = new Date(0, 0, 0, parseInt(document.getElementById('timePickerHour').value, 10), parseInt(document.getElementById('timePickerMinute').value, 10));
-  }
+  teamProfile.day = parseInt($('#dayChoiceSection .ui.dropdown').dropdown('get value'), 10);
+  teamProfile.day = teamProfile.day ? teamProfile.day : 0;
+  teamProfile.time = new Date(0, 0, 0, parseInt(document.getElementById('timePickerHour').value, 10), parseInt(document.getElementById('timePickerMinute').value, 10));
   var teamId, currentTeamId = Router.current().route.currentTeamId.get();
   if (currentTeamId)
     Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
@@ -683,4 +667,9 @@ function saveTeamData(event) {
   var teamNameHolder = document.querySelector('#teamNameHolder');
   nameEntryOverride.set(false);
   return false;
+}
+
+function padToTwo(number) {
+  if (number<=99) { number = ("0"+number).slice(-2); }
+  return number;
 }
