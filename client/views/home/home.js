@@ -415,15 +415,10 @@ setFormDefaults = function() {
   else
     $('#friendlyCompetitive').checkbox('disable');
   picker.setDate(tomorrow);
-  if (teamProfile.regular) {
-    var date = nextMatchingWeekDay(teamProfile.day);
-    if (date)
-      picker.setDate(date);
-    if (teamProfile.sameTime) {
-      $('#timePickerHour').val(clientFunctions.padToTwo(teamProfile.time.getHours()));
-      $('#timePickerMinute').val(clientFunctions.padToTwo(teamProfile.time.getMinutes()));
-    }
-  }
+  var date = nextMatchingWeekDay(teamProfile.day);
+  picker.setDate(date);
+  $('#timePickerHour').val(clientFunctions.padToTwo(teamProfile.time.getHours()));
+  $('#timePickerMinute').val(clientFunctions.padToTwo(teamProfile.time.getMinutes()));
 }
 
 nextMatchingWeekDay = function(day) {
