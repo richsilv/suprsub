@@ -256,15 +256,20 @@ Template.teamSettings.rendered = function() {
   }
   $(this.findAll('.ui.dropdown:not(#teamChoice)')).dropdown({verbose: false, debug: false, performance: false});
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-  setTeamData();
   teamNameDropdownInit();
-  if (Router.current().route.currentTeamId.get()) {
+  var setData = Deps.autorun(function(c) {
+    if (Router.current().route.currentTeamId.get()) {
+      setTeamData();
+      c.stop();
+    }
+  })
+/*  if (Router.current().route.currentTeamId.get()) {
     $('#teamChoice').dropdown('set selected', Router.current().route.currentTeamId.get());
     var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
-    if (teamData) 
-      $('#teamName').val(teamData.name);
-    $('#teamName').focus();
-  }
+    if (teamData) $('#teamName').val(teamData.name);
+
+  }*/
+  $('#teamName').focus();
 };
 
 Template.teamSettings.created = function() {
@@ -589,11 +594,11 @@ function setTeamData(teamData) {
       $('#friendlyCompetitive').checkbox('enable');
     else
       $('#friendlyCompetitive').checkbox('disable');
-    $('#gameFormat').dropdown('set value', teamData.format);
-    if (teamData.day) {
+    $('#gameFormat').dropdown('set selected', teamData.format);
+    if (teamData.day != null) {
       $('#dayChoiceSection>.ui.dropdown').dropdown('set selected', teamData.day ? teamData.day : 0);
     }
-    if (teamData.time) {
+    if (teamData.time != null) {
       $('#timePickerHour').val(padToTwo(teamData.time.getHours()));
       $('#timePickerMinute').val(padToTwo(teamData.time.getMinutes()));
     }
