@@ -173,6 +173,15 @@ input[type=range]:active::-moz-range-thumb {
 		-webkit-transform:rotate(0); /* Safari and Chrome */
 		-webkit-appearance: none;
 	}
+	.ui.slider.range input[type="range"]::-ms-thumb {
+		width: 2em;
+	}
+	.ui.slider.range input[type="range"]::-webkit-slider-thumb {
+		width: 2em;
+	}
+	.ui.slider.range input[type="range"]::-moz-range-thumb {
+		width: 2em;		
+	}
 	#distanceWriteLabel {
 		/*margin-left: 5em;*/
 		text-align: center;
