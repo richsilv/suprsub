@@ -258,7 +258,7 @@ Template.teamSettings.rendered = function() {
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
   teamNameDropdownInit();
   var setData = Deps.autorun(function(c) {
-    if (Router.current().route.currentTeamId.get()) {
+    if (Router.current().route.currentTeamId && Router.current().route.currentTeamId.get()) {
       setTeamData();
       c.stop();
     }

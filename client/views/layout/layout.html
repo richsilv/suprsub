@@ -11,9 +11,9 @@
 			wf.async = 'true';
 			var s = document.getElementsByTagName('script')[0];
 			s.parentNode.insertBefore(wf, s);
-		})(); 
+		})();
 	</script>
-	<title>SuprSub</title>
+	<title>SuprSub - Play more football</title>
 	<meta name=”description” content=”Find football players or teams at short notice to fill the gaps in your team or calendar”>
 	<link rel="icon" sizes="16x16 24x24 32x32 48x48 64x64" href="/suprsubS.ico?v=3">
 	<link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png" />
@@ -44,8 +44,8 @@
 	<div class="ui darkgreen fixed inverted main menu" id="topbar">
 		<span class="item" href="{{pathFor 'home'}}">
 			<i class="suprsub icon"></i>
-		</span>	
-		{{#if currentUser}}	
+		</span>
+		{{#if currentUser}}
 		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
@@ -67,8 +67,8 @@
 			{{#if currentUser}}
 			<div class="svg item" id="socialItem">
 				<span><a target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Check+out+this+brilliant+new+footy+platform+-+you+can+sign+up+in+seconds!+@suprsub&url=http://suprsub.com" class="webicon twitter" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a></span>
-				<span><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></span>	
-				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>				
+				<span><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></span>
+				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>
 			</div>
 			<div class="item" id="delete-holder">
     			<div class="ui red button" id="delete-button">Delete Account</div>
@@ -87,7 +87,7 @@
 				<div class="ui icon input">
 					<input type="password" placeholder="Password" id="login-password">
 					<i class="lock link icon"></i>
-				</div>				
+				</div>
 			</div>
   			<div class="item">
     			<div class="ui button" id="login-button">Log In</div>
@@ -136,7 +136,7 @@
 		<div class="item" href="{{pathFor 'home'}}">
 			<i class="suprsub icon"></i>
 		</div><hr>
-		{{#if currentUser}}	
+		{{#if currentUser}}
 		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
@@ -162,7 +162,7 @@
 <template name="generalConfirmModalWrapper">
 	<div class="ui small modal" id="generalConfirmModal">
 	{{>generalConfirmModal}}
-	</div>	
+	</div>
 </template>
 
 <template name="generalConfirmModal">
@@ -189,7 +189,7 @@
 	<div id="socialBox" class="show-for-large-up">
 		<div class="svg">
 			<div><a target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Surbsub+-+Play+more+football.+Find+a+SuprSub+in+seconds.+Be+a+SuprSub+wherever+and+whenever+suits+you.&url=http://supsub.com" class="webicon twitter large" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a></div>
-			<div><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook large" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></div>	
+			<div><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook large" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></div>
 			<div><a  class="webicon googleplus large" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></div>
 		</div>
 	</div>

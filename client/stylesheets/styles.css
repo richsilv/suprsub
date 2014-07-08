@@ -1,7 +1,9 @@
 @font-face {
-	font-family: "Collegiate";
-	src: url('/fonts/SF_Collegiate.ttf');
-	opacity:.99; 
+    font-family: 'Collegiate';
+	src: url('fonts/SF_Collegiate.woff') format('woff'), url('fonts/SF_Collegiate.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+
 }
 
 html {
@@ -29,7 +31,7 @@ body {
     left: 0;
     width: 150px;
     height: 100px;
-    text-shadow: rgba(200, 200, 200, .7) 0.5em 0.5em 0.5em;
+    text-shadow: rgba(200, 200, 200, 0.7) 0.5em 0.5em 0.5em;
 }
 
 .suprsubFont {
@@ -48,12 +50,12 @@ body {
 
 .backgroundShadowBig {
 	color: ghostwhite;
-	text-shadow: rgba(0, 0, 0, .9) 0.01em 0.01em 0.01em, rgba(0, 0, 0, 0.7) -0.01em -0.01em 0.01em;	
+	text-shadow: rgba(0, 0, 0, 0.9) 0.01em 0.01em 0.01em, rgba(0, 0, 0, 0.7) -0.01em -0.01em 0.01em;	
 }
 
 .backgroundShadowSmall {
 	color: ghostwhite;
-	text-shadow: rgba(0, 0, 0, .9) 0.05em 0.05em 0.05em, rgba(0, 0, 0, 0.7) -0.05em -0.05em 0.05em;	
+	text-shadow: rgba(0, 0, 0, 0.9) 0.05em 0.05em 0.05em, rgba(0, 0, 0, 0.7) -0.05em -0.05em 0.05em;	
 }
 
 .gap.columns {
@@ -312,7 +314,7 @@ input[type=checkbox] {
 
 /* Default State */
 .checkboxDiv {
-   background: rgba(0, 0, 0, .095);
+   background: rgba(0, 0, 0, 0.095);
    width: 30px;
    height: 20px;
    line-height: 20px;

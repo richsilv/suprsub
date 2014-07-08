@@ -36,7 +36,10 @@ Template.homePage.events({
     else
       postBoxText.set(false);
   }
-})
+});
+Template.homePage.rendered = function() {
+  console.log(this, arguments);
+};
 
 Template.postBox.helpers({
   'teamRegistered': function() {
@@ -193,10 +196,10 @@ Template.fullPostingForm.rendered = function() {
   $('#fullPostingForm .dropdown').dropdown({verbose: false, debug: false, performance: false});;
   $('.ui.neutral.checkbox').checkbox({verbose: false, debug: false, performance: false});
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
-  renderDep = Deps.autorun(function() {
+  renderDep = Deps.autorun(function(c) {
     if (Meteor.user()) {
       setFormDefaults();
-      this.stop();
+      c.stop();
     }
   });
 };
