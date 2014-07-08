@@ -9,9 +9,9 @@ var dataChange = new suprsubDep(false),
 Template.pitchData.helpers({
   getVenues: function() {
     if (appVars.venues && appVars.venues.get()) {
-      return appVars.venues.get().map(function(v) {return prettyLocation(v)});
+      return _.pluck(appVars.venues.get(), 'prettyLocation');
     }
-    else return []; 
+    else return [];
   }
 });
 
@@ -51,23 +51,23 @@ Template.availabilityDays.events({
 
 Template.defineBounds.events({
   'change #distanceWrite': function(event) {
-    appVars.tabChoices.setKey('playerTab', 'pitchData');
-    Deps.flush();
     appVars.circleChanged.set(true);
     $('#distanceRead').html(parseInt(event.target.value, 10) / 10 + 'km');
     appVars.circleSize.value = parseInt($('#distanceWrite').val(), 10) * 100;
     var self = this;
     this.circleTimeout = Meteor.setTimeout(function() {
-          appVars.circleChanged.set(true);
-          appVars.circleSize.dep.changed();
-          appVars.venues.dep.changed();
           if (appVars.circleSize.value > 20000 && pitchMap.getZoom() > 9) pitchMap.setZoom(9);
           if (appVars.circleSize.value > 10000 && appVars.circleSize.value < 20000 && pitchMap.getZoom() !== 10) pitchMap.setZoom(10);
           else if (appVars.circleSize.value < 10000 && pitchMap.getZoom() < 11) pitchMap.setZoom(11);
+          appVars.circleChanged.set(true);
+          appVars.circleSize.dep.changed();
+          appVars.venues.dep.changed();
           Meteor.clearTimeout(self.circleTimeout);
           self.circleTimeout = null;
           }, 500);
     clientFunctions.updateCircle();
+    appVars.tabChoices.setKey('playerTab', 'pitchData');
+    // Deps.flush();
   }  
 });
 
