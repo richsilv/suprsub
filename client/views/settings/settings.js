@@ -88,6 +88,25 @@ Template.settingsBox.rendered = function() {
 
 // **************************
 
+Template.otherSettingsBox.events({
+  'click #deleteAccount': function() {
+    confirmModal({
+      message: '<h3 class="ui dividing header">Delete Account</h3><p>Are you sure you want to delete this account?  All your player information will be deleted, and any team for which you are the only registered player will also be deleted.</p>',
+      callback: function() {
+        // DELETE ACCOUNT
+        Meteor.call('removeCurrentUser');
+        console.log("account deleted");
+      }
+    }, function() {
+      Meteor.setTimeout(function() {
+        $('#generalConfirmModal').modal('show');
+      }, 250);
+    });
+  }
+});
+
+// **************************
+
 Template.settingsMainButtons.events({
   'click #resetButton': function() {
     var thisUser = Meteor.user();

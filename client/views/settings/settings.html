@@ -4,7 +4,8 @@
 		<div class="medium-8 master columns">
 				{{> settingsBox}}
 		</div>
-		<div class="medium-8 master columns">		
+		<div class="medium-8 master columns">
+				{{> otherSettingsBox}}		
 		</div>
 	</div>
 	<div class="gap row">
@@ -142,6 +143,17 @@
 	</div>
 </template>
 
+<template name="otherSettingsBox">
+	<form class="ui form segment content whitetranslucent">
+		<div class="row">
+			<div class="small-16 columns">
+				<div class="ui small fluid negative button" id="deleteAccount">DELETE ACCOUNT</div>
+				<p class="small-14 columns small-centered text-center label">By clicking this link all your player information will be deleted.  Any team for which you are the only registered player will also be deleted.</p>
+			</div>
+		</div>
+	</form>
+</template>
+
 <template name="duplicateEmail">
 	<div class="ui row">
 		<div class="ui column">
@@ -153,7 +165,7 @@
 			<ul>
 				<li>Log out of this account.</li>
 				<li>Log back in using the e-mail <em>{{this.email}}</em>.</li>
-				<li>Select <strong>Close this Account</strong> from the system menu.</li>
+				<li>Select <strong>Close this Account</strong> on the Settings Page.</li>
 				<li>Log back into this account, from which you will now be able to link that e-mail address.</li>
 			</ul>
 			<p>Sorry about that, but this is necessary to prevent accounts being hijacked.</p>

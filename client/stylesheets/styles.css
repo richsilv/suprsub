@@ -249,6 +249,11 @@ i.suprsub.icon:before{
 	background-color: rgba(0, 0, 0, 0) !important;
 }
 
+.label {
+	color: rgb(85, 85, 85);
+	font-size: 1em;
+}
+
 .cleared.row {
 	clear: both;
 }
