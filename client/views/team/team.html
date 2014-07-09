@@ -114,13 +114,25 @@
 	<form class="ui form whitetranslucent height225 teamForm">
 		<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
 			<div class="field">
+				<label>Friendly / Competitive</label>
+				<div class="ui fluid selection dropdown" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+					<input type="hidden">
+					<div class="default text">Select</div>
+					<i class="dropdown icon"></i>
+					<div class="menu">
+						<div class="item" data-value="0">Friendly</div>
+						<div class="item" data-value="1">Competitive</div>
+					</div>
+				</div>
+			</div>
+<!-- 			<div class="field">
 				<div class="checkboxLabel">Friendly</div>
 				<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
 					<input type="checkbox">
 					<label></label>
 				</div>
 				<div class="checkboxLabel">Comp<span class="show-for-small">.</span><span class="show-for-medium-up">etitive</span></div>
-			</div>
+			</div> -->
 		</div>
 		<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
 			<div class="field">

@@ -590,10 +590,14 @@ function setTeamData(teamData) {
         Meteor.clearInterval(googleCallback);
       }, 5000);
     }
-    if (teamData.type)
-      $('#friendlyCompetitive').checkbox('enable');
-    else
-      $('#friendlyCompetitive').checkbox('disable');
+    if (teamData.type) {
+      $('#friendlyCompetitive').dropdown('set selected', "1");
+      $('#friendlyCompetitive').dropdown('set value', "1");
+    }
+    else {
+      $('#friendlyCompetitive').dropdown('set selected', "0");
+      $('#friendlyCompetitive').dropdown('set value', "0");
+    }
     $('#gameFormat').dropdown('set selected', teamData.format);
     $('#gameFormat').dropdown('set value', teamData.format);
     if (teamData.day != null) {
@@ -638,12 +642,13 @@ function saveTeamData(event) {
   var homeGroundId = $('#homeGround>input').attr('id'),
       teamProfile,
       thisGlowCallback = glowCallback.bind(undefined, event),
-      format = $('#gameFormat').dropdown('get value');
+      format = $('#gameFormat').dropdown('get value'),
+      type = $('#friendlyCompetitive').dropdown('get value');
   if (!homeGroundId) return false;
   teamProfile = {
       name: $('#teamName').val(),
       homeGround: homeGroundId,
-      type: $('#friendlyCompetitive input')[0].checked,
+      type: (typeof type === 'string' ? parseInt(type, 10) : 0),
       format: (typeof format === "string" ? format : "5"),
       ringerCode: Meteor.uuid()
   };
