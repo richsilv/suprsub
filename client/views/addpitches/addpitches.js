@@ -21,7 +21,7 @@ Template.pitchesTemplate.rendered = function ( ) {
   if (dropElem.length && !dropElem[0].dropzone)
     $('#fileDrop').dropzone({
       success: function(file, res) {
-        if (res) {
+        if (res && res.success) {
           var added = [];
           failureSet.set(res.failure);
           waitingFlag.set(false);

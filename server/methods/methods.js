@@ -375,14 +375,20 @@ Meteor.methods({
 			throw new Meteor.Error(500, "User is not a member of the team that made this posting");
 	},
 	parsePitches: function(pitches) {
-		var pitchList, thisPitch, i, j, success = [], failure = [];
+		var pitchList, thisPitch,
+			i,
+			j,
+			success = [],
+			failure = [],
+			entryLength;
 		pitchList = pitches.split('\n');
 		for (i = pitchList.length; i; i--) {
 			thisPitch = pitchList[i - 1].split(',');
-			if (thisPitch.length === 3) {
+			entryLength = thisPitch.length
+			if (entryLength >= 2) {
 				var res = HTTP.get('http://maps.googleapis.com/maps/api/geocode/json', {
 					params: {
-						address: thisPitch[2],
+						address: thisPitch[entryLength - 1],
 						sensor: false
 					}
 				});
@@ -392,26 +398,26 @@ Meteor.methods({
 						success.push({
 							address: content.results[0].formatted_address,
 							location: content.results[0].geometry.location,
-							name: thisPitch[1],
-							owner: thisPitch[0]
+							name: thisPitch[entryLength - 2],
+							owner: entryLength === 3 ? thisPitch[0] : null
 						});
 					else
 						failure.push({
-							name: thisPitch[1],
-							owner: thisPitch[0],
-							address: thisPitch[2],
+							name: thisPitch[entryLength - 2],
+							owner: entryLength === 3 ? thisPitch[0] : null,
+							address: thisPitch[entryLength - 1],
 							reason: "cannot geocode"
 						});
 				}
 				else
 					failure.push({
-						name: thisPitch[1],
-						owner: thisPitch[0],
-						address: thisPitch[2],
+						name: thisPitch[entryLength - 2],
+						owner: entryLength === 3 ? thisPitch[0] : null,
+						address: thisPitch[entryLength - 1],
 						reason: "cannot geocode"
 					});					
 			}
-			else if (pitchList[i - 1].length)
+			else if (entryLength)
 				failure.push({
 					details: pitchList[i - 1],
 					reason: "cannot understand this line"
