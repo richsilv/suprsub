@@ -159,13 +159,13 @@ Template.fullPostingForm.events({
       requestData.dateTime = picker.getDate();
       requestData.dateTime = new Date(requestData.dateTime.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() * 60000));
       requestData.location = $('#homeGroundSearch').attr('data-value');
-      requestData.gameType = $('#friendlyCompetitive input')[0].checked ? 1 : 0;
+      requestData.gameType = parseInt($('#friendlyCompetitive').flipbox('get choice'), 10);
       var teamSize = parseInt($('#gameFormat').dropdown('get value'), 10);
       if (teamSize)
         requestData.teamSize = teamSize;
       if (parseInt($('#costInput').val(), 10))
         requestData.price = parseInt($('#costInput').val(), 10);
-      if ($('#onlySuprsubs input')[0].checked)
+      if ($('#onlySuprsubs').flipbox('get choice'))
         requestData.onlyRingers = true;
       requestData.gender = Meteor.user().profile.gender;
       appVars.newPosting.set(requestData);
@@ -195,6 +195,7 @@ Template.fullPostingForm.rendered = function() {
   // $('#datepicker').val(moment(tomorrow).format('Do MMMM YYYY'));
   $('#fullPostingForm .dropdown').dropdown({verbose: false, debug: false, performance: false});;
   $('.ui.neutral.checkbox').checkbox({verbose: false, debug: false, performance: false});
+  $('.ui.flipbox').flipbox();
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
   renderDep = Deps.autorun(function(c) {
     if (Meteor.user()) {
@@ -414,9 +415,9 @@ setFormDefaults = function() {
     }
   }
   if (teamProfile.type)
-    $('#friendlyCompetitive').checkbox('enable');
+    $('#friendlyCompetitive').flipbox('set choice', 1);
   else
-    $('#friendlyCompetitive').checkbox('disable');
+    $('#friendlyCompetitive').flipbox('set choice', 0);
   picker.setDate(tomorrow);
   var date = nextMatchingWeekDay(teamProfile.day);
   picker.setDate(date);

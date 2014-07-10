@@ -76,14 +76,14 @@
 			    	</div>
 			    </div>
 		    </div>
-			<div class="small-14 small-centered columns">
-				<div class="field">
-					<div class="checkboxLabel">Don't send me postings</div>
+			<div class="small-16 medium-14 small-centered columns">
+				<div class="text-center field">
+					<div class="checkboxLabel">Don't send<br class="hide-for-medium-up"> me postings</div>
 					<div class="ui toggle checkbox" id="postUser" title="Do you want us to tweet or e-mail you whenever there is a posting that matches your profile?">
 						<input type="checkbox">
 						<label></label>
 					</div>
-					<div class="checkboxLabel">Send me postings</div>
+					<div class="checkboxLabel">Send me<br class="hide-for-medium-up"> postings</div>
 				</div>
 			</div>
 		</form>
@@ -169,6 +169,18 @@
 				<li>Log back into this account, from which you will now be able to link that e-mail address.</li>
 			</ul>
 			<p>Sorry about that, but this is necessary to prevent accounts being hijacked.</p>
+		</div>
+	</div>
+</template>
+
+<template name="deleteAccount">
+	<div class="ui row">
+		<div class="ui column">
+			<h3 class="ui dividing header">
+				Delete Account
+			</h3>
+			<p>Are you sure you want to delete this account?  All your player information will be deleted, and any team for which you are the only registered player will also be deleted.</p>
+			
 		</div>
 	</div>
 </template>

@@ -129,12 +129,31 @@
 			</div>
 			<div class="underlineRow ui row">
 				<div class="field small-8 columns">
-					<div class="checkboxLabel">Friendly</div>
+					<label>Friendly / Competitive</label>
+					<div class="ui fluid selection flipbox" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+						<input type="hidden">
+						<div class="displayed text">Select</div>
+						<i class="right exchange icon"></i>
+						<div class="choices">
+							<div class="item" data-value="0">Friendly</div>
+							<div class="item" data-value="1">Competitive</div>
+						</div>
+					</div>
+<!-- 					<div class="ui fluid selection dropdown" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+						<input type="hidden">
+						<div class="default text">Select</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							<div class="item" data-value="0">Friendly</div>
+							<div class="item" data-value="1">Competitive</div>
+						</div>
+					</div>				
+ --><!-- 					<div class="checkboxLabel">Friendly</div>
 					<div class="ui toggle checkbox neutral" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
 						<input type="checkbox">
 						<label></label>
 					</div>
-					<div class="checkboxLabel"><span class="show-for-medium-up">Competitive</span><span class="show-for-small-only">Comp.</span></div>
+					<div class="checkboxLabel"><span class="show-for-medium-up">Competitive</span><span class="show-for-small-only">Comp.</span></div> -->
 				</div>
 				<div class="field small-8 columns">
 					<label>Game Format</label>
@@ -163,13 +182,23 @@
 					</div>
 				</div>
 				<div class="field small-9 columns">
-					<label>Send to:</label>
+					<label>Send to</label>
+					<div class="ui fluid selection flipbox" id="onlySuprsubs" title="Do you want to notify everybody of this posting, or only those you've already specified as preferred SubrSubs?">
+						<input type="hidden">
+						<div class="displayed text">Select</div>
+						<i class="right exchange icon"></i>
+						<div class="choices">
+							<div class="item" data-value="0">Everyone</div>
+							<div class="item" data-value="1">My SuprSubs</div>
+						</div>
+					</div>		
+<!-- 					<label>Send to:</label>
 					<div class="checkboxLabel">Everyone</div>
 					<div class="ui toggle checkbox neutral" id="onlySuprsubs" title="Do you want to notify everybody of this posting, or only those you've already specified as preferred SubrSubs?">
 						<input type="checkbox">
 						<label></label>
 					</div>
-					<div class="checkboxLabel">My SuprSubs</div>
+					<div class="checkboxLabel">My SuprSubs</div> -->
 				</div>
 			</div>
 			<div class="ui lowered button bottomRight teal submit labeled{{#unless teamRegistered}} disabled{{/unless}} icon" id="fullPostingFormSubmit" title="{{#if teamRegistered}}Submit this posting{{else}}You need to enter your team details on the Team tab before you can make a posting{{/if}}">

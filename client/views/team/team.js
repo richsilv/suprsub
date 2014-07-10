@@ -255,6 +255,7 @@ Template.teamSettings.rendered = function() {
       this.data.renderedOnce.set(true);
   }
   $(this.findAll('.ui.dropdown:not(#teamChoice)')).dropdown({verbose: false, debug: false, performance: false});
+  $(this.findAll('.ui.flipbox')).flipbox();
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
   teamNameDropdownInit();
   var setData = Deps.autorun(function(c) {
@@ -591,12 +592,10 @@ function setTeamData(teamData) {
       }, 5000);
     }
     if (teamData.type) {
-      $('#friendlyCompetitive').dropdown('set selected', "1");
-      $('#friendlyCompetitive').dropdown('set value', "1");
+      $('#friendlyCompetitive').flipbox('set choice', 1);
     }
     else {
-      $('#friendlyCompetitive').dropdown('set selected', "0");
-      $('#friendlyCompetitive').dropdown('set value', "0");
+      $('#friendlyCompetitive').flipbox('set choice', 0);
     }
     $('#gameFormat').dropdown('set selected', teamData.format);
     $('#gameFormat').dropdown('set value', teamData.format);
@@ -643,7 +642,7 @@ function saveTeamData(event) {
       teamProfile,
       thisGlowCallback = glowCallback.bind(undefined, event),
       format = $('#gameFormat').dropdown('get value'),
-      type = $('#friendlyCompetitive').dropdown('get value');
+      type = parseInt($('#friendlyCompetitive').flipbox('get choice'), 10);
   if (!homeGroundId) return false;
   teamProfile = {
       name: $('#teamName').val(),
