@@ -218,11 +218,11 @@
 
 .ui.flipbox > .displayed.text,
 .ui.displayed.flipbox > .text {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 0.8);
 }
 .ui.flipbox:hover > .displayed.text,
 .ui.displayed.flipbox:hover > .text {
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 
@@ -651,13 +651,13 @@
 ---------------*/
 
 .ui.selection.flipbox:hover > .exchange.icon {
-  opacity: 1;
+  opacity: 0.7;
 }
 .ui.fluid.flipbox > .exchange.icon {
   float: right;
 }
 .ui.selection.flipbox > .exchange.icon {
-  opacity: 0.7;
+  opacity: 1;
   margin: 0.2em 0em 0.2em 1.25em;
   -webkit-transition: opacity 0.2s ease-out;
   -moz-transition: opacity 0.2s ease-out;
