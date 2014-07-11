@@ -318,7 +318,7 @@ Template.otherInfo.events({
       if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
         var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
-        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + prettyLocation(pitch) + '</a>';});
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.prettyLocation + '</a>';});
         $('#matches').html(pitchElement + '</div></div></div>');
       }
    }
@@ -338,7 +338,7 @@ Template.otherInfo.events({
     var pitch = Pitches.findOne({'_id': event.target.id});
     if (pitch) {
       pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
-      $('#homeGround input').val(prettyLocation(pitch));
+      $('#homeGround input').val(pitch.prettyLocation);
       $('#homeGround input').attr('id', pitch._id);
       appVars.showErrors.dep.changed();
       $('html, body').animate({
@@ -590,7 +590,7 @@ function setTeamData(teamData) {
     $('#homeGround>input').attr('id', teamData.homeGround);
     var ground = Pitches.findOne({'_id': teamData.homeGround});
     if (ground) {
-      $('#homeGround>input').val(ground.owner + ' ' + ground.name);
+      $('#homeGround>input').val(ground.prettyLocation);
       var googleCallback = Meteor.setInterval(function() {
         if (typeof google !== 'undefined' && window.pitchMap && 'panTo' in pitchMap) {
           pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));

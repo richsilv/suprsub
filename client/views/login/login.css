@@ -24,6 +24,17 @@
 	margin-right: 2em;
 }
 
+.disclaimer {
+	font-size: 0.8em;
+	color: #ccc;
+}
+
+.disclaimer a:link, .disclaimer a:hover, .disclaimer a:visited {
+	color: #22d;
+	text-decoration: none;
+	text-shadow: 0 0 1px #99f;
+}
+
 #loginBox {
 	position: absolute;
     width: 100%;
