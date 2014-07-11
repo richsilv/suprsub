@@ -47,7 +47,7 @@ Router.map(function() {
       'playerDetails': {to: 'mainSection'}
     },
     waitOn: function() {
-      return [Subs.pitches, clientFunctions.loadGMaps()];
+      return [Subs.pitches, clientFunctions.loadGMaps(), clientFunctions.pitchesAvailable()];
     },
     onBeforeAction: function() {
       appVars.circleSize = new suprsubDep(8000);
@@ -127,7 +127,7 @@ Router.map(function() {
       return [
         Subs.pitches,
         Subs.teams,
-        Subs.events
+        clientFunctions.reactiveSubHandle('events')
         ];
     }
   });

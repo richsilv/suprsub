@@ -78,6 +78,15 @@ clientFunctions = (function() {
 		return handle;
 	};
 
+	var pitchesAvailable = function() {
+		var handle = {
+			ready: function() {
+				return (Pitches.find().count() > 1000);
+			}
+		}
+		return handle;
+	}
+
 	var initialize = function(circle) {
 		var defaultLocation = new google.maps.LatLng(51, 0);
 		var mapOptions = {
@@ -183,7 +192,7 @@ clientFunctions = (function() {
 			limit: maxPitches ? maxPitches : appVars.maxPitches,
 			sort: {priority: -1}
 		}).fetch();
-		if (currentPitch) pitches.unshift(Pitches.findOne(currentPitch));
+		if (currentPitch && Pitches.findOne(currentPitch)) pitches.unshift(Pitches.findOne(currentPitch));
 		for (var i=0; i < pitches.length; i++) {
 			var marker = new google.maps.Marker({
 				position: pitches[i].location,
@@ -289,6 +298,16 @@ clientFunctions = (function() {
 		}
 	};
 
+	var reactiveSubHandle = function(subName, collection, minDocs) {
+		var handle = { ready: function() {
+			return Subs[subName] &&
+				Subs[subName].ready() &&
+				( collection ? (collection.find({}).count() >= minDocs) : true );
+			}
+		};
+		return handle;
+	}
+
 	var joinTeam = function(code) {
 		var handle, self;
 		if (!joinTeamDep) {
@@ -332,11 +351,13 @@ clientFunctions = (function() {
 		removeMarkers: removeMarkers,
 		loadGoogleMaps: loadGoogleMaps,
 		loadGMaps: loadGMaps,
+		pitchesAvailable: pitchesAvailable,
 		initialize: initialize,
 		initializeCircle: initializeCircle,
 		updateCircle: updateCircle,
 		logTemplateEvents: logTemplateEvents,
 		suprsubPlugins: suprsubPlugins,
+		reactiveSubHandle: reactiveSubHandle,
 		joinTeam: joinTeam,
 		padToTwo: padToTwo
 	};
