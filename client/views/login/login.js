@@ -68,8 +68,9 @@ Template.loginScreen.events({
             else {
                 Router.current().redirect('/home');
                 // location.reload();
-                if (Router.Tour.loadTour(appVars.tour)) 
+                if (Router.Tour.loadTour(appVars.tour))
                     Meteor.setTimeout(function() {
+                        console.log(Router.current());
                         Router.Tour.nextStep();
                     }, 500);
             }

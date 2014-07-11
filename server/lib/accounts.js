@@ -126,5 +126,6 @@ Accounts.onCreateUser(function(options, user) {
 	user.profile.team =  {_ids: []};
 	user.profile.player = {availability: appConfig.availabilityTemplate};
 	user.profile.postMe = true;
+	user.profile.firstLogin = true;
 	return user;
 });

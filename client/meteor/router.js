@@ -4,7 +4,7 @@ suprsubController = FastRender.RouteController.extend({
 /*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
-  before: function (pause) {
+  onBeforeAction: function (pause) {
     var that = this;
     appVars.showErrors.set(false);
     if (dep) dep.stop();
@@ -15,21 +15,17 @@ suprsubController = FastRender.RouteController.extend({
     }
     dep = Deps.autorun(function() {
       if (!Meteor.user()) {
-        // render the login template but keep the url in the browser the same
-        that.render('mainTemplate');
-        that.render('loginScreen', {to: 'mainSection'});
-        // stop the rest of the before hooks and the action function 
-        pause();
+        that.redirect('/login');
       }
-      else {
-        that.render();
+      else if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
+        that.redirect('/gender');
+      }
+      else if (Meteor.user().profile && Meteor.user().profile.firstLogin && that.path !== '/home') {
+        that.redirect('/home');
       }
     });
   },
-  after: function() {
-    if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
-      this.redirect('/gender');
-    }
+  onAfterAction: function() {
   },
 });
 
@@ -38,6 +34,22 @@ Router.onBeforeAction('loading');
 Router.map(function() {
 
   var subs;
+
+  this.route('login', {
+    path: '/login',
+    controller: suprsubController,
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'loginScreen': {to: 'mainSection'}
+    },
+    onBeforeAction: function() {
+      var that = this;
+      if (dep) dep.stop();
+      dep = Deps.autorun(function() {
+        if (Meteor.user()) that.redirect('/home');
+      });
+    }
+  })
 
   this.route('playerDetails', {
     path: '/player',
@@ -50,8 +62,8 @@ Router.map(function() {
       return [Subs.pitches, clientFunctions.loadGMaps(), clientFunctions.pitchesAvailable()];
     },
     onBeforeAction: function() {
-      appVars.circleSize = new suprsubDep(8000);
-      appVars.availabilitySession = new suprsubDep(Meteor.user().profile.player.availability, 'routerAvailability');
+      appVars.circleSize.set(8000);
+      if (Meteor.user() && Meteor.user().profile) appVars.availabilitySession.set(Meteor.user().profile.player.availability);
     },
     action: function() {
       this.render();
@@ -87,7 +99,7 @@ Router.map(function() {
         else
           Router.current().route.currentTeamId.set(null);
       }
-      return [Subs.pitches, Subs.teams, clientFunctions.loadGMaps()];
+      return [Subs.pitches, clientFunctions.reactiveSubHandle('teams'), clientFunctions.loadGMaps()];
     },
     action: function() {
       this.render();
@@ -129,6 +141,22 @@ Router.map(function() {
         Subs.teams,
         clientFunctions.reactiveSubHandle('events')
         ];
+    },
+    onAfterAction: function() {
+      console.log("checking firstLogin");
+      if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.firstLogin) {
+        var that = this,
+            dep = Deps.autorun(function(c) {
+              if (that._waitList.ready()) {
+                Meteor.users.update({_id: Meteor.userId()}, {$unset: {'profile.firstLogin': true}});
+                Router.Tour.loadTour(appVars.tour);
+                Meteor.setTimeout(function() {
+                  Router.Tour.nextStep();
+                }, 250);
+                c.stop();
+              }
+        });
+      }
     }
   });
 

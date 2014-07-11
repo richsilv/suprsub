@@ -299,10 +299,11 @@ clientFunctions = (function() {
 	};
 
 	var reactiveSubHandle = function(subName, collection, minDocs) {
-		var handle = { ready: function() {
-			return Subs[subName] &&
-				Subs[subName].ready() &&
-				( collection ? (collection.find({}).count() >= minDocs) : true );
+		var handle = {
+			ready: function() {
+				Router.current()._waitList._dep.depend();
+				console.log("RSH RUN FOR", subName, (Subs[subName] && Subs[subName].ready() && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true: false);
+				return (Subs[subName] && Subs[subName].ready() && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true : false;
 			}
 		};
 		return handle;

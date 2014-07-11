@@ -1,9 +1,9 @@
 Meteor.publish('pitches', function(loc, prox) {
-	return Pitches.find({location: {$near: loc}});
+	return Pitches.find({location: {$near: loc}}, {fields: {prettyLocation: 1, 'location.lat': 1, 'location.lng': 1}});
 });
 
 Meteor.publish('allPitches', function() {
-	return Pitches.find();
+	return Pitches.find({}, {fields: {prettyLocation: 1, 'location.lat': 1, 'location.lng': 1}});
 });
 
 Meteor.publish('events', function(id, userPostings) {

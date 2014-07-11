@@ -80,6 +80,8 @@ appVars = (function() {
 		mapCenter: new suprsubDep({b: 51.5080391, d: -0.12806929999999284, lat: function() {return this.b;}, lng: function() {return this.d;}}),
 		tabChoices: new suprsubDep({playerTab: 'availability'}),
 		circleChanged: new suprsubDep(false),
+		circleSize: new suprsubDep(8000),
+		availabilitySession: new suprsubDep([], 'routerAvailability'),
 		newPosting: new suprsubDep(null),
 		mainOption: '/',
 		TimeKeeper: TimeKeeper,

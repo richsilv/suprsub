@@ -119,7 +119,10 @@ Template.fullPostingForm.helpers({
     appVars.showErrors.dep.depend();
     if (!picker) return null;
     var dateEntered = picker.getDate();
-    if (!dateEntered) return "error";
+    if (!dateEntered) {
+      if (appVars.showErrors.get()) return "error";
+      else return null;
+    }
     var dateNow = (new Date()).getTime();
         dateEntered = dateEntered.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() + 30) * 60000;
     if (appVars.showErrors.get() && (dateEntered < dateNow || dateEntered > dateNow + 5184000000)) return "error";
@@ -140,10 +143,10 @@ Template.fullPostingForm.events({
     }
     if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
       template.lastUpdate = new Date().getTime();
-      if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
-        var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"}, {sort: {prettyLocation: 1}});
+      if (Pitches.findOne({$where: "this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
+        var pitchCursor = Pitches.find({$where: "this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"}, {sort: {prettyLocation: 1}});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
-        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + prettyLocation(pitch) + '</a>';});
+        pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.prettyLocation + '</a>';});
         $('#matchesFloat').html(pitchElement + '</div></div></div>');
         $('#matchesFloat').show();
       }
