@@ -18,8 +18,7 @@
       "collection-hooks": {},
       "moment-timezone": {},
       "velocityjs": {},
-      "find-faster": {},
-      "server-eval": {}
+      "find-faster": {}
     },
     "packages": {
       "semantic-ui": {
@@ -106,11 +105,6 @@
         "git": "https://github.com/arunoda/meteor-find-faster.git",
         "tag": "v0.1.3",
         "commit": "b821858e34692aa89782a06c32a88b735b2885ab"
-      },
-      "server-eval": {
-        "git": "https://github.com/gandev-de/meteor-server-eval.git",
-        "tag": "v0.5.0",
-        "commit": "0652e70de0b359305f7e04b9131dfc755e1cf27a"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
