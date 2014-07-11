@@ -143,7 +143,7 @@ Router.map(function() {
       return [
         Subs.pitches,
         Subs.teams,
-        Subs.events
+        clientFunctions.reactiveSubHandle('events')
         ];
     },
     after: function() {
