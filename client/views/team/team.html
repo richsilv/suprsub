@@ -48,7 +48,7 @@
 </template>
 
 <template name="teamName">
-	<div class="field" id="teamNameHolder">
+	<div class="{{checkName}} field" id="teamNameHolder">
 		<label>Team/Game Name</label>
 		{{#if dropdownTeams}}
 		<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
@@ -166,7 +166,7 @@
 			</div>
 		</div>
 		</div>
-		<div class="field">
+		<div class="{{homeCheck}} field">
 			<label>Home Ground</label>
 			<div class="ui input" id="homeGround">
 				<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">

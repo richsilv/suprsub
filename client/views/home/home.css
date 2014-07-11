@@ -39,6 +39,11 @@
 	color: #009FDA;
 }
 
+.ui.link.list {
+	max-height: 20em;
+	overflow-y: auto;
+}
+
 .fadeBox {
 	position: absolute;
 	border-radius: 5px;

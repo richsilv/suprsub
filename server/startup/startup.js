@@ -13,7 +13,7 @@ Meteor.startup(function() {
 	// COLLECTION OBSERVERS
 
 	// STARTUP PROCESSES
-	Pitches._ensureIndex({ location : "2d" });
+	// Pitches._ensureIndex({ location : "2d" });
 	if (Meteor.settings && Meteor.settings.streamTwitter) {
 		serverFunctions.streamTwitter();
 		appConfig.streaming = true;

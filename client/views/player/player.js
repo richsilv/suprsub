@@ -9,7 +9,9 @@ var dataChange = new suprsubDep(false),
 Template.pitchData.helpers({
   getVenues: function() {
     if (appVars.venues && appVars.venues.get()) {
-      return _.pluck(appVars.venues.get(), 'prettyLocation');
+      return _.map(appVars.venues.get(), function(p) {
+        return _.pick(p, '_id', 'prettyLocation');
+      });
     }
     else return [];
   }
@@ -160,6 +162,21 @@ Template.playerForm.events({
 
 // ******************************
 
+Template.playerDropdowns.helpers({
+  'fieldCheck': function(id) {
+    if (!appVars.showErrors.get()) return;
+    var dropdown = $('#' + id);
+    if (!dropdown || dropdown.dropdown('get value')) return;
+    return "error";
+  }
+});
+
+Template.playerDropdowns.events({
+  'click': function() {
+    appVars.showErrors.dep.changed();
+  }
+})
+
 Template.playerDropdowns.rendered = function() {
   var thisUser = Meteor.user();
   $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
@@ -240,6 +257,7 @@ Template.playerMainButtons.events({
     clientFunctions.updateCircle();
   },
   'click #saveButton': function(event) {
+    appVars.showErrors.set(true);
     if (!$(event.target).hasClass('disabled') && !$(event.target).parents('#saveButton').hasClass('disabled'))
       savePlayerData.call(this, event);
   }

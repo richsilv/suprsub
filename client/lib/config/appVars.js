@@ -99,6 +99,7 @@ appVars = (function() {
 		{name: "Evening", periodCode: 2}
 		],
 		_libs: {},
+		showErrors: new suprsubDep(false),
 	    saveCalc: new Deps.Dependency(),
 	    maxInvalidate: 100,
 	    maxPitches: screen.width > 1000 ? 60 : screen.width > 600 ? 40 : 25,

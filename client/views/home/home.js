@@ -1,5 +1,5 @@
 var postBoxText = new suprsubDep(false),
-    picker;
+    picker
 
 // *********************************
 
@@ -107,10 +107,32 @@ Template.fullPostingForm.helpers({
   'teamRegistered': function() {
     var thisUser = Meteor.user();
     return (thisUser && thisUser.profile && thisUser.profile.team._ids.length);;   
+  },
+  //TODO//
+  'playersCheck': function() {
+    if (appVars.showErrors.get() && !parseInt($('#numberPlayers').dropdown('get value'), 10)) return "error";
+  },
+  'locationCheck': function() {
+    if (appVars.showErrors.get() && !$('#homeGroundSearch').attr('data-value')) return "error";
+  },
+  'dateTimeCheck': function() {
+    appVars.showErrors.dep.depend();
+    if (!picker) return null;
+    var dateEntered = picker.getDate();
+    if (!dateEntered) return "error";
+    var dateNow = (new Date()).getTime();
+        dateEntered = dateEntered.setHours($('#timePickerHour').val()) + ($('#timePickerMinute').val() + 30) * 60000;
+    if (appVars.showErrors.get() && (dateEntered < dateNow || dateEntered > dateNow + 5184000000)) return "error";
+  },
+  'formatCheck': function() {
+    if (appVars.showErrors.get() && !$('#format').attr('value')) return "error";
   }
 })
 
 Template.fullPostingForm.events({
+  'click': function() {
+    appVars.showErrors.dep.changed();
+  },
   'keyup #homeGroundSearch': function(event, template) {
     if (event.keyCode === 27) {
       $('#matchesFloat').hide();
@@ -119,7 +141,7 @@ Template.fullPostingForm.events({
     if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
       template.lastUpdate = new Date().getTime();
       if (Pitches.findOne({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
-        var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
+        var pitchCursor = Pitches.find({$where: "this.name.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"}, {sort: {prettyLocation: 1}});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
         pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + prettyLocation(pitch) + '</a>';});
         $('#matchesFloat').html(pitchElement + '</div></div></div>');
@@ -145,6 +167,7 @@ Template.fullPostingForm.events({
           gender: 0,
           price: 0
         };
+      appVars.showErrors.set(true);
       if (!thisUser.profile.team._ids.length) {
         console.log("Player has no team");
         return;

@@ -57,7 +57,7 @@
 
 <template name="playerDropdowns">
   	<div class="two fields">
-    	<div class="field">
+    	<div class="{{fieldCheck "ageDropdown"}} field">
       		<label>Age</label>
 			<div class="ui fluid selection dropdown" id="ageDropdown">
 				<input type="hidden" name="ageInuput">
@@ -68,7 +68,7 @@
 				</div>
 			</div>
     	</div>
-	    <div class="field">
+	    <div class="{{fieldCheck "positionDropdown"}} field">
 	      	<label>Prefered Position</label>
 			<div class="ui fluid selection dropdown" id="positionDropdown">
 				<input type="hidden">
@@ -81,7 +81,7 @@
 	    </div>
   	</div>
   	<div class="two fields">
-    	<div class="field">
+    	<div class="{{fieldCheck "footednessDropdown"}} field">
       		<label>Footedness</label>
 			<div class="ui fluid selection dropdown" id="footednessDropdown">
 				<input type="hidden">
@@ -92,7 +92,7 @@
 				</div>
 			</div>
     	</div>
-	    <div class="field">
+	    <div class="{{fieldCheck "abilityDropdown"}} field">
 	      	<label>Ability</label>
 			<div class="ui fluid selection dropdown" id="abilityDropdown">
 				<input type="hidden">
@@ -133,7 +133,7 @@
 		<div id="pitchTableDiv">
 			<tbody>
 				{{#each getVenues}}
-					<tr><td class="tableLocation">{{this}}</td></tr>
+					<tr><td class="tableLocation" id="{{this._id}}">{{this.prettyLocation}}</td></tr>
 				{{/each}}
 			</tbody>
 		</div>

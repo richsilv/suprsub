@@ -34,6 +34,7 @@ clientFunctions = (function() {
 		$('#homeGround input').val(m.title);
 		$('#homeGround input').attr('id', m.pitch_ID);
 		appVars.saveCalc.changed();
+		appVars.showErrors.dep.changed();
 		google.maps.event.trigger(pitchMap, 'bounds_changed');
 		// window.scrollTo(window.scrollX, 0);
 	};
@@ -81,7 +82,8 @@ clientFunctions = (function() {
 		var defaultLocation = new google.maps.LatLng(51, 0);
 		var mapOptions = {
 				zoom: 11,
-				center: defaultLocation
+				center: defaultLocation,
+				disableDoubleClickZoom: true
 			},
 			thisTeam = Teams.findOne(Router.current().route.currentTeamId);
 		pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
@@ -135,6 +137,13 @@ clientFunctions = (function() {
 				});
 				appVars.circleChanged.set(true);
 			}
+			google.maps.event.addListener(pitchMap, 'dblclick', function(event) {
+				appVars.mapCenter.set(event.latLng)
+				console.log("new center is ", event.latLng);
+				appVars.circleChanged.set(true);
+				updateCircle();
+				event.stop();
+			});
 		}
 		google.maps.event.addListener(pitchMap, 'bounds_changed', function() {
 			var _thisTimeout = this.thisTimeout;
@@ -179,7 +188,7 @@ clientFunctions = (function() {
 			var marker = new google.maps.Marker({
 				position: pitches[i].location,
 				map: pitchMap,
-				title:pitches[i].owner + " " + pitches[i].name,
+				title:pitches[i].prettyLocation,
 				icon: (pitches[i]._id === currentPitch) ? 'images/soccerv3.png' : 'images/soccerv2.png',
 				pitch_ID: pitches[i]._id
 			});

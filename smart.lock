@@ -16,7 +16,10 @@
       "accounts-meld": {},
       "kadira": {},
       "collection-hooks": {},
-      "moment-timezone": {}
+      "moment-timezone": {},
+      "velocityjs": {},
+      "find-faster": {},
+      "server-eval": {}
     },
     "packages": {
       "semantic-ui": {
@@ -93,6 +96,21 @@
         "git": "https://github.com/acreeger/meteor-moment-timezone",
         "tag": "v0.0.1.4",
         "commit": "feb364efb1ec0cefb870d5981b2b836b45211455"
+      },
+      "velocityjs": {
+        "git": "https://github.com/Sewdn/meteor-velocityjs.git",
+        "tag": "v0.1.0",
+        "commit": "d94afb23a188af9ae16adb70a09426563e4539c7"
+      },
+      "find-faster": {
+        "git": "https://github.com/arunoda/meteor-find-faster.git",
+        "tag": "v0.1.3",
+        "commit": "b821858e34692aa89782a06c32a88b735b2885ab"
+      },
+      "server-eval": {
+        "git": "https://github.com/gandev-de/meteor-server-eval.git",
+        "tag": "v0.5.0",
+        "commit": "0652e70de0b359305f7e04b9131dfc755e1cf27a"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

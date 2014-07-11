@@ -6,6 +6,7 @@ suprsubController = FastRender.RouteController.extend({
   loadingTemplate: 'loading',
   before: function (pause) {
     var that = this;
+    appVars.showErrors.set(false);
     if (dep) dep.stop();
     if (Router.Tour.getTour() && Router.Tour.currentPage() !== this.route.name) {
       console.log("Stopping tour", Router.Tour.currentPage(), this.route.name);

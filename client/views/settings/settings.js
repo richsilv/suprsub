@@ -1,3 +1,5 @@
+var duplicateEmail, duplicate = new suprsubDep(false);
+
 Template.settingsBox.helpers({
   contactString: function() {
     var cString = '', contactArray = Meteor.user().profile.contact;
@@ -29,18 +31,36 @@ Template.settingsBox.events({
       }
     });*/
   },
-  'click #emailButton': function() {
+  'click #linkButton': function() {
     templateAttach(Template.linkModalWrapper, function() {
       $('#linkModal').modal({
         onHide: function() {
           $('.ui.dimmer.page').remove();
           $('#linkModal').remove();
+          duplicateEmail = null;
+          duplicate.set(false);
         },
         closable: true
       });
       $('#linkModal').modal('show');
     });
     // UI.insert(UI.render(Template.linkModal), document.getElementById('linkModalHolder'));
+  },
+  'click #waitingButton': function() {
+    confirmModal({
+      message: "<h3>Send Confirmation Email?</h3><p>Would you like another confirmation e-mail to be sent to <em>" +
+      (Meteor.user().emails ? Meteor.user().emails[0].address : 'false') + "</em>?",
+      callback: function() {
+        Meteor.call('sendVerificationEmail');
+        confirmModal({
+          message: "<h3>Confirmation Email Has Been Sent</h3><p>Check your inbox, and if you can't find the mail, check your spam folder!</p>",
+          noButtons: true
+        },
+        function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250);}
+        )
+      }},
+      function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 250);}
+    );
   },
   'click #facebookButton': function() {
     if (!('facebook' in Meteor.user().services)) {
@@ -123,16 +143,23 @@ Template.settingsMainButtons.events({
 
 // **************************
 
-Template.linkModal.events({
+Template.linkModal.helpers({
+  duplicate: function() {
+    return duplicate.get();
+  }
+});
+
+// **************************
+
+Template.attachEmail.events({
   'click #emailCancel': function() {
     $('.modal').filter(':visible').modal('hide');
   },
   'click #emailSubmit': function() {
     Meteor.call('emailExists', $('#emailEntry').val(), function(err, res) {
       if (res) {
-        var duplicateEmail = $('#emailEntry').val();
-        // TODO SORT THIS OUT USING UI.toHTML...
-        $('#linkModal').html(Template.duplicateEmail({email: duplicateEmail}));
+        duplicateEmail = $('#emailEntry').val();
+        duplicate.set(true);
       }
       else {
         Meteor.call('addEmailCredentials', {
@@ -144,6 +171,12 @@ Template.linkModal.events({
         $('.modal').filter(':visible').modal('hide');
       }
     });
+  }
+});
+
+Template.duplicateEmail.helpers({
+  email: function() {
+    return duplicateEmail;
   }
 });
 

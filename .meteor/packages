@@ -43,3 +43,6 @@ accounts-meld
 kadira
 collection-hooks
 moment-timezone
+velocityjs
+find-faster
+server-eval

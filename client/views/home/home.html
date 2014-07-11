@@ -76,7 +76,7 @@
 	<div class="ui segment content whitetranslucent">
 		<form class="ui reply form" id="fullPostingForm">
 			<div class="underlineRow ui row">
-				<div class="field small-6 columns">
+				<div class="{{playersCheck}} field small-6 columns">
 					<label>No. of players</label>
 					<div class="ui fluid selection dropdown" id="numberPlayers" title="The number of SuprSubs your team is looking for">
 						<input type="hidden" id="players">
@@ -93,7 +93,7 @@
 						</div>
 					</div>					
 				</div>
-				<div class="field small-10 columns">
+				<div class="{{locationCheck}} field small-10 columns">
 					<label>Location</label>
 					<div class="ui left labeled icon input" title="The match location. If you can't find your venue, you can make a request for it to be added on the Team page">
 						<input type="text" placeholder="Type a description or address" id="homeGroundSearch">
@@ -103,14 +103,14 @@
 				</div>
 			</div>
 			<div class="underlineRow ui row">
-				<div class="field small-8 columns">
+				<div class="{{dateTimeCheck}} field small-8 columns">
 					<label>Date</label>
 					<div class="ui left labeled icon input" title="The date of your match">
 						<input id="datepicker">
 						<i class="calendar icon"></i>
 					</div>
 				</div>
-				<div class="field small-8 columns" id="timeSection" title="Kick-off time">
+				<div class="{{dateTimeCheck}} field small-8 columns" id="timeSection" title="Kick-off time">
 					<label>Kick-off</label>
 					<div class="row">
 						<div class="small-9 columns minipadding">
@@ -155,7 +155,7 @@
 					</div>
 					<div class="checkboxLabel"><span class="show-for-medium-up">Competitive</span><span class="show-for-small-only">Comp.</span></div> -->
 				</div>
-				<div class="field small-8 columns">
+				<div class="{{formatCheck}} field small-8 columns">
 					<label>Game Format</label>
 					<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
 						<input type="hidden" id="format">

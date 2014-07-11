@@ -61,10 +61,16 @@ Template.teamName.helpers({
   singleTeamName: function() {
     var thisTeam = Teams.findOne({_id: Router.current().route.currentTeamId.value});
     return thisTeam ? thisTeam.name : '';
+  },
+  checkName: function() {
+    if (appVars.showErrors.get() && $('#teamName') && !$('#teamName').val()) return 'error';
   }
 });
 
 Template.teamName.events({
+  'click, keydown': function() {
+    appVars.showErrors.dep.changed();
+  },
   'click #teamChoice .text': function() {
     if ($('#teamChoice').dropdown('is visible') === true) {
       nameEntryOverride.set(true);
@@ -216,6 +222,9 @@ Template.playerTable.rendered = function() {
 Template.teamSettings.helpers({
   days: function() {
     return appVars.days;
+  },
+  homeCheck: function() {
+    return (!appVars.showErrors.get() || $('#homeGround>input').attr('id')) ? null : 'error'
   }
 });
 
@@ -331,6 +340,7 @@ Template.otherInfo.events({
       pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
       $('#homeGround input').val(prettyLocation(pitch));
       $('#homeGround input').attr('id', pitch._id);
+      appVars.showErrors.dep.changed();
       $('html, body').animate({
         scrollTop: ($('#homeGround').first().offset().top - (window.innerHeight/2))
       },500);
@@ -639,11 +649,15 @@ function glowCallback(event, err) {
 
 function saveTeamData(event) {
   var homeGroundId = $('#homeGround>input').attr('id'),
+      name = $('#teamName').val(),
       teamProfile,
       thisGlowCallback = glowCallback.bind(undefined, event),
       format = $('#gameFormat').dropdown('get value'),
       type = parseInt($('#friendlyCompetitive').flipbox('get choice'), 10);
-  if (!homeGroundId) return false;
+  if (!homeGroundId || !name) {
+    appVars.showErrors.set(true);
+    return false;
+  }
   teamProfile = {
       name: $('#teamName').val(),
       homeGround: homeGroundId,
