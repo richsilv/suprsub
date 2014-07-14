@@ -25,6 +25,14 @@ UI.registerHelper("codeEntered", function() {
   }
 });
 
+UI.registerHelper("contacts", function() {
+  var thisUser = Meteor.user(), returnString, contactNames = ['Twitter', 'email', 'email'];
+  if (!thisUser) return null;
+  returnString = contactNames[thisUser.profile.contact[0]];
+  if (thisUser.profile.contact > 1) returnString += ' and ' + contactNames[thisUser.profile.contact[1]];
+  return returnString;
+});
+
 // **************************
 
 Template.teamInfo.events({
