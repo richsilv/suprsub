@@ -18,6 +18,7 @@ Template.topbar.events({
     'click #login-button' : function() {
         Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
           if (err) accountError.set(err.reason);
+          else Router.current().redirect('/home');
         });
     },
     'click #logout-button' : function() {
@@ -68,11 +69,6 @@ Template.loginScreen.events({
             else {
                 Router.current().redirect('/home');
                 // location.reload();
-                if (Router.Tour.loadTour(appVars.tour))
-                    Meteor.setTimeout(function() {
-                        console.log(Router.current());
-                        Router.Tour.nextStep();
-                    }, 500);
             }
         });
     },
