@@ -224,7 +224,7 @@ Template.fullPostingForm.rendered = function() {
   $('.ui.flipbox').flipbox();
   clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
   renderDep = Deps.autorun(function(c) {
-    if (Meteor.user()) {
+    if (Meteor.user() && Router.current()._waitList.ready()) {
       setFormDefaults();
       c.stop();
     }
@@ -436,7 +436,7 @@ setFormDefaults = function() {
   if (teamProfile.homeGround) {
     var homeGround = Pitches.findOne({_id: teamProfile.homeGround});
     if (homeGround) {
-      $('#homeGroundSearch').val(prettyLocation(homeGround));
+      $('#homeGroundSearch').val(homeGround.prettyLocation);
       $('#homeGroundSearch').attr('data-value', homeGround._id);
     }
   }
