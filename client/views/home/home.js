@@ -240,7 +240,7 @@ Template.postingModal.helpers({
     output = {
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),
-      location: prettyLocation(postingData.location),
+      location: postingData.prettyLocation,
       gender: postingData.gender ? "Female" : "Male",
       price: postingData.price,
       onlyRingers: postingData.onlyRingers
@@ -342,7 +342,7 @@ Template.signupModal.helpers({
     output = {
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),
-      location: prettyLocation(postingData.location),
+      location: postingData.prettyLocation,
       gender: postingData.gender ? "Female" : "Male",
       price: postingData.price,
       onlyRingers: postingData.onlyRingers

@@ -325,7 +325,7 @@
 		else if (Math.random() > 0.5) sentence += ' at ';
 		else sentence += ' ';
 		if (Math.random() > 0.5) {
-			sentence += prettyLocation(posting.location);
+			sentence += posting.prettyLocation;
 			if (Math.random() > 0.66) sentence += ', ';
 			else if (Math.random() > 0.5) sentence += ' at ';
 			else sentence += ' ';
