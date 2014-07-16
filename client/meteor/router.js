@@ -13,14 +13,17 @@ suprsubController = FastRender.RouteController.extend({
       Router.Tour.loadTour();
       Router.Tour.nextStep();
     }
-    dep = Deps.autorun(function() {
+    Deps.autorun(function(c) {
       if (!Meteor.user()) {
+        c.stop();
         that.redirect('/login');
       }
       else if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
+        c.stop();
         that.redirect('/gender');
       }
       else if (Meteor.user().profile && Meteor.user().profile.firstLogin && that.path !== '/home') {
+        c.stop();
         that.redirect('/home');
       }
     });
@@ -44,8 +47,7 @@ Router.map(function() {
     },
     onBeforeAction: function() {
       var that = this;
-      if (dep && dep.stop) dep.stop();
-      dep = Deps.autorun(function(c) {
+      Deps.autorun(function(c) {
         if (Meteor.userId()) {
           c.stop();
           that.redirect('/home');
