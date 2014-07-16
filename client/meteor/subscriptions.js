@@ -10,7 +10,7 @@ Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
     }
     else {
         console.log("Returned " + res.length + " pitches");
-        console.log("Collecting " + pitches.length + " pitches");
+        console.log("Collecting " + (pitches ? pitches.length : 0) + " pitches");
         pitches = pitches ? pitches.concat(res) : res;
         console.log("Inserting Pitches");
         pitches.forEach(function(p) {

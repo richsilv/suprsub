@@ -44,9 +44,12 @@ Router.map(function() {
     },
     onBeforeAction: function() {
       var that = this;
-      if (dep) dep.stop();
-      dep = Deps.autorun(function() {
-        if (Meteor.user()) that.redirect('/home');
+      if (dep && dep.stop) dep.stop();
+      dep = Deps.autorun(function(c) {
+        if (Meteor.userId()) {
+          c.stop();
+          that.redirect('/home');
+        }
       });
     }
   })

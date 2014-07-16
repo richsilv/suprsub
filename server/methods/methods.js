@@ -10,7 +10,9 @@ Meteor.methods({
 		return Pitches.find({_id: {$nin: ignore}}, {fields: {prettyLocation: 1, 'location.lat': 1, 'location.lng': 1}}).fetch();
 	},
 	oldPitches: function(allIds) {
-		return _.filter(allIds, function(id) {return (Pitches.find(id).count() === 0)});
+		var currentIds = _.pluck(Pitches.find({}, {fields: {_id: true}}).fetch(), '_id');
+		this.unblock();
+		return _.filter(allIds, function(id) {return (currentIds.indexOf(id) === -1)});
 	},
 	pitchesWithin: function(center, distance) {
 		var ratio = 6.283184 / 360;
