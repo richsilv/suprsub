@@ -313,7 +313,9 @@
 	}
 
 	function describePosting(posting) {
-		var sentence = '', startPhrases = ['Looking for', 'We need', 'I need', 'Need', "We're looking for", "I'm looking for"];
+		var sentence = '', 
+			startPhrases = ['Looking for', 'We need', 'I need', 'Need', "We're looking for", "I'm looking for"],
+			pitch = Pitches.findOne({_id: posting.location});
 		sentence += startPhrases[Math.floor(Math.random() * startPhrases.length)] + ' ';
 		if (Math.random() > 0.5) sentence += posting.players;
 		else sentence += ['none', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'][posting.players];
@@ -325,7 +327,7 @@
 		else if (Math.random() > 0.5) sentence += ' at ';
 		else sentence += ' ';
 		if (Math.random() > 0.5) {
-			sentence += posting.prettyLocation;
+			sentence += pitch ? pitch.prettyLocation : 'Unknown Location';
 			if (Math.random() > 0.66) sentence += ', ';
 			else if (Math.random() > 0.5) sentence += ' at ';
 			else sentence += ' ';

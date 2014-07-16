@@ -238,12 +238,13 @@ Template.fullPostingForm.rendered = function() {
 
 Template.postingModal.helpers({
   posting: function(){
-    postingData = appVars.newPosting.get();
+    var postingData = appVars.newPosting.get(),
+        pitch = Pitches.findOne({_id: postingData.location});
     if (!postingData) return {};
     output = {
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),
-      location: postingData.prettyLocation,
+      location: pitch ? pitch.prettyLocation : "Unkown Location",
       gender: postingData.gender ? "Female" : "Male",
       price: postingData.price,
       onlyRingers: postingData.onlyRingers
@@ -340,12 +341,13 @@ Template.activityFeed.destroyed = function() {
 
 Template.signupModal.helpers({
   posting: function(){
-    var postingData = this.postingData;
+    var postingData = this.postingData,
+        pitch = Pitches.findOne({_id: postingData.location});
     if (!postingData) return {};
     output = {
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),
-      location: postingData.prettyLocation,
+      location: pitch ? pitch.prettyLocation : "Unknown Location",
       gender: postingData.gender ? "Female" : "Male",
       price: postingData.price,
       onlyRingers: postingData.onlyRingers
