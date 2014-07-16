@@ -166,7 +166,9 @@ clientFunctions = (function() {
 			}, venueDelay);
       	});
 		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
-			document.getElementById("pitchMap").style.display = "block";
+			// document.getElementById("pitchMap").style.display = "block";
+			appVars.mapReady.set(true);
+			Deps.flush();
 			google.maps.event.trigger(pitchMap, 'resize');
 			pitchMap.setCenter(defaultLocation);
 		});

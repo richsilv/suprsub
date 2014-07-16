@@ -129,6 +129,9 @@ Template.fullPostingForm.helpers({
   },
   'formatCheck': function() {
     if (appVars.showErrors.get() && !$('#format').attr('value')) return "error";
+  },
+  'pitchesReady': function() {
+    return appVars.pitchesReady.get();
   }
 })
 

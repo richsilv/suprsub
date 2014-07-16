@@ -59,7 +59,7 @@ Router.map(function() {
       'playerDetails': {to: 'mainSection'}
     },
     waitOn: function() {
-      return [Subs.pitches, clientFunctions.loadGMaps(), clientFunctions.pitchesAvailable()];
+      return [clientFunctions.loadGMaps()];
     },
     onBeforeAction: function() {
       appVars.circleSize.set(8000);
@@ -68,7 +68,12 @@ Router.map(function() {
     action: function() {
       this.render();
       Template.pitchMapLarge.rendered = function() {
-        clientFunctions.initialize(true);
+        Deps.autorun(function(c) {
+          if (Pitches.find().count() > 1000) {
+            clientFunctions.initialize(true);
+            c.stop();
+          }
+        });
         Template.pitchMapLarge.rendered = null;
       };
     }
@@ -137,18 +142,15 @@ Router.map(function() {
     },
     waitOn: function() {
       return [
-        Subs.pitches,
-        Subs.teams,
-        clientFunctions.reactiveSubHandle('events')
+        Subs.teams
         ];
     },
     onAfterAction: function() {
-      console.log("checking firstLogin");
-      if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.firstLogin) {
-        var that = this,
+      var that = this, thisUser = Meteor.user();
+      if (thisUser && thisUser.profile && thisUser.profile.firstLogin) {
             dep = Deps.autorun(function(c) {
               if (that._waitList.ready()) {
-                Meteor.users.update({_id: Meteor.userId()}, {$unset: {'profile.firstLogin': true}});
+                Meteor.users.update({_id: thisUser}, {$unset: {'profile.firstLogin': true}});
                 Router.Tour.loadTour(appVars.tour);
                 Meteor.setTimeout(function() {
                   Router.Tour.nextStep();
@@ -156,6 +158,7 @@ Router.map(function() {
                 c.stop();
               }
         });
+            
       }
     }
   });

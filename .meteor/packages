@@ -46,3 +46,5 @@ moment-timezone
 velocityjs
 find-faster
 appcache
+amplify
+aws-sdk

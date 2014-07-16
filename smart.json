@@ -16,6 +16,7 @@
     "collection-hooks": {},
     "moment-timezone": {},
     "velocityjs": {},
-    "find-faster": {}
+    "find-faster": {},
+    "aws-sdk": {}
   }
 }

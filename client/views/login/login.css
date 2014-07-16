@@ -6,7 +6,7 @@
 	width: 100%;
 	height:100vh;
 	width:100vw;
-	background: url('/images/footygoal2.jpeg') no-repeat center center fixed;
+	background: url('https://s3-eu-west-1.amazonaws.com/suprsub/images/footygoal2.jpeg') no-repeat center center fixed;
 	background-size: cover;
 	-o-background-size: cover;
 	-moz-background-size: cover;
@@ -76,7 +76,7 @@
 @media only screen and (max-width: 40em) {
 
 	#login-background-image {
-		background: url('/images/footygoalsmall.jpeg') no-repeat center center fixed;
+		background: url('https://s3-eu-west-1.amazonaws.com/suprsub/images/footygoalsmall.jpeg') no-repeat center center fixed;
 	}
 
 }

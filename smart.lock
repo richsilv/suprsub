@@ -18,7 +18,8 @@
       "collection-hooks": {},
       "moment-timezone": {},
       "velocityjs": {},
-      "find-faster": {}
+      "find-faster": {},
+      "aws-sdk": {}
     },
     "packages": {
       "semantic-ui": {
@@ -106,6 +107,11 @@
         "tag": "v0.1.3",
         "commit": "b821858e34692aa89782a06c32a88b735b2885ab"
       },
+      "aws-sdk": {
+        "git": "https://github.com/peerlibrary/meteor-aws-sdk.git",
+        "tag": "v2.0.4-1",
+        "commit": "8e5ef041df90a6a87df44273534611f420d8a2f8"
+      },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
         "tag": "v0.2.4",
@@ -115,6 +121,11 @@
         "git": "https://github.com/fourseven/meteor-scss.git",
         "tag": "v0.9.3",
         "commit": "185f3b2787fb85e653f7b7bf603d1493ed14943d"
+      },
+      "blocking": {
+        "git": "https://github.com/peerlibrary/meteor-blocking.git",
+        "tag": "v0.4.1",
+        "commit": "512354e9721d931c7884b56fbb3b419d060ae8da"
       }
     }
   }

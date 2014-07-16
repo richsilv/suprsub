@@ -6,6 +6,12 @@ var sendToLogger = {
 }, oldConsole = console;
 
 Meteor.methods({
+	getPitches: function(ignore) {
+		return Pitches.find({_id: {$nin: ignore}}, {fields: {prettyLocation: 1, 'location.lat': 1, 'location.lng': 1}}).fetch();
+	},
+	oldPitches: function(allIds) {
+		return _.filter(allIds, function(id) {return (Pitches.find(id).count() === 0)});
+	},
 	pitchesWithin: function(center, distance) {
 		var ratio = 6.283184 / 360;
 		var lng = center.lng * ratio;

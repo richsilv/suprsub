@@ -1,0 +1,1 @@
+Pitches = new Meteor.Collection();

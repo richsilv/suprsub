@@ -177,7 +177,8 @@
 </template>
 
 <template name="pitchMapLarge">
-	<div class="ui row large" id="pitchMap" style="display: none;"></div>
+	<div class="ui row large" id="pitchMap" style={{#if mapReady}}"display: block;"{{else}}"display: none;"{{/if}}></div>
+	{{#unless mapReady}}<div class="loader">Loading</div>{{/unless}}
 </template>
 
 <template name="playerAreaButtons">
