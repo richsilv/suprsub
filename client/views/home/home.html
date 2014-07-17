@@ -96,7 +96,7 @@
 				<div class="{{locationCheck}} {{#unless pitchesReady}}disabled{{/unless}} field small-10 columns">
 					<label>Location</label>
 					<div class="ui left labeled icon input" title="The match location. If you can't find your venue, you can make a request for it to be added on the Team page">
-						<input type="text" placeholder={{#if pitchesReady}}Type a description or address{{else}}Loading pitches...{{/if}} id="homeGroundSearch">
+						<input type="text" placeholder={{#if pitchesReady}}Type a description or address{{else}}Loading pitches...{{/if}} id="homeGroundSearch" disabled={{#unless pitchesReady}}disabled{{/unless}}>
 						<i class="globe icon"></i>
 					</div>
 					<div id="matchesFloat"></div>

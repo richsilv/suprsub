@@ -90,6 +90,9 @@ Template.loginScreen.events({
                     console.log(error);
                     accountError.set('Cannot login with Facebook');                    
                 }
+                else {
+                    Router.current().redirect('/home');
+                }
             });
     },
     'click #twitter-login': function(event) {

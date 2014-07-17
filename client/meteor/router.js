@@ -147,7 +147,7 @@ Router.map(function() {
     },
     waitOn: function() {
       return [
-        Subs.teams
+        clientFunctions.reactiveSubHandle('teams')
         ];
     },
     onAfterAction: function() {

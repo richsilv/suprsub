@@ -4,7 +4,8 @@ Subs = {
 };
 
 var pitches = amplify.store('pitchData'), existingPitchIds = _.pluck(pitches, '_id');
-$(document).load(function() {
+$(window).load(function() {
+    console.log("Pitch process beginning...");
     Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
         if (err) {
             console.log("Cannot get pitches", err);
