@@ -39,6 +39,9 @@ Template.topbar.events({
 Template.loginScreen.helpers({
     accountError: function() {
         return accountError.get();
+    },
+    forgottenPassword: function() {
+        return accountError.get() === "Incorrect password";
     }
 })
 Template.loginScreen.events({
@@ -72,6 +75,9 @@ Template.loginScreen.events({
             }
         });
     },
+    'click #reset-button': function() {
+        // TODO send reset password mail
+    },
     'keyup .form .field input' : function(event) {
         if (event.keyCode === 13) {
             $(event.target).parents('.field').next().find('input').focus();
@@ -81,6 +87,7 @@ Template.loginScreen.events({
         Meteor.loginWithFacebook({requestPermissions: ['email']},
             function (error) {
                 if (error) {
+                    console.log(error);
                     accountError.set('Cannot login with Facebook');                    
                 }
             });

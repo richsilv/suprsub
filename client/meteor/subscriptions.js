@@ -4,33 +4,35 @@ Subs = {
 };
 
 var pitches = amplify.store('pitchData'), existingPitchIds = _.pluck(pitches, '_id');
-Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
-    if (err) {
-        console.log("Cannot get pitches", err);
-    }
-    else {
-        console.log("Returned " + res.length + " pitches");
-        console.log("Collecting " + (pitches ? pitches.length : 0) + " pitches");
-        pitches = pitches ? pitches.concat(res) : res;
-        console.log("Inserting Pitches");
-        pitches.forEach(function(p) {
-            Pitches.insert(p);
-        });
-        console.log("Pitches Inserted");
-        appVars.pitchesReady.set(true);
-        console.log("Getting redundant pitches");
-        Meteor.call('oldPitches', existingPitchIds, function(err, res) {
-            if (err) {
-                console.log("Cannot get old pitches", err);
-            }
-            else {
-                console.log("Removing " + res.length + " redundant pitches");
-                Pitches.remove({_ids: {$in: res}}, function(err) {
-                    amplify.store('pitchData', Pitches.find().fetch());
-                });
-            }
-        });
-    }
+$(document).load(function() {
+    Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
+        if (err) {
+            console.log("Cannot get pitches", err);
+        }
+        else {
+            console.log("Returned " + res.length + " pitches");
+            console.log("Collecting " + (pitches ? pitches.length : 0) + " pitches");
+            pitches = pitches ? pitches.concat(res) : res;
+            console.log("Inserting Pitches");
+            pitches.forEach(function(p) {
+                Pitches.insert(p);
+            });
+            console.log("Pitches Inserted");
+            appVars.pitchesReady.set(true);
+            console.log("Getting redundant pitches");
+            Meteor.call('oldPitches', existingPitchIds, function(err, res) {
+                if (err) {
+                    console.log("Cannot get old pitches", err);
+                }
+                else {
+                    console.log("Removing " + res.length + " redundant pitches");
+                    Pitches.remove({_ids: {$in: res}}, function(err) {
+                        amplify.store('pitchData', Pitches.find().fetch());
+                    });
+                }
+            });
+        }
+    });
 });
 
 Deps.autorun(function() {
