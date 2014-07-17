@@ -135,7 +135,7 @@ clientFunctions = (function() {
 					appVars.mapCenter.set(defaultLocation);
 					pitchMap.setCenter(defaultLocation);
 					updateCircle();
-					Meteor.call('pitchesWithin', {"lat": res.coords.latitude, "lng": res.coords.longitude}, 8000, function(err, res) {
+					clientFunctions.pitchesWithin({"lat": res.coords.latitude, "lng": res.coords.longitude}, 8000, function(err, res) {
 						if (err || !appVars.venues) console.log(err);
 						else appVars.venues.set(res);
 					});
@@ -172,7 +172,7 @@ clientFunctions = (function() {
 			google.maps.event.trigger(pitchMap, 'resize');
 			pitchMap.setCenter(defaultLocation);
 		});
-		if (appVars.circleSize) Meteor.call('pitchesWithin', {"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
+		if (appVars.circleSize) clientFunctions.pitchesWithin({"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);
 			else if (appVars.venues) {
 				appVars.venues.set(res);
@@ -345,8 +345,10 @@ clientFunctions = (function() {
 			lat = center.lat * ratio,
 			width = Math.acos(Math.pow(Math.cos(lat), 2) * Math.cos(ratio) + Math.pow(Math.sin(lat), 2)) * 6371 / 111,
 			d2 = Math.pow(distance/111000, 2),
-			results = _.filter(Pitches.find({}, {sort: {name: 1}}).fetch(), function(p) {
+			results = _.sortBy(_.filter(Pitches.find({}).fetch(), function(p) {
 				return (Math.pow(p.location.lat - center.lat, 2) + Math.pow((p.location.lng - center.lng) * width, 2) < d2);
+			}), function(p) {
+				return p.prettyLocation;
 			});
 		if (callback) {
 			callback(null, results);
