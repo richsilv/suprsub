@@ -339,15 +339,21 @@ clientFunctions = (function() {
 		return handle;
 	};
 
-	var pitchesWithin = function(center, distance) {
-		var ratio = 6.283184 / 360;
-		var lng = center.lng * ratio;
-		var lat = center.lat * ratio;
-		var width = Math.acos(Math.pow(Math.cos(lat), 2) * Math.cos(ratio) + Math.pow(Math.sin(lat), 2)) * 6371 / 111;
-		var d2 = Math.pow(distance/111000, 2);
-		return _.filter(Pitches.find({}, {sort: {name: 1}}).fetch(), function(p) {
-			return (Math.pow(p.location.lat - center.lat, 2) + Math.pow((p.location.lng - center.lng) * width, 2) < d2);
-		});
+	var pitchesWithin = function(center, distance, callback) {
+		var ratio = 6.283184 / 360,
+			lng = center.lng * ratio,
+			lat = center.lat * ratio,
+			width = Math.acos(Math.pow(Math.cos(lat), 2) * Math.cos(ratio) + Math.pow(Math.sin(lat), 2)) * 6371 / 111,
+			d2 = Math.pow(distance/111000, 2),
+			results = _.filter(Pitches.find({}, {sort: {name: 1}}).fetch(), function(p) {
+				return (Math.pow(p.location.lat - center.lat, 2) + Math.pow((p.location.lng - center.lng) * width, 2) < d2);
+			});
+		if (callback) {
+			callback(null, results);
+		}
+		else {
+			return results;
+		}
 	};
 
 	var padToTwo = function(number) {
