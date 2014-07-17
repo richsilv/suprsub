@@ -273,7 +273,8 @@
 </template>
 
 <template name="pitchMapSmall">
-	<div class="ui row small" id="pitchMap" style="display: none;"></div>
+	<div class="ui row small" id="pitchMap" style={{#if mapReady}}"display: block;"{{else}}"display: none;"{{/if}}></div>
+	{{#unless mapReady}}<div class="loader">Loading</div>{{/unless}}
 </template>
 
 <template name="newVenueBox">

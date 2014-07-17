@@ -270,10 +270,9 @@ Template.playerMainButtons.created = function() {
 
 Template.pitchMapLarge.helpers({
   mapReady: function() {
-    console.log("mapReady gives", appVars.mapReady);
     return appVars.mapReady.get();
   }
-})
+});
 
 // ***************** DEPS *************************
 

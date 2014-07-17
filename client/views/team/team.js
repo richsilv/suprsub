@@ -403,7 +403,16 @@ Template.playerButtons.events({
 Template.pitchMapSmall.created = function() {
   window.circleSize = null;
   window.venues = null;
-  var intv = setInterval(function(){
+  Template.pitchMapSmall.rendered = function() {
+    Deps.autorun(function(c) {
+      if (Pitches.find().count() > 1000) {
+        clientFunctions.loadGoogleMaps(false);
+        c.stop();
+      }
+    });
+    Template.pitchMapSmall.rendered = null;
+  };
+/*  var intv = setInterval(function(){
     var $el = $("#pitchMap");
     if ( $el.length > 0 ) {
       clearInterval(intv);
@@ -413,7 +422,15 @@ Template.pitchMapSmall.created = function() {
   setTimeout(function(){
     clearInterval(intv);
   }, 5000);
+*/
 };
+
+
+Template.pitchMapSmall.helpers({
+  mapReady: function() {
+    return appVars.mapReady.get();
+  }
+});
 
 // **************************
 
