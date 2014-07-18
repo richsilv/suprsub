@@ -155,7 +155,7 @@ Router.map(function() {
       if (thisUser && thisUser.profile && thisUser.profile.firstLogin) {
             dep = Deps.autorun(function(c) {
               if (that._waitList.ready()) {
-                Meteor.users.update({_id: thisUser}, {$unset: {'profile.firstLogin': true}});
+                Meteor.users.update({_id: thisUser._id}, {$unset: {'profile.firstLogin': true}});
                 Router.Tour.loadTour(appVars.tour);
                 Meteor.setTimeout(function() {
                   Router.Tour.nextStep();
