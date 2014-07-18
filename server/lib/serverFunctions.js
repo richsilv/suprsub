@@ -363,17 +363,29 @@
 	}
 
 	function matchingPlayers(event) {
+		var results;
 		if (typeof event === "string") event = Events.findOne({_id: event});
 		if (!event || !event.dateTime || !event.location) return [];
-		var periodCode = getPeriodCode(event.dateTime),
-			query = {
-				'profile.player.venues': event.location,
-				'profile.postMe': true
-			};
-		appConfig.sendToLogger.log("Looking for players available at " + event.location + " at time code " + periodCode);
-		query['profile.player.availability.' + periodCode] = true;
-		query._id = {$ne: event.userId};
-		var results = Meteor.users.find(query, {fields: {_id: true}}).fetch();
+		if (event.onlyRingers) {
+			var thisTeam = Teams.findOne({});
+			if (!thisTeam) {
+				results = [];
+			}
+			else {
+				results = Meteor.users.find({_id: {$in: thisTeam.ringers}}, {fields: {_id: true}}).fetch();
+			}
+		}
+		else {
+			var periodCode = getPeriodCode(event.dateTime),
+				query = {
+					'profile.player.venues': event.location,
+					'profile.postMe': true
+				};
+			appConfig.sendToLogger.log("Looking for players available at " + event.location + " at time code " + periodCode);
+			query['profile.player.availability.' + periodCode] = true;
+			query._id = {$ne: event.userId};
+			results = Meteor.users.find(query, {fields: {_id: true}}).fetch();
+		}
 		return results;
 	}
 

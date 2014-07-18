@@ -311,7 +311,7 @@ clientFunctions = (function() {
 		return handle;
 	}
 
-	var joinTeam = function(code) {
+	var joinTeam = function(code, callback) {
 		var handle, self;
 		if (!joinTeamDep) {
 			joinTeamDep = {
@@ -336,7 +336,12 @@ clientFunctions = (function() {
 				return joinTeamDep.info;				
 			}
 		};
-		return handle;
+		if (callback) {
+			callback(null, handle);
+		}
+		else {
+			return handle;
+		}
 	};
 
 	var pitchesWithin = function(center, distance, callback) {

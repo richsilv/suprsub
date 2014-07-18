@@ -7,7 +7,8 @@ var tabChoices = new suprsubDep({
     memberList = new suprsubDep([]),
     memberRefresh = new Deps.Dependency(),
     nameEntryOverride = new suprsubDep(false),
-    disableSave = new suprsubDep(true);
+    disableSave = new suprsubDep(true),
+    codeDep = new Deps.Dependency;
 
 // **************************
 
@@ -20,6 +21,7 @@ UI.registerHelper("teamId", function() {
 });
 
 UI.registerHelper("codeEntered", function() {
+  codeDep.depend();
   if (Router.current().route.codeEntered && Router.current().route.codeEntered.ready()) {
     return Router.current().route.codeEntered.info().code || null;
   }
@@ -380,7 +382,10 @@ Template.playerButtons.events({
           onHide: function() {
             var joinCode = $('#teamCodeEntry').val();
             $('.ui.dimmer.page').remove();
-            Router.current().route.codeEntered = clientFunctions.joinTeam(joinCode);            
+            clientFunctions.joinTeam(joinCode, function(err, res) {
+              Router.current().route.codeEntered = res;
+              codeDep.changed();
+            });           
           },
         });
     });

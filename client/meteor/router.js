@@ -1,32 +1,42 @@
-var dep;
+var routerDeps = {};
 
 suprsubController = FastRender.RouteController.extend({
 /*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
   onBeforeAction: function (pause) {
-    var that = this;
+    var that = this, thisUser;
     appVars.showErrors.set(false);
-    if (dep) dep.stop();
     if (Router.Tour.getTour() && Router.Tour.currentPage() !== this.route.name) {
       console.log("Stopping tour", Router.Tour.currentPage(), this.route.name);
       Router.Tour.loadTour();
       Router.Tour.nextStep();
     }
-    Deps.autorun(function(c) {
-      if (!Meteor.user()) {
-        c.stop();
-        that.redirect('/login');
+    if (routerDeps) {
+      for (var dep in routerDeps) {
+        console.log("dep: ", dep);
+        routerDeps[dep].stop();
+        delete routerDeps[dep];
       }
-      else if (Meteor.user().profile && Meteor.user().profile.confirmGender && this.path !== '/gender') {
-        c.stop();
-        that.redirect('/gender');
-      }
-      else if (Meteor.user().profile && Meteor.user().profile.firstLogin && that.path !== '/home') {
-        c.stop();
-        that.redirect('/home');
-      }
-    });
+      routerDeps.controller = Deps.autorun(function(c) {
+        thisUser = Meteor.user();
+        if (!thisUser) {
+          c.stop();
+          delete routerDeps.controller; 
+          that.redirect('/login');
+        }
+        else if (thisUser.profile && thisUser.profile.confirmGender && that.path !== '/gender') {
+          c.stop();
+          delete routerDeps.controller; 
+          that.redirect('/gender');
+        }
+        else if (thisUser.profile && thisUser.profile.firstLogin && that.path !== '/home') {
+          c.stop();
+          delete routerDeps.controller; 
+          that.redirect('/home');
+        }
+      });
+    }
   },
   onAfterAction: function() {
   },
@@ -47,9 +57,10 @@ Router.map(function() {
     },
     onBeforeAction: function() {
       var that = this;
-      Deps.autorun(function(c) {
+      routerDeps.login = Deps.autorun(function(c) {
         if (Meteor.userId()) {
           c.stop();
+          delete routerDeps.login;
           that.redirect('/home');
         }
       });
@@ -73,9 +84,10 @@ Router.map(function() {
     action: function() {
       this.render();
       Template.pitchMapLarge.rendered = function() {
-        Deps.autorun(function(c) {
+        routerDeps.playerPitches = Deps.autorun(function(c) {
           if (Pitches.find().count() > 1000) {
             clientFunctions.initialize(true);
+            delete routerDeps.playerPitches;
             c.stop();
           }
         });
@@ -153,13 +165,14 @@ Router.map(function() {
     onAfterAction: function() {
       var that = this, thisUser = Meteor.user();
       if (thisUser && thisUser.profile && thisUser.profile.firstLogin) {
-            dep = Deps.autorun(function(c) {
+            routerDeps.home = Deps.autorun(function(c) {
               if (that._waitList.ready()) {
                 Meteor.users.update({_id: thisUser._id}, {$unset: {'profile.firstLogin': true}});
                 Router.Tour.loadTour(appVars.tour);
                 Meteor.setTimeout(function() {
                   Router.Tour.nextStep();
                 }, 250);
+                delete routerDeps.home;
                 c.stop();
               }
         });
@@ -329,3 +342,7 @@ Router.map(function() {
     }
   }); 
 });
+
+getRouterDeps = function() {
+  return routerDeps;
+}
