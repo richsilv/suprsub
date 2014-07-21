@@ -289,27 +289,31 @@ Meteor.methods({
 				suprsubRoot + "team/" + code, Meteor.user().services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
-			Email.send({
-				from: "info@suprsub.meteor.com",
-				to: Meteor.user().emails[0].address,
-				subject: "SuprSub team link and code",
-				html: Handlebars.templates['sendcode']({
-					teamName: team.name,
-					suprsubRoot: suprsubRoot,
-					code: code
-				})
+			Meteor.defer(function() {
+				Email.send({
+					from: "info@suprsub.meteor.com",
+					to: Meteor.user().emails[0].address,
+					subject: "SuprSub team link and code",
+					html: Handlebars.templates['sendcode']({
+						teamName: team.name,
+						suprsubRoot: suprsubRoot,
+						code: code
+					})
+				});
 			});
 		}
 		else if (contacts.indexOf(1) > -1) {
-			Email.send({
-				from: "info@suprsub.meteor.com",
-				to: Meteor.user().services.facebook.email,
-				subject: "SuprSub team link and code",
-				html: Handlebars.templates['sendcode']({
-					teamName: team.name,
-					suprsubRoot: suprsubRoot,
-					code: code
-				})
+			Meteor.defer(function() {
+				Email.send({
+					from: "info@suprsub.meteor.com",
+					to: Meteor.user().services.facebook.email,
+					subject: "SuprSub team link and code",
+					html: Handlebars.templates['sendcode']({
+						teamName: team.name,
+						suprsubRoot: suprsubRoot,
+						code: code
+					})
+				});
 			});			
 		}
 	},
@@ -324,29 +328,33 @@ Meteor.methods({
 				suprsubRoot + "team/" + code, Meteor.user().services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
-			Email.send({
-				from: "info@suprsub.meteor.com",
-				to: Meteor.user().emails[0].address,
-				subject: "SuprSub team link and code",
-				html: Handlebars.templates['sendcoderinger']({
-					teamName: team.name,
-					suprsubRoot: suprsubRoot,
-					code: code,
-					inviter: name
-				})
+			Meteor.defer(function() {
+				Email.send({
+					from: "info@suprsub.meteor.com",
+					to: Meteor.user().emails[0].address,
+					subject: "SuprSub team link and code",
+					html: Handlebars.templates['sendcoderinger']({
+						teamName: team.name,
+						suprsubRoot: suprsubRoot,
+						code: code,
+						inviter: name
+					})
+				});
 			});
 		}
 		else if (contacts.indexOf(1) > -1) {
-			Email.send({
-				from: "info@suprsub.meteor.com",
-				to: Meteor.user().services.facebook.email,
-				subject: "SuprSub team link and code",
-				html: Handlebars.templates['sendcoderinger']({
-					teamName: team.name,
-					suprsubRoot: suprsubRoot,
-					code: code,
-					inviter: name
-				})
+			Meteor.defer(function() {
+				Email.send({
+					from: "info@suprsub.meteor.com",
+					to: Meteor.user().services.facebook.email,
+					subject: "SuprSub team link and code",
+					html: Handlebars.templates['sendcoderinger']({
+						teamName: team.name,
+						suprsubRoot: suprsubRoot,
+						code: code,
+						inviter: name
+					})
+				});
 			});			
 		}
 	},	
