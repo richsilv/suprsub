@@ -172,6 +172,10 @@ clientFunctions = (function() {
 			google.maps.event.trigger(pitchMap, 'resize');
 			pitchMap.setCenter(defaultLocation);
 		});
+		google.maps.event.addListener(pitchMap, 'idle', function(){
+			// document.getElementById("pitchMap").style.display = "block";
+			appVars.mapReady.set(true);
+		});
 		if (appVars.circleSize) clientFunctions.pitchesWithin({"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);
 			else if (appVars.venues) {
