@@ -146,8 +146,8 @@ Template.fullPostingForm.events({
     }
     if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
       template.lastUpdate = new Date().getTime();
-      if (Pitches.findOne({$where: "this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
-        var pitchCursor = Pitches.find({$where: "this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"}, {sort: {prettyLocation: 1}});
+      if (Pitches.findOne({$where: "this.prettyLocation && this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
+        var pitchCursor = Pitches.find({$where: "this.prettyLocation && this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"}, {sort: {prettyLocation: 1}});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
         pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.prettyLocation + '</a>';});
         $('#matchesFloat').html(pitchElement + '</div></div></div>');

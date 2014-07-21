@@ -368,6 +368,10 @@ clientFunctions = (function() {
 	  return number;
 	};
 
+	var clearPitches = function() {
+		amplify.store['pitchData', []];
+	}
+
 	return {
 		_libs: _libs,
 		contactString: contactString,
@@ -386,7 +390,8 @@ clientFunctions = (function() {
 		reactiveSubHandle: reactiveSubHandle,
 		joinTeam: joinTeam,
 		pitchesWithin: pitchesWithin,
-		padToTwo: padToTwo
+		padToTwo: padToTwo,
+		clearPitches: clearPitches
 	};
 
 })();

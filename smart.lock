@@ -64,8 +64,8 @@
       },
       "Dropzonejs": {
         "git": "https://github.com/devonbarrett/meteor-dropzone.git",
-        "tag": "v1.0.1",
-        "commit": "aa0e15055a519e72a97d02cffad4b052e840433d"
+        "tag": "v3.10.2-rev01",
+        "commit": "561e6110aa8487003f926a4eb7d4d5520a3a365b"
       },
       "fast-render": {
         "git": "https://github.com/arunoda/meteor-fast-render.git",
@@ -84,8 +84,8 @@
       },
       "kadira": {
         "git": "https://github.com/meteorhacks/kadira.git",
-        "tag": "v2.4.8",
-        "commit": "5f4437af113537def34484c7b7a2a5e4d60847a9"
+        "tag": "v2.4.9",
+        "commit": "8bb902989917522822a0897117672ae858c23427"
       },
       "collection-hooks": {
         "git": "https://github.com/matb33/meteor-collection-hooks.git",

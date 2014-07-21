@@ -19,6 +19,11 @@ Meteor.startup(function() {
 		appConfig.streaming = true;
 	}
 
+	Pitches.remove({name: {$exists: false}});
+	Pitches.find({prettyLocation: {$exists: false}}).forEach(function(p) {
+		Pitches.update(p, {$set: {prettyLocation: serverFunctions.prettyLocation(p)}});
+	})
+
 	// ACCOUNTS INJECTION ON SERVER STARTUP
 	Accounts.loginServiceConfiguration.remove({
 		service: "facebook"
