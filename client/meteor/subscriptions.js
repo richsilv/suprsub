@@ -36,8 +36,8 @@ $(window).load(function() {
     });
 });
 
-Deps.autorun(function() {
-  if (Meteor.user()) {
+appVars.subDep = Deps.autorun(function() {
+  if (Meteor.userId()) {
     // if (Subs.reactiveFeed) Subs.reactiveFeed[0].stop();
     Subs.teams = Meteor.subscribe('teams');
     // Subs.pitches = Meteor.subscribe('allPitches');

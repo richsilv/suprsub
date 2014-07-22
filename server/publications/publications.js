@@ -9,7 +9,7 @@ Meteor.publish('allPitches', function() {
 Meteor.publish('events', function(id, userPostings) {
 	var events, eventsList, teamList, userList,
 		thisUser = Meteor.users.findOne(this.userId),
-		gender = thisUser ? thisUser.profile.gender: 0;
+		gender = (thisUser && thisUser.profile.gender !== null) ? thisUser.profile.gender : 0;
 	if (id) {
 		var thisUser = Meteor.users.findOne(id);
 		if (!thisUser)

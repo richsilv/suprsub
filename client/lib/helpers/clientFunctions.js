@@ -154,6 +154,8 @@ clientFunctions = (function() {
 				event.stop();
 			});
 		}
+		console.log("GMaps Initialization");
+		appVars.mapReady.set(true);
 		google.maps.event.addListener(pitchMap, 'bounds_changed', function() {
 			var _thisTimeout = this.thisTimeout;
 			if (_thisTimeout) {
@@ -167,14 +169,9 @@ clientFunctions = (function() {
       	});
 		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
 			// document.getElementById("pitchMap").style.display = "block";
-			appVars.mapReady.set(true);
 			Deps.flush();
-			google.maps.event.trigger(pitchMap, 'resize');
-			pitchMap.setCenter(defaultLocation);
-		});
-		google.maps.event.addListener(pitchMap, 'idle', function(){
-			// document.getElementById("pitchMap").style.display = "block";
-			appVars.mapReady.set(true);
+			// google.maps.event.trigger(pitchMap, 'resize');
+			// pitchMap.setCenter(defaultLocation);
 		});
 		if (appVars.circleSize) clientFunctions.pitchesWithin({"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);
@@ -307,11 +304,22 @@ clientFunctions = (function() {
 	var reactiveSubHandle = function(subName, collection, minDocs) {
 		var handle = {
 			ready: function() {
+				var sub = subLookup(subName);
 				Router.current()._waitList._dep.depend();
-				console.log("RSH RUN FOR", subName, (Subs[subName] && Subs[subName].ready() && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true: false);
-				return (Subs[subName] && Subs[subName].ready() && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true : false;
+				if (sub) sub.readyDeps.depend();
+				console.log("RSH RUN FOR", subName, (sub && sub.ready && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true: false);
+				return (sub && sub.ready && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true : false;
 			}
 		};
+		return handle;
+	}
+
+	var accountsReadyHandle = function() {
+		var handle = {
+			ready: function() {
+				return Accounts.loginServicesConfigured && Accounts.loginServicesConfigured();
+			}
+		}
 		return handle;
 	}
 
@@ -374,7 +382,11 @@ clientFunctions = (function() {
 
 	var clearPitches = function() {
 		amplify.store['pitchData', []];
-	}
+	};
+
+	var subLookup = function(subName) {
+		return _.filter(Meteor.connection._subscriptions, function(s) {return s.name === subName;})[0]
+	};
 
 	return {
 		_libs: _libs,
@@ -392,6 +404,7 @@ clientFunctions = (function() {
 		logTemplateEvents: logTemplateEvents,
 		suprsubPlugins: suprsubPlugins,
 		reactiveSubHandle: reactiveSubHandle,
+		accountsReadyHandle: accountsReadyHandle,
 		joinTeam: joinTeam,
 		pitchesWithin: pitchesWithin,
 		padToTwo: padToTwo,

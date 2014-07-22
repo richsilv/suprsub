@@ -13,6 +13,7 @@ UI.registerHelper("service", function(network) {
 });
 
 UI.registerHelper("email", function(level) {
+  if (!Meteor.userId()) return false;
   switch (level) {
     case 'verified':
       return Meteor.user().emails ? Meteor.user().emails[0].verified : false;

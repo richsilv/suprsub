@@ -19,7 +19,8 @@
       "moment-timezone": {},
       "velocityjs": {},
       "find-faster": {},
-      "aws-sdk": {}
+      "aws-sdk": {},
+      "modernizr": {}
     },
     "packages": {
       "semantic-ui": {
@@ -111,6 +112,11 @@
         "git": "https://github.com/peerlibrary/meteor-aws-sdk.git",
         "tag": "v2.0.4-1",
         "commit": "8e5ef041df90a6a87df44273534611f420d8a2f8"
+      },
+      "modernizr": {
+        "git": "https://github.com/cwaring/meteor-modernizr.git",
+        "tag": "v0.0.2",
+        "commit": "a1a45997395bfc2a0e576cad68fc283a6e022323"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

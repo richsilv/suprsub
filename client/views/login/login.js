@@ -117,10 +117,12 @@ Template.twitterGenderModal.events({
         console.log('click');
         $('#twitterGenderModal').modal('hide');
         Meteor.setTimeout(function() {
-            Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}});
-            Router.current().redirect('/player');
-            location.reload();
-        }, 600);
+            Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}}, {}, function(err) {
+                Subs.events.stop();
+                Subs.events = Meteor.subscribe('events', Subs.postingsChoice.get(), Subs.postingsUser.get());
+            });
+            Router.current().redirect('/home');
+        }, 50);
     }
 })
 

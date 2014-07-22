@@ -17,6 +17,7 @@
     "moment-timezone": {},
     "velocityjs": {},
     "find-faster": {},
-    "aws-sdk": {}
+    "aws-sdk": {},
+    "modernizr": {}
   }
 }

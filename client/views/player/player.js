@@ -52,7 +52,7 @@ Template.availabilityDays.events({
 // **************************
 
 Template.defineBounds.events({
-  'change #distanceWrite': function(event) {
+  'input #distanceWrite': function(event) {
     appVars.circleChanged.set(true);
     $('#distanceRead').html(parseInt(event.target.value, 10) / 10 + 'km');
     appVars.circleSize.value = parseInt($('#distanceWrite').val(), 10) * 100;
@@ -70,7 +70,7 @@ Template.defineBounds.events({
     clientFunctions.updateCircle();
     appVars.tabChoices.setKey('playerTab', 'pitchData');
     // Deps.flush();
-  }  
+  }
 });
 
 Template.defineBounds.rendered = function() {
@@ -273,6 +273,24 @@ Template.pitchMapLarge.helpers({
     return appVars.mapReady.get();
   }
 });
+
+Template.pitchMapLarge.created = function() {
+  this.mapReadyDep = Deps.autorun(function(c) {
+    if (appVars.mapReady.get()) {
+      google.maps.event.trigger(pitchMap, 'resize');
+      pitchMap.setCenter(appVars.defaultLocation); 
+      c.stop();
+      delete this.mapReadyDep;   
+    }
+  });
+}
+
+Template.pitchMapLarge.destroyed = function() {
+  if (this.mapReadyDep) {
+    this.mapReadyDep.stop();
+    delete this.mapReadyDep;
+  }
+}
 
 // ***************** DEPS *************************
 

@@ -1,41 +1,36 @@
-var routerDeps = {};
+var teamSubHandle = clientFunctions.reactiveSubHandle('teams'),
+    eventSubHandle = clientFunctions.reactiveSubHandle('events'),
+    routerDeps = {
+      controller: Deps.autorun(function(c) {
+        Meteor.connection._userIdDeps.depend();
+        var thisUser = Meteor.user(),
+            that = Router.current();
+        console.log(that ? that.path : null, c, this.controller);
+        if (!that) {
+        }
+        else if (!thisUser) {
+          that.redirect('/login');
+        }
+        else if (thisUser.profile && thisUser.profile.confirmGender && that.path !== '/gender') {
+          that.redirect('/gender');
+        }
+        else if (thisUser.profile && !thisUser.profile.confirmGender && thisUser.profile.firstLogin && that.path !== '/home') {
+          that.redirect('/home');
+        }
+      })
+    };
 
 suprsubController = FastRender.RouteController.extend({
 /*  autoRender: false,*/
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
   onBeforeAction: function (pause) {
-    var that = this, thisUser;
+    var that = this;
     appVars.showErrors.set(false);
     if (Router.Tour.getTour() && Router.Tour.currentPage() !== this.route.name) {
       console.log("Stopping tour", Router.Tour.currentPage(), this.route.name);
       Router.Tour.loadTour();
       Router.Tour.nextStep();
-    }
-    if (routerDeps) {
-      for (var dep in routerDeps) {
-        console.log("dep: ", dep);
-        routerDeps[dep].stop();
-        delete routerDeps[dep];
-      }
-      routerDeps.controller = Deps.autorun(function(c) {
-        thisUser = Meteor.user();
-        if (!thisUser) {
-          c.stop();
-          delete routerDeps.controller; 
-          that.redirect('/login');
-        }
-        else if (thisUser.profile && thisUser.profile.confirmGender && that.path !== '/gender') {
-          c.stop();
-          delete routerDeps.controller; 
-          that.redirect('/gender');
-        }
-        else if (thisUser.profile && thisUser.profile.firstLogin && that.path !== '/home') {
-          c.stop();
-          delete routerDeps.controller; 
-          that.redirect('/home');
-        }
-      });
     }
   },
   onAfterAction: function() {
@@ -55,6 +50,9 @@ Router.map(function() {
     yieldTemplates: {
       'loginScreen': {to: 'mainSection'}
     },
+    waitOn: function() {
+      return [clientFunctions.accountsReadyHandle()];
+    },
     onBeforeAction: function() {
       var that = this;
       routerDeps.login = Deps.autorun(function(c) {
@@ -64,6 +62,12 @@ Router.map(function() {
           that.redirect('/home');
         }
       });
+    },
+    unload: function() {
+      if (routerDeps.login) {
+        routerDeps.login.stop();
+        delete routerDeps.login;
+      }
     }
   })
 
@@ -121,7 +125,7 @@ Router.map(function() {
         else
           Router.current().route.currentTeamId.set(null);
       }
-      return [Subs.pitches, clientFunctions.reactiveSubHandle('teams'), clientFunctions.loadGMaps()];
+      return [Subs.pitches, teamSubHandle, clientFunctions.loadGMaps()];
     },
     action: function() {
       this.render();
@@ -138,7 +142,7 @@ Router.map(function() {
     }
   });
 
-  this.route('home', {
+  this.route('homeRedirect', {
     path: '/',
     controller: suprsubController,
     template: 'mainTemplate',
@@ -158,11 +162,12 @@ Router.map(function() {
       'homePage': {to: 'mainSection'}
     },
     waitOn: function() {
-      return [
-        clientFunctions.reactiveSubHandle('teams')
+        return [
+          teamSubHandle
         ];
     },
     onAfterAction: function() {
+      console.log("running homepage logic once")
       var that = this, thisUser = Meteor.user();
       if (thisUser && thisUser.profile && thisUser.profile.firstLogin) {
             routerDeps.home = Deps.autorun(function(c) {
@@ -175,8 +180,13 @@ Router.map(function() {
                 delete routerDeps.home;
                 c.stop();
               }
-        });
-            
+        });    
+      }
+    },
+    unload: function() {
+      if (routerDeps.home) {
+        routerDeps.home.stop();
+        delete routerDeps.home;
       }
     }
   });
@@ -192,7 +202,7 @@ Router.map(function() {
       return [
         Subs.pitches,
         Subs.teams,
-        clientFunctions.reactiveSubHandle('events')
+        eventSubHandle
         ];
     },
     after: function() {
