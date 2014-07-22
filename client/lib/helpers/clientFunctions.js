@@ -88,10 +88,10 @@ clientFunctions = (function() {
 	}
 
 	var initialize = function(circle) {
-		var defaultLocation = new google.maps.LatLng(51, 0);
+		appVars.defaultLocation = new google.maps.LatLng(51, 0);
 		var mapOptions = {
 				zoom: 11,
-				center: defaultLocation,
+				center: appVars.defaultLocation,
 				disableDoubleClickZoom: true
 			},
 			thisTeam = Teams.findOne(Router.current().route.currentTeamId);
@@ -102,26 +102,26 @@ clientFunctions = (function() {
 		if (Router.current().route.name === "teamDetails") {
 			if (thisTeam && thisTeam.homeGround) {
 				var thisPitch = Pitches.findOne(thisTeam.homeGround);
-				defaultLocation = new google.maps.LatLng(thisPitch.location.lat, thisPitch.location.lng);
-				appVars.mapCenter.set(defaultLocation);
-				pitchMap.setCenter(defaultLocation);
+				appVars.defaultLocation = new google.maps.LatLng(thisPitch.location.lat, thisPitch.location.lng);
+				appVars.mapCenter.set(appVars.defaultLocation);
+				pitchMap.setCenter(appVars.defaultLocation);
 			}
 			else {
 				navigator.geolocation.getCurrentPosition(function(res) {
-					defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
-					appVars.mapCenter.set(defaultLocation);
-					pitchMap.setCenter(defaultLocation);
+					appVars.defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
+					appVars.mapCenter.set(appVars.defaultLocation);
+					pitchMap.setCenter(appVars.defaultLocation);
 				}, function() {
 					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");	
-					appVars.mapCenter.set(defaultLocation);
-					pitchMap.setCenter(defaultLocation);
+					appVars.mapCenter.set(appVars.defaultLocation);
+					pitchMap.setCenter(appVars.defaultLocation);
 					});
 			}
 		}
 		else if (Router.current().route.name === "playerDetails") {
 			if (Meteor.user() && Meteor.user().profile && Meteor.user().profile.player && Meteor.user().profile.player.center) {
-				defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng);
-				appVars.mapCenter.set(defaultLocation);
+				appVars.defaultLocation = new google.maps.LatLng(Meteor.user().profile.player.center.lat, Meteor.user().profile.player.center.lng);
+				appVars.mapCenter.set(appVars.defaultLocation);
 				appVars.circleSize.set(Meteor.user().profile.player.size);
 				$('#distanceWrite').val(appVars.circleSize.get()/100);
 				$('#distanceRead').html(appVars.circleSize.get()/1000+'km');
@@ -131,9 +131,9 @@ clientFunctions = (function() {
 			}
 			else {
 				navigator.geolocation.getCurrentPosition(function(res) {
-					defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
-					appVars.mapCenter.set(defaultLocation);
-					pitchMap.setCenter(defaultLocation);
+					appVars.defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
+					appVars.mapCenter.set(appVars.defaultLocation);
+					pitchMap.setCenter(appVars.defaultLocation);
 					updateCircle();
 					clientFunctions.pitchesWithin({"lat": res.coords.latitude, "lng": res.coords.longitude}, 8000, function(err, res) {
 						if (err || !appVars.venues) console.log(err);
@@ -141,8 +141,8 @@ clientFunctions = (function() {
 					});
 				}, function() {
 					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
-					appVars.mapCenter.set(defaultLocation);
-					pitchMap.setCenter(defaultLocation);
+					appVars.mapCenter.set(appVars.defaultLocation);
+					pitchMap.setCenter(appVars.defaultLocation);
 				});
 				appVars.circleChanged.set(true);
 			}
@@ -167,12 +167,12 @@ clientFunctions = (function() {
 				_thisTimeout = null;
 			}, venueDelay);
       	});
-		google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
-			// document.getElementById("pitchMap").style.display = "block";
-			Deps.flush();
-			// google.maps.event.trigger(pitchMap, 'resize');
-			// pitchMap.setCenter(defaultLocation);
-		});
+		// google.maps.event.addListenerOnce(pitchMap, 'idle', function(){
+		// 	// document.getElementById("pitchMap").style.display = "block";
+		// 	Deps.flush();
+		// 	// google.maps.event.trigger(pitchMap, 'resize');
+		// 	// pitchMap.setCenter(defaultLocation);
+		// });
 		if (appVars.circleSize) clientFunctions.pitchesWithin({"lat": parseFloat(appVars.mapCenter.get().lat(), 10), "lng": parseFloat(appVars.mapCenter.get().lng(), 10)}, appVars.circleSize.get(), function(err, res) {
 			if (err) console.log(err);
 			else if (appVars.venues) {
