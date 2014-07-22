@@ -1,8 +1,10 @@
 Meteor.startup(function() {
 
-	Meteor.AppCache.config({
-  		safari: false,
-	});
+	if (Meteor.AppCache) {
+		Meteor.AppCache.config({
+  			safari: false,
+		});
+	}
 
     // LOG ALL QUERIES
 /*    var wrappedFind = Meteor.Collection.prototype.find;
