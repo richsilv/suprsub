@@ -37,9 +37,6 @@ Template.homePage.events({
       postBoxText.set(false);
   }
 });
-Template.homePage.rendered = function() {
-  console.log(this, arguments);
-};
 
 Template.postBox.helpers({
   'teamRegistered': function() {
@@ -63,7 +60,6 @@ Template.postBox.events({
         };
         requestData = _.extend(requestData, res, {team: Meteor.user().profile.team._ids[0]});
         appVars.newPosting.set(requestData);
-        console.log(requestData);
         UI.insert(UI.render(Template.postingModalWrapper), document.body);
         $('#postingModal').modal('setting', {
           onHide: function() {
@@ -198,7 +194,6 @@ Template.fullPostingForm.events({
         requestData.onlyRingers = true;
       requestData.gender = Meteor.user().profile.gender;
       appVars.newPosting.set(requestData);
-      console.log(requestData);
       UI.insert(UI.render(Template.postingModalWrapper), document.body);
       $('#postingModal').modal('setting', {
         onHide: function() {

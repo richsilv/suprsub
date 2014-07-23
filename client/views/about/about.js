@@ -1,9 +1,6 @@
 var sectionInfo;
 appVars.tabChoices.value.aboutTab = 'aboutSuprSub';
 
-// window.onscroll = function(event) {
-// 	console.log(event);
-// };
 Template.about.created = function() {
 	window.onscroll = function(event) {
 		sectionInfo.forEach(function(s) {

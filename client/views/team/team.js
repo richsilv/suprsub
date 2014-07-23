@@ -102,7 +102,6 @@ Template.teamName.events({
 });
 
 Template.dropdownItem.rendered = function() {
-    // console.log("rerendering...");
     teamNameDropdownInit();
     if (!this.data || !this.data.renderedOnce || !this.data.renderedOnce.get()) {
       if (!this.data || !this.data.renderedOnce)
@@ -157,7 +156,6 @@ function deleteTeamFunction() {
   var deleteTeamId = Router.current().route.currentTeamId.get(),
       teamIds = Router.current().route.teamIds;
   if (deleteTeamId) {
-    // console.log("deleting...");
     Teams.remove({_id: deleteTeamId});
     teamIds = _.without(teamIds, deleteTeamId);
     Meteor.users.update(Meteor.userId(), {$set: {'profile.team._ids': teamIds}});
@@ -169,7 +167,6 @@ function deleteTeamFunction() {
 
 Template.teamButtons.events({
   'click #setDefault': function(event) {
-    // console.log(event);
     if (!($(event.target).hasClass('disabled')))
       confirmModal({
         message : "<p>Are you sure you want to make this your <strong>default</strong> team?</p>" +
@@ -263,7 +260,6 @@ Template.teamSettings.events({
 });
 
 Template.teamSettings.rendered = function() {
-  // console.log(this.data.renderedOnce, this.data.renderedOnce ? this.data.renderedOnce.get() : null);
   if (!this.data || !this.data.renderedOnce || !this.data.renderedOnce.get()) {
     $(this.findAll('.ui.neutral.checkbox')).checkbox({verbose: false, debug: false, performance: false});
     // $(this.find('#regDayCheckbox')).checkbox({verbose: false, debug: false, performance: false, onEnable: regularDayCheckboxEnable, onDisable: regularDayCheckboxDisable});
@@ -326,7 +322,6 @@ Template.otherInfo.events({
     if ((!template.lastUpdate || (new Date().getTime() - template.lastUpdate > 1000)) && event.target.value.length > 2) {
       template.lastUpdate = new Date().getTime();
       if (Pitches.findOne({$where: "this.prettyLocation && this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"})) {
-        console.log("compiling possibilities");
         var pitchCursor = Pitches.find({$where: "this.prettyLocation && this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1"});
         var pitchElement = '<div class="ui segment content"><div class="field"><div class="ui link list">';
         pitchCursor.forEach(function(pitch) {pitchElement += '<a class="pitchEntry item" id="' + pitch._id + '">' + pitch.prettyLocation + '</a>';});
@@ -475,7 +470,6 @@ Template.chooseCodeTypeModal.events({
     }, 250);
   },
   'click #inviteSuprsubs': function() {
-    console.log("suprsub invite clicked");
     Meteor.setTimeout(function() {
       var thisTeam = Teams.findOne(Router.current().route.currentTeamId.get());
       $('#chooseCodeTypeModal').modal('hide');
@@ -600,11 +594,9 @@ regularTimeCheckboxDisable = function() {
 }
 
 function teamNameDropdownInit() {
-  console.log("initialising dropdown");
   $('#teamChoice').dropdown({
     verbose: false, debug: false, performance: false,
     onChange: function(value, text) {
-      console.log("dropdown select event");
       Router.current().route.currentTeamId.set(value);
       // setTeamData();
       disableSave.set(true);
@@ -703,7 +695,6 @@ function saveTeamData(event) {
   if (currentTeamId)
     Teams.update(currentTeamId, {$set: teamProfile}, thisGlowCallback);
   else {
-    // console.log(teamProfile);
     var newTeamId = Teams.insert(teamProfile);
     if (Meteor.user().profile.team._ids.indexOf(newTeamId) < 0) {
       Router.current().route.teamIds.push(newTeamId);

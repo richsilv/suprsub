@@ -147,8 +147,7 @@ clientFunctions = (function() {
 				appVars.circleChanged.set(true);
 			}
 			google.maps.event.addListener(pitchMap, 'dblclick', function(event) {
-				appVars.mapCenter.set(event.latLng)
-				console.log("new center is ", event.latLng);
+				appVars.mapCenter.set(event.latLng);
 				appVars.circleChanged.set(true);
 				updateCircle();
 				event.stop();

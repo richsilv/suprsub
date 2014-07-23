@@ -76,7 +76,20 @@ Template.loginScreen.events({
         });
     },
     'click #reset-button': function() {
-        // TODO send reset password mail
+        var email = $('#login-email').val();
+        Accounts.forgotPassword({email: email}, function(err) {
+            if (err)
+                console.log(err);
+            else {
+                confirmModal({
+                    message: "<h2>PASSWORD RESET SENT</h2><p>A password reminder has been sent to <em>" + email + "</em>.  Please check your email, including your spam folder.</p>",
+                    callback: null,
+                    noButtons: true
+                    },
+                    function() { Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 100);}
+                );
+          }            
+        });
     },
     'keyup .form .field input' : function(event) {
         if (event.keyCode === 13) {
@@ -112,9 +125,40 @@ Template.loginScreen.rendered = function() {
     clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
 };
 
+Template.resetBox.helpers({
+    accountError: function() {
+        return accountError.get();
+    }
+});
+Template.resetBox.events({
+    'click #reset-button, keyup #confirm-password' : function(event) {
+        if ((event.keyCode && event.keyCode !== 13) || event.keyCode === 0) return false;
+        if ($('#signup-password').val() !== $('#confirm-password').val()) {
+            accountError.set("Passwords do not match");
+            $('#signup-password').val('');
+            $('#confirm-password').val('');
+            $('#signup-password').focus();
+            return;
+        }
+        Accounts.resetPassword(
+            appVars.resetCode,
+            $('#signup-password').val(), 
+            function(err) {
+                if (err) {
+                    console.log(err);
+                    accountError.set(err.reason);
+                }
+                else {
+                    Router.current().redirect('/home');
+                    // location.reload();
+                }
+            }
+        );
+    }   
+});
+
 Template.twitterGenderModal.events({
     'click #genderConfirmButton': function(event) {
-        console.log('click');
         $('#twitterGenderModal').modal('hide');
         Meteor.setTimeout(function() {
             Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}}, {}, function(err) {

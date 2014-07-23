@@ -5,7 +5,6 @@ Subs = {
 
 var pitches = amplify.store('pitchData'), existingPitchIds = _.pluck(pitches, '_id');
 $(window).load(function() {
-    console.log("Pitch process beginning...");
     Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
         if (err) {
             console.log("Cannot get pitches", err);
@@ -14,13 +13,10 @@ $(window).load(function() {
             console.log("Returned " + res.length + " pitches");
             console.log("Collecting " + (pitches ? pitches.length : 0) + " pitches");
             pitches = pitches ? pitches.concat(res) : res;
-            console.log("Inserting Pitches");
             pitches.forEach(function(p) {
                 Pitches.insert(p);
             });
-            console.log("Pitches Inserted");
             appVars.pitchesReady.set(true);
-            console.log("Getting redundant pitches");
             Meteor.call('oldPitches', existingPitchIds, function(err, res) {
                 if (err) {
                     console.log("Cannot get old pitches", err);

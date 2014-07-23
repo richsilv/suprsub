@@ -42,6 +42,13 @@
     margin-top: -250px;
 }
 
+#resetBox {
+	position: absolute;
+    width: 100%;
+    height: 500px;
+    margin-top: -250px;
+}
+
 #loggedInBox {
 	padding-top: 50px;
 	width: 100%;

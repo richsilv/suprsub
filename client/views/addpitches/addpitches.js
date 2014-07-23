@@ -4,9 +4,7 @@ successSet = new suprsubDep([]),
 
 Template.successFailurePITCHES.helpers({
   success: function() {
-    console.log("reassess");
     var x = successSet.get();
-    console.log(x, successSet.value);
     return successSet.get();
   },
   failure: function() {
@@ -25,7 +23,6 @@ Template.pitchesTemplate.rendered = function ( ) {
           var added = [];
           failureSet.set(res.failure);
           waitingFlag.set(false);
-          console.log(res.success);
           res.success.forEach(function(pitch) {
             var thisPitch = Pitches.findOne(pitch);
             if (!thisPitch) {

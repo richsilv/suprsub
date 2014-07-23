@@ -180,30 +180,6 @@ Template.duplicateEmail.helpers({
   }
 });
 
-/*Template.linkModal.rendered = function() {
-  $('#linkModal').modal({
-    onShow: function() {
-      $('body').dimmer({
-        debug: false,
-        performance: false,
-        verbose: false,
-        onHide: function() {
-          console.log("hidden");
-          $(linkModal).remove();
-          appVars.venues.dep.changed();
-        }
-      });
-    },
-    onHide: function() {
-      $(linkModal).remove();
-      appVars.venues.dep.changed();
-    },
-    debug: false,
-    performance: false,
-    verbose: false
-  });
-};*/
-
 // ****************** UTILITY ************
 
 function saveSettingsData(event) {

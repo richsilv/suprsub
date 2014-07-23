@@ -95,6 +95,46 @@
 	{{> twitterGenderModalHolder}}
 </template>
 
+<template name="resetBox">
+	<div id="login-background-image">
+	</div>
+	<div class="ui page center aligned gridF" id="resetBox">
+		<div class="row">
+			<div class="large-7 large-centered medium-11 medium-centered column">
+				<div class="ui inverted segment semitranslucent">
+					<h1>Please enter a new password</h1>
+				</div>
+				<div class="ui form segment translucent">
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="password" placeholder="Password" id="signup-password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="password" placeholder="Confirm Password" id="confirm-password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					{{#if accountError}}
+						<div class="ui error message" id="errorBox">
+							<div class="header">{{accountError}}</div>
+						</div>
+					{{/if}}
+					<div class="ui rightF orange submit button" id="reset-button">Reset Password</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
 <template name="twitterGenderModalHolder">
 	<div class="ui modal" id="twitterGenderModal">
 		{{>twitterGenderModal}}

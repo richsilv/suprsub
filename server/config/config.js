@@ -43,7 +43,6 @@ appConfig = (function() {
 	    },
 		sendToLogger: {
 			log: function() {
-				console.log(arguments);
 				var e = new Error('dummy'),
 					stack = e.stack.replace(/^[^\(]+?[\n$]/gm, '')
 					.replace(/^\s+at\s+/gm, '')

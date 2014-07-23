@@ -1,1 +1,1 @@
-Kadira.connect('W655yyDkbdoz3MHFg', 'a84f219f-71e7-4739-9997-41184d25e979')
+if (Meteor.absoluteUrl() === 'http://suprsub-20880.onmodulus.net/') Kadira.connect('W655yyDkbdoz3MHFg', 'a84f219f-71e7-4739-9997-41184d25e979')

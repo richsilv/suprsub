@@ -10,9 +10,11 @@ Meteor.methods({
 		return Pitches.find({_id: {$nin: ignore}}, {fields: {prettyLocation: 1, 'location.lat': 1, 'location.lng': 1}}).fetch();
 	},
 	oldPitches: function(allIds) {
-		var currentIds = _.pluck(Pitches.find({}, {fields: {_id: true}}).fetch(), '_id');
 		this.unblock();
-		return _.difference(allIds, currentIds);
+		var timer = new Date().getTime();
+		var currentIds = _.pluck(Pitches.find({}, {fields: {_id: true}}).fetch(), '_id');
+		var difference = setMinus(allIds, currentIds);
+		return difference;
 	},
 	pitchesWithin: function(center, distance) {
 		var ratio = 6.283184 / 360;
@@ -357,7 +359,7 @@ Meteor.methods({
 				});
 			});			
 		}
-	},	
+	},
 	getTeamMembers: function(teamId) {
 		return teamId ? Meteor.users.find({'profile.team._ids': teamId}, {fields: {'profile.name': true}}).fetch() : [];
 	},
@@ -457,4 +459,18 @@ Meteor.methods({
 		}
 		return (func && func.apply(this, args));
 	}
-});	
+});
+
+function setMinus(A, B) {
+    var map = {}, C = [];
+
+    for(var i = B.length; i--; )
+        map[B[i]] = null; // any other value would do
+
+    for(var i = A.length; i--; ) {
+        if(!map.hasOwnProperty(A[i]))
+            C.push(A[i]);
+    }
+
+    return C;
+}

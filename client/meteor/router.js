@@ -5,8 +5,7 @@ var teamSubHandle = clientFunctions.reactiveSubHandle('teams'),
         Meteor.connection._userIdDeps.depend();
         var thisUser = Meteor.user(),
             that = Router.current();
-        console.log(that ? that.path : null, c, this.controller);
-        if (!that) {
+        if (!that || that.params.resetCode) {
         }
         else if (!thisUser) {
           that.redirect('/login');
@@ -69,7 +68,25 @@ Router.map(function() {
         delete routerDeps.login;
       }
     }
-  })
+  });
+
+  this.route('reset', {
+    path: '/reset/:resetCode?',
+    controller: suprsubController,
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'resetBox': {to: 'mainSection'}
+    },
+    onBeforeAction: function() {
+      appVars.resetCode = this.params.resetCode;
+      if (!appVars.resetCode) {
+        this.redirect('/login');
+      }
+    },
+    unload: function() {
+      delete appVars.resetCode;
+    }
+  });
 
   this.route('playerDetails', {
     path: '/player',
@@ -112,7 +129,6 @@ Router.map(function() {
       if (thisUser && thisUser.profile && thisUser.profile.team) {
         Router.current().route.teamIds = thisUser.profile.team._ids;
         if (!Router.current().route.currentTeamId) {
-          console.log("Calc:", thisUser.profile.team._ids, thisUser.profile.team._ids.length ? thisUser.profile.team._ids[0] : null);
           Router.current().route.currentTeamId = new suprsubDep(thisUser.profile.team._ids.length ? thisUser.profile.team._ids[0] : null);
         }
         else if (thisUser.profile.team._ids.indexOf(Router.current().route.currentTeamId.value) === -1)
@@ -167,7 +183,6 @@ Router.map(function() {
         ];
     },
     onAfterAction: function() {
-      console.log("running homepage logic once")
       var that = this, thisUser = Meteor.user();
       if (thisUser && thisUser.profile && thisUser.profile.firstLogin) {
             routerDeps.home = Deps.autorun(function(c) {
@@ -316,7 +331,6 @@ Router.map(function() {
     template: 'blank',
     before: function() {
       Meteor.call('printLine');
-      console.log(this.params);
     }
   });
 

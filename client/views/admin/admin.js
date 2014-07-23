@@ -13,7 +13,6 @@ Template.adminTemplate.events({
 	},
 	'click .objId': function(event) {
 		var thisObj = getObject(event.target.innerText);
-		console.log(thisObj);
 		if (thisObj) {
 			activePane = event.target.parentElement;
 			objectFill(thisObj, activePane, event.target.innerText);
@@ -111,7 +110,6 @@ Template.tweetInjector.events({
 		var tweetText = $('#tweetInput').val(),
 			tweetSender = $('#tweetSender').val(),
 			replyTo = $('#replyTo').val();
-		console.log(tweetText, tweetSender);
 		if (tweetText && tweetSender) {
 			Meteor.call('twitterGetDetails', tweetSender, function(err, res) {
 				if (err) {
