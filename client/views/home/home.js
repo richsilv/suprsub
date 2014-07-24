@@ -269,7 +269,7 @@ Template.activityFeed.helpers({
     return Events.find({cancelled: {$exists: false}}, {limit: 10, sort: {createdAt: -1}});
   },
   eventIcon: function() {
-    if (this.players === 0) return "darkgreen suprsub";
+    if (this.players === 0) return "darkgreenText suprsub";
     else if (this.source === 'web') return "red browser";
     else return "teal twitter";
   },

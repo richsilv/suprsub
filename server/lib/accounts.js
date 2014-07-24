@@ -95,7 +95,7 @@ Accounts.emailTemplates.resetPassword.subject = function(user) {
 	return "Resetting your password for SuprSub.com";
 };
 Accounts.emailTemplates.resetPassword.html = function(user, url) {
-	url = url.replace('/#/reset-password', '/login');
+	url = url.replace('/#/reset-password', '/reset');
 	var text = "<p>Hello, " + user.profile.name + "!</p>";
 	text += "<p>To reset your password for <strong>SuprSub</strong>, please click the following link:</p>";
 	text += "<p>" + url + "</p>";

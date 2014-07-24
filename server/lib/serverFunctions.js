@@ -725,6 +725,7 @@
 	function getDefaultTokens(teamId) {
 		var thisTeam = Teams.findOne(teamId),
 			tokens = [];
+		console.log(thisTeam);
 		if (thisTeam) {
 			for (prop in thisTeam) {
 				switch(prop) {
@@ -733,13 +734,11 @@
 						break;
 
 					case 'day':
-						if (thisTeam.regular)
-							tokens.push({code: 5, data: thisTeam.day});
+						tokens.push({code: 5, data: thisTeam.day});
 						break;
 
 					case 'time':
-						if (thisTeam.sameTime)
-							tokens.push({code: 7, data: {hours: thisTeam.time.getHours(), mins: thisTeam.time.getMinutes()}})
+						tokens.push({code: 7, data: {hours: thisTeam.time.getHours(), mins: thisTeam.time.getMinutes()}})
 						break;
 
 					case 'format':

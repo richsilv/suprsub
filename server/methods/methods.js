@@ -283,18 +283,19 @@ Meteor.methods({
 	},
 	sendTeamCode: function(code) {
 		var console = appConfig.sendToLogger;
-		var contacts = Meteor.user().profile.contact,
+		var thisUser = Meteor.user();
+			contacts = thisUser.profile.contact,
 			team = Teams.findOne(code),
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your teammates - " + 
-				suprsubRoot + "team/" + code, Meteor.user().services.twitter.id);
+				suprsubRoot + "team/" + code, thisUser.services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
 			Meteor.defer(function() {
 				Email.send({
 					from: "info@suprsub.meteor.com",
-					to: Meteor.user().emails[0].address,
+					to: thisUser.emails[0].address,
 					subject: "SuprSub team link and code",
 					html: Handlebars.templates['sendcode']({
 						teamName: team.name,
@@ -308,7 +309,7 @@ Meteor.methods({
 			Meteor.defer(function() {
 				Email.send({
 					from: "info@suprsub.meteor.com",
-					to: Meteor.user().services.facebook.email,
+					to: thisUser.services.facebook.email,
 					subject: "SuprSub team link and code",
 					html: Handlebars.templates['sendcode']({
 						teamName: team.name,
@@ -321,19 +322,20 @@ Meteor.methods({
 	},
 	sendRingerCode: function(teamId, name) {
 		var console = appConfig.sendToLogger;
-		var contacts = Meteor.user().profile.contact,
+		var thisUser = Meteor.user();
+			contacts = thisUser.profile.contact,
 			team = Teams.findOne(teamId),
 			code = team.ringerCode
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your potential Supsrubs - " + 
-				suprsubRoot + "team/" + code, Meteor.user().services.twitter.id);
+				suprsubRoot + "team/" + code, thisUser.services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
 			Meteor.defer(function() {
 				Email.send({
 					from: "info@suprsub.meteor.com",
-					to: Meteor.user().emails[0].address,
+					to: thisUser.emails[0].address,
 					subject: "SuprSub team link and code",
 					html: Handlebars.templates['sendcoderinger']({
 						teamName: team.name,
@@ -348,7 +350,7 @@ Meteor.methods({
 			Meteor.defer(function() {
 				Email.send({
 					from: "info@suprsub.meteor.com",
-					to: Meteor.user().services.facebook.email,
+					to: thisUser.services.facebook.email,
 					subject: "SuprSub team link and code",
 					html: Handlebars.templates['sendcoderinger']({
 						teamName: team.name,

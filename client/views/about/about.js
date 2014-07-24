@@ -30,4 +30,3 @@ Template.aboutMenu.events({
 		window.scrollTo(0, $(event.target.hash)[0].offsetTop);
 	}
 });
-
