@@ -406,6 +406,26 @@ Template.signupModal.events({
 
 // *********************************
 
+Deps.autorun(function(c) {
+  if (appVars.pitchesReady.get()) {
+    if (!Meteor.user()) return false;
+    var teamList = Meteor.user().profile.team._ids;
+    if (!teamList.length) return false;
+    var teamProfile = Teams.findOne({_id: teamList[0]});
+    if (!teamProfile) return false;
+    c.stop();
+    if (teamProfile.homeGround) {
+      var homeGround = Pitches.findOne({_id: teamProfile.homeGround});
+      if (homeGround) {
+        $('#homeGroundSearch').val(homeGround.prettyLocation);
+        $('#homeGroundSearch').attr('data-value', homeGround._id);
+      }
+    }    
+  }
+});
+
+// *********************************
+
 function verifyForm() {
   if (!parseInt($('#numberPlayers').dropdown('get value'), 10))
     return false;

@@ -3,7 +3,8 @@ Subs = {
     postingsUser : new suprsubDep(false)
 };
 
-var pitches = amplify.store('pitchData'), existingPitchIds = _.pluck(pitches, '_id');
+var pitches = (Meteor.settings && Meteor.settings.public && Meteor.settings.public.overWritePitches) ? [] : amplify.store('pitchData')
+    existingPitchIds = _.pluck(pitches, '_id');
 $(window).load(function() {
     Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
         if (err) {

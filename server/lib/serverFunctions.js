@@ -709,7 +709,7 @@
 		var location;
 		location = (typeof locationId === 'string') ? Pitches.findOne({_id: locationId}) : locationId;
 		if (!location || !location.name) return '';
-		else return location.owner ? location.owner + ' - ' + location.name : location.name;
+		else return location.owner ? location.owner + ' - ' + location.name : (location.location.city ? location.name + ' (' + location.location.city + ')' : location.name);
 	}
 
 	function padNum(number, digits) {

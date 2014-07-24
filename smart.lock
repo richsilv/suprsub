@@ -100,8 +100,8 @@
       },
       "velocityjs": {
         "git": "https://github.com/Sewdn/meteor-velocityjs.git",
-        "tag": "v0.1.0",
-        "commit": "d94afb23a188af9ae16adb70a09426563e4539c7"
+        "tag": "v0.8.0",
+        "commit": "5e96099e2cf8f99dbc7ed61225e96b0ba833ff08"
       },
       "find-faster": {
         "git": "https://github.com/arunoda/meteor-find-faster.git",

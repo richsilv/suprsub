@@ -16,6 +16,11 @@ Meteor.methods({
 		var difference = setMinus(allIds, currentIds);
 		return difference;
 	},
+	addPrettyLocations: function() {
+		Pitches.find().forEach(function(p) {
+			Pitches.update(p, {$set: {prettyLocation: serverFunctions.prettyLocation(p)}});
+		});
+	},
 	pitchesWithin: function(center, distance) {
 		var ratio = 6.283184 / 360;
 		var lng = center.lng * ratio;
