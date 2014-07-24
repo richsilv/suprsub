@@ -10,6 +10,7 @@
 		{{>walkThrough}}
 		{{>rulesGuidelines}}
 		{{>postingInstructions}}
+		{{>contactingSuprSub}}
 		</div>
 	</div>
 </template>
@@ -59,10 +60,10 @@
 				{{/if}}
 			</div>
 			<div class="{{#if tabChoice 'aboutTab' 'postingInstructions'}}active {{/if}}teal item" id="postingInstructions">
-				<a href="#postingInstructionsSection">Using SuprSub via Twitter</a>
+				<a href="#postingInstructionsSection">Making and Responding to Postings</a>
 				{{#if tabChoice 'aboutTab' 'postingInstructions'}}
 				<div class="menu">
-					<a class="active teal item">
+					<a class="teal item">
 						Making a Posting
 						<div class="ui teal label"><i class="large pencil icon"></i></div>
 					</a>
@@ -77,6 +78,21 @@
 				</div>
 				{{/if}}
 			</div>
+			<div class="{{#if tabChoice 'aboutTab' 'contactingSuprSub'}}active {{/if}}teal item" id="contactingSuprSub">
+				<a href="#contactingSuprSubSection">Contacting SuprSub</a>
+				{{#if tabChoice 'aboutTab' 'contactingSuprSub'}}
+				<div class="menu">
+					<a class="teal item">
+						Pitches
+						<div class="ui teal label"><i class="large location icon"></i></div>
+					</a>
+					<a class="item">
+						Suggestions & Problems
+						<div class="ui label"><i class="large mail outline icon"></i></div>
+					</a>
+				</div>
+				{{/if}}
+			</div>
 		</div>
 	</div>
 </template>
@@ -84,7 +100,7 @@
 <template name="aboutSuprSub">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header" id="aboutSuprSubSection">About SuprSub</h1>
+			<h1 class="ui top attached header menuItem" id="aboutSuprSubSection">About SuprSub</h1>
 			<div class="ui small-16 attached segment whitetranslucent">
 			<p>SuprSub is a football player community, helping local teams to find players and keen players to find more games in their neighbourhood.</p>
 			<strong>3 Easy Steps:</strong>
@@ -102,7 +118,7 @@
 <template name="howItWorks">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header" id="howItWorksSection">How It Works</h1>
+			<h1 class="ui top attached header menuItem" id="howItWorksSection">How It Works</h1>
 			<div class="ui small-16 attached segment whitetranslucent">
 				<strong class="subheader">5-a-side, 11-a-side and everything in between.  Play more football!</strong>
 				<p>SuprSub provides an easy way of posting last minute player needs to a large and growing community of eager footballers.  By last minute we mean any time in the next week, from a few hours to a few days.</p>
@@ -122,7 +138,7 @@
 <template name="walkThrough">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header" id="walkThroughSection">Walk me through it...</h1>
+			<h1 class="ui top attached header menuItem" id="walkThroughSection">Walk me through it...</h1>
 			<div class="ui small-16 attached segment whitetranslucent">
 				<strong>Players</strong>
 				<ul>
@@ -153,7 +169,7 @@
 <template name="rulesGuidelines">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header" id="rulesAndGuidelinesSection">User Guidelines</h1>
+			<h1 class="ui top attached header menuItem" id="rulesAndGuidelinesSection">User Guidelines</h1>
 			<div class="ui small-16 attached segment whitetranslucent">
 			<p>SuprSub is a community of football players who love playing football and is intended to help everyone get more out of the game.  Please follow these simple and mostly obvious guidelines to ensure everything runs smoothly.  Thank you.</p>
 			<strong>Players</strong>
@@ -183,7 +199,7 @@
 <template name="postingInstructions">
 	<div class="row instructionsRow">
 		<div class="grid">
-			<h1 class="ui top attached header" id="postingInstructionsSection">Using SuprSub via Twitter</h1>
+			<h1 class="ui top attached header menuItem" id="postingInstructionsSection">Making and Responding to Postings</h1>
 			<div class="ui small-16 attached segment whitetranslucent">
 				<h3 class="ui header">How to use the service with Twitter</h3>
 				<p>Once you've registered your default game or team, it couldn't be easier.</p>
@@ -289,7 +305,46 @@
 			<div class="ui small-16 attached segment whitetranslucent">
 				<h3 class="ui header">How to respond to a posting that you've been sent when you'd like to become a Suprsub.</h3>
 				<hr>
-				<p>Instructions on how to respond.</p>
+				<strong class="subheader">via Email:</strong>
+				<p>Click on the link provided, which takes you to the posting on <a href="www.suprsub.com">www.suprsub.com</a>, then hit "Sign Up".</p>
+				<strong class="subheader">via the Web App:</strong>
+				<p>Click on the game posting you'd like to sign up for on the Activity Feed, then hit "Sign Up".</p>
+				<strong class="subheader">via Twitter:</strong>
+				<p>Reply to the tweet you received with the posting details with the word "suprsub" and that's it: <strong>@suprsub suprsub</strong></p>
+				<em>NB - Twitter only allows you to tweet the same thing once in a 24hr period, so if you have already sent a tweet like </em><strong>@suprsub suprsub</strong><em>, just add any other word and it should work.  For example: </em>
+				<div class="ui list"><div class="item"><strong>@suprsub suprsub go</strong></div><div class="item"><strong>@suprsub suprsub please</strong></div><div class="item"><strong>@suprsub suprsub a</strong></div><div class="item"><strong>@suprsub suprsub cookpassbabtridge</strong></div></div>
+			</div>
+		</div>
+	</div>
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">Cancelling a Posting</h1>
+			<div class="ui small-16 attached segment whitetranslucent">
+				<h3 class="ui header">How to cancel a posting that you've made.</h3>
+				<hr>
+				<strong class="subheader">via the Web App:</strong>
+				<p>Click on the game posting you' made (it should be easy to find if you filter by "Mine"), then hit "Cancel".</p>
+				<strong class="subheader">via Twitter:</strong>
+				<p>Reply to the tweet you received with the posting details with the word "cancel" and that's it: <strong>@suprsub cancel</strong>.  Note the point in the previous section about adding an extra word if required!</p>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="contactingSuprSub">
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header menuItem" id="contactingSuprSubSection">Pitches</h1>
+			<div class="ui small-16 attached segment whitetranslucent">
+				<p>We reckon we’ve got most of the UK covered, pitch-wise. However, if your usual pitch is not there, on the team page bring up the pitch map and hit the ‘Add A Venue’ button.  Submit a name and at least a post code and we’ll do the rest and notify you when it’s done.</p>
+			</div>
+		</div>
+	</div>
+	<div class="row instructionsRow">
+		<div class="grid">
+			<h1 class="ui top attached header">Suggestions & Problems</h1>
+			<div class="ui small-16 attached segment whitetranslucent">
+				<p>Email us at <a href="mailto:info@suprsub.com">info@suprsub.com</a> and we will happily look into it.</p>
 			</div>
 		</div>
 	</div>

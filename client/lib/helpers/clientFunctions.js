@@ -142,10 +142,11 @@ clientFunctions = (function() {
 				}, function() {
 					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");
 					appVars.mapCenter.set(appVars.defaultLocation);
-					pitchMap.setCenter(appVars.defaultLocation);
+					// pitchMap.setCenter(appVars.defaultLocation);
 				});
 				appVars.circleChanged.set(true);
 			}
+			pitchMap.setCenter(appVars.defaultLocation);
 			google.maps.event.addListener(pitchMap, 'dblclick', function(event) {
 				appVars.mapCenter.set(event.latLng);
 				appVars.circleChanged.set(true);
