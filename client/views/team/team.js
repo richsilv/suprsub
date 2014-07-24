@@ -84,12 +84,12 @@ Template.teamName.events({
   'click #teamChoice .text': function() {
     if ($('#teamChoice').dropdown('is visible') === true) {
       nameEntryOverride.set(true);
-      var myFunc = function() {
+      var renderData = function() {
         var teamData = Teams.findOne(Router.current().route.currentTeamId.get());
         $('#teamName').val(teamData.name);
         $('#teamName').focus();
       };
-      renderOnce('teamName', myFunc);  
+      renderOnce('teamName', renderData);  
     }
   },
   'keyup input, click div': function() {
