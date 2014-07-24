@@ -288,12 +288,6 @@ Router.map(function() {
     template: 'mainTemplate',
     yieldTemplates: {
       'about': {to: 'mainSection'}
-    },
-    unload: function() {
-      console.log(this);
-      Meteor.setInterval(function() {
-        console.log("now you can go!");
-      }, 5000);
     }
   });
 

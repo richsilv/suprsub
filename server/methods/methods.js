@@ -100,6 +100,7 @@ Meteor.methods({
 	},
 	twitterSendMessage: function(string, twitterId) {
 		var fut = new Future(),
+			posting = {text: string};
 			console = appConfig.sendToLogger;
 		if (!(twitterId)) throw new Meteor.Error(500, "I need a twitter id to send a message.");
 		var Twit = new TwitMaker({
@@ -112,11 +113,9 @@ Meteor.methods({
 			console.log("Sending Direct Message:", {To: twitterId, Message: string});
 			return {err: null, res: null};
 		}
-		Twit.post('direct_messages/new', 
-		{
-			user_id: twitterId.toString(),
-			text: string
-		}, function(err, res) {fut.return({err: err, res: res});});
+		if (/^[0-9]+$/.exec(twitterId)) posting.user_id = twitterId;
+		else posting.screen_name = twitterId;
+		Twit.post('direct_messages/new', posting, function(err, res) {fut.return({err: err, res: res});});
 		return fut.wait();
 	},
 	twitterSendTweet: function(string) {

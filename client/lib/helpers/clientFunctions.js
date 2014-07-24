@@ -63,7 +63,7 @@ clientFunctions = (function() {
 				ready: false,
 				readyDep: new Deps.Dependency()
 			};
-			$.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyDmSBUaNyV0mQrcJj87Ga1OwzhxdxVrHjI&sensor=false&callback=clientFunctions.gMapsCallback', function( data, textStatus, jqxhr ) {
+			$.getScript('https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyDmSBUaNyV0mQrcJj87Ga1OwzhxdxVrHjI&sensor=false&callback=clientFunctions.gMapsCallback', function( data, textStatus, jqxhr ) {
 				if (jqxhr.status === 200) console.log( "Google Maps Initialised." );
 				else console.log( "Google Maps load error." )
 			});
@@ -199,7 +199,7 @@ clientFunctions = (function() {
 			var marker = new google.maps.Marker({
 				position: pitches[i].location,
 				map: pitchMap,
-				title:pitches[i].prettyLocation,
+				options: {title: pitches[i].prettyLocation},
 				icon: (pitches[i]._id === currentPitch) ? 'images/soccerv3.png' : 'images/soccerv2.png',
 				pitch_ID: pitches[i]._id
 			});
