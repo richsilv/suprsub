@@ -366,7 +366,7 @@ function savePlayerData(event) {
       })
     })
   };
-  if (appVars.tabChoices.value.playerTab === 'availability') update.profile.player.availability = availability;
+  update.profile.player.availability = (appVars.tabChoices.value.playerTab === 'availability') ? availability : appVars.availabilitySession.value;
   Meteor.users.update({_id: Meteor.userId()}, {$set: update}, function(err) {
     if (!err) {
       if (event) {

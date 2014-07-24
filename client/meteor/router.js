@@ -2,6 +2,7 @@ var teamSubHandle = clientFunctions.reactiveSubHandle('teams'),
     eventSubHandle = clientFunctions.reactiveSubHandle('events'),
     routerDeps = {
       controller: Deps.autorun(function(c) {
+        console.log("dependency runnng");
         Meteor.connection._userIdDeps.depend();
         var thisUser = Meteor.user(),
             that = Router.current();
@@ -55,7 +56,7 @@ Router.map(function() {
     onBeforeAction: function() {
       var that = this;
       routerDeps.login = Deps.autorun(function(c) {
-        if (Meteor.userId()) {
+        if (Meteor.user()) {
           c.stop();
           delete routerDeps.login;
           that.redirect('/home');
