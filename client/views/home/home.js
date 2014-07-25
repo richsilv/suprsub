@@ -233,9 +233,9 @@ Template.fullPostingForm.rendered = function() {
 
 Template.postingModal.helpers({
   posting: function(){
-    var postingData = appVars.newPosting.get(),
-        pitch = Pitches.findOne({_id: postingData.location});
+    var postingData = appVars.newPosting.get(), pitch;
     if (!postingData) return {};
+    pitch = Pitches.findOne({_id: postingData.location});
     output = {
       players: postingData.players + ' player',
       dateTime: prettyDateTime(postingData.dateTime),

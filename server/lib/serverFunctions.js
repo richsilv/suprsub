@@ -367,11 +367,15 @@
 		if (typeof event === "string") event = Events.findOne({_id: event});
 		if (!event || !event.dateTime || !event.location) return [];
 		if (event.onlyRingers) {
-			var thisTeam = Teams.findOne({});
+			var thisTeam = Teams.findOne(event.team);
 			if (!thisTeam) {
 				results = [];
 			}
+			else if (!thisTeam.ringers) {
+				throw new Meteor.Error(500, "No ringers!");
+			}
 			else {
+				console.log("Preferred SuprSubs: ", thisTeam.ringers);
 				results = Meteor.users.find({_id: {$in: thisTeam.ringers}}, {fields: {_id: true}}).fetch();
 			}
 		}

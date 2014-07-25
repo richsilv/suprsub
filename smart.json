@@ -18,6 +18,7 @@
     "velocityjs": {},
     "find-faster": {},
     "aws-sdk": {},
-    "modernizr": {}
+    "modernizr": {},
+    "server-eval": {}
   }
 }
