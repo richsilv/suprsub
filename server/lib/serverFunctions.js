@@ -663,7 +663,7 @@
 				switch (thisPlayer.profile.contact[j]) {
 					case 0:
 						if (thisPlayer.services.twitter) {
-							var tweetText = "@" + thisPlayer.services.twitter.screenName + ' ' + event.sentence + ' _id' + event._id;
+							var tweetText = "@" + thisPlayer.services.twitter.screenName + (event.onlyRingers ? ' ' + team.name + ' ' : ' ') + event.sentence;
 							if (tweetText.length > 140) tweetText = tweetText.slice(0,137) + '...';
 							console.log("Tweeting: " + tweetText);
 							Meteor.call('twitterSendTweet', tweetText);
@@ -680,8 +680,8 @@
 							Email.send({
 								from: 'SuprSub Postings <postings@suprsub.com>', 
 								to: email, 
-								subject: event.sentence, 
-								html: "<h2>New Posting in Your Neighbourhood</h2><p>" + event.sentence + "</p>" + 
+								subject: (event.onlyRingers ? team.name + " posted: " : "") + event.sentence, 
+								html: "<h2>New Posting " + (event.onlyRingers ? ("from " + team.name) : "in Your Neighbourhood") + "</h2><p>" + event.sentence + "</p>" + 
 									  '<p><a href="' + Meteor.absoluteUrl() + 'home/' + event._id +'">Click here to sign up</a></p>'
 							});
 						}
