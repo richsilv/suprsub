@@ -663,7 +663,7 @@
 				switch (thisPlayer.profile.contact[j]) {
 					case 0:
 						if (thisPlayer.services.twitter) {
-							var tweetText = "@" + thisPlayer.services.twitter.screenName + (event.onlyRingers ? ' ' + team.name + ' ' : ' ') + event.sentence;
+							var tweetText = "@" + thisPlayer.services.twitter.screenName + (event.onlyRingers ? ' ' + team.name + ' ' : ' ') + event.sentence + ' _id' + event._id;;
 							if (tweetText.length > 140) tweetText = tweetText.slice(0,137) + '...';
 							console.log("Tweeting: " + tweetText);
 							Meteor.call('twitterSendTweet', tweetText);
