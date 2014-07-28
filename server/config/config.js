@@ -3,6 +3,8 @@ Future = Npm.require('fibers/future');
 appConfig = (function() {
 
 	Natural = Meteor.require('natural');
+	awsCredentials = SecureData.findOne({Name: 'awsCredentials'}).Value;
+	AWS.config.update(awsCredentials);
 
 	return {
 		facebooklocal: SecureData.findOne({Name: 'facebooklocal'}).Value,
@@ -14,6 +16,8 @@ appConfig = (function() {
 		// DELETE THIS TO POST AS SUPRSUB
 		twitterAccountId: SecureData.findOne({Name: 'twitterlocal'}).AccountId,
 		twitterToken: SecureData.findOne({Name: 'Claudio'}).Value.service.twitter,
+		awsCredentials: SecureData.findOne({Name: 'awsCredentials'}).Value,
+		s3: new AWS.S3(),
 		// ==============================
 		dictionary: JSON.parse(Assets.getText("dictionary.json")),
 		dayDictionary: JSON.parse(Assets.getText("daydictionary.json")),
