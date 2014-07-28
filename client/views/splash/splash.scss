@@ -184,7 +184,7 @@ $carousel-height: 450px;
 	margin: 0.5em;
 }
 
-.icon:not('.input') {
+.splashpage .icon:not('.input') {
 	width: 100px;
 	margin-left: auto;
 	margin-right: auto;
@@ -192,7 +192,7 @@ $carousel-height: 450px;
 	display: block;
 }
 
-.iconPic {
+.splashpage .iconPic {
 	/*height: 200px;*/
 	max-width: 100%;
 	max-height: 200px;
@@ -203,38 +203,38 @@ $carousel-height: 450px;
 	vertical-align: middle;
 }
 
-.iconBox {
+.splashpage .iconBox {
 	text-align: center;
 	color: rgb(34, 34, 34);
 	/*color: rgb(51, 51, 50);*/
 }
 
-.iconBox img.icon {
+.splashpage .iconBox img.icon {
 	height: 95px;
 }
 
-.iconPicHolder {
+.splashpage .iconPicHolder {
 	height: 200px;
 	line-height: 200px;
 	position: relative;
 }
 
-.ui.button {
+.splashpage .ui.button:not(#topbar .ui.button) {
 	text-transform: none;
 }
 
-.ui.modal i.icon {
+.splashpage .ui.modal i.icon {
 	padding: 0;
 }
 
-.ui.form .subtext {
+.splashpage .ui.form .subtext {
 	font-size: 0.6em;
 	margin: 1em;
 	line-height: 2em;
 	color: #555;
 }
 
-.columns .field:last-of-type {
+.splashpage .columns .field:last-of-type {
 	margin-bottom: 0;
 }
 
