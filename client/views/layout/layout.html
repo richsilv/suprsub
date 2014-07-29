@@ -74,6 +74,7 @@
     			<div class="ui button" id="logout-button">Log Out</div>
   			</div>
 			{{else}}
+			{{#unless option '/'}}
 			<div class="item">
 				<div class="ui icon input">
 					<input type="email" placeholder="Email" id="login-email" name="email" autocomplete="on">
@@ -86,6 +87,7 @@
 					<i class="lock link icon"></i>
 				</div>
 			</div>
+			{{/unless}}
   			<div class="item">
     			<div class="ui button" id="login-button">Log In</div>
   			</div>
