@@ -47,25 +47,6 @@ Meteor.startup(function() {
     }(document, 'script', 'facebook-jssdk'));
 });
 
-Template.topbar.events({
-    'click #login-button' : function() {
-    	Router.go('/login');
-        Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
-          if (err) ;
-          else Router.current().redirect('/home');
-        });
-    },
-    'keyup #login-email, keyup #login-password': function(events) {
-        if (event.keyCode === 13) {
-        	Router.go('/login');
-            Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
-                if (err) ;
-	            else Router.current().redirect('/home');
-            });
-        }
-    }
-});
-
 Template.owlCarousel.helpers({
 	carouselItems: function() {
 		imageLinksReady.dep.depend();

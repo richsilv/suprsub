@@ -56,7 +56,7 @@ var tour = {
 			content: "Manage your contact preferences here.",
 			target: "#selectedContact",
 			targetTemplate: "settingsBox",
-			placement: "botttom",
+			placement: "bottom",
 			mobilePlacement: "bottom",
 			page: 'settings',
 		},
@@ -65,7 +65,9 @@ var tour = {
 			page: 'playerDetails',
 			title: 'Get Started',
 			content: 'To get started as a player, enter your details on this page.  Or, if you want to register a team, flick back to the Team tab.',
-			buttonText: 'Done'
+			buttonText: 'Done',
+			target: '#main-background-image',
+			targetTemplate: 'playerDetails'
 		}
 
 	]

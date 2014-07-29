@@ -16,6 +16,10 @@ var accountError = {
 
 Template.topbar.events({
     'click #login-button' : function() {
+        if (Router.current().path === '/') {
+            Router.go('/login');
+            return;
+        }
         Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
           if (err) accountError.set(err.reason);
           else Router.current().redirect('/home');
