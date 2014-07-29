@@ -19,6 +19,8 @@
     "find-faster": {},
     "aws-sdk": {},
     "modernizr": {},
-    "server-eval": {}
+    "server-eval": {},
+    "owl-carousel": {},
+    "stellar": {}
   }
 }

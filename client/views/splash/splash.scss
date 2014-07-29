@@ -1,0 +1,499 @@
+.suprsubLogo {
+	font-family: "Collegiate", sans-serif !important;
+	font-weight: normal !important;
+	padding-top: 0.05em !important;
+	padding-bottom: 0.05em !important;
+/*	color: #fff !important;
+	text-shadow: rgba(0, 0, 0, 0.9) 0.01em 0.01em 0.01em, rgba(0, 0, 0, 0.7) -0.01em -0.01em 0.01em;*/
+	color: white;
+	opacity: 0.75;
+}
+/*
+.topBar {
+	padding: 0.25em 5em;
+	background-color: hsl(120, 75%, 43%);
+	width: 100vw;
+	box-shadow: 0 -5px 5px -5px rgba(37, 37, 37, 0.5) inset;
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box;
+    height: 39px;
+}*/
+
+
+$topbar-height: 45px;
+$darkgreen: hsl(120, 75%, 43%);
+$carousel-height: 450px;
+
+.splashpage#wrapper {
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	font-weight: normal;
+}
+
+.splashpage#wrapper {
+
+	h2 {
+		font-size: 2.3125rem;
+		font-weight: normal;
+	}
+
+	h4 {
+		font-size: 1.4375rem;
+		font-weight: normal;
+	}
+
+	h3 {
+		font-size: 1.6875rem;
+		font-weight: normal;
+	}
+
+	ul, p {
+		line-height: 1.6;
+	}
+
+	a {
+		text-decoration: none solid rgb(221, 221, 221);
+	}
+
+}
+
+.vcard {
+  display: inline-block;
+  margin: 0 0 1.25rem 0;
+  border: 1px solid #dddddd;
+  padding: 0.625rem 0.75rem; }
+  .vcard li {
+    margin: 0;
+    display: block; }
+  .vcard .fn {
+    font-weight: bold;
+    font-size: 0.9375rem; }
+
+.broad.row {
+	margin-top: 5em;
+	margin-bottom: 5em;
+}
+
+.leftItem {
+	font-size: 1.5em;
+	font-weight: bold;
+	float: left;
+	padding: 0.1em 2em;
+	display: inline;
+}
+
+.rightItem {
+	font-size: 1.5em;
+	font-weight: bold;
+	float: right;
+	padding: 0.1em 2em;
+	display: inline;
+	color: #fff !important;
+}
+
+.pageLink a:link {
+	color: #fff !important;	
+}
+.pageLink a:visited {
+	color: #fff !important;	
+}
+.pageLink a:hover {
+	color: #ddd !important;
+}
+.pageLink a:active {
+	color: #ddd !important;	
+}
+
+.owl-carousel div.img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: $carousel-height;
+	text-align: center;
+	margin-top: $topbar-height;
+}
+
+.owl-carousel div img {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+.owl-carousel .caption {
+	text-align: center;
+	font-size: 1.8em;
+	bottom: 0;
+	color: white;
+	/*color: #47c8c8;*/
+	text-shadow: 0 0 5px black;
+	position: relative;
+	display: inline-block;
+	background-color: rgba(22, 22, 22, 0.2);
+	padding: 0.2em 1em;
+	top: $carousel-height/2.75;
+}
+
+.owl-carousel .caption a {
+	transition: color 0.2s;
+}
+
+.owl-carousel .caption a:link,
+.owl-carousel .caption a:visited,
+.owl-carousel .caption a:active {
+	color: #fff;
+}
+
+.owl-carousel .caption a:hover {
+	color: #ddd;
+}
+
+.owl-carousel .signup {
+	position: relative;
+	top: $carousel-height/2.75;
+}
+
+.carousel-holder .img>div {
+	opacity: 0;
+/*	transition: opacity 0.5s;
+	-moz-transition: opacity 0.5s;
+	-webkit-transition: opacity 0.5s;*/
+}
+
+.ui.darkgreen.buttons .button,
+.ui.darkgreen.button {
+  background-color: $darkgreen;
+  color: #FFFFFF;
+}
+.ui.darkgreen.buttons .button:hover,
+.ui.darkgreen.button:hover,
+.ui.darkgreen.buttons .active.button,
+.ui.darkgreen.button.active {
+  background-color: darken($darkgreen, 7%);
+  color: #FFFFFF;
+}
+.ui.darkgreen.buttons .button:active,
+.ui.darkgreen.button:active {
+  background-color: $darkgreen;
+  color: #FFFFFF;
+}
+
+.owl-carousel .caption.header {
+	font-weight: 800;
+	font-size: 2.4em;
+	margin: 0.5em;
+}
+
+.splashpage .icon:not('.input') {
+	width: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 1em 0;
+	display: block;
+}
+
+.splashpage .iconPic {
+	/*height: 200px;*/
+	max-width: 100%;
+	max-height: 200px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 1em 0;
+	display: inline;
+	vertical-align: middle;
+}
+
+.splashpage .iconBox {
+	text-align: center;
+	color: rgb(34, 34, 34);
+	/*color: rgb(51, 51, 50);*/
+}
+
+.splashpage .iconBox img.icon {
+	height: 95px;
+}
+
+.splashpage .iconPicHolder {
+	height: 200px;
+	line-height: 200px;
+	position: relative;
+}
+
+.splashpage .ui.button:not(#topbar .ui.button) {
+	text-transform: none;
+}
+
+.splashpage .ui.modal i.icon {
+	padding: 0;
+}
+
+.splashpage .ui.form .subtext {
+	font-size: 0.6em;
+	margin: 1em;
+	line-height: 2em;
+	color: #555;
+}
+
+.splashpage .columns .field:last-of-type {
+	margin-bottom: 0;
+}
+
+#signup-button {
+	margin-bottom: 0;
+}
+
+#moreInfo {
+	background-color: $darkgreen;
+	padding-top: 1.5em;
+	height: 100%;
+	-webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 0px 1px inset;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 0px 1px inset;
+	color: white;
+}
+
+#moreInfo h3, #moreInfo p, #moreInfo li {
+	color: white;
+	opacity: 0.75;
+}
+
+.socialHolder {
+	margin: 0.25em 0;
+}
+
+#contactBox {
+	color: #666;
+	border: 1px solid #888;
+}
+
+#contactBox .fn {
+	/*color: #fff;*/
+}
+
+#contactBox a:link, #contactBox a:visited {
+	color: #4040af;
+}
+#contactBox a:hover {
+	color: #2020af;
+}
+
+.parallax {
+	height: 200px;
+	width: 100%;
+	border: solid rgb(221, 221, 221);
+	border-width: 1px 0 0;
+	overflow: hidden;
+}
+
+.leafImage {
+	 background-image: url('http://suprsub.s3.amazonaws.com/images/grass.jpg');
+	 background-attachment: fixed;
+	 background-position: 0 200px;
+	 background-size: cover;
+	 position: relative;
+	 height: 400px;
+	 width: 100%;
+}
+
+
+@media (max-width: 1000px) {
+
+	.rightItem {
+		padding: 0.25em 1em;
+	}
+}
+
+@media (max-width: 800px) {
+
+	.leftItem {
+		padding: 0.25em 1em;
+	}
+
+  	.rightItem {
+    	display: none;
+  	}
+
+	#orbitHolder img {
+		height: 340px;
+		overflow: hidden;
+		min-width: 1200px;
+		margin-left: -200px;
+	}
+
+	#orbitHolder #image8 {
+		margin-left: -480px;
+	}
+
+	#orbitHolder li .orbit-caption {
+		font-size: 1.5em;
+	}
+
+}
+
+#topbar {
+	top: 0;
+    -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    height: $topbar-height;
+}
+
+#topbar .item {
+	height: 100%;
+}
+/*
+#topbar+div+div {
+	margin-top: 50px;
+}*/
+
+#miniTopbar+div+div {
+	margin-top: 60px;
+}
+
+#toplogo-image {
+	position:absolute;
+	left: 50%;
+	top: 4px;
+    background: url('/images/SuprSubLogo_NameSmall.jpeg');
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+	border-radius: 4px;
+	height: 29px;
+	width: 125px;
+	margin-left: -72px;
+}
+
+#toplogo-image-temp {
+	position:absolute;
+	left: 50%;
+	top: 4px;
+    background-color: #00db00;
+    font-family: "Collegiate";
+    color: white;
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
+	border-radius: 4px;
+	margin-left: -72px;
+	color: white;
+	font-size: 50px !important;
+	padding: 5px 3px 0px 3px;
+}
+
+#miniTopbar {
+	top: 0;
+	z-index: 950;
+	height: 48px;
+	font-size: 18px;
+}
+
+#miniTopbar .leftItem {
+	font-size: 1.4rem;
+	margin-left: 0px;
+	-webkit-transition: margin-left 0.5s;
+	transition: margin-left 0.5s;
+	margin-top: -0.3em;
+}
+
+#miniTopbar .leftItem.offScreen {
+	margin-left: -100px;
+}
+
+#miniTopbar .leftItem .icon {
+	display: inline-block;
+	vertical-align: middle;
+	font-size: 1.5em;
+}
+
+#miniTopbar #phoneLogin {
+	font-size: 0.4em;
+}
+
+#miniTopbar #logout-holder {
+	margin-top: 0.1em;
+}
+
+#socialBox {
+	position:fixed;
+	z-index: 1;
+/*	-webkit-box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4) inset;
+	box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.4) inset;*/
+	background-color: hsl(120, 75%, 43%) !important;
+	top: 50%;
+	margin-top: -100px;
+	right: 5px;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+#socialBox>div {
+	border-radius: 3px;
+	background-color: antiquewhite;
+	box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.4);
+	height: 100%;
+}
+
+#topbar .webicon, #topbar .webicon:hover{
+	margin: 5px;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+#socialItem {
+	padding-top: 0.1em;
+	padding-bottom: 0.1em;
+}
+
+.white {
+	color: white;
+}
+
+.darkgreenshadow {
+	text-shadow: 0 0 10px rgba(63, 255, 63, 0.4), 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.darkgreen.active.item {
+  	border-color: $darkgreen !important;
+  	color: $darkgreen !important;
+}
+.inverted.darkgreen {
+  	background-color: $darkgreen;
+}
+.ui.inverted.darkgreen .active.item:after {
+  	background-color: $darkgreen;
+}
+.inverted.darkgreen {
+	color: #ffffff;
+}
+
+.menu .darkgreen.active.item,
+.darkgreen.menu .active.item {
+  border-color: $darkgreen !important;
+  /*color: hsl(120, 75%, 43%) !important;*/
+}
+.inverted.darkgreen.menu {
+  background-color: $darkgreen;
+}
+.inverted.darkgreen.pointing.menu .active.item:after {
+  background-color: $darkgreen;
+}
+
+i.suprsub.icon {
+	vertical-align: sub;
+	margin-left: 13.3px;
+	margin-right: initial;
+	/*margin-top: -0.4em;*/
+	display: block;
+	padding-top: 0.5em;
+	color: white;
+	opacity: 0.75;
+	font-style: normal;
+}
+
+i.suprsub.icon:before{
+	content: "SuprSub";
+	font-family: "Collegiate";
+	font-size: 36.8px;
+}

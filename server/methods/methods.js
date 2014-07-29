@@ -16,6 +16,19 @@ Meteor.methods({
 		var difference = setMinus(allIds, currentIds);
 		return difference;
 	},
+	getSplashImages: function(number) {
+		var splashFuture = new Future()
+		appConfig.s3.listObjects({Bucket: 'suprsub', Prefix: 'images/splash-pages/'}, function(err, data) {
+			if (err) {
+				console.log(err);
+				splashFuture.throw(err);
+			}
+			else {
+				splashFuture.return(_.sample(_.map(_.filter(data.Contents, function(x) {return x.Size > 0}), function(x) {return 'http://suprsub.s3.amazonaws.com/' + x.Key;}), number));
+			}
+		});
+		return splashFuture.wait();
+	},
 	addPrettyLocations: function() {
 		Pitches.find().forEach(function(p) {
 			Pitches.update(p, {$set: {prettyLocation: serverFunctions.prettyLocation(p)}});

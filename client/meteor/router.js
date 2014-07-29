@@ -8,6 +8,8 @@ var teamSubHandle = clientFunctions.reactiveSubHandle('teams'),
             that = Router.current();
         if (!that || that.params.resetCode) {
         }
+        else if (!thisUser && that.path === '/') {
+        }
         else if (!thisUser) {
           that.redirect('/login');
         }
@@ -42,6 +44,31 @@ Router.onBeforeAction('loading');
 Router.map(function() {
 
   var subs;
+
+  this.route('splash', {
+    path: '/',
+    controller: suprsubController,
+    template: 'mainTemplate',
+    yieldTemplates: {
+      'splash': {to: 'mainSection'}
+    },
+    onBeforeAction: function() {
+      var that = this;
+      routerDeps.login = Deps.autorun(function(c) {
+        if (Meteor.user()) {
+          c.stop();
+          delete routerDeps.login;
+          that.redirect('/home');
+        }
+      });
+    },
+    unload: function() {
+      if (routerDeps.login) {
+        routerDeps.login.stop();
+        delete routerDeps.login;
+      }
+    }
+  });
 
   this.route('login', {
     path: '/login',
@@ -156,18 +183,6 @@ Router.map(function() {
         Router.current().route.codeEntered = clientFunctions.joinTeam(this.params.joinCode);
         this.redirect('/team');
       }
-    }
-  });
-
-  this.route('homeRedirect', {
-    path: '/',
-    controller: suprsubController,
-    template: 'mainTemplate',
-    yieldTemplates: {
-      'homePage': {to: 'mainSection'}
-    },
-    action: function() {
-      this.redirect('/home');
     }
   });
 

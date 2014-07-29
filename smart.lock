@@ -21,7 +21,9 @@
       "find-faster": {},
       "aws-sdk": {},
       "modernizr": {},
-      "server-eval": {}
+      "server-eval": {},
+      "owl-carousel": {},
+      "stellar": {}
     },
     "packages": {
       "semantic-ui": {
@@ -123,6 +125,16 @@
         "git": "https://github.com/gandev-de/meteor-server-eval.git",
         "tag": "v0.5.0",
         "commit": "0652e70de0b359305f7e04b9131dfc755e1cf27a"
+      },
+      "owl-carousel": {
+        "git": "https://github.com/richsilv/meteor-owl-carousel.git",
+        "tag": "v0.1.0",
+        "commit": "cdf148b3ff3b4c715127c7c7497dcee159b37e18"
+      },
+      "stellar": {
+        "git": "https://github.com/noorderstorm/meteor-stellar.git",
+        "tag": "v0.1.0",
+        "commit": "1ca2f68e0cca5967a6f88545cea12055c9fc2465"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",
