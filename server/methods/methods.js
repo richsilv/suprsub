@@ -17,7 +17,8 @@ Meteor.methods({
 		return difference;
 	},
 	getSplashImages: function(number) {
-		var splashFuture = new Future()
+		var splashFuture = new Future();
+		if (_.isEmpty(appConfig.awsCredentials)) return new Array(number);
 		appConfig.s3.listObjects({Bucket: 'suprsub', Prefix: 'images/splash-pages/'}, function(err, data) {
 			if (err) {
 				console.log(err);

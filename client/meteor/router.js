@@ -27,19 +27,22 @@ suprsubController = FastRender.RouteController.extend({
   layout: 'mainTemplate',
   loadingTemplate: 'loading',
   onBeforeAction: function (pause) {
-    var that = this;
-    appVars.showErrors.set(false);
-    if (Router.Tour.getTour() && Router.Tour.currentPage() !== this.route.name) {
-      console.log("Stopping tour", Router.Tour.currentPage(), this.route.name);
-      Router.Tour.loadTour();
-      Router.Tour.nextStep();
-    }
-  },
-  onAfterAction: function() {
-  },
+  }
 });
 
-Router.onBeforeAction('loading');
+Router.onBeforeAction(function(pause) {
+  var that = this;
+  appVars.showErrors.set(false);
+  if (Router.Tour.getTour() && Router.Tour.currentPage() !== this.route.name) {
+    console.log("Stopping tour", Router.Tour.currentPage(), this.route.name);
+    Router.Tour.loadTour();
+    Router.Tour.nextStep();
+  }
+  if (!this.ready()) {
+    this.render('loading');
+    pause();
+  }
+});
 
 Router.map(function() {
 
