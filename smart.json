@@ -21,6 +21,9 @@
     "modernizr": {},
     "server-eval": {},
     "owl-carousel": {},
-    "stellar": {}
+    "stellar": {},
+    "jquery-transit": {
+        "path": "packages/meteor-jquery-transit"
+    }
   }
 }

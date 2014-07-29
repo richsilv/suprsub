@@ -1,4 +1,5 @@
-var imageLinksReady = new suprsubDep(false),
+var carousel,
+	imageLinksReady = new suprsubDep(false),
 	slideData = [
 	{ header: "PLAY MORE FOOTBALL", caption: "The best way to play more football" },
 	{ header: "PLAY MORE FOOTBALL", caption: "Find a SuprSub in seconds if your team is short" },
@@ -6,12 +7,12 @@ var imageLinksReady = new suprsubDep(false),
 	{ header: "PLAY MORE FOOTBALL", caption: 'Launching soon - <a href="https://twitter.com/intent/follow?screen_name=suprsub">follow us on Twitter</a> for the latest updates' }
 	];
 
-// if (!$.support.transition) $.fn.transition = $.fn.animate;
+if (!$.support.transition) $.fn.transitionAlias = $.fn.animate;
 
 function changedCallback(event) {
-	if (this && this.info) $(".carousel-holder .img>div").transition({opacity: 0, duration: 100});
+	if (this && this.info) $(".carousel-holder .img>div").transitionAlias({opacity: 0, duration: 100});
 	Meteor.setTimeout(function() {
-	  $(".carousel-holder .img>div").transition({opacity: 1, duration: 500});
+	  $(".carousel-holder .img>div").transitionAlias({opacity: 1, duration: 500});
 	}, 500);
 }
 
@@ -26,7 +27,7 @@ Meteor.startup(function() {
 	$(document).ready(function() {
 		Deps.autorun(function(c) {
 			if(imageLinksReady.get()) {
-				$('.owl-carousel').owlCarousel({
+				carousel = $('.owl-carousel').owlCarousel({
 			    	items: 1,
 			    	autoplay: true,
 			    	lazyLoad: true,
@@ -55,7 +56,8 @@ Template.owlCarousel.helpers({
 });
 
 Template.owlCarousel.destroyed = function() {
-	$('.owl-carousel').trigger('destroy.owl.carousel');
+	console.log('destroying carousel');
+	carousel.trigger('destroy.owl.carousel');
 };
 
 Template.owlCarousel.events({

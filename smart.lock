@@ -23,7 +23,10 @@
       "modernizr": {},
       "server-eval": {},
       "owl-carousel": {},
-      "stellar": {}
+      "stellar": {},
+      "jquery-transit": {
+        "path": "packages/meteor-jquery-transit"
+      }
     },
     "packages": {
       "semantic-ui": {
@@ -135,6 +138,9 @@
         "git": "https://github.com/noorderstorm/meteor-stellar.git",
         "tag": "v0.1.0",
         "commit": "1ca2f68e0cca5967a6f88545cea12055c9fc2465"
+      },
+      "jquery-transit": {
+        "path": "packages/meteor-jquery-transit"
       },
       "blaze-layout": {
         "git": "https://github.com/EventedMind/blaze-layout.git",

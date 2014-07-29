@@ -15,6 +15,8 @@ html {
 body {
 	margin: 0;
 	height: 100%;
+	-webkit-backface-visibility: hidden;
+	-webkit-transition: translate3d(0,0,0);
 }
 
 #wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
@@ -201,7 +203,7 @@ i.suprsub.icon {
 i.suprsub.icon:before{
 	content: "S";
 	font-family: "Collegiate";
-	font-size: 175%;
+	font-size: 44px;
 }
 
 .facebook.sign.icon {
@@ -256,6 +258,11 @@ i.suprsub.icon:before{
 
 .cleared.row {
 	clear: both;
+}
+
+.ui.dimmer {
+	transition: opacity 1s;
+	-webkit-transition: opacity 1s;
 }
 
 .modal {

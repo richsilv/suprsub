@@ -36,6 +36,8 @@ confirmModal = function(options, postRender) {
 		      $('.ui.dimmer.page').remove();
 		      $('#generalConfirmModal').remove();
 		    },
+		    debug: true,
+		    verbose: true, // REMOVE THIS IN PROD;
 		    closable: options.noButtons ? true : false
 		  });
 		  postRender && postRender.apply(this, arguments);

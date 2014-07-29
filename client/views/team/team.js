@@ -373,18 +373,29 @@ Template.playerButtons.events({
     tabChoices.setKey('membersRingers', false);
   },
   'click #joinTeam': function() {
-    templateAttach('joinTeamModal', function() {
-      $('#joinTeamModal').modal('setting', {
-          onHide: function() {
-            var joinCode = $('#teamCodeEntry').val();
-            $('.ui.dimmer.page').remove();
-            clientFunctions.joinTeam(joinCode, function(err, res) {
-              Router.current().route.codeEntered = res;
-              codeDep.changed();
-            });           
-          },
-        });
-    });
+    confirmModal({
+      message: UI.toHTML(Template.joinTeamModal),
+      callback: function() {
+        console.log("submitting");
+        var joinCode = $('#teamCodeEntry').val();
+        $('.ui.dimmer.page').remove();
+        clientFunctions.joinTeam(joinCode, function(err, res) {
+          Router.current().route.codeEntered = res;
+          codeDep.changed();
+        });                       
+      } 
+    },
+      function() {
+        Meteor.setTimeout(function() {$('#generalConfirmModal').modal('show'); }, 100);
+      }
+    );
+    // templateAttach('joinTeamModal', function() {
+    //   $('#joinTeamModal').modal('setting', {
+    //       onHide: function() {
+    //         $('.ui.dimmer.page').remove();
+    //       }
+    //     });
+    // });
   },
   'click #sendInvitation': function() {
     if (Router.current().route.currentTeamId.get()) {
