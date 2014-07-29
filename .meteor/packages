@@ -48,5 +48,6 @@ find-faster
 amplify
 aws-sdk
 modernizr
-owl-carousel
 stellar
+owl-carousel
+jquery-transit

@@ -6,7 +6,7 @@ var imageLinksReady = new suprsubDep(false),
 	{ header: "PLAY MORE FOOTBALL", caption: 'Launching soon - <a href="https://twitter.com/intent/follow?screen_name=suprsub">follow us on Twitter</a> for the latest updates' }
 	];
 
-if (!$.support.transition) $.fn.transition = $.fn.animate;
+// if (!$.support.transition) $.fn.transition = $.fn.animate;
 
 function changedCallback(event) {
 	if (this && this.info) $(".carousel-holder .img>div").transition({opacity: 0, duration: 100});
