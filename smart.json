@@ -1,7 +1,6 @@
 {
   "packages": {
     "semantic-ui": {},
-    "iron-router": {},
     "twit": {},
     "moment": {},
     "zurb-foundation": {},
@@ -23,7 +22,7 @@
     "owl-carousel": {},
     "stellar": {},
     "jquery-transit": {
-        "path": "packages/meteor-jquery-transit"
+      "path": "packages/meteor-jquery-transit"
     }
   }
 }

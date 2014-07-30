@@ -182,6 +182,27 @@
 		font-size: 14px;
 	}
 
+	#miniTopbar {
+		height: auto;
+		min-height: 48px;
+	}
+
+	#miniTopbar .right.menu {
+		max-width: 80%;
+	}
+
+	#miniTopbar .right.menu .right.item {
+		/*max-width: 30%;*/
+		padding-left: 0.2em;
+		padding-right: 0.2em;
+	}
+
+	#miniTopbar .right.menu .left.item {
+		/*max-width: 70%;*/
+		padding-left: 0.2em;
+		padding-right: 0.2em;
+	}
+
 	#logout-holder {
 		padding-top: 1em;
 		width: 100%;

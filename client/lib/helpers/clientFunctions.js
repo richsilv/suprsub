@@ -305,7 +305,7 @@ clientFunctions = (function() {
 		var handle = {
 			ready: function() {
 				var sub = subLookup(subName);
-				Router.current()._waitList._dep.depend();
+				Router.current()._waitList._readyDep.depend();
 				if (sub) sub.readyDeps.depend();
 				console.log("RSH RUN FOR", subName, (sub && sub.ready && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true: false);
 				return (sub && sub.ready && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true : false;

@@ -47,6 +47,10 @@ Template.miniTopbar.events({
 		}, 500);
 	},
     'click #login-button' : function() {
+    	if (Router.current().path === "/") {
+    		Router.go('/login');
+    		return;
+    	}
         Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
           if (err) accountError.set(err.reason);
         });

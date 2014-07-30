@@ -42,6 +42,12 @@
     margin-top: -250px;
 }
 
+#loginSubBox>div {
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #resetBox {
 	position: absolute;
     width: 100%;

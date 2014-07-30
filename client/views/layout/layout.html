@@ -29,7 +29,9 @@
 		{{#unless smallScreen}}
 			{{> topbar}}
 		{{else}}
-			{{> sidebar}}
+			{{#if currentUser}}
+				{{> sidebar}}
+			{{/if}}
 			{{> miniTopbar}}
 		{{/unless}}
 		{{> yield region='mainSection'}}
@@ -74,7 +76,7 @@
     			<div class="ui button" id="logout-button">Log Out</div>
   			</div>
 			{{else}}
-			{{#unless option '/'}}
+			{{#unless option "/"}}
 			<div class="item">
 				<div class="ui icon input">
 					<input type="email" placeholder="Email" id="login-email" name="email" autocomplete="on">
@@ -109,22 +111,29 @@
   			</div>
   		</div> -->
 		{{else}}
-			<div class="item" id="phoneLogin">
-				<div class="item small-6 columns">
-					<div class="ui icon input">
-						<input type="email" placeholder="Email" id="login-email">
-						<i class="user link icon"></i>
+			<span class="left item">
+				<i class="suprsub icon"></i>
+			</span>
+			<div class="right menu">
+				<div class="item row" id="phoneLogin">
+					{{#unless option "/"}}
+					<div class="columns">
+							<div class="ui icon input">
+								<input type="email" placeholder="Email" id="login-email">
+								<i class="user link icon"></i>
+							</div>
+							<div class="ui icon input">
+								<input type="password" placeholder="Password" id="login-password">
+								<i class="lock link icon"></i>
+							</div>
 					</div>
+					{{/unless}}
+					<div class="small-5 columns">
+			  			<div class="right item">
+			    			<div class="ui tiny button" id="login-button">Log In</div>
+			  			</div>
+		  			</div>
 				</div>
-				<div class="item small-6 columns">
-					<div class="ui icon input">
-						<input type="password" placeholder="Password" id="login-password">
-						<i class="lock link icon"></i>
-					</div>
-				</div>
-	  			<div class="item small-4 columns">
-	    			<div class="ui tiny button" id="login-button">Log In</div>
-	  			</div>
 			</div>
 		{{/if}}
 	</div>

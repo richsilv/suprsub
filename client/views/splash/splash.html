@@ -1,87 +1,91 @@
 <template name="splash">
 	<div class="splashpage" id="wrapper">
-	{{> topbar}}
-	{{> owlCarousel}}
-	<div class="broad row" id="threeInstructions">
-		<h2>What is SuprSub?</h2>
-		<ul class="large-block-grid-3">
-			<li class="iconBox">
-				<div class="iconPicHolder"><img class="iconPic" src="http://suprsub.s3.amazonaws.com/images/macair.png" /></div>
-				<h4>The best way to play more football</h4>
-			</li>
-			<li class="iconBox">
-				<div class="iconPicHolder"><img class="iconPic" src="http://suprsub.s3.amazonaws.com/images/copamondial.png" /></div>
-				<h4>Find a SuprSub in seconds if your team is short</h4>
-			</li>
-			<li class="iconBox">
-				<div class="iconPicHolder"><img class="iconPic" src="http://suprsub.s3.amazonaws.com/images/iphone.png" /></div>
-				<h4>Be a SuprSub wherever and whenever suits you</h4>
-			</li>
-		</ul>
-	</div>
-	{{> parallaxBox}}
-	<div class="broad row" id="iconBlurb">
-		<h2>How it works</h2>
-		<div class="large-4 small-8 columns">
-			<div class="iconBox">
-				<img class="icon" src="webicons/iphone-icon.svg" />
-				<p>SuprSub is a multi-platform, local football player & game finder.</p>
-			</div>
-		</div>
-		<div class="large-4 small-6 columns">
-			<div class="iconBox">
-				<img class="icon" src="webicons/twitter-icon.svg" />
-				<p>Optimised for Twitter, it also works via web and Facebook.  And it's a doddle to use on smartphone!</p>
-			</div>
-		</div>
-		<div class="large-4 small-6 columns">
-			<div class="iconBox">
-				<img class="icon" src="webicons/pin-icon.svg" />
-				<p>SuprSub is designed to enable everyone to play more football in their local area.</p>
-			</div>
-		</div>
-		<div class="large-4 small-6 columns">
-			<div class="iconBox">
-				<img class="icon" src="webicons/users-icon.svg" />
-				<p>SuprSub is free and easy to use.  Connect with hundreds of players in your area instantly.</p>
-			</div>
-		</div>	
-	</div>
-	<div id="moreInfo">
-		<div  class="row">
-		<div class="large-5 columns">
-			<div class="suprsubLogo" style="font-size: 3em; padding-top: 0.5em !important;">
-				SuprSub
-			</div>
-		</div>
-		<div class="large-11 columns">
-			<div class="large-5 large-offset-1 columns">
-				<h3>Connect</h3>
-				<div class="socialHolder" id="socialLinks">
-					<!-- <a href="https://twitter.com/suprsub" class="twitter-follow-button" data-width="148" data-lang="en" data-size="medium" data-dnt="true">Follow SuprSub</a> -->
-					<iframe allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=suprsub&show_count=false" style="width:300px; height:20px;"></iframe>
-				</div>
-				<div class="socialHolder">
-					<div class="fb-like" data-href="https://www.facebook.com/suprsub" data-width="148" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
-				</div>
-			</div>
-			<div class="large-5 columns">
-				<h3 id="aboutLinks">About</h3>
-				<p class="pageLink"><a href="/website-terms-and-conditions-suprsub.doc">Terms and Conditions</a></p>
-				<p class="pageLink"><a href="/website-privacy-policy-suprsub.doc">Privacy Policy</a></p>
-			</div>
-			<div class="large-5 columns">
-				<h3>Contact</h3>
-				<ul class="vcard" id="contactBox">
-					<li class="fn">SuprSub Ltd</li>
-					<li class="email"><a href="mailto:info@suprsub.com">info@suprsub.com</a></li>
-					<li>UK registered with Company No. <span class="fn">08857136</span></li>
+		{{> owlCarousel}}
+		<div class="broad row" id="threeInstructions">
+			<div class="small-16 columns">
+				<h2>What is SuprSub?</h2>
+				<ul class="large-block-grid-3 small-block-grid-1">
+					<li class="iconBox">
+						<div class="iconPicHolder"><img class="iconPic" src="http://suprsub.s3.amazonaws.com/images/macair.png" /></div>
+						<h4>The best way to play more football</h4>
+					</li>
+					<li class="iconBox">
+						<div class="iconPicHolder"><img class="iconPic" src="http://suprsub.s3.amazonaws.com/images/copamondial.png" /></div>
+						<h4>Find a SuprSub in seconds if your team is short</h4>
+					</li>
+					<li class="iconBox">
+						<div class="iconPicHolder"><img class="iconPic" src="http://suprsub.s3.amazonaws.com/images/iphone.png" /></div>
+						<h4>Be a SuprSub wherever and whenever suits you</h4>
+					</li>
 				</ul>
 			</div>
 		</div>
+		{{> parallaxBox}}
+		<div class="broad row" id="iconBlurb">
+			<div class="small-16 columns">
+				<h2>How it works</h2>
+				<div class="large-4 small-8 columns">
+					<div class="iconBox">
+						<img class="icon" src="webicons/iphone-icon.svg" />
+						<p>SuprSub is a multi-platform, local football player & game finder.</p>
+					</div>
+				</div>
+				<div class="large-4 small-8 columns">
+					<div class="iconBox">
+						<img class="icon" src="webicons/twitter-icon.svg" />
+						<p>Optimised for Twitter, it also works via web and Facebook.  And it's a doddle to use on smartphone!</p>
+					</div>
+				</div>
+				<div class="large-4 small-8 columns">
+					<div class="iconBox">
+						<img class="icon" src="webicons/pin-icon.svg" />
+						<p>SuprSub is designed to enable everyone to play more football in their local area.</p>
+					</div>
+				</div>
+				<div class="large-4 small-8 columns">
+					<div class="iconBox">
+						<img class="icon" src="webicons/users-icon.svg" />
+						<p>SuprSub is free and easy to use.  Connect with hundreds of players in your area instantly.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="moreInfo">
+			<div  class="row">
+				<div class="large-5 columns">
+					<div class="suprsubLogo" style="font-size: 3em; padding-top: 0.5em !important;">
+						SuprSub
+					</div>
+				</div>
+				<div class="large-11 columns">
+					<div class="large-5 large-offset-1 columns">
+						<h3>Connect</h3>
+						<div class="socialHolder" id="socialLinks">
+							<!-- <a href="https://twitter.com/suprsub" class="twitter-follow-button" data-width="148" data-lang="en" data-size="medium" data-dnt="true">Follow SuprSub</a> -->
+							<iframe allowtransparency="true" frameborder="0" scrolling="no" src="//platform.twitter.com/widgets/follow_button.html?screen_name=suprsub&show_count=false" style="width:300px; height:20px;"></iframe>
+						</div>
+						<div class="socialHolder">
+							<div class="fb-like" data-href="https://www.facebook.com/suprsub" data-width="148" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+						</div>
+					</div>
+					<div class="large-5 columns">
+						<h3 id="aboutLinks">About</h3>
+						<p class="pageLink"><a href="/website-terms-and-conditions-suprsub.doc">Terms and Conditions</a></p>
+						<p class="pageLink"><a href="/website-privacy-policy-suprsub.doc">Privacy Policy</a></p>
+					</div>
+					<div class="large-5 columns">
+						<h3>Contact</h3>
+						<ul class="vcard" id="contactBox">
+							<li class="fn">SuprSub Ltd</li>
+							<li class="email"><a href="mailto:info@suprsub.com">info@suprsub.com</a></li>
+							<li>UK registered with Company No. <span class="fn">08857136</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	</div>
-	</div>
+	<div id="fb-root" class=" fb_reset"></div>
 </template>
 
 <!-- <template name="topbar">

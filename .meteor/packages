@@ -10,7 +10,6 @@ accounts-base
 accounts-password
 accounts-facebook
 accounts-twitter
-iron-router
 
 twit
 
@@ -28,9 +27,7 @@ Pikaday
 
 
 
-blaze-layout
 
-iron-router
 
 
 fast-render
@@ -51,3 +48,6 @@ modernizr
 stellar
 owl-carousel
 jquery-transit
+meteor-jquery-transit
+iron-router
+server-eval
