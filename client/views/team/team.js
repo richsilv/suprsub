@@ -242,10 +242,10 @@ Template.teamSettings.events({
       duration: 500, 
       complete: function() {
         tabChoices.setKey('venueSearch', true);
-        pitchMap.setCenter(appVars.mapCenter.get());
+        appVars.pitchMap.setCenter(appVars.mapCenter.get());
       }
     });
-    google.maps.event.trigger(pitchMap, 'resize');
+    google.maps.event.trigger(appVars.pitchMap, 'resize');
   },
   'change #timePickerMinute': function(event) {
     event.target.value = clientFunctions.padToTwo(event.target.value);
@@ -335,7 +335,7 @@ Template.otherInfo.events({
       region: 'uk'
       },
       function(res) {
-        if (res.length) pitchMap.panTo(res[0].geometry.location);
+        if (res.length) appVars.pitchMap.panTo(res[0].geometry.location);
       }
     );
     return false;
@@ -343,7 +343,7 @@ Template.otherInfo.events({
   'click .pitchEntry': function(event) {
     var pitch = Pitches.findOne({'_id': event.target.id});
     if (pitch) {
-      pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
+      appVars.pitchMap.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
       $('#homeGround input').val(pitch.prettyLocation);
       $('#homeGround input').attr('id', pitch._id);
       appVars.showErrors.dep.changed();
@@ -352,7 +352,7 @@ Template.otherInfo.events({
       },500);
       window.scrollTo(window.scrollX, Math.max(window.scrollY - 100, 0));
       appVars.saveCalc.changed();
-      google.maps.event.trigger(pitchMap, 'bounds_changed');
+      google.maps.event.trigger(appVars.pitchMap, 'bounds_changed');
     }
   },
   'click #addVenue': function() {
@@ -374,7 +374,7 @@ Template.playerButtons.events({
   },
   'click #joinTeam': function() {
     confirmModal({
-      message: UI.toHTML(Template.joinTeamModal),
+      message: Blaze.toHTML(Template.joinTeamModal),
       callback: function() {
         console.log("submitting");
         var joinCode = $('#teamCodeEntry').val();
@@ -626,8 +626,8 @@ function setTeamData(teamData) {
     if (ground) {
       $('#homeGround>input').val(ground.prettyLocation);
       var googleCallback = Meteor.setInterval(function() {
-        if (typeof google !== 'undefined' && window.pitchMap && 'panTo' in pitchMap) {
-          pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));
+        if (typeof google !== 'undefined' && appVars.pitchMap && 'panTo' in appVars.pitchMap) {
+          appVars.pitchMap.panTo(new google.maps.LatLng(ground.location.lat, ground.location.lng));
           Meteor.clearInterval(googleCallback);
         }
       }, 200);

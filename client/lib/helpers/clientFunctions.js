@@ -35,7 +35,7 @@ clientFunctions = (function() {
 		$('#homeGround input').attr('id', m.pitch_ID);
 		appVars.saveCalc.changed();
 		appVars.showErrors.dep.changed();
-		google.maps.event.trigger(pitchMap, 'bounds_changed');
+		google.maps.event.trigger(appVars.pitchMap, 'bounds_changed');
 		// window.scrollTo(window.scrollX, 0);
 	};
 
@@ -95,7 +95,7 @@ clientFunctions = (function() {
 				disableDoubleClickZoom: true
 			},
 			thisTeam = Teams.findOne(Router.current().route.currentTeamId);
-		pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
+		appVars.pitchMap = new google.maps.Map(document.getElementById('pitchMap'),
 			mapOptions);
 		appVars.circleChanged.set(false);
 		if (!appVars.gc) appVars.gc = new google.maps.Geocoder();
@@ -104,17 +104,17 @@ clientFunctions = (function() {
 				var thisPitch = Pitches.findOne(thisTeam.homeGround);
 				appVars.defaultLocation = new google.maps.LatLng(thisPitch.location.lat, thisPitch.location.lng);
 				appVars.mapCenter.set(appVars.defaultLocation);
-				pitchMap.setCenter(appVars.defaultLocation);
+				appVars.pitchMap.setCenter(appVars.defaultLocation);
 			}
 			else {
 				navigator.geolocation.getCurrentPosition(function(res) {
 					appVars.defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
 					appVars.mapCenter.set(appVars.defaultLocation);
-					pitchMap.setCenter(appVars.defaultLocation);
+					appVars.pitchMap.setCenter(appVars.defaultLocation);
 				}, function() {
 					window.alert("Your browser does not support geolocation, so you'll have to use the address box to find your location.");	
 					appVars.mapCenter.set(appVars.defaultLocation);
-					pitchMap.setCenter(appVars.defaultLocation);
+					appVars.pitchMap.setCenter(appVars.defaultLocation);
 					});
 			}
 		}
@@ -126,14 +126,14 @@ clientFunctions = (function() {
 				$('#distanceWrite').val(appVars.circleSize.get()/100);
 				$('#distanceRead').html(appVars.circleSize.get()/1000+'km');
 				updateCircle();
-				if (appVars.circleSize.get() > 10000) pitchMap.setZoom(10);
-				if (appVars.circleSize.get() > 20000) pitchMap.setZoom(9);
+				if (appVars.circleSize.get() > 10000) appVars.pitchMap.setZoom(10);
+				if (appVars.circleSize.get() > 20000) appVars.pitchMap.setZoom(9);
 			}
 			else {
 				navigator.geolocation.getCurrentPosition(function(res) {
 					appVars.defaultLocation = new google.maps.LatLng(res.coords.latitude, res.coords.longitude);
 					appVars.mapCenter.set(appVars.defaultLocation);
-					pitchMap.setCenter(appVars.defaultLocation);
+					appVars.pitchMap.setCenter(appVars.defaultLocation);
 					updateCircle();
 					clientFunctions.pitchesWithin({"lat": res.coords.latitude, "lng": res.coords.longitude}, 8000, function(err, res) {
 						if (err || !appVars.venues) console.log(err);
@@ -146,8 +146,8 @@ clientFunctions = (function() {
 				});
 				appVars.circleChanged.set(true);
 			}
-			pitchMap.setCenter(appVars.defaultLocation);
-			google.maps.event.addListener(pitchMap, 'dblclick', function(event) {
+			appVars.pitchMap.setCenter(appVars.defaultLocation);
+			google.maps.event.addListener(appVars.pitchMap, 'dblclick', function(event) {
 				appVars.mapCenter.set(event.latLng);
 				appVars.circleChanged.set(true);
 				updateCircle();
@@ -156,14 +156,14 @@ clientFunctions = (function() {
 		}
 		console.log("GMaps Initialization");
 		appVars.mapReady.set(true);
-		google.maps.event.addListener(pitchMap, 'bounds_changed', function() {
+		google.maps.event.addListener(appVars.pitchMap, 'bounds_changed', function() {
 			var _thisTimeout = this.thisTimeout;
 			if (_thisTimeout) {
 				Meteor.clearTimeout(_thisTimeout);
 			}
 			this.thisTimeout = Meteor.setTimeout(function() {
 				removeMarkers();
-				addMarkers(pitchMap.getBounds(), circle);
+				addMarkers(appVars.pitchMap.getBounds(), circle);
 				_thisTimeout = null;
 			}, venueDelay);
       	});
@@ -199,7 +199,7 @@ clientFunctions = (function() {
 		for (var i=0; i < pitches.length; i++) {
 			var marker = new google.maps.Marker({
 				position: pitches[i].location,
-				map: pitchMap,
+				map: appVars.pitchMap,
 				options: {title: pitches[i].prettyLocation},
 				icon: (pitches[i]._id === currentPitch) ? 'images/soccerv3.png' : 'images/soccerv2.png',
 				pitch_ID: pitches[i]._id
@@ -227,7 +227,7 @@ clientFunctions = (function() {
 			strokeWeight: 2,
 			fillColor: '#78db1c',
 			fillOpacity: 0.35,
-			map: pitchMap,
+			map: appVars.pitchMap,
 			draggable: true,
 			center: appVars.mapCenter.get(),
 			radius: appVars.circleSize.get()

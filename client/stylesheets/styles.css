@@ -223,7 +223,7 @@ i.suprsub.icon:before{
 
 .rotate {
 	font-size: 0.9em;
-	margin-top:-45px;
+	margin-top:-5px;
 	margin-left: 15px;
 	width: 0px;
 	-webkit-transform: rotate(90deg);
@@ -233,9 +233,9 @@ i.suprsub.icon:before{
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
 	-webkit-transform-style: preserve-3d;
 }
-.rotated_cell {
+.ui.table thead th.rotated_cell {
 	height:90px;
-	vertical-align:bottom
+	vertical-align:top;
 	transform: translate3d(0,0,0);
 }
 
@@ -342,9 +342,6 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 
 /*For small and medium width screens*/
 @media only screen and (max-width: 64em) {
-	.rotate {
-		margin-top: 0;
-	}
 	.cancelOrSave {
 		margin-left: calc(50% - 87px);
 		margin-top: 1em;
@@ -389,7 +386,7 @@ input[type=checkbox]:checked ~ .checkboxDiv {
 		height: 80px;
 	}
 	.rotate {
-		margin-top: -40px;
+/*		margin-top: -40px;*/
 		margin-left: 10px;
 	}
 	.checkboxDiv {

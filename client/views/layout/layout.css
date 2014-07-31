@@ -195,13 +195,9 @@
 		font-size: 14px;
 	}
 
-	#miniTopbar {
-		height: auto;
-		min-height: 48px;
-	}
-
 	#miniTopbar .right.menu {
 		max-width: 80%;
+		height: 100%;
 	}
 
 	#miniTopbar .right.menu .right.item {

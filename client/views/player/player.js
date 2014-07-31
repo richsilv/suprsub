@@ -58,9 +58,9 @@ Template.defineBounds.events({
     appVars.circleSize.value = parseInt($('#distanceWrite').val(), 10) * 100;
     var self = this;
     this.circleTimeout = Meteor.setTimeout(function() {
-          if (appVars.circleSize.value > 20000 && pitchMap.getZoom() > 9) pitchMap.setZoom(9);
-          if (appVars.circleSize.value > 10000 && appVars.circleSize.value < 20000 && pitchMap.getZoom() !== 10) pitchMap.setZoom(10);
-          else if (appVars.circleSize.value < 10000 && pitchMap.getZoom() < 11) pitchMap.setZoom(11);
+          if (appVars.circleSize.value > 20000 && appVars.pitchMap.getZoom() > 9) appVars.pitchMap.setZoom(9);
+          if (appVars.circleSize.value > 10000 && appVars.circleSize.value < 20000 && appVars.pitchMap.getZoom() !== 10) appVars.pitchMap.setZoom(10);
+          else if (appVars.circleSize.value < 10000 && appVars.pitchMap.getZoom() < 11) appVars.pitchMap.setZoom(11);
           appVars.circleChanged.set(true);
           appVars.circleSize.dep.changed();
           appVars.venues.dep.changed();
@@ -275,51 +275,46 @@ Template.pitchMapLarge.helpers({
 });
 
 Template.pitchMapLarge.created = function() {
-  this.mapReadyDep = Deps.autorun(function(c) {
+  this.autorun(function(c) {
     if (appVars.mapReady.get()) {
-      google.maps.event.trigger(pitchMap, 'resize');
-      pitchMap.setCenter(appVars.defaultLocation); 
+      google.maps.event.trigger(appVars.pitchMap, 'resize');
+      appVars.pitchMap.setCenter(appVars.defaultLocation); 
       c.stop();
       delete this.mapReadyDep;   
     }
   });
-}
 
-Template.pitchMapLarge.destroyed = function() {
-  if (this.mapReadyDep) {
-    this.mapReadyDep.stop();
-    delete this.mapReadyDep;
-  }
+  this.autorun(function() {
+      if (appVars.liveCircle) {
+        appVars.mapCenter.set(appVars.liveCircle.getCenter());
+      }
+      else if (appVars.circleSize) {
+        var populationOptions = {
+          strokeColor: '#78db1c',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#78db1c',
+          fillOpacity: 0.35,
+          map: appVars.pitchMap,
+          draggable: true,
+          center: appVars.mapCenter.get(),
+          radius: appVars.circleSize.get()
+        };
+        if (window.google) {
+          appVars.liveCircle = new google.maps.Circle(populationOptions);
+          google.maps.event.addListener(appVars.liveCircle, 'center_changed', function() {
+            appVars.mapCenter.set(appVars.liveCircle.getCenter());
+            appVars.liveCircle.setOptions({ strokeColor: '#db781c', fillColor: '#db781c' });
+            appVars.circleChanged.set(true);
+          });
+        }
+      }
+  });
+
 }
 
 // ***************** DEPS *************************
 
-Deps.autorun(function() {
-    if (appVars.liveCircle) {
-      appVars.mapCenter.set(appVars.liveCircle.getCenter());
-    }
-    else if (appVars.circleSize) {
-      var populationOptions = {
-        strokeColor: '#78db1c',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#78db1c',
-        fillOpacity: 0.35,
-        map: appVars.pitchMap,
-        draggable: true,
-        center: appVars.mapCenter.get(),
-        radius: appVars.circleSize.get()
-      };
-      if (window.google) {
-        appVars.liveCircle = new google.maps.Circle(populationOptions);
-        google.maps.event.addListener(appVars.liveCircle, 'center_changed', function() {
-          appVars.mapCenter.set(appVars.liveCircle.getCenter());
-          appVars.liveCircle.setOptions({ strokeColor: '#db781c', fillColor: '#db781c' });
-          appVars.circleChanged.set(true);
-        });
-      }
-    }
-});
 
 Deps.autorun(function() {
   dataChange.dep.depend();
