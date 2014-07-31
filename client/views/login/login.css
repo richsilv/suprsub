@@ -61,6 +61,10 @@
 	height: auto;
 }
 
+#phoneLogin>div {
+	vertical-align: super;
+}
+
 #socialbuttons .button {
 	text-transform: none;
 }

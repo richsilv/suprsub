@@ -35,10 +35,6 @@
 			{{> miniTopbar}}
 		{{/unless}}
 		{{> yield region='mainSection'}}
-		<h1 id="header"></h1>
-        <div id="content">
-          <p></p>
-        </div>
 	</div>
 </template>
 
@@ -114,27 +110,27 @@
 			<span class="left item">
 				<i class="suprsub icon"></i>
 			</span>
-			<div class="right menu">
-				<div class="item row" id="phoneLogin">
+			<span class="right menu">
+				<span class="item" id="phoneLogin">
 					{{#unless option "/"}}
-					<div class="columns">
-							<div class="ui icon input">
+					<span class="">
+							<span class="ui icon input item">
 								<input type="email" placeholder="Email" id="login-email">
 								<i class="user link icon"></i>
-							</div>
-							<div class="ui icon input">
+							</span>
+							<span class="ui icon input item">
 								<input type="password" placeholder="Password" id="login-password">
 								<i class="lock link icon"></i>
-							</div>
-					</div>
+							</span>
+					</span>
 					{{/unless}}
-					<div class="small-5 columns">
-			  			<div class="right item">
+					<span class="">
+			  			<span class="item">
 			    			<div class="ui tiny button" id="login-button">Log In</div>
-			  			</div>
-		  			</div>
-				</div>
-			</div>
+			  			</span>
+		  			</span>
+				</span>
+			</span>
 		{{/if}}
 	</div>
 </template>

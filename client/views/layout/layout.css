@@ -86,8 +86,17 @@
 }
 
 #miniTopbar #phoneLogin {
-	font-size: 0.4em;
+	display: table;
+	height: 100%;
+	padding: 0;
+	margin-top: auto;
+	margin-bottom: auto;
 }
+#miniTopbar #phoneLogin span {
+	display: table-cell;
+	vertical-align: middle;
+}
+
 
 #miniTopbar #logout-holder {
 	margin-top: 0.1em;
@@ -113,8 +122,12 @@
 	height: 100%;
 }
 
+#topbar .right.menu {
+	padding-top: 4px;
+}
+
 #topbar .webicon, #topbar .webicon:hover{
-	margin: 5px;
+	margin: 0px 5px;
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
@@ -175,7 +188,7 @@
 	#topbar a.item {
 		font-size: 14px;
 		text-align: center;
-		/*width: 12%;*/
+		width: 12%;
 	}
 
 	#topbar a.item i.icon {
