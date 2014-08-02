@@ -1,12 +1,10 @@
-Subs = {
-	postingsChoice : new suprsubDep(''),
-    postingsUser : new suprsubDep(false)
-};
+appVars.Subs.postingsChoice = new suprsubDep('');
+appVars.Subs.postingsUser = new suprsubDep(false);
 
 var pitches = (Meteor.settings && Meteor.settings.public && Meteor.settings.public.overWritePitches) ? [] : amplify.store('pitchData')
     existingPitchIds = _.pluck(pitches, '_id');
 $(window).load(function() {
-    Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
+    appVars.Subs.pitches = Meteor.call('getPitches', existingPitchIds,function(err, res) {
         if (err) {
             console.log("Cannot get pitches", err);
         }
@@ -33,17 +31,11 @@ $(window).load(function() {
     });
 });
 
-appVars.subDep = Deps.autorun(function() {
-  if (Meteor.userId()) {
-    // if (Subs.reactiveFeed) Subs.reactiveFeed[0].stop();
-    Subs.teams = Meteor.subscribe('teams');
-    // Subs.pitches = Meteor.subscribe('allPitches');
-
-    Subs.userData = Meteor.subscribe('userData');
-    Subs.events = Meteor.subscribe('events', Subs.postingsChoice.get(), Subs.postingsUser.get());
-    // Subs.liveTeams = Meteor.subscribe('liveTeams');
-    // Subs.liveUsers = Meteor.subscribe('liveUsers');
-    // Subs.reactiveFeed = Meteor.subscribeReactive('feed', 20, Subs.postingsChoice.get(), Subs.postingsUser.get());
-    Subs.logging = Meteor.subscribe('logging');
-  }
+Deps.autorun(function() {
+    if (Meteor.userId()) {
+        appVars.Subs.teams = clientFunctions.safeSubscribe('teams');
+        appVars.Subs.userData = clientFunctions.safeSubscribe('userData');
+        appVars.Subs.events = clientFunctions.safeSubscribe('events', appVars.Subs.postingsChoice.get(), appVars.Subs.postingsUser.get());
+        appVars.Subs.logging = clientFunctions.safeSubscribe('logging');
+    }
 });

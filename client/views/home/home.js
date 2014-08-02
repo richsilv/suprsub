@@ -5,10 +5,10 @@ var postBoxText = new suprsubDep(false),
 
 Template.homePage.helpers({
   filter: function() {
-    return Subs.postingsChoice.get();
+    return appVars.Subs.postingsChoice.get();
   },
   postingsUser: function() {
-    return Subs.postingsUser.get();
+    return appVars.Subs.postingsUser.get();
   },
   postBoxText: function() {
     return postBoxText.get();

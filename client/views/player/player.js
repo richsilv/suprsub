@@ -300,7 +300,8 @@ Template.pitchMapLarge.created = function() {
           center: appVars.mapCenter.get(),
           radius: appVars.circleSize.get()
         };
-        if (window.google) {
+        if (window.google && appVars.pitchMap) {
+          console.log(populationOptions);
           appVars.liveCircle = new google.maps.Circle(populationOptions);
           google.maps.event.addListener(appVars.liveCircle, 'center_changed', function() {
             appVars.mapCenter.set(appVars.liveCircle.getCenter());

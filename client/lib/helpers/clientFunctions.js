@@ -301,12 +301,23 @@ clientFunctions = (function() {
 		}
 	};
 
+	var safeSubscribe = function() {
+		appVars.Subs._dep.changed();
+		Meteor.subscribe.apply(this, arguments);
+	};
+
 	var reactiveSubHandle = function(subName, collection, minDocs) {
+		var sub, readyDep = new Deps.Dependency();
+		Deps.autorun(function(c) {
+			appVars.Subs._dep.depend();
+			sub = subLookup(subName);
+			if (sub) sub.readyDeps.depend();
+			console.log('looking up', subName);
+			readyDep.changed();
+		});
 		var handle = {
 			ready: function() {
-				var sub = subLookup(subName);
-				Router.current()._waitList._readyDep.depend();
-				if (sub) sub.readyDeps.depend();
+				readyDep.depend();
 				console.log("RSH RUN FOR", subName, (sub && sub.ready && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true: false);
 				return (sub && sub.ready && ( collection ? (collection.find({}).count() >= minDocs) : true )) ? true : false;
 			}
@@ -403,6 +414,7 @@ clientFunctions = (function() {
 		updateCircle: updateCircle,
 		logTemplateEvents: logTemplateEvents,
 		suprsubPlugins: suprsubPlugins,
+		safeSubscribe: safeSubscribe,
 		reactiveSubHandle: reactiveSubHandle,
 		accountsReadyHandle: accountsReadyHandle,
 		joinTeam: joinTeam,
