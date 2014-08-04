@@ -55,6 +55,7 @@ clientFunctions = (function() {
 		var handle, self = this;
 		clientFunctions.gMapsCallback = function() {
 			var lib = appVars._libs.googleMaps;
+			console.log("callback running");
 			lib.ready = true;
 			return lib.readyDep.changed();			
 		};
@@ -65,7 +66,7 @@ clientFunctions = (function() {
 			};
 			$.getScript('https://maps.googleapis.com/maps/api/js?v=3&key=AIzaSyDmSBUaNyV0mQrcJj87Ga1OwzhxdxVrHjI&sensor=false&callback=clientFunctions.gMapsCallback', function( data, textStatus, jqxhr ) {
 				if (jqxhr.status === 200) console.log( "Google Maps Initialised." );
-				else console.log( "Google Maps load error." )
+				else console.log( "Google Maps load error." );
 			});
 		}
 		handle = {
@@ -301,11 +302,6 @@ clientFunctions = (function() {
 		}
 	};
 
-	var safeSubscribe = function() {
-		appVars.Subs._dep.changed();
-		Meteor.subscribe.apply(this, arguments);
-	};
-
 	var reactiveSubHandle = function(subName, collection, minDocs) {
 		var sub, readyDep = new Deps.Dependency();
 		Deps.autorun(function(c) {
@@ -414,7 +410,6 @@ clientFunctions = (function() {
 		updateCircle: updateCircle,
 		logTemplateEvents: logTemplateEvents,
 		suprsubPlugins: suprsubPlugins,
-		safeSubscribe: safeSubscribe,
 		reactiveSubHandle: reactiveSubHandle,
 		accountsReadyHandle: accountsReadyHandle,
 		joinTeam: joinTeam,

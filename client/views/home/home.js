@@ -19,16 +19,16 @@ Template.homePage.helpers({
 });
 Template.homePage.events({
   'click #allFilter': function() {
-    Subs.postingsChoice.set('');
-    Subs.postingsUser.set(false);
+    appVars.Subs.postingsChoice.set('');
+    appVars.Subs.postingsUser.set(false);
   },
   'click #userFilter': function() {
-    Subs.postingsChoice.set(Meteor.userId());
-    Subs.postingsUser.set(false);
+    appVars.Subs.postingsChoice.set(Meteor.userId());
+    appVars.Subs.postingsUser.set(false);
   },
   'click #userPostings': function() {
-    Subs.postingsChoice.set(Meteor.userId());
-    Subs.postingsUser.set(true);
+    appVars.Subs.postingsChoice.set(Meteor.userId());
+    appVars.Subs.postingsUser.set(true);
   },  
   'click #postBoxTextChoice .item': function(event) {
     if (event.target.attributes.activate.value === "1")

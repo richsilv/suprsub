@@ -33,9 +33,9 @@ $(window).load(function() {
 
 Deps.autorun(function() {
     if (Meteor.userId()) {
-        appVars.Subs.teams = clientFunctions.safeSubscribe('teams');
-        appVars.Subs.userData = clientFunctions.safeSubscribe('userData');
-        appVars.Subs.events = clientFunctions.safeSubscribe('events', appVars.Subs.postingsChoice.get(), appVars.Subs.postingsUser.get());
-        appVars.Subs.logging = clientFunctions.safeSubscribe('logging');
+        appVars.Subs.teams = Meteor.subscribe('teams');
+        appVars.Subs.userData = Meteor.subscribe('userData');
+        appVars.Subs.events = Meteor.subscribe('events', appVars.Subs.postingsChoice.get(), appVars.Subs.postingsUser.get());
+        appVars.Subs.logging = Meteor.subscribe('logging');
     }
 });

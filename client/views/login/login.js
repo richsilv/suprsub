@@ -22,12 +22,12 @@ Template.topbar.events({
         }
         Meteor.loginWithPassword($('#login-email').val(), $('#login-password').val(), function(err) {
           if (err) accountError.set(err.reason);
-          else Router.current().redirect('/home');
+          else Router.go('/home');
         });
     },
     'click #logout-button' : function() {
-        Meteor.logout();
-        Router.current().redirect('/');
+        Meteor.logout();    
+        Router.go('/login');
     },
     'click #delete-button' : function() {
         Meteor.call('removeCurrentUser');
@@ -166,8 +166,8 @@ Template.twitterGenderModal.events({
         $('#twitterGenderModal').modal('hide');
         Meteor.setTimeout(function() {
             Meteor.users.update(Meteor.userId(), {$set: {'profile.gender': $('#mfSubBox .checkbox input')[0].checked ? 1 : 0}, $unset: {'profile.confirmGender': ''}}, {}, function(err) {
-                Subs.events.stop();
-                Subs.events = Meteor.subscribe('events', Subs.postingsChoice.get(), Subs.postingsUser.get());
+                appVars.Subs.events.stop();
+                appVars.Subs.events = Meteor.subscribe('events', Subs.postingsChoice.get(), Subs.postingsUser.get());
             });
             Router.current().redirect('/home');
         }, 50);

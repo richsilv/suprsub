@@ -147,8 +147,8 @@ function leaveTeamFunction() {
     var newArray = _.without(Meteor.user().profile.team._ids, Router.current().route.currentTeamId.get()); 
     Meteor.users.update({_id: Meteor.userId()}, {$set: {'profile.team._ids': newArray}});
     Router.current().route.currentTeamId.set(newArray.length ? newArray[0] : null);
-    Subs.teams.stop();
-    Subs.teams = Meteor.subscribe('teams');
+    appVars.Subs.teams.stop();
+    appVars.Subs.teams = Meteor.subscribe('teams');
     // setTeamData();
   }
 }
@@ -456,7 +456,7 @@ Template.newVenueBox.events({
     if (locationName && locationAddress && !NewVenues.findOne({name: locationName, address: locationAddress})) {
       NewVenues.insert({name: locationName, address: locationAddress, user: Meteor.userId()});
       var newdiv = HTML.DIV({cls: "ui purple label"}, ["Your location has been added to the approval queue!"]);
-      UI.materialize(newdiv, $('#newVenueBox .ui.grid .column')[0]);
+      UI.materialize(newdiv, $('#newVenueBox .ui.grid .column')[0]); // TODO 
       Meteor.setTimeout(function() {tabChoices.setKey('newVenue', false);}, 2000);
     }
   }
@@ -617,7 +617,7 @@ function teamNameDropdownInit() {
 }
 
 function setTeamData(teamData) {
-  if (teamData || (Router.current().route.currentTeamId && Router.current().route.currentTeamId.get() && Subs.teams.ready())) {
+  if (teamData || (Router.current().route.currentTeamId && Router.current().route.currentTeamId.get() && appVars.Subs.teams.ready())) {
     teamData = teamData ? teamData : Teams.findOne(Router.current().route.currentTeamId.get());
     if (!teamData) return;
     $('#teamName').val(teamData.name);
@@ -714,8 +714,8 @@ function saveTeamData(event) {
         $push: {'profile.team._ids': newTeamId}
       }, function() {
         thisGlowCallback.apply(this);
-        Subs.teams.stop();
-        Subs.teams = Meteor.subscribe('teams');
+        appVars.Subs.teams.stop();
+        appVars.Subs.teams = Meteor.subscribe('teams');
         // Router._controllerDep.changed();
         setTeamData(teamProfile);
       });

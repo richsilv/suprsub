@@ -27,6 +27,7 @@ Template.sidebar.events({
 	},
     'click #logout-button' : function() {
         Meteor.logout();
+        Router.go('/login');
     }
 });
 
