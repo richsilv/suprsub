@@ -1,0 +1,24 @@
+{
+  "packages": {
+    "semantic-ui": {},
+    "moment": {},
+    "zurb-foundation": {},
+    "pikaday": {},
+    "impicker": {},
+    "Dropzonejs": {},
+    "fast-render": {},
+    "iron-router-tour": {},
+    "collection-hooks": {},
+    "moment-timezone": {},
+    "velocityjs": {},
+    "find-faster": {},
+    "modernizr": {},
+    "owl-carousel": {},
+    "stellar": {},
+    "jquery-transit": {
+      "path": "packages/meteor-jquery-transit"
+    },
+    "collection-helpers": {},
+    "collection2": {}
+  }
+}
