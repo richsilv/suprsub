@@ -14,4 +14,12 @@ Router.map(function () {
     Example:
       this.route('home', {path: '/'});
   */
+  this.route('home', {
+  	path: '/',
+  	controller: 'HomeController'
+  });
+  this.route('team', {
+  	path: '/team',
+  	controller: 'TeamController'
+  });
 });

@@ -9,7 +9,6 @@
       "impicker": {},
       "Dropzonejs": {},
       "fast-render": {},
-      "iron-router-tour": {},
       "collection-hooks": {},
       "moment-timezone": {},
       "velocityjs": {},
@@ -18,10 +17,16 @@
       "owl-carousel": {},
       "stellar": {},
       "jquery-transit": {
-        "path": "packages/meteor-jquery-transit"
+        "path": "../Packages/meteor-jquery-transit"
       },
       "collection-helpers": {},
-      "collection2": {}
+      "collection2": {},
+      "iron-router": {
+        "version": "0.8.2"
+      },
+      "semantic-ui-modal": {
+        "path": "../Packages/semantic-ui-modal"
+      }
     },
     "packages": {
       "semantic-ui": {
@@ -59,11 +64,6 @@
         "tag": "v1.0.0",
         "commit": "acbc04982025fe78cebb8865b5a04689741d4b0b"
       },
-      "iron-router-tour": {
-        "git": "https://github.com/richsilv/iron-router-tour.git",
-        "tag": "v0.1.4",
-        "commit": "37ae274781ad2656638c7d7fda0bde247fd0096b"
-      },
       "collection-hooks": {
         "git": "https://github.com/matb33/meteor-collection-hooks.git",
         "tag": "v0.7.2",
@@ -100,7 +100,7 @@
         "commit": "1ca2f68e0cca5967a6f88545cea12055c9fc2465"
       },
       "jquery-transit": {
-        "path": "packages/meteor-jquery-transit"
+        "path": "../Packages/meteor-jquery-transit"
       },
       "collection-helpers": {
         "git": "https://github.com/dburles/meteor-collection-helpers.git",
@@ -117,10 +117,8 @@
         "tag": "v0.8.2",
         "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
       },
-      "scss": {
-        "git": "https://github.com/fourseven/meteor-scss.git",
-        "tag": "v0.9.3",
-        "commit": "185f3b2787fb85e653f7b7bf603d1493ed14943d"
+      "semantic-ui-modal": {
+        "path": "../Packages/semantic-ui-modal"
       },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",

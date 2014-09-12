@@ -1,3 +1,223 @@
 <template name="Team">
-  client/views/team/team.html
+	<div id="main-background-image"></div>
+	<div class="row teamHeight">
+		<div class="medium-8 master columns">
+				{{> teamTopLevel}}
+		</div>
+		<div class="medium-8 master columns">
+				{{> teamSecondLevel}}		
+		</div>
+	</div>
+	<div class="gap row">
+		<div class="small-16 master columns">
+			{{> otherInfo}}
+		</div>
+	</div>
+	{{#if codeEntered}}
+		<!-- {{> codeModal}} -->
+	{{/if}}
 </template>
+
+	<template name="teamTopLevel">
+		<form class="ui form segment whitetranslucent teamForm">
+			<div class="small-10 columns">
+				{{> teamName}}
+			</div>
+			<div class="small-6 columns ui four buttons withLabel">
+				{{> teamButtons}}
+			</div>
+			<div class="small-16 columns ui content segment">
+				{{> teamSettings}}
+			</div>
+		</form>
+	</template>
+
+		<template name="teamName">
+			<div class="{{checkName}} field" id="teamNameHolder">
+				<label>Team/Game Name</label>
+				{{#if dropdownTeams}}
+				<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
+					<input type="hidden">
+					<div class="default text">Select Team</div>
+					<i class="dropdown icon"></i>
+					<div class="menu">
+						{{#each teams}}
+							{{> dropdownItem}}
+						{{/each}}
+					</div>
+				</div>
+				{{else}}
+				<div class="ui input">
+					<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value="{{singleTeamName}}">
+				</div>
+				{{/if}}
+			</div>
+		</template>
+
+			<template name="dropdownItem">
+				<div class="item" data-value="{{_id}}">{{name}}</div>
+			</template>
+
+		<template name="teamButtons">
+			<div class="ui fluid attached icon button {{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
+			<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
+			<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
+			<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
+		</template>
+
+		<template name="teamSettings">
+			<form class="ui form whitetranslucent height225 teamForm">
+				<div class="row">
+				<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
+					<div class="field">
+						<label>Friendly / Competitive</label>
+						<div class="ui fluid selection flipbox" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+							<input type="hidden">
+							<div class="displayed text">Select</div>
+							<i class="right exchange icon"></i>
+							<div class="choices">
+								<div class="item" data-value="0">Friendly</div>
+								<div class="item" data-value="1">Competitive</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
+					<div class="field">
+						<label>Game Format</label>
+						<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
+							<input type="hidden" id="format">
+							<div class="default text">Select</div>
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<div class="item" data-value="5">5-a-side</div>
+								<div class="item" data-value="6">6-a-side</div>
+								<div class="item" data-value="7">7-a-side</div>
+								<div class="item" data-value="8">8-a-side</div>
+								<div class="item" data-value="9">9-a-side</div>
+								<div class="item" data-value="10">10-a-side</div>
+								<div class="item" data-value="11">11-a-side</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="{{homeCheck}} field">
+					<label>Home Ground</label>
+					<div class="ui input" id="homeGround">
+						<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">
+					</div>
+				</div>
+				<div class="fields">
+					<div class="small-7 columns field opacity" id="dayChoiceSection">
+						<label>Day</label>
+						<div class="ui selection dropdown">
+							<input type="hidden" id="day">
+							<div class="default text">Select</div>
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
+							</div>
+						</div>
+					</div>
+					<div class="small-9 columns field opacity" id="timeSection">
+						<label>Kick-off</label>
+						<div class="row">
+							<div class="small-9 columns" style="margin: 0;">
+								<div class="ui left icon input">
+									<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+									<i class="time icon"></i>
+								</div>
+							</div>
+							<div class="small-7 columns" style="margin: 0;">
+								<div class="ui input">
+									<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="fields">
+				</div>
+			</form>
+		</template>
+
+	<template name="teamSecondLevel">
+		<div class="ui form segment content whitetranslucent teamForm">
+			<div class="row">
+				{{> playerButtons}}
+			</div>
+			{{#if teamId}}
+			<div class="ui fluid green segment" id="memberRingerTable">
+				{{> playerTable}}
+			</div>	
+			{{/if}}
+		</div>
+	</template>
+
+		<template name="playerButtons">
+			<div class="columns">
+				<div class="ui four fluid icon buttons">
+					<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#if tabChoice 'membersRingers' true}} teal{{/if}}" id="toggleTeammates" title="Show all members of this team">
+						<i class="users icon"></i>
+					</div>
+					<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}{{#unless tabChoice 'membersRingers' true}} teal{{/unless}}" id="toggleRingers" title="Show all preferred SuprSubs for this team">
+						<i class="unordered list icon"></i>
+					</div>
+					<div class="ui icon button attached withLabel{{#unless teamId}} disabled{{/unless}}" id="sendInvitation" title="Send an invitation for players to join your team as team members or preferred SuprSubs">
+						<i class="mail icon"></i>
+						<i class="right icon"></i>
+					</div>
+					<div class="ui icon button attached withLabel" id="joinTeam" title="Enter a code that you have been sent to join a friend's team or register as a SuprSub">
+						<i class="right icon"></i>
+						<i class="users icon"></i>
+					</div>
+				</div>
+			</div>
+		</template>
+
+		<template name="playerTable">
+			<table class="ui table">
+				<tr><th>{{tableHeader}}</th></tr>
+				{{#each tableInfo}}
+				<tr><td>{{this.profile.name}}</td></tr>
+				{{/each}}
+			</table>	
+		</template>
+
+	<template name="otherInfo">
+		<div class="ui segment content whitetranslucent" id="otherInfo">
+			<div class="row">
+				<div class="large-8 columns">
+					<form class="ui form segment content">
+						<div class="ui grid">
+							<div class="field fourteen wide column">
+								<label>Home Ground</label>
+								<div class="ui left labeled icon input">
+									<input type="text" placeholder="Type a description or address" id="homeGroundSearch" title="You can find a venue either using its name (e.g. Powerleague Wembley), or by typing an address or place and hitting the search icon">
+									<i class="globe icon"></i>
+								</div>
+							</div>
+							<div class="two wide column">
+								<div class="ui right attached button withLabel" id="mapSearchButton" title="Pan to this location">
+									<div class="content"><i class="search icon"></i></div>
+								</div>
+							</div>
+						</div>
+					</form>
+					<div id="matches"></div>
+					<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
+				</div>
+				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
+				<div class="large-8 master columns">
+					<!-- <div id="pitchMapContainerSmall">
+						{{#if tabChoices 'newVenue'}}
+						{{> newVenueBox}}
+						{{else}}
+						{{> pitchMapSmall}}
+						{{/if}}
+					</div> -->
+				</div>
+			</div>
+		</div>
+	</template>

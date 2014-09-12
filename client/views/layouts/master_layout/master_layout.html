@@ -1,3 +1,138 @@
 <template name="MasterLayout">
-  {{> yield}}
+	<div id="wrapper">
+		{{#unless smallScreen}}
+			{{> topbar}}
+		{{else}}
+			{{#if currentUser}}
+				{{> sidebar}}
+			{{/if}}
+			{{> miniTopbar}}
+		{{/unless}}
+		{{> yield}}
+	</div>
+</template>
+
+<template name="topbar">
+	<div class="ui darkgreen fixed inverted main menu" id="topbar">
+		<span class="item" href="{{pathFor 'home'}}">
+			<i class="suprsub icon"></i>
+		</span>
+		{{#if currentUser}}
+		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
+			<i class="home icon"></i> Home
+		</a>
+		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
+			<i class="user icon"></i> Player
+		</a>
+		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'teamDetails'}}">
+			<i class="users icon"></i> Team
+		</a>
+		<a class="{{#if option "/about"}}active {{/if}}item" href="{{pathFor 'about'}}">
+			<i class="book icon"></i> About
+		</a>
+		<a class="{{#if option "/settings"}}active {{/if}}item" href="{{pathFor 'settings'}}">
+			<i class="settings icon"></i> Settings
+		</a>
+		{{/if}}
+		<div id="toplogo-image-temp" style="display: none;">SuprSub</div>
+		<div class="right menu">
+			{{#if currentUser}}
+			<div class="svg item" id="socialItem">
+				<span><a target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Check+out+this+brilliant+new+footy+platform+-+you+can+sign+up+in+seconds!+@suprsub&url=http://suprsub.com" class="webicon twitter" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a></span>
+				<span><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></span>
+				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>
+			</div>
+  			<div class="item" id="logout-holder">
+    			<div class="ui button" id="logout-button">Log Out</div>
+  			</div>
+			{{else}}
+			{{#unless option "/"}}
+			<div class="item">
+				<div class="ui icon input">
+					<input type="email" placeholder="Email" id="login-email" name="email" autocomplete="on">
+					<i class="user link icon"></i>
+				</div>
+				</div>
+				<div class="item">
+				<div class="ui icon input">
+					<input type="password" placeholder="Password" id="login-password">
+					<i class="lock link icon"></i>
+				</div>
+			</div>
+			{{/unless}}
+  			<div class="item">
+    			<div class="ui button" id="login-button">Log In</div>
+  			</div>
+  			{{/if}}
+		</div>
+	</div>
+</template>
+
+<template name="miniTopbar">
+	<div class="ui darkgreen fixed inverted main menu" id="miniTopbar">
+		{{#if currentUser}}
+		<span class="item leftItem">
+			<i class="reorder icon"></i>
+			<i class="suprsub icon"></i>
+		</span>
+<!-- 		<div class="right small-5 columns item">
+  			<div class="item" id="logout-holder">
+    			<div class="ui tiny button" id="logout-button">Log Out</div>
+  			</div>
+  		</div> -->
+		{{else}}
+			<span class="left item">
+				<i class="suprsub icon"></i>
+			</span>
+			<span class="right menu">
+				<span class="item" id="phoneLogin">
+					{{#unless option "/"}}
+					<span class="">
+							<span class="ui icon input item">
+								<input type="email" placeholder="Email" id="login-email">
+								<i class="user link icon"></i>
+							</span>
+							<span class="ui icon input item">
+								<input type="password" placeholder="Password" id="login-password">
+								<i class="lock link icon"></i>
+							</span>
+					</span>
+					{{/unless}}
+					<span class="">
+			  			<span class="item">
+			    			<div class="ui tiny button" id="login-button">Log In</div>
+			  			</span>
+		  			</span>
+				</span>
+			</span>
+		{{/if}}
+	</div>
+</template>
+
+<template name="sidebar">
+	<div class="ui inverted darkgreen overlay thin sidebar menu" id="sidebar">
+		<div class="item" href="{{pathFor 'home'}}">
+			<i class="suprsub icon"></i>
+		</div><hr>
+		{{#if currentUser}}
+		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
+			<i class="home icon"></i> Home
+		</a>
+		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
+			<i class="user icon"></i> Player
+		</a>
+		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'teamDetails'}}">
+			<i class="users icon"></i> Team
+		</a>
+		<a class="{{#if option "/about"}}active {{/if}}item" href="{{pathFor 'about'}}">
+			<i class="book icon"></i> About
+		</a>
+		<a class="{{#if option "/settings"}}active {{/if}}item" href="{{pathFor 'settings'}}">
+			<i class="settings icon"></i> Settings
+		</a>
+  		<div class="item" id="logout-holder">
+    			<span><div class="ui tiny button" id="logout-button">Log Out</div></span>
+  		</div>
+		{{/if}}
+	</div>
 </template>

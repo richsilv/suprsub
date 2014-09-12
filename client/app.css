@@ -1,3 +1,75 @@
 /*****************************************************************************/
 /* Global CSS Styles */
 /*****************************************************************************/
+@font-face {
+    font-family: 'Collegiate';
+	src: url('fonts/SF_Collegiate.woff') format('woff'), url('fonts/SF_Collegiate.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+
+}
+
+html {
+	font-size: 14px;
+	height: 100%;
+	-webkit-font-smoothing: antialiased;
+}
+
+body {
+	margin: 0;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	-webkit-transition: translate3d(0,0,0);
+}
+
+#wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
+	font-family: Arial, sans-serif;
+}
+
+#wrapper {
+	-webkit-transition: opacity 2s; /* For Safari 3.1 to 6.0 */
+    transition: opacity 2s;
+}
+
+#topbar {
+	top: 0;
+    -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    height: 45px;
+}
+
+#topbar .item {
+	height: 100%;
+}
+
+#topbar+div+div {
+	margin-top: 50px;
+}
+
+#miniTopbar+div+div {
+	margin-top: 60px;
+}
+
+.ui.input>[type="number"] {
+	line-height: 1.33;
+	height: auto;
+}
+
+.gap.row {
+	margin-top: 1em;
+}
+
+.ui.form .ui.input input {
+	padding-top: 0.8em;
+	padding-bottom: 0.8em;
+	height: 2.75em;
+	height: calc(2.6em + 2px);
+}
+
+.ui.buttons.withLabel, .ui.button.withLabel {
+	margin-top: 1.5em;
+	height: 2.75em;
+	height: calc(2.6em + 2px);
+
+}

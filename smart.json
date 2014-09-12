@@ -7,7 +7,6 @@
     "impicker": {},
     "Dropzonejs": {},
     "fast-render": {},
-    "iron-router-tour": {},
     "collection-hooks": {},
     "moment-timezone": {},
     "velocityjs": {},
@@ -16,9 +15,15 @@
     "owl-carousel": {},
     "stellar": {},
     "jquery-transit": {
-      "path": "packages/meteor-jquery-transit"
+      "path": "../Packages/meteor-jquery-transit"
     },
     "collection-helpers": {},
-    "collection2": {}
+    "collection2": {},
+    "iron-router": {
+      "version": "0.8.2"
+    },
+    "semantic-ui-modal": {
+        "path": "/home/richard/Meteor/Packages/semantic-ui-modal"
+    }
   }
 }

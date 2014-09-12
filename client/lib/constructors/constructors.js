@@ -38,3 +38,60 @@ suprsubDep.prototype.setKey = function(key, newValue) {
     }
     return this.value[key];
 };
+
+
+
+function monitorRenders() {
+
+    var _this = this;
+    
+    this.waitList = {};
+
+    _.each(Object.keys(Template), function(t) {
+
+        var template = Template[t];
+
+        if (template instanceof Blaze.Template) {
+
+            var oldCreated = template.created,
+                oldRendered = template.rendered,
+                counter = 0,
+                newId = Random.id();
+
+            template.created = function () {
+                console.log("added id " + newId + " to waitList");
+                this.id = newId;
+                _this.waitList[newId] = this;
+                console.log("waitList is ", _this.waitList);
+                oldCreated && oldCreated.apply(this, arguments);
+            };
+            template.rendered = function() {
+                console.log("removed id " + this.id + " from waitList");
+                delete _this.waitList[this.id];
+                console.log("waitList is ", _this.waitList);            
+                oldRendered && oldRendered.apply(this, arguments);
+            }
+        }
+    });
+
+    this.unrendered = function() {
+        
+        var results = [];
+
+        _.each(Object.keys(Template), function(t) {
+
+            var template = Template[t];
+
+            console.log(template, template.id);
+
+            if (template instanceof Blaze.Template && _this.waitList.indexOf(template.id) > -1) results.push(template);
+
+        });
+
+        return results;        
+
+    }
+
+}
+
+templateMonitor = new monitorRenders();
