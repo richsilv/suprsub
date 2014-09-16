@@ -27,6 +27,10 @@ Template.Team.created = function () {
 };
 
 Template.Team.rendered = function () {
+
+  this.$('.ui.flipbox').flipbox();
+  this.$('.ui.dropdown').dropdown();
+
 };
 
 Template.Team.destroyed = function () {
