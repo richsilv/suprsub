@@ -1,8 +1,8 @@
 Client = {
 
 	subs: {
-		postingsChoice: new suprsubDep(''),
-		postingsUser: new suprsubDep(false)
+		postingsChoice: new SuprSubDep(''),
+		postingsUser: new SuprSubDep(false)
 	}
 
 };

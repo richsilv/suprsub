@@ -39,15 +39,6 @@ Template.topbar.events({
 
     if (event.keyCode ===  13 || event.type === 'click') {
 
-      // Client.remote.call('login', {
-      //   password: _this.password.get(),
-      //   user: {
-      //     email: _this.email.get()
-      //   }
-      // }, function(err, res) {
-      //   console.log(err, res);
-      // });
-
       Meteor.loginWithPassword(_this.email.get(), _this.password.get(), function(err) {
         console.log(err);
         return false;

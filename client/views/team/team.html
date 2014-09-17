@@ -23,7 +23,7 @@
 			<div class="small-10 columns">
 				{{> teamName}}
 			</div>
-			<div class="small-6 columns ui four buttons withLabel">
+			<div class="small-6 columns">
 				{{> teamButtons}}
 			</div>
 			<div class="small-16 columns ui content segment">
@@ -35,7 +35,11 @@
 		<template name="teamName">
 			<div class="{{checkName}} field" id="teamNameHolder">
 				<label>Team/Game Name</label>
-				{{#if dropdownTeams}}
+				{{#unless teamDropdown}}
+				<div class="ui input">
+					<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value={{teamName}}>
+				</div>
+				{{else}}
 				<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
 					<input type="hidden">
 					<div class="default text">Select Team</div>
@@ -46,11 +50,7 @@
 						{{/each}}
 					</div>
 				</div>
-				{{else}}
-				<div class="ui input">
-					<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value="{{singleTeamName}}">
-				</div>
-				{{/if}}
+				{{/unless}}
 			</div>
 		</template>
 
@@ -59,10 +59,16 @@
 			</template>
 
 		<template name="teamButtons">
-			<div class="ui fluid attached icon button {{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
-			<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
-			<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
-			<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
+			{{#unless newTeam}}
+				<div class="ui four buttons withLabel">
+					<div class="ui fluid attached icon button {{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
+					<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
+					<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
+					<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
+				</div>
+			{{else}}
+				<div class="ui fluid attached icon button withLabel {{#unless noErrors}} disabled{{/unless}}" id="saveTeam" title="Save as new team"><i class="save icon"></i></div>
+			{{/unless}}
 		</template>
 
 		<template name="teamSettings">
@@ -125,13 +131,13 @@
 						<div class="row">
 							<div class="small-9 columns" style="margin: 0;">
 								<div class="ui left icon input">
-									<input id="timePickerHour" type="number" value="19" min="0" max="23" step="1" class="input-small">
+									<input id="timePickerHour" type="number" value={{hour}} min="0" max="23" step="1" class="input-small">
 									<i class="time icon"></i>
 								</div>
 							</div>
 							<div class="small-7 columns" style="margin: 0;">
 								<div class="ui input">
-									<input id="timePickerMinute" type="number" value="00" min="00" max="59" step="5" class="input-small">
+									<input id="timePickerMinute" type="number" value={{minute}} min="00" max="59" step="5" class="input-small">
 								</div>
 							</div>
 						</div>
