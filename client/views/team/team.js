@@ -1,15 +1,29 @@
 /*****************************************************************************/
 /* Team: Event Handlers and Helpers */
 /*****************************************************************************/
-Template.teamName.events({
+Template.teamTopLevel.events({
 
   'keyup #teamName': function(event) {
     formData.currentTeam.setKey('name', event.currentTarget.value)
+  },
+
+  'change #timePickerHour': function(event) {
+    var newTime = formData.currentTeam.getKey('time');
+    newTime.setHours(event.currentTarget.valueAsNumber);
+    event.currentTarget.value = App.padZeros(event.currentTarget.value, 2);
+    formData.currentTeam.setKey('time', newTime);
+  },
+
+  'change #timePickerMinute': function(event) {
+    var newTime = formData.currentTeam.getKey('time');
+    newTime.setMinutes(event.currentTarget.valueAsNumber);
+    event.currentTarget.value = App.padZeros(event.currentTarget.value, 2);
+    formData.currentTeam.setKey('time', newTime);
   }
 
 });
 
-Template.teamName.helpers({
+Template.teamTopLevel.helpers({
 
   teamDropdown: function() {
     return !formData.teamInput.get();
@@ -21,60 +35,28 @@ Template.teamName.helpers({
 
   teams: function() {
     return formData.teamsArray.get();
-  }
-
-});
-
-Template.teamSettings.events({
-  /*
-   * Example: 
-   *  'click .selector': function (e, tmpl) {
-   *
-   *  }
-   */
-
-  'change #timePickerHour': function(event) {
-    var newTime = formData.currentTeam.getKey('time');
-    newTime.setHours(event.currentTarget.valueAsNumber);
-    formData.currentTeam.setKey('time', newTime);
   },
 
-  'change #timePickerMinute': function(event) {
-    var newTime = formData.currentTeam.getKey('time');
-    newTime.setMinutes(event.currentTarget.valueAsNumber);
-    formData.currentTeam.setKey('time', newTime);
-  }
+  hour: function() {
+    var team = formData.currentTeam.get();  
+    return team && App.padZeros(team.time.getHours(), 2);
+  },
 
-});
-
-Template.teamSettings.helpers({
-  /*
-   * Example: 
-   *  items: function () {
-   *    return Items.find();
-   *  }
-   */
-
-   hour: function() {
-
-      var team = formData.currentTeam.get();  
-      return team && App.padZeros(team.time.getHours(), 2);
-
-   },
-
-   minute: function() {
-
-      var team = formData.currentTeam.get();
-      return team && App.padZeros(team.time.getMinutes(), 2);
-
-   }
-
-});
-
-Template.teamButtons.helpers({
+  minute: function() {
+    var team = formData.currentTeam.get();
+    return team && App.padZeros(team.time.getMinutes(), 2);
+  },
 
   newTeam: function() {
-    return formData.currentTeam.get().newTeam;
+    return !formData.currentTeam.get()._id;
+  },
+
+  formValid: function() {
+    return !formData.currentTeam.getKey('invalid').length;
+  },
+
+  invalid: function(field) {
+    return (formData.showErrors.get() && formData.currentTeam.get().invalid.indexOf(field) > -1) ? 'error' : ''; 
   }
 
 });
@@ -156,7 +138,8 @@ Meteor.startup(function() {
     teamsArray: new SuprSubDep(),
     currentTeam: defaultTeam(),
     teamIndex: new SuprSubDep(),
-    teamInput: new SuprSubDep()
+    teamInput: new SuprSubDep(),
+    showErrors: new SuprSubDep(false)
   }
 
   Tracker.autorun(function(c) {
@@ -173,6 +156,19 @@ Meteor.startup(function() {
     }
   });
 
+  Tracker.autorun(function(c) {
+
+    var team = formData.currentTeam.get(),
+        invalid = [],
+        nameMatch = /[A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
+
+    if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
+    if (!team.format) invalid.push('format');
+
+    formData.currentTeam.value.invalid = invalid;
+
+  })
+
 });
 
 function defaultTeam() {
@@ -180,9 +176,9 @@ function defaultTeam() {
     time: new Date(0, 0, 1, 19, 0, 0),
     name: '',
     homeGround: '',
-    format: '5',
+    format: '',
     ringerCode: Random.id(),
     competitive: '0',
-    newTeam: true
+    invalid: ['name', 'homeGround', 'format']
   });
 }

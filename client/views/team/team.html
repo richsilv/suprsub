@@ -21,131 +21,119 @@
 	<template name="teamTopLevel">
 		<form class="ui form segment whitetranslucent teamForm">
 			<div class="small-10 columns">
-				{{> teamName}}
+				<div class="{{invalid 'name'}} field" id="teamNameHolder">
+					<label>Team/Game Name</label>
+					{{#unless teamDropdown}}
+					<div class="ui input">
+						<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value={{teamName}}>
+					</div>
+					{{else}}
+					<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
+						<input type="hidden">
+						<div class="default text">Select Team</div>
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							{{#each teams}}
+								{{> dropdownItem}}
+							{{/each}}
+						</div>
+					</div>
+					{{/unless}}
+				</div>
 			</div>
 			<div class="small-6 columns">
-				{{> teamButtons}}
+				{{#unless newTeam}}
+					<div class="ui four buttons withLabel">
+						<div class="ui fluid attached icon button {{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
+						<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
+						<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
+						<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
+					</div>
+				{{else}}
+					<div class="ui fluid attached icon button withLabel {{#unless formValid}} disabled{{/unless}}" id="saveTeam" title="Save as new team"><i class="save icon"></i></div>
+				{{/unless}}
 			</div>
 			<div class="small-16 columns ui content segment">
-				{{> teamSettings}}
+				<form class="ui form whitetranslucent height225 teamForm">
+					<div class="row">
+					<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
+						<div class="field">
+							<label>Friendly / Competitive</label>
+							<div class="ui fluid selection flipbox" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+								<input type="hidden">
+								<div class="displayed text">Select</div>
+								<i class="right exchange icon"></i>
+								<div class="choices">
+									<div class="item" data-value="0">Friendly</div>
+									<div class="item" data-value="1">Competitive</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
+						<div class="{{invalid 'format'}} field">
+							<label>Game Format</label>
+							<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
+								<input type="hidden" id="format">
+								<div class="default text">Select</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									<div class="item" data-value="5">5-a-side</div>
+									<div class="item" data-value="6">6-a-side</div>
+									<div class="item" data-value="7">7-a-side</div>
+									<div class="item" data-value="8">8-a-side</div>
+									<div class="item" data-value="9">9-a-side</div>
+									<div class="item" data-value="10">10-a-side</div>
+									<div class="item" data-value="11">11-a-side</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+					<div class="{{invalid 'homeGround'}} field">
+						<label>Home Ground</label>
+						<div class="ui input" id="homeGround">
+							<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">
+						</div>
+					</div>
+					<div class="fields">
+						<div class="small-7 columns field opacity" id="dayChoiceSection">
+							<label>Day</label>
+							<div class="ui selection dropdown">
+								<input type="hidden" id="day">
+								<div class="default text">Select</div>
+								<i class="dropdown icon"></i>
+								<div class="menu">
+									{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
+								</div>
+							</div>
+						</div>
+						<div class="small-9 columns field opacity" id="timeSection">
+							<label>Kick-off</label>
+							<div class="row">
+								<div class="small-9 columns" style="margin: 0;">
+									<div class="ui left icon input">
+										<input id="timePickerHour" type="number" value={{hour}} min="0" max="23" step="1" class="input-small">
+										<i class="time icon"></i>
+									</div>
+								</div>
+								<div class="small-7 columns" style="margin: 0;">
+									<div class="ui input">
+										<input id="timePickerMinute" type="number" value={{minute}} min="00" max="59" step="5" class="input-small">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="fields">
+					</div>
+				</form>
 			</div>
 		</form>
 	</template>
 
-		<template name="teamName">
-			<div class="{{checkName}} field" id="teamNameHolder">
-				<label>Team/Game Name</label>
-				{{#unless teamDropdown}}
-				<div class="ui input">
-					<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value={{teamName}}>
-				</div>
-				{{else}}
-				<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
-					<input type="hidden">
-					<div class="default text">Select Team</div>
-					<i class="dropdown icon"></i>
-					<div class="menu">
-						{{#each teams}}
-							{{> dropdownItem}}
-						{{/each}}
-					</div>
-				</div>
-				{{/unless}}
-			</div>
-		</template>
-
-			<template name="dropdownItem">
-				<div class="item" data-value="{{_id}}">{{name}}</div>
-			</template>
-
-		<template name="teamButtons">
-			{{#unless newTeam}}
-				<div class="ui four buttons withLabel">
-					<div class="ui fluid attached icon button {{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
-					<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
-					<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
-					<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
-				</div>
-			{{else}}
-				<div class="ui fluid attached icon button withLabel {{#unless noErrors}} disabled{{/unless}}" id="saveTeam" title="Save as new team"><i class="save icon"></i></div>
-			{{/unless}}
-		</template>
-
-		<template name="teamSettings">
-			<form class="ui form whitetranslucent height225 teamForm">
-				<div class="row">
-				<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
-					<div class="field">
-						<label>Friendly / Competitive</label>
-						<div class="ui fluid selection flipbox" id="friendlyCompetitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
-							<input type="hidden">
-							<div class="displayed text">Select</div>
-							<i class="right exchange icon"></i>
-							<div class="choices">
-								<div class="item" data-value="0">Friendly</div>
-								<div class="item" data-value="1">Competitive</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
-					<div class="field">
-						<label>Game Format</label>
-						<div class="ui fluid selection dropdown" id="gameFormat" title="How many players will there be on each side (optional)?">
-							<input type="hidden" id="format">
-							<div class="default text">Select</div>
-							<i class="dropdown icon"></i>
-							<div class="menu">
-								<div class="item" data-value="5">5-a-side</div>
-								<div class="item" data-value="6">6-a-side</div>
-								<div class="item" data-value="7">7-a-side</div>
-								<div class="item" data-value="8">8-a-side</div>
-								<div class="item" data-value="9">9-a-side</div>
-								<div class="item" data-value="10">10-a-side</div>
-								<div class="item" data-value="11">11-a-side</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				</div>
-				<div class="{{homeCheck}} field">
-					<label>Home Ground</label>
-					<div class="ui input" id="homeGround">
-						<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">
-					</div>
-				</div>
-				<div class="fields">
-					<div class="small-7 columns field opacity" id="dayChoiceSection">
-						<label>Day</label>
-						<div class="ui selection dropdown">
-							<input type="hidden" id="day">
-							<div class="default text">Select</div>
-							<i class="dropdown icon"></i>
-							<div class="menu">
-								{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
-							</div>
-						</div>
-					</div>
-					<div class="small-9 columns field opacity" id="timeSection">
-						<label>Kick-off</label>
-						<div class="row">
-							<div class="small-9 columns" style="margin: 0;">
-								<div class="ui left icon input">
-									<input id="timePickerHour" type="number" value={{hour}} min="0" max="23" step="1" class="input-small">
-									<i class="time icon"></i>
-								</div>
-							</div>
-							<div class="small-7 columns" style="margin: 0;">
-								<div class="ui input">
-									<input id="timePickerMinute" type="number" value={{minute}} min="00" max="59" step="5" class="input-small">
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="fields">
-				</div>
-			</form>
+		<template name="dropdownItem">
+			<div class="item" data-value="{{_id}}">{{name}}</div>
 		</template>
 
 	<template name="teamSecondLevel">

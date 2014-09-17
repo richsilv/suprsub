@@ -13,6 +13,6 @@ dburles:collection-helpers
 richsilv:semantic-ui-modal
 richsilv:semantic-flipbox
 reactive-var
-iron:router@1.0.0-pre1
 reactive-dict
+iron:router
 
