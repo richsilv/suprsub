@@ -7,6 +7,10 @@ _.extend(App, {
 		if (typeof string !== 'string') string = string.toString();
 		while (string.length < len) string  = '0' + string;
 		return string;
+	},
+	subs: {
+		postingsChoice: new SuprSubDep(''),
+		postingsUser: new SuprSubDep(false)
 	}
 });
 

@@ -1,3 +1,5 @@
+Pitches = new PolledCollection('pitches');
+
 /*
  * Add query methods like this:
  *  Pitches.findPublic = function () {

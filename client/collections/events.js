@@ -1,7 +1,5 @@
-Events = new Meteor.Collection('events', Client.remote);
-
 Deps.autorun(function() {
-    Client.subs.events = Client.remote.subscribe('events', Client.subs.postingsChoice.get(), Client.subs.postingsUser.get());
+    App.subs.events = App.remote.subscribe('events', App.subs.postingsChoice.get(), App.subs.postingsUser.get());
 });
 
 /*

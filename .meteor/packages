@@ -15,4 +15,10 @@ richsilv:semantic-flipbox
 reactive-var
 reactive-dict
 iron:router
+mrt:leaflet
+mrt:leaflet-markercluster
+richsilv:polledcollection
+natestrauser:font-awesome
+richsilv:leaflet-awesome-markers
+andruschka:tinycon
 

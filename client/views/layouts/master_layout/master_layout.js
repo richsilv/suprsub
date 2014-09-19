@@ -63,3 +63,16 @@ Template.topbar.created = function() {
   this.password = new ReactiveVar();
 
 }
+
+// SYNC PITCHES ON LOGIN
+Meteor.startup(function() {
+  Tracker.autorun(function(c) {
+    if (!!Meteor.userId()) {
+      Pitches.sync({
+        syncCallback: function() {
+          c.stop();
+        }
+      });
+    }
+  });
+});

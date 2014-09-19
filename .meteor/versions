@@ -3,6 +3,8 @@ accounts-facebook@1.0.0
 accounts-oauth@1.1.0
 accounts-password@1.0.1
 accounts-twitter@1.0.0
+amplify@1.0.0
+andruschka:tinycon@0.0.1
 application-configuration@1.0.2
 autoupdate@1.1.0
 base64@1.0.0
@@ -44,6 +46,9 @@ minimongo@1.0.3
 mobile-status-bar@1.0.0
 mongo-livedata@1.0.4
 mongo@1.0.5
+mrt:leaflet-markercluster@0.0.2
+mrt:leaflet@0.3.8
+natestrauser:font-awesome@4.2.0
 npm-bcrypt@0.7.7
 oauth1@1.1.0
 oauth2@1.1.0
@@ -55,6 +60,8 @@ reactive-dict@1.0.2
 reactive-var@1.0.1
 reload@1.1.0
 retry@1.0.0
+richsilv:leaflet-awesome-markers@1.0.0
+richsilv:polledcollection@0.0.0
 richsilv:semantic-flipbox@1.0.4
 richsilv:semantic-ui-modal@1.0.1
 richsilv:semantic-ui@1.0.0

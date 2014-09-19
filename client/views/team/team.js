@@ -1,3 +1,5 @@
+var MARKER_DELAY = 1000;
+
 /*****************************************************************************/
 /* Team: Event Handlers and Helpers */
 /*****************************************************************************/
@@ -19,6 +21,15 @@ Template.teamTopLevel.events({
     newTime.setMinutes(event.currentTarget.valueAsNumber);
     event.currentTarget.value = App.padZeros(event.currentTarget.value, 2);
     formData.currentTeam.setKey('time', newTime);
+  },
+
+  'click #saveTeam': function() {
+    if (formData.currentTeam.get().invalid.length) {
+      formData.showErrors.set(true);
+      Meteor.setTimeout(function() {
+        formData.showErrors.set(false);
+      }, 1000);
+    }
   }
 
 });
@@ -60,6 +71,12 @@ Template.teamTopLevel.helpers({
   }
 
 });
+
+Template.pitchMapSmall.helpers({
+  pitchSync: function() {
+    return Pitches && Pitches.ready();
+  }
+})
 
 /*****************************************************************************/
 /* Team: Lifecycle Hooks */
@@ -129,6 +146,40 @@ Template.Team.destroyed = function () {
 
 };
 
+Template.pitchMapSmall.rendered = function() {
+
+  var _this = this;
+
+  // DATA-BINDING AND MARKER UPDATE
+  this.autorun(function(c) {
+    var newTimer = new Date().getTime(),
+        mapDetails;
+
+    if (c.firstRun) {
+      _this.mapDetails = new SuprSubDep({
+        mapCenter: L.latLng(51.5073509, -0.12775829999998223),
+        mapZoom: 11
+      });
+    }
+
+    mapDetails = _this.mapDetails.get();
+
+    if (!_this.timer || _this.timer + MARKER_DELAY < newTimer) {
+      _this.timer = newTimer;
+    }
+  });
+
+  // PASS OBJECT RATHER THAN GET() SO THAT OBJECT REF CAN BE USED BY MAP CALLBACKS ATTACHED BY mapRender
+  mapRender(this.mapDetails);
+
+};
+
+Template.pitchMapSmall.destroyed = function() {
+
+  map.remove();
+
+};
+
 /*****************************************************************************/
 /* Team: Data Binding */
 /*****************************************************************************/
@@ -164,6 +215,7 @@ Meteor.startup(function() {
 
     if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
     if (!team.format) invalid.push('format');
+    if (!team.homeGround) invalid.push('homeGround');
 
     formData.currentTeam.value.invalid = invalid;
 
@@ -182,3 +234,46 @@ function defaultTeam() {
     invalid: ['name', 'homeGround', 'format']
   });
 }
+
+mapRender = function(mapDetails) {
+  var query,
+      OpenStreetMap_HOT = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
+        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
+      }),
+      mapCenter = mapDetails.value.mapCenter,
+      mapZoom = mapDetails.value.mapZoom;
+
+  L.Icon.Default.imagePath = 'packages/leaflet/images';
+  window.map = L.map('map', {
+      doubleClickZoom: false
+  }).setView(mapCenter, mapZoom);
+  OpenStreetMap_HOT.addTo(window.map);
+
+  // ATTACH CALLBACKS
+
+  map.on('moveend', function(e) {
+    mapDetails.setKey('mapCenter', map.getCenter());
+  });
+  map.on('zoomend', function(e) {
+    mapDetails.setKey('mapZoom', map.getZoom());
+  });
+
+  // ADD MARKERS WHEN PITCHES ARE READY
+
+  Tracker.autorun(function(comp) {
+    if (Pitches && Pitches.ready()) {
+
+      var redMarker = L.AwesomeMarkers.icon({
+            icon: 'coffee',
+            markerColor: 'red'
+          }),
+          markers = new L.MarkerClusterGroup({maxClusterRadius: 30});
+
+      Pitches.find().forEach(function(p) { markers.addLayer(new L.Marker(p.location, {icon: redMarker}));})
+      map.addLayer(markers);
+
+      comp.stop();
+    }
+  });
+
+};

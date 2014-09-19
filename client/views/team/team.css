@@ -1,3 +1,48 @@
 /*****************************************************************************/
 /* Team: Style */
 /*****************************************************************************/
+#mapContainer {
+    position: relative;
+    width: 100%
+}
+
+#mapContainer::before {
+    content: "";
+    display: block;
+    padding-top: 70% /* THIS CONTROLS THE MAPS ASPECT RATIO = HEIGHT / WIDTH (and yes, I know thats poor grammar but I cant use apostrophes in a comment) */
+}
+
+#mapHolder {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0
+}
+
+#map {
+	height: 100%;
+}
+
+#mapCover {
+	background-color: rgba(0, 0, 0, 0.6);
+	font-size: 2em;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 0px;
+	display: table;
+	transition-property: opacity, z-index;
+	transition-duration: 1s, 0.1s;
+	transition-delay: 0s, 1s;
+}
+
+#mapCover>div {
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+	color: whitesmoke;
+	text-shadow: 0 0 1px whitesmoke;
+}
+
+#mapCover.hide {
+	opacity: 0;
+	z-index: -50;
+}
