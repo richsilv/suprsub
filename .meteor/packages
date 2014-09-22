@@ -10,7 +10,6 @@ accounts-password
 accounts-facebook
 accounts-twitter
 dburles:collection-helpers
-richsilv:semantic-ui-modal
 richsilv:semantic-flipbox
 reactive-var
 reactive-dict
@@ -22,3 +21,5 @@ natestrauser:font-awesome
 richsilv:leaflet-awesome-markers
 andruschka:tinycon
 fourseven:scss
+richsilv:semantic-ui-sass
+

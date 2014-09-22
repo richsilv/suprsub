@@ -265,7 +265,8 @@ mapRender = function(mapDetails) {
 
       var redMarker = L.AwesomeMarkers.icon({
             icon: 'soccer-ball-o',
-            markerColor: 'red',
+            markerColor: 'darkgreen',
+            iconColor: 'rgba(255. 255. 255. 0.85)',
             prefix: 'fa'
           }),
           markers = new L.MarkerClusterGroup({maxClusterRadius: 40});

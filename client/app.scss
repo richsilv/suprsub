@@ -1,6 +1,25 @@
 /*****************************************************************************/
 /* Global CSS Styles */
 /*****************************************************************************/
+
+// GLOBAL SCSS
+
+$suprsub-green: hsl(120, 75%, 43%);
+$white-translucent: rgba(255, 255, 255, 0.85) !important;
+$background-color: rgb(148, 153, 148);
+$rem-base: 14px;
+$base-font-size: $rem-base;
+$base-line-height: 150%;
+$row-width: 72.5em;
+$total-columns: 16;
+
+// TOPBAR SCSS
+$topbar-bg-color: $suprsub-green;
+$topbar-bg: $topbar-bg-color;
+
+@import "packages/richsilv:semantic-ui-sass/assets/stylesheets/semantic-ui";
+@import "./third-party/foundation-scss/foundation";
+
 @font-face {
     font-family: 'Collegiate';
 	src: url('fonts/SF_Collegiate.woff') format('woff'), url('fonts/SF_Collegiate.ttf') format('truetype');
@@ -20,6 +39,7 @@ body {
 	height: 100%;
 	-webkit-backface-visibility: hidden;
 	-webkit-transition: translate3d(0,0,0);
+    background-color: $background-color;
 }
 
 #wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
@@ -60,6 +80,10 @@ body {
 	margin-top: 1em;
 }
 
+.ui.whitetranslucent {
+	background-color: $white-translucent
+}
+
 .ui.form .ui.input input {
 	padding-top: 0.8em;
 	padding-bottom: 0.8em;
@@ -71,7 +95,4 @@ body {
 	margin-top: 1.5em;
 	height: 2.75em;
 	height: calc(2.6em + 2px);
-
 }
-
-@import "./third-party/foundation-scss/foundation";
