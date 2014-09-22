@@ -264,10 +264,11 @@ mapRender = function(mapDetails) {
     if (Pitches && Pitches.ready()) {
 
       var redMarker = L.AwesomeMarkers.icon({
-            icon: 'coffee',
-            markerColor: 'red'
+            icon: 'soccer-ball-o',
+            markerColor: 'red',
+            prefix: 'fa'
           }),
-          markers = new L.MarkerClusterGroup({maxClusterRadius: 30});
+          markers = new L.MarkerClusterGroup({maxClusterRadius: 40});
 
       Pitches.find().forEach(function(p) { markers.addLayer(new L.Marker(p.location, {icon: redMarker}));})
       map.addLayer(markers);
