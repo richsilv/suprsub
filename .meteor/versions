@@ -47,6 +47,7 @@ minimongo@1.0.3
 mobile-status-bar@1.0.0
 mongo-livedata@1.0.4
 mongo@1.0.5
+mrt:leaflet-awesome-markers@0.0.3
 mrt:leaflet-markercluster@0.0.2
 mrt:leaflet@0.3.8
 npm-bcrypt@0.7.7
@@ -60,7 +61,6 @@ reactive-dict@1.0.2
 reactive-var@1.0.1
 reload@1.1.0
 retry@1.0.0
-richsilv:leaflet-awesome-markers@1.0.0
 richsilv:polledcollection@0.0.0
 richsilv:semantic-flipbox@1.0.4
 richsilv:semantic-ui-sass@1.0.0

@@ -17,7 +17,8 @@ iron:router
 mrt:leaflet
 mrt:leaflet-markercluster
 richsilv:polledcollection
-richsilv:leaflet-awesome-markers
 andruschka:tinycon
 fourseven:scss
 richsilv:semantic-ui-sass
+mrt:leaflet-awesome-markers
+
