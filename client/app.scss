@@ -42,6 +42,18 @@ body {
     background-color: $background-color;
 }
 
+// MAP MARKERS
+
+.awesome-marker-icon-suprsub-green {
+	background-image: url('images/suprsub-soft.png');
+}
+
+.awesome-marker>i.icon {
+	margin: 10px 0 0 0;
+	font-size: 1.25em;
+	opacity: 1;
+}
+
 #wrapper *:not(i):not(.suprsubFont):not(.suprsubHeader) {
 	font-family: Arial, sans-serif;
 }

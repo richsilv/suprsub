@@ -1,5 +1,13 @@
 var MARKER_DELAY = 1000;
 
+var formData = {
+  teamsArray: new SuprSubDep(),
+  currentTeam: defaultTeam(),
+  teamIndex: new SuprSubDep(),
+  teamInput: new SuprSubDep(),
+  showErrors: new SuprSubDep(false)
+};
+
 /*****************************************************************************/
 /* Team: Event Handlers and Helpers */
 /*****************************************************************************/
@@ -74,7 +82,7 @@ Template.teamTopLevel.helpers({
 
 Template.pitchMapSmall.helpers({
   pitchSync: function() {
-    return Pitches && Pitches.ready();
+    return Pitches && Pitches.find().count() > 100;
   }
 })
 
@@ -166,6 +174,7 @@ Template.pitchMapSmall.rendered = function() {
 
     if (!_this.timer || _this.timer + MARKER_DELAY < newTimer) {
       _this.timer = newTimer;
+      map && map.updateMarkers && map.updateMarkers();
     }
   });
 
@@ -185,13 +194,6 @@ Template.pitchMapSmall.destroyed = function() {
 /*****************************************************************************/
 
 Meteor.startup(function() {
-  /*var*/ formData = {
-    teamsArray: new SuprSubDep(),
-    currentTeam: defaultTeam(),
-    teamIndex: new SuprSubDep(),
-    teamInput: new SuprSubDep(),
-    showErrors: new SuprSubDep(false)
-  }
 
   Tracker.autorun(function(c) {
     var user = Meteor.user();
@@ -237,11 +239,25 @@ function defaultTeam() {
 
 mapRender = function(mapDetails) {
   var query,
+
       OpenStreetMap_HOT = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
         attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
       }),
+
       mapCenter = mapDetails.value.mapCenter,
-      mapZoom = mapDetails.value.mapZoom;
+
+      mapZoom = mapDetails.value.mapZoom,
+
+/*      pitchIcon = L.divIcon({
+        className: 'marker-icon suprsub-green',
+        html: '<i class="football"></i>',
+        iconSize: 40
+      });*/
+      pitchIcon = L.AwesomeMarkers.icon({
+        icon: 'football',
+        markerColor: 'suprsub-green',
+        prefix: 'icon'
+      });
 
   L.Icon.Default.imagePath = 'packages/leaflet/images';
   window.map = L.map('map', {
@@ -257,23 +273,27 @@ mapRender = function(mapDetails) {
   map.on('zoomend', function(e) {
     mapDetails.setKey('mapZoom', map.getZoom());
   });
+  map.markers = new L.MarkerClusterGroup({
+    maxClusterRadius: 40,
+    showCoverageOnHover: false
+  });
+  map.updateMarkers = function() {
+    map.markers.clearLayers();
+    map.markers.addLayers(_.map(Pitches.withinBounds(map.getBounds()), function(pitch) {
+      return new L.Marker(pitch.location, {
+        icon: pitchIcon,
+        title: pitch.prettyLocation,
+        riseOnHover: true
+      });
+    }));    
+  };
+  map.addLayer(map.markers);
+  map.updateMarkers();
 
-  // ADD MARKERS WHEN PITCHES ARE READY
-
+  // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
     if (Pitches && Pitches.ready()) {
-
-      var redMarker = L.AwesomeMarkers.icon({
-            icon: 'soccer-ball-o',
-            markerColor: 'darkgreen',
-            iconColor: 'rgba(255. 255. 255. 0.85)',
-            prefix: 'fa'
-          }),
-          markers = new L.MarkerClusterGroup({maxClusterRadius: 40});
-
-      Pitches.find().forEach(function(p) { markers.addLayer(new L.Marker(p.location, {icon: redMarker}));})
-      map.addLayer(markers);
-
+      map.updateMarkers();
       comp.stop();
     }
   });
