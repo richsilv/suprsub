@@ -38,9 +38,6 @@
 	width: 100%;
 	top: 0px;
 	display: table;
-	transition-property: opacity, z-index;
-	transition-duration: 1s, 0.1s;
-	transition-delay: 0s, 0s;
 }
 
 #mapCover>div {
@@ -49,9 +46,4 @@
 	vertical-align: middle;
 	color: whitesmoke;
 	text-shadow: 0 0 1px whitesmoke;
-}
-
-#mapCover.hide {
-	opacity: 0;
-	z-index: -50;
 }

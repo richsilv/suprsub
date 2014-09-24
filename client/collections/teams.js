@@ -1,6 +1,6 @@
 Deps.autorun(function() {
     if (Meteor.userId()) {
-        App.subs.teams = App.remote.subscribe('teams');
+        App.subs.teams = Meteor.subscribe('teams');
     }
 });
 

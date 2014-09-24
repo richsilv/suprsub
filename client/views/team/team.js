@@ -7,7 +7,19 @@ var formData = {
   teamInput: new SuprSubDep(),
   pitchMatches: new SuprSubDep([]),
   showErrors: new SuprSubDep(false)
-};
+},
+
+  pitchIcon = L.AwesomeMarkers.icon({
+    icon: 'football',
+    markerColor: 'suprsub-green',
+    prefix: 'icon'
+  }),
+
+  pitchIconSpinning = L.AwesomeMarkers.icon({
+    icon: 'football-spinning',
+    markerColor: 'suprsub-green',
+    prefix: 'icon'
+  });
 
 /*****************************************************************************/
 /* Team: Event Handlers and Helpers */
@@ -38,6 +50,11 @@ Template.teamTopLevel.events({
       Meteor.setTimeout(function() {
         formData.showErrors.set(false);
       }, 1000);
+    }
+
+    else {
+      var newId = Teams.insert(_.omit(formData.currentTeam.get(), 'invalid'));
+      Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newId}});
     }
   }
 
@@ -229,7 +246,6 @@ Template.pitchMapSmall.created = function() {
 
     if (!_this.timer || _this.timer + MARKER_DELAY < newTimer) {
       _this.timer = newTimer;
-      window.map && map.updateMarkers && map.updateMarkers();
     }
   });
 
@@ -239,6 +255,10 @@ Template.pitchMapSmall.rendered = function() {
 
   // PASS OBJECT RATHER THAN GET() SO THAT OBJECT REF CAN BE USED BY MAP CALLBACKS ATTACHED BY mapRender
   mapRender(this.mapDetails);
+  map.locate();
+  map.on('locationfound', function(data) {
+    map.panTo(data.latlng);
+  });
 
 };
 
@@ -254,6 +274,7 @@ Template.pitchMapSmall.destroyed = function() {
 
 Meteor.startup(function() {
 
+  // KEEP TEAM LIST UP TO DATE
   Tracker.autorun(function(c) {
     var user = Meteor.user();
 
@@ -268,11 +289,22 @@ Meteor.startup(function() {
     }
   });
 
+  //SYNCHRONISE CURRENT TEAM
+
+  Tracker.autorun(function(c) {
+    var currentTeam = formData.currentTeam.get();
+
+    if (currentTeam.id) {
+      Teams.update(currentTeam._id, {$set: _.omit(currentTeam, 'invalid')});
+    }
+  })
+
+  // VALIDATE FORM
   Tracker.autorun(function(c) {
 
     var team = formData.currentTeam.get(),
         invalid = [],
-        nameMatch = /[A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
+        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
 
     if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
     if (!team.format) invalid.push('format');
@@ -280,7 +312,7 @@ Meteor.startup(function() {
 
     formData.currentTeam.value.invalid = invalid;
 
-  })
+  });
 
 });
 
@@ -292,6 +324,8 @@ function defaultTeam() {
     format: '',
     ringerCode: Random.id(),
     competitive: '0',
+    players: [Meteor.userId()],
+    ringers: [],
     invalid: ['name', 'homeGround', 'format']
   });
 }
@@ -299,6 +333,17 @@ function defaultTeam() {
 function setHomeGround(pitch) {
   if (typeof pitch === 'string') pitch = Pitches.findOne({_id: pitch});
   if (pitch) formData.currentTeam.setKey('homeGround', pitch);
+  map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
+  map.homeGroundMarker = _.find(map.markerArray, function(marker) {
+    return marker.options.pitchId === pitch._id;
+  });
+  map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
+  map.on('moveend', function() {
+    map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
+      map.homeGroundMarker.openPopup();      
+    });
+    map.off('moveend');
+  });
 }
 
 
@@ -313,13 +358,7 @@ mapRender = function(mapDetails) {
 
       mapCenter = mapDetails.value.mapCenter,
 
-      mapZoom = mapDetails.value.mapZoom,
-
-      pitchIcon = L.AwesomeMarkers.icon({
-        icon: 'football',
-        markerColor: 'suprsub-green',
-        prefix: 'icon'
-      });
+      mapZoom = mapDetails.value.mapZoom;
 
   L.Icon.Default.imagePath = 'packages/leaflet/images';
 
@@ -328,12 +367,18 @@ mapRender = function(mapDetails) {
   }).setView(mapCenter, mapZoom);
 
   tileLayer.addTo(map);
-/*  tileLayer.on('loading', function(e) {
-    mapDetails.setKey('isLoading', true);
+  tileLayer.on('loading', function(e) {
+    $('#mapCover').velocity({
+      opacity: 0.6,
+      'z-index': 0
+    });  
   });
   tileLayer.on('load', function(e) {
-    mapDetails.setKey('isLoading', false);
-  })*/
+    $('#mapCover').velocity({
+      opacity: 0,
+      'z-index': -50
+    })    
+  })
 
   // ATTACH CALLBACKS
 
@@ -349,15 +394,21 @@ mapRender = function(mapDetails) {
   });
 
   map.updateMarkers = function() {
-    map.markers.clearLayers();
-    map.markers.addLayers(_.map(Pitches.withinBounds(map.getBounds()), function(pitch) {
-      return new L.Marker(pitch.location, {
+    map.markerArray = _.map(Pitches.find().fetch(), function(pitch) {
+      var newMarker = new L.Marker(pitch.location, {
         icon: pitchIcon,
         title: pitch.prettyLocation,
         riseOnHover: true,
         pitchId: pitch._id
-      }).on('click', homeGroundWrapper);
-    }));    
+      }).on('click', homeGroundWrapper).bindPopup(pitch.prettyLocation);
+      if (pitch._id === formData.currentTeam.getKey('_id')) {
+        newMarker.options.icon = pitchIconSpinning;
+        map.homeGroundMarker = newMarker;
+      }
+      return newMarker;
+    });
+    map.markers.clearLayers();
+    map.markers.addLayers(map.markerArray);  
   };
   map.addLayer(map.markers);
   map.updateMarkers();
@@ -365,7 +416,7 @@ mapRender = function(mapDetails) {
   // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
     if (Pitches && Pitches.ready()) {
-      map.updateMarkers();
+      if (App.pitchSync.removed.length + App.pitchSync.inserted > 0) map.updateMarkers();
       comp.stop();
     }
   });

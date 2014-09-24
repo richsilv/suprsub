@@ -12,6 +12,36 @@
 
 }
 
+@-webkit-keyframes spinnerRotate
+{
+    from{-webkit-transform:rotate(0deg);}
+    to{-webkit-transform:rotate(360deg);}
+}
+@-moz-keyframes spinnerRotate
+{
+    from{-moz-transform:rotate(0deg);}
+    to{-moz-transform:rotate(360deg);}
+}
+@-ms-keyframes spinnerRotate
+{
+    from{-ms-transform:rotate(0deg);}
+    to{-ms-transform:rotate(360deg);}
+}
+@mixin spinning($duration) {
+    -webkit-animation-name: spinnerRotate;
+    -webkit-animation-duration: $duration;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: spinnerRotate;
+    -moz-animation-duration: $duration;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: spinnerRotate;
+    -ms-animation-duration: $duration;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+}
+
 [data-icon]:before {
   font-family: "suprsub-icons" !important;
   content: attr(data-icon);
@@ -46,4 +76,9 @@
 }
 .icon-male-symbol:before {
   content: "c";
+}
+
+.icon-football-spinning:before {
+  content: "a";
+  @include spinning(5s);
 }
