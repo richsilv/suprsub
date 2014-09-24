@@ -1,6 +1,15 @@
 /*****************************************************************************/
 /* Team: Style */
 /*****************************************************************************/
+
+#pitchMatches {
+	max-height: 8em;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* MAP ATTRIBUTES */
+
 #mapContainer {
     position: relative;
     width: 100%
@@ -31,7 +40,7 @@
 	display: table;
 	transition-property: opacity, z-index;
 	transition-duration: 1s, 0.1s;
-	transition-delay: 0s, 1s;
+	transition-delay: 0s, 0s;
 }
 
 #mapCover>div {

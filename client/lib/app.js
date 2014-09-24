@@ -2,16 +2,22 @@
 /* Client App Namespace  */
 /*****************************************************************************/
 _.extend(App, {
+
 	tabChoices: new SuprSubDep({playerTab: 'availability'}),
+
 	padZeros: function(string, len) {
 		if (typeof string !== 'string') string = string.toString();
 		while (string.length < len) string  = '0' + string;
 		return string;
 	},
+
 	subs: {
 		postingsChoice: new SuprSubDep(''),
 		postingsUser: new SuprSubDep(false)
-	}
+	},
+
+	mapSearchURI: 'http://nominatim.openstreetmap.org/search?'
+
 });
 
 App.helpers = {

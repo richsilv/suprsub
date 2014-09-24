@@ -93,7 +93,7 @@
 					<div class="{{invalid 'homeGround'}} field">
 						<label>Home Ground</label>
 						<div class="ui input" id="homeGround">
-							<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?">
+							<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?" value="{{homeGroundName}}">
 						</div>
 					</div>
 					<div class="fields">
@@ -199,7 +199,17 @@
 							</div>
 						</div>
 					</form>
-					<div id="matches"></div>
+					{{#if pitchMatches}}
+						<div class="ui segment">
+							<div id="pitchMatches" class="ui link list">
+								{{#each pitchMatches}}
+									<a class="item">
+										{{this.prettyLocation}}
+									</a>
+								{{/each}}
+							</div>
+						</div>
+					{{/if}}
 					<div class="mini purple ui button bottomRight" id="addVenue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 				</div>
 				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
@@ -220,10 +230,10 @@
 			<div id="mapHolder">
 				<div id="map">
 				</div>
-				<div id="mapCover" class="{{#if pitchSync}}hide{{/if}}">
+<!-- 				<div id="mapCover" class="{{#if pitchSync}}hide{{/if}}">
 					<div>
 					LOADING...
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</template>

@@ -5,6 +5,7 @@ var formData = {
   currentTeam: defaultTeam(),
   teamIndex: new SuprSubDep(),
   teamInput: new SuprSubDep(),
+  pitchMatches: new SuprSubDep([]),
   showErrors: new SuprSubDep(false)
 };
 
@@ -49,7 +50,7 @@ Template.teamTopLevel.helpers({
   },
 
   teamName: function() {
-    return formData.currentTeam.get().name;
+    return formData.currentTeam.getKey('name');
   },
 
   teams: function() {
@@ -57,17 +58,17 @@ Template.teamTopLevel.helpers({
   },
 
   hour: function() {
-    var team = formData.currentTeam.get();  
-    return team && App.padZeros(team.time.getHours(), 2);
+    var time = formData.currentTeam.getKey('time');  
+    return time && App.padZeros(time.getHours(), 2);
   },
 
   minute: function() {
-    var team = formData.currentTeam.get();
-    return team && App.padZeros(team.time.getMinutes(), 2);
+    var time = formData.currentTeam.getKey('time');
+    return time && App.padZeros(time.getMinutes(), 2);
   },
 
   newTeam: function() {
-    return !formData.currentTeam.get()._id;
+    return !formData.currentTeam.getKey('_id');
   },
 
   formValid: function() {
@@ -75,14 +76,67 @@ Template.teamTopLevel.helpers({
   },
 
   invalid: function(field) {
-    return (formData.showErrors.get() && formData.currentTeam.get().invalid.indexOf(field) > -1) ? 'error' : ''; 
+    return (formData.showErrors.get() && formData.currentTeam.getKey('invalid').indexOf(field) > -1) ? 'error' : ''; 
+  },
+
+  homeGroundName: function() {
+    return formData.currentTeam.getKey('homeGround').prettyLocation;
+  }
+
+});
+
+Template.otherInfo.helpers({
+
+  pitchMatches: function() {
+    return formData.pitchMatches.get();
+  } 
+
+});
+
+Template.otherInfo.events({
+
+  'keyup #homeGroundSearch': function(event) {
+    var searchString = event.currentTarget.value;
+    if (searchString.length > 3) {
+      formData.pitchMatches.set(Pitches.find({
+        $where: 'this.prettyLocation && this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1'
+      }, {
+        sort: {prettyLocation: 1}
+      }).fetch());
+    }
+    return false;
+  },
+
+  'click #mapSearchButton, submit': function(event, template) {
+    var params = {
+      q: template.$('#homeGroundSearch').val(),
+      format: 'json',
+      countrycode: 'gb',
+      limit:1
+    }
+    $.getJSON(App.mapSearchURI + $.param(params), function(data, res) {
+      var location = data && data.length && data[0];
+      if (res === 'success' && location) {
+        map.panTo(L.latLng(location.lat, location.lon));
+      }
+    });
+    return false;
+  },
+
+  'click #pitchMatches .item': function(event) {
+    setHomeGround(this);
+    map.setView(L.latLng(this.location), 14, {
+      animate: true,
+      pan: {duration: 2}
+    });
   }
 
 });
 
 Template.pitchMapSmall.helpers({
   pitchSync: function() {
-    return Pitches && Pitches.find().count() > 100;
+    _this = Template.instance();
+    return Pitches.find().count() > 100 && !_this.mapDetails.getKey('isLoading');
   }
 })
 
@@ -154,7 +208,7 @@ Template.Team.destroyed = function () {
 
 };
 
-Template.pitchMapSmall.rendered = function() {
+Template.pitchMapSmall.created = function() {
 
   var _this = this;
 
@@ -166,7 +220,8 @@ Template.pitchMapSmall.rendered = function() {
     if (c.firstRun) {
       _this.mapDetails = new SuprSubDep({
         mapCenter: L.latLng(51.5073509, -0.12775829999998223),
-        mapZoom: 11
+        mapZoom: 11,
+        isLoading: true
       });
     }
 
@@ -174,9 +229,13 @@ Template.pitchMapSmall.rendered = function() {
 
     if (!_this.timer || _this.timer + MARKER_DELAY < newTimer) {
       _this.timer = newTimer;
-      map && map.updateMarkers && map.updateMarkers();
+      window.map && map.updateMarkers && map.updateMarkers();
     }
   });
+
+};
+
+Template.pitchMapSmall.rendered = function() {
 
   // PASS OBJECT RATHER THAN GET() SO THAT OBJECT REF CAN BE USED BY MAP CALLBACKS ATTACHED BY mapRender
   mapRender(this.mapDetails);
@@ -217,7 +276,7 @@ Meteor.startup(function() {
 
     if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
     if (!team.format) invalid.push('format');
-    if (!team.homeGround) invalid.push('homeGround');
+    if ($.isEmptyObject(team.homeGround)) invalid.push('homeGround');
 
     formData.currentTeam.value.invalid = invalid;
 
@@ -229,7 +288,7 @@ function defaultTeam() {
   return new SuprSubDep({
     time: new Date(0, 0, 1, 19, 0, 0),
     name: '',
-    homeGround: '',
+    homeGround: {},
     format: '',
     ringerCode: Random.id(),
     competitive: '0',
@@ -237,10 +296,18 @@ function defaultTeam() {
   });
 }
 
-mapRender = function(mapDetails) {
-  var query,
+function setHomeGround(pitch) {
+  if (typeof pitch === 'string') pitch = Pitches.findOne({_id: pitch});
+  if (pitch) formData.currentTeam.setKey('homeGround', pitch);
+}
 
-      OpenStreetMap_HOT = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
+
+function homeGroundWrapper(event) {
+  setHomeGround(event.target.options.pitchId);
+}
+
+mapRender = function(mapDetails) {
+  var tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
         attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
       }),
 
@@ -248,11 +315,6 @@ mapRender = function(mapDetails) {
 
       mapZoom = mapDetails.value.mapZoom,
 
-/*      pitchIcon = L.divIcon({
-        className: 'marker-icon suprsub-green',
-        html: '<i class="football"></i>',
-        iconSize: 40
-      });*/
       pitchIcon = L.AwesomeMarkers.icon({
         icon: 'football',
         markerColor: 'suprsub-green',
@@ -260,10 +322,18 @@ mapRender = function(mapDetails) {
       });
 
   L.Icon.Default.imagePath = 'packages/leaflet/images';
+
   window.map = L.map('map', {
       doubleClickZoom: false
   }).setView(mapCenter, mapZoom);
-  OpenStreetMap_HOT.addTo(window.map);
+
+  tileLayer.addTo(map);
+/*  tileLayer.on('loading', function(e) {
+    mapDetails.setKey('isLoading', true);
+  });
+  tileLayer.on('load', function(e) {
+    mapDetails.setKey('isLoading', false);
+  })*/
 
   // ATTACH CALLBACKS
 
@@ -277,14 +347,16 @@ mapRender = function(mapDetails) {
     maxClusterRadius: 40,
     showCoverageOnHover: false
   });
+
   map.updateMarkers = function() {
     map.markers.clearLayers();
     map.markers.addLayers(_.map(Pitches.withinBounds(map.getBounds()), function(pitch) {
       return new L.Marker(pitch.location, {
         icon: pitchIcon,
         title: pitch.prettyLocation,
-        riseOnHover: true
-      });
+        riseOnHover: true,
+        pitchId: pitch._id
+      }).on('click', homeGroundWrapper);
     }));    
   };
   map.addLayer(map.markers);

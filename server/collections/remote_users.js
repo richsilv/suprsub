@@ -1,4 +1,18 @@
-RemoteUsers = new Meteor.Collection('remote_users');
+RemoteUsers = new Meteor.Collection('users', App.remote);
+
+// App.remote.subscribe('');
+
+RemoteUsers.find().observe({
+  added: function(doc) {
+    if (!Meteor.users.findOne(doc._id)) Meteor.users.insert(doc);
+  },
+  changed: function(newDoc, oldDoc) {
+    Meteor.users.update(oldDoc._id, {$set: newDoc});
+  },
+  removed: function(doc) {
+    Meteor.users.remove(doc._id);
+  }
+});
 
 /*
  * Add query methods like this:
