@@ -3,6 +3,8 @@ accounts-facebook@1.0.0
 accounts-oauth@1.1.0
 accounts-password@1.0.1
 accounts-twitter@1.0.0
+aldeed:collection2@2.1.0
+aldeed:simple-schema@1.0.3
 amplify@1.0.0
 andruschka:tinycon@0.0.1
 application-configuration@1.0.2
@@ -40,6 +42,7 @@ json@1.0.0
 livedata@1.0.9
 localstorage@1.0.0
 logging@1.0.3
+matb33:collection-hooks@0.7.6
 meteor-platform@1.1.0
 meteor@1.1.0
 minifiers@1.1.0

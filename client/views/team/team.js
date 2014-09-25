@@ -9,17 +9,30 @@ var formData = {
   showErrors: new SuprSubDep(false)
 },
 
-  pitchIcon = L.AwesomeMarkers.icon({
-    icon: 'football',
-    markerColor: 'suprsub-green',
-    prefix: 'icon'
-  }),
+pitchIcon = L.AwesomeMarkers.icon({
+  icon: 'football',
+  markerColor: 'suprsub-green',
+  prefix: 'icon'
+}),
 
-  pitchIconSpinning = L.AwesomeMarkers.icon({
-    icon: 'football-spinning',
-    markerColor: 'suprsub-green',
-    prefix: 'icon'
+pitchIconSpinning = L.AwesomeMarkers.icon({
+  icon: 'football-spinning',
+  markerColor: 'suprsub-green',
+  prefix: 'icon'
+}),
+
+disappearFunc = function(elements) {
+  elements.velocity({
+    opacity: 0,
+    'z-index': -50
+  })
+},
+appearFunc = function(elements) {
+  elements.velocity({
+    opacity: 0.6,
+    'z-index': 0
   });
+};
 
 /*****************************************************************************/
 /* Team: Event Handlers and Helpers */
@@ -155,7 +168,7 @@ Template.pitchMapSmall.helpers({
     _this = Template.instance();
     return Pitches.find().count() > 100 && !_this.mapDetails.getKey('isLoading');
   }
-})
+});
 
 /*****************************************************************************/
 /* Team: Lifecycle Hooks */
@@ -331,6 +344,10 @@ function defaultTeam() {
 }
 
 function setHomeGround(pitch) {
+  var readyDep = new SuprSubDep({
+    move: false,
+    tiles: false
+  });;
   if (typeof pitch === 'string') pitch = Pitches.findOne({_id: pitch});
   if (pitch) formData.currentTeam.setKey('homeGround', pitch);
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
@@ -338,11 +355,22 @@ function setHomeGround(pitch) {
     return marker.options.pitchId === pitch._id;
   });
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
-  map.on('moveend', function() {
-    map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
-      map.homeGroundMarker.openPopup();      
+  map.panTo(pitch.location);
+
+    map.on('moveend', function() {
+      readyDep.setKey('move', true);
+      map.off('moveend');
     });
-    map.off('moveend');
+    map.tileLayer.on('load', function() {
+      readyDep.setKey('tiles', true);
+      map.tileLayer.off('load');
+    });    
+
+  Tracker.autorun(function(comp) {
+    if (readyDep.getKey('move') && readyDep.getKey('tiles')) {
+      map.homeGroundMarker.openPopup();
+      comp.stop();
+    }
   });
 }
 
@@ -352,12 +380,7 @@ function homeGroundWrapper(event) {
 }
 
 mapRender = function(mapDetails) {
-  var tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
-        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
-      }),
-
-      mapCenter = mapDetails.value.mapCenter,
-
+  var mapCenter = mapDetails.value.mapCenter,
       mapZoom = mapDetails.value.mapZoom;
 
   L.Icon.Default.imagePath = 'packages/leaflet/images';
@@ -366,19 +389,12 @@ mapRender = function(mapDetails) {
       doubleClickZoom: false
   }).setView(mapCenter, mapZoom);
 
-  tileLayer.addTo(map);
-  tileLayer.on('loading', function(e) {
-    $('#mapCover').velocity({
-      opacity: 0.6,
-      'z-index': 0
-    });  
-  });
-  tileLayer.on('load', function(e) {
-    $('#mapCover').velocity({
-      opacity: 0,
-      'z-index': -50
-    })    
-  })
+  map.tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
+        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
+      });
+  map.tileLayer.addTo(map);
+  // map.tileLayer.on('loading', appearFunc.bind(this, $('#mapCover')));
+  // map.tileLayer.on('load', disappearFunc.bind(this, $('#mapCover')));
 
   // ATTACH CALLBACKS
 
@@ -394,7 +410,7 @@ mapRender = function(mapDetails) {
   });
 
   map.updateMarkers = function() {
-    map.markerArray = _.map(Pitches.find().fetch(), function(pitch) {
+    map.markerArray = _.map(Pitches.find({location: {$exists: true}}).fetch(), function(pitch) {
       var newMarker = new L.Marker(pitch.location, {
         icon: pitchIcon,
         title: pitch.prettyLocation,
