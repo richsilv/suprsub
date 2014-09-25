@@ -36,7 +36,8 @@ Schemas.Teams = new SimpleSchema({
 		maxCount: 50
 	},
 	competitive: {
-		type: Boolean,
+		type: Number,
+		allowedValues: [0, 1],
 		label: 'Friendly/Competitive'
 	}
 });

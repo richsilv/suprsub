@@ -1,10 +1,11 @@
 var MARKER_DELAY = 1000;
 
 var formData = {
-  teamsArray: new SuprSubDep(),
-  currentTeam: defaultTeam(),
+  teamsArray: new SuprSubDep([]),
+  currentTeam: defaultTeam({}),
   teamIndex: new SuprSubDep(),
   teamInput: new SuprSubDep(),
+  homeGround: new SuprSubDep({}),
   pitchMatches: new SuprSubDep([]),
   showErrors: new SuprSubDep(false)
 },
@@ -110,7 +111,7 @@ Template.teamTopLevel.helpers({
   },
 
   homeGroundName: function() {
-    return formData.currentTeam.getKey('homeGround').prettyLocation;
+    return formData.homeGround.getKey('prettyLocation');
   }
 
 });
@@ -188,7 +189,7 @@ Template.Team.rendered = function () {
 
   this.$('#friendlyCompetitive').flipbox({
     onChange: function(val) {
-      currentTeam.setKey('competitive', val);
+      currentTeam.setKey('competitive', parseInt(val, 10));
     }
   });
 
@@ -302,7 +303,7 @@ Meteor.startup(function() {
     }
   });
 
-  //SYNCHRONISE CURRENT TEAM
+  // SYNCHRONISE CURRENT TEAM
 
   Tracker.autorun(function(c) {
     var currentTeam = formData.currentTeam.get();
@@ -310,7 +311,13 @@ Meteor.startup(function() {
     if (currentTeam.id) {
       Teams.update(currentTeam._id, {$set: _.omit(currentTeam, 'invalid')});
     }
-  })
+  });
+
+  // UPDATE HOME GROUND
+
+  Tracker.autorun(function(c) {
+    formData.homeGround.set(Pitches.findOne(formData.currentTeam.getKey('homeGround')));
+  });
 
   // VALIDATE FORM
   Tracker.autorun(function(c) {
@@ -321,7 +328,7 @@ Meteor.startup(function() {
 
     if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
     if (!team.format) invalid.push('format');
-    if ($.isEmptyObject(team.homeGround)) invalid.push('homeGround');
+    if ($.isEmptyObject(formData.homeGround.get())) invalid.push('homeGround');
 
     formData.currentTeam.value.invalid = invalid;
 
@@ -333,10 +340,10 @@ function defaultTeam() {
   return new SuprSubDep({
     time: new Date(0, 0, 1, 19, 0, 0),
     name: '',
-    homeGround: {},
+    homeGround: '',
     format: '',
     ringerCode: Random.id(),
-    competitive: '0',
+    competitive: 0,
     players: [Meteor.userId()],
     ringers: [],
     invalid: ['name', 'homeGround', 'format']
@@ -349,7 +356,7 @@ function setHomeGround(pitch) {
     tiles: false
   });;
   if (typeof pitch === 'string') pitch = Pitches.findOne({_id: pitch});
-  if (pitch) formData.currentTeam.setKey('homeGround', pitch);
+  if (pitch) formData.currentTeam.setKey('homeGround', pitch._id);
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
   map.homeGroundMarker = _.find(map.markerArray, function(marker) {
     return marker.options.pitchId === pitch._id;
@@ -438,3 +445,7 @@ mapRender = function(mapDetails) {
   });
 
 };
+
+getFormData = function() {
+  return formData;
+}

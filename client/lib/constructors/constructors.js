@@ -29,7 +29,7 @@ SuprSubDep.prototype.set = function(newValue){
 
 SuprSubDep.prototype.getKey = function(key) {
     this.dep.depend();
-    if (key in this.value) return clone(this.value[key]);
+    if (this.value && key in this.value) return clone(this.value[key]);
     else return undefined;
 };
 
