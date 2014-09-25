@@ -2,8 +2,6 @@
 
 Teams.before.update(function(userId, doc, fieldNames, modifier) {
 
-	console.log(doc, modifier);
-
 });
 
 Meteor.users.before.update(function(userId, doc, fieldNames, modifier) {
@@ -28,18 +26,18 @@ Meteor.users.before.update(function(userId, doc, fieldNames, modifier) {
 							updater[op] = {
 								'players': userId
 							};
+							break;
 
 						case 'profile.team._ids_ringer':
 							updater[op] = {
 								'ringers': userId
 							}
+							break;
 
 						default:
 					}
 
-					console.log('Attempted update is:', id, updater);
-
-					if (id.length) {
+					if (id instanceof Array) {
 						Teams.update({_id: {$in: id}}, updater);
 					}
 
