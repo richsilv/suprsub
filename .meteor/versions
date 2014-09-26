@@ -67,6 +67,7 @@ retry@1.0.0
 richsilv:leaflet-awesome-markers@1.0.0
 richsilv:polledcollection@0.0.0
 richsilv:semantic-flipbox@1.0.4
+richsilv:semantic-ui-modal@1.0.2
 richsilv:semantic-ui-sass@1.0.0
 routepolicy@1.0.1
 service-configuration@1.0.1

@@ -2,7 +2,7 @@ var MARKER_DELAY = 1000;
 
 var formData = {
   teamsArray: new SuprSubDep([]),
-  currentTeam: defaultTeam({}),
+  currentTeam: new SuprSubDep(defaultTeam()),
   teamIndex: new SuprSubDep(),
   teamInput: new SuprSubDep(),
   homeGround: new SuprSubDep({}),
@@ -70,6 +70,30 @@ Template.teamTopLevel.events({
       var newId = Teams.insert(_.omit(formData.currentTeam.get(), 'invalid'));
       Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newId}});
     }
+  },
+
+  'click #setDefault': function() {
+
+  },
+
+  'click #addNewTeam': function() {
+
+  },
+
+  'click #leaveTeam': function() {
+
+  },
+
+  'click #deleteTeam': function() {
+
+    SemanticModal.confirmModal({
+      header: 'Are you sure?',
+      message: 'Deleting a team is permanent, and will remove it for <strong>all</strong> team members, not just you.',
+      callback: function() {
+        Teams.remove({_id: formData.currentTeam.getKey('_id')});
+      }
+    });
+
   }
 
 });
@@ -103,7 +127,8 @@ Template.teamTopLevel.helpers({
   },
 
   formValid: function() {
-    return !formData.currentTeam.getKey('invalid').length;
+    var invalid = formData.currentTeam.getKey('invalid');
+    return !invalid.length;
   },
 
   invalid: function(field) {
@@ -218,6 +243,8 @@ Template.Team.rendered = function () {
     if (format) {
       _this.$('#gameFormat').dropdown('set value', format);
       _this.$('#gameFormat').dropdown('set selected', format);
+    } else {
+      _this.$('#gameFormat').dropdown('restore defaults');
     }
   });
 
@@ -298,46 +325,50 @@ Meteor.startup(function() {
       formData.teamsArray.set(teams);
       if (!formData.teamIndex.get() || formData.teamIndex.get() >  teams.length -1) formData.teamIndex.set(0);
       if (teams.length) formData.currentTeam.set(teams[formData.teamIndex.get()]);
+      else formData.currentTeam.set(defaultTeam());
       if (teams.length < 2) formData.teamInput.set(true);
 
     }
-  });
 
-  // SYNCHRONISE CURRENT TEAM
+    // SYNCHRONISE CURRENT TEAM
 
-  Tracker.autorun(function(c) {
-    var currentTeam = formData.currentTeam.get();
+    Tracker.autorun(function(c) {
+      var currentTeam = formData.currentTeam.get();
 
-    if (currentTeam.id) {
-      Teams.update(currentTeam._id, {$set: _.omit(currentTeam, 'invalid')});
-    }
-  });
+      if (currentTeam.id) {
+        Teams.update(currentTeam._id, {$set: _.omit(currentTeam, 'invalid')});
+      }
+    });
 
-  // UPDATE HOME GROUND
+    // UPDATE HOME GROUND
 
-  Tracker.autorun(function(c) {
-    formData.homeGround.set(Pitches.findOne(formData.currentTeam.getKey('homeGround')));
-  });
+    Tracker.autorun(function(c) {
+      homeGround = Pitches.findOne(formData.currentTeam.getKey('homeGround'));
+      formData.homeGround.set(homeGround);
+      setHomeGround(homeGround);
+    });
 
-  // VALIDATE FORM
-  Tracker.autorun(function(c) {
+    // VALIDATE FORM
+    Tracker.autorun(function(c) {
 
-    var team = formData.currentTeam.get(),
-        invalid = [],
-        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
+      var team = formData.currentTeam.get(),
+          invalid = [],
+          nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
 
-    if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
-    if (!team.format) invalid.push('format');
-    if ($.isEmptyObject(formData.homeGround.get())) invalid.push('homeGround');
+      if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
+      if (!team.format) invalid.push('format');
+      if ($.isEmptyObject(formData.homeGround.get())) invalid.push('homeGround');
 
-    formData.currentTeam.value.invalid = invalid;
+      formData.currentTeam.value.invalid = invalid;
+
+    });
 
   });
 
 });
 
 function defaultTeam() {
-  return new SuprSubDep({
+  return {
     time: new Date(0, 0, 1, 19, 0, 0),
     name: '',
     homeGround: '',
@@ -347,22 +378,27 @@ function defaultTeam() {
     players: [Meteor.userId()],
     ringers: [],
     invalid: ['name', 'homeGround', 'format']
-  });
+  };
 }
 
 function setHomeGround(pitch) {
+  if (!window.map) return false;
+
   var readyDep = new SuprSubDep({
-    move: false,
-    tiles: false
-  });;
+        move: false,
+        tiles: false
+      }),
+      thisPitchId = pitch && pitch._id;
+
+  map.homeGroundMarker && map.homeGroundMarker.closePopup();
   if (typeof pitch === 'string') pitch = Pitches.findOne({_id: pitch});
   if (pitch) formData.currentTeam.setKey('homeGround', pitch._id);
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
   map.homeGroundMarker = _.find(map.markerArray, function(marker) {
-    return marker.options.pitchId === pitch._id;
+    return marker.options.pitchId === thisPitchId;
   });
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
-  map.panTo(pitch.location);
+  if (pitch) map.panTo(pitch.location);
 
     map.on('moveend', function() {
       readyDep.setKey('move', true);
