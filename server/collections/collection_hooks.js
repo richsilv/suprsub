@@ -1,5 +1,7 @@
 // KEEP CLOSE LINKS BETWEEN PLAYERS/RINGERS LIST IN TEAM DOCS AND THOSE IN USER DOCS
 
+Teams.hookOptions.after.update = {fetchPrevious: false};
+
 Teams.after.update(function(userId, doc, fieldNames, modifier) {
 
 	var teamId = doc._id
@@ -10,8 +12,15 @@ Teams.after.update(function(userId, doc, fieldNames, modifier) {
 
 		switch (op) {
 
-			case '$push':
 			case '$pull':
+
+				if (!doc.ringers.length) {
+
+					Teams.remove(doc);
+
+				}
+
+			case '$push':
 
 				for (typeArray in mod) {
 
@@ -50,6 +59,13 @@ Teams.after.update(function(userId, doc, fieldNames, modifier) {
 		}
 
 	}
+
+});
+
+Teams.after.remove(function (userId, doc) {
+
+	Meteor.users.update({'profile.team._ids': doc._id}, {$pull: {'profile.team._ids': doc._id}});
+	Meteor.users.update({'profile.team._ids_ringer': doc._id}, {$pull: {'profile.team._ids_ringer': doc._id}});	
 
 });
 

@@ -78,9 +78,28 @@ Template.teamTopLevel.events({
 
   'click #addNewTeam': function() {
 
+    SemanticModal.confirmModal({
+      header: 'Create New Team',
+      message: "This will create a new team with you as the sole player.  You'll need to hit the <strong>save</strong> button when you've enter the details, and then you'll be able to invite your teammates and preferred SuprSubs to join",
+      callback: function() {
+        formData.currentTeam.set(defaultTeam());
+        formData.teamInput.set(true);
+      }
+    });
+
   },
 
   'click #leaveTeam': function() {
+
+    var solePlayer = (formData.currentTeam.getKey('players').length < 2) && (formData.currentTeam.getKey('players').indexOf(Meteor.userId()));
+    SemanticModal.confirmModal({
+      header: 'Are you sure?',
+      message: 'Are you sure you want to leave this team?' + (solePlayer ? '  <strong>The team will be deleted as you are the only registered player!</strong>' : ''),
+      callback: function() {
+        Meteor.users.update(Meteor.userId(), {$pull: {'profile.teams._ids': formData.currentTeam.getKey('_id')}});
+        Meteor.users.update(Meteor.userId(), {$pull: {'profile.teams._ids_ringers': formData.currentTeam.getKey('_id')}});        
+      }
+    });
 
   },
 
@@ -109,6 +128,7 @@ Template.teamTopLevel.helpers({
   },
 
   teams: function() {
+    console.log("calculating", formData.teamsArray.get());
     return formData.teamsArray.get();
   },
 
@@ -265,6 +285,10 @@ Template.Team.destroyed = function () {
   this.$('.ui.dropdown').dropdown('destroy');  
 
 };
+
+Template.teamDropDown.rendered = function() {
+    this.$('.ui.dropdown').dropdown();
+}
 
 Template.pitchMapSmall.created = function() {
 
@@ -475,7 +499,7 @@ mapRender = function(mapDetails) {
   // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
     if (Pitches && Pitches.ready()) {
-      if (App.pitchSync.removed.length + App.pitchSync.inserted > 0) map.updateMarkers();
+      if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) map.updateMarkers();
       comp.stop();
     }
   });

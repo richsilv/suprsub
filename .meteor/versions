@@ -52,7 +52,6 @@ mongo-livedata@1.0.4
 mongo@1.0.5
 mrt:leaflet-markercluster@0.0.2
 mrt:leaflet@0.3.8
-mrt:server-eval@0.6.3
 npm-bcrypt@0.7.7
 oauth1@1.1.0
 oauth2@1.1.0

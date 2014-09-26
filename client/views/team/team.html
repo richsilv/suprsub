@@ -23,22 +23,13 @@
 			<div class="small-10 columns">
 				<div class="{{invalid 'name'}} field" id="teamNameHolder">
 					<label>Team/Game Name</label>
-					{{#unless teamDropdown}}
+					{{#if teamDropdown}}
+						{{> teamDropDown teams}}
+					{{else}}
 					<div class="ui input">
 						<input placeholder="Team Name" type="text" id="teamName" title="This is the name that will appear on your team postings" value={{teamName}}>
 					</div>
-					{{else}}
-					<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
-						<input type="hidden">
-						<div class="default text">Select Team</div>
-						<i class="dropdown icon"></i>
-						<div class="menu">
-							{{#each teams}}
-								{{> dropdownItem}}
-							{{/each}}
-						</div>
-					</div>
-					{{/unless}}
+					{{/if}}
 				</div>
 			</div>
 			<div class="small-6 columns">
@@ -132,9 +123,22 @@
 		</form>
 	</template>
 
-		<template name="dropdownItem">
-			<div class="item" data-value="{{_id}}">{{name}}</div>
+		<template name="teamDropDown">
+			<div class="ui fluid selection dropdown" id="teamChoice" title="Select or rename your team">
+				<input type="hidden">
+				<div class="default text">Select Team</div>
+				<i class="dropdown icon"></i>
+				<div class="menu">
+					{{#each this}}
+						{{> dropdownItem}}
+					{{/each}}
+				</div>
+			</div>
 		</template>
+
+			<template name="dropdownItem">
+				<div class="item" data-value="{{_id}}">{{name}}</div>
+			</template>
 
 	<template name="teamSecondLevel">
 		<div class="ui form segment content whitetranslucent teamForm">
