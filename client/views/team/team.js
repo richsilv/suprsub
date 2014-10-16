@@ -428,7 +428,7 @@ Meteor.startup(function() {
       else {
         formData.currentTeam.set(defaultTeam());
       }
-      
+
     }
 
     // SYNCHRONISE CURRENT TEAM
@@ -584,7 +584,7 @@ mapRender = function(mapDetails) {
 
   // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
-    if (Pitches && Pitches.ready()) {
+    if (Pitches && Pitches.synced()) {
       if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) {
         map.updateMarkers();
         zoomPitch(App.currentLocation);
