@@ -2,7 +2,7 @@ Teams = new Meteor.Collection('teams');
 
 // SCHEMA
 
-Schemas.Teams = new SimpleSchema({
+/*Schemas.Teams = new SimpleSchema({
 	time: {
 		type: Date,
 		label: 'Regular Day/Time'
@@ -42,7 +42,7 @@ Schemas.Teams = new SimpleSchema({
 	}
 });
 
-Teams.attachSchema(Schemas.Teams);
+Teams.attachSchema(Schemas.Teams);*/
 
 // ALLOW/DENY
 

@@ -1,39 +1,39 @@
 var MARKER_DELAY = 1000;
 
 var formData = {
-  teamsArray: new SuprSubDep([]),
-  currentTeam: new SuprSubDep(defaultTeam()),
-  teamIndex: new SuprSubDep(),
-  teamInput: new SuprSubDep(),
-  homeGround: new SuprSubDep({}),
-  pitchMatches: new SuprSubDep([]),
-  showErrors: new SuprSubDep(false)
-},
+    teamsArray: new SuprSubDep([]),
+    currentTeam: new SuprSubDep(defaultTeam()),
+    teamIndex: new SuprSubDep(),
+    teamInput: new SuprSubDep(),
+    homeGround: new SuprSubDep({}),
+    pitchMatches: new SuprSubDep([]),
+    showErrors: new SuprSubDep(false)
+  },
 
-pitchIcon = L.AwesomeMarkers.icon({
-  icon: 'football',
-  markerColor: 'suprsub-green',
-  prefix: 'icon'
-}),
+  pitchIcon = L.AwesomeMarkers.icon({
+    icon: 'football',
+    markerColor: 'suprsub-green',
+    prefix: 'icon'
+  }),
 
-pitchIconSpinning = L.AwesomeMarkers.icon({
-  icon: 'football-spinning',
-  markerColor: 'suprsub-green',
-  prefix: 'icon'
-}),
+  pitchIconSpinning = L.AwesomeMarkers.icon({
+    icon: 'football-spinning',
+    markerColor: 'suprsub-green',
+    prefix: 'icon'
+  }),
 
-disappearFunc = function(elements) {
-  elements.velocity({
-    opacity: 0,
-    'z-index': -50
-  })
-},
-appearFunc = function(elements) {
-  elements.velocity({
-    opacity: 0.6,
-    'z-index': 0
-  });
-};
+  disappearFunc = function(elements) {
+    elements.velocity({
+      opacity: 0,
+      'z-index': -50
+    })
+  },
+  appearFunc = function(elements) {
+    elements.velocity({
+      opacity: 0.6,
+      'z-index': 0
+    });
+  };
 
 /*****************************************************************************/
 /* Team: Event Handlers and Helpers */
@@ -41,7 +41,11 @@ appearFunc = function(elements) {
 Template.teamTopLevel.events({
 
   'keyup #teamName': function(event) {
-    formData.currentTeam.setKey('name', event.currentTarget.value)
+    formData.currentTeam.setKey('name', event.currentTarget.value);
+  },
+
+  'submit #teamForm': function(event) {
+    return false;
   },
 
   'change #timePickerHour': function(event) {
@@ -64,11 +68,16 @@ Template.teamTopLevel.events({
       Meteor.setTimeout(function() {
         formData.showErrors.set(false);
       }, 1000);
-    }
-
-    else {
+    } else {
       var newId = Teams.insert(_.omit(formData.currentTeam.get(), 'invalid'));
-      Meteor.users.update(Meteor.userId(), {$push: {'profile.team._ids': newId}});
+      Meteor.users.update(Meteor.userId(), {
+        $push: {
+          'profile.team._ids': newId
+        },
+        $set: {
+          'profile.team.default': newId
+        }
+      });
     }
   },
 
@@ -96,8 +105,16 @@ Template.teamTopLevel.events({
       header: 'Are you sure?',
       message: 'Are you sure you want to leave this team?' + (solePlayer ? '  <strong>The team will be deleted as you are the only registered player!</strong>' : ''),
       callback: function() {
-        Meteor.users.update(Meteor.userId(), {$pull: {'profile.teams._ids': formData.currentTeam.getKey('_id')}});
-        Meteor.users.update(Meteor.userId(), {$pull: {'profile.teams._ids_ringers': formData.currentTeam.getKey('_id')}});        
+        Meteor.users.update(Meteor.userId(), {
+          $pull: {
+            'profile.teams._ids': formData.currentTeam.getKey('_id')
+          }
+        });
+        Meteor.users.update(Meteor.userId(), {
+          $pull: {
+            'profile.teams._ids_ringers': formData.currentTeam.getKey('_id')
+          }
+        });
       }
     });
 
@@ -109,7 +126,9 @@ Template.teamTopLevel.events({
       header: 'Are you sure?',
       message: 'Deleting a team is permanent, and will remove it for <strong>all</strong> team members, not just you.',
       callback: function() {
-        Teams.remove({_id: formData.currentTeam.getKey('_id')});
+        Teams.remove({
+          _id: formData.currentTeam.getKey('_id')
+        });
       }
     });
 
@@ -120,7 +139,7 @@ Template.teamTopLevel.events({
 Template.teamTopLevel.helpers({
 
   teamDropdown: function() {
-    return !formData.teamInput.get();
+    return !formData.teamInput.get() && formData.teamsArray.get().length > 1;
   },
 
   teamName: function() {
@@ -128,12 +147,11 @@ Template.teamTopLevel.helpers({
   },
 
   teams: function() {
-    console.log("calculating", formData.teamsArray.get());
     return formData.teamsArray.get();
   },
 
   hour: function() {
-    var time = formData.currentTeam.getKey('time');  
+    var time = formData.currentTeam.getKey('time');
     return time && App.padZeros(time.getHours(), 2);
   },
 
@@ -152,11 +170,32 @@ Template.teamTopLevel.helpers({
   },
 
   invalid: function(field) {
-    return (formData.showErrors.get() && formData.currentTeam.getKey('invalid').indexOf(field) > -1) ? 'error' : ''; 
+    return (formData.showErrors.get() && formData.currentTeam.getKey('invalid').indexOf(field) > -1) ? 'error' : '';
   },
 
   homeGroundName: function() {
     return formData.homeGround.getKey('prettyLocation');
+  },
+
+  'submit': function() {
+    return false;
+  }
+
+});
+
+Template.teamDropDown.events({
+
+  'dblclick #teamChoice': function() {
+    formData.teamInput.set(true);
+    Tracker.flush();
+    $('#teamName').focus();
+  },
+
+  'blur #teamChoice, keydown #teamChoice': function(event) {
+    if (event.keyCode === 13 || event.type === 'blur') {
+      formData.teamInput.set(false);
+    }
+    return false;
   }
 
 });
@@ -165,7 +204,7 @@ Template.otherInfo.helpers({
 
   pitchMatches: function() {
     return formData.pitchMatches.get();
-  } 
+  }
 
 });
 
@@ -177,7 +216,9 @@ Template.otherInfo.events({
       formData.pitchMatches.set(Pitches.find({
         $where: 'this.prettyLocation && this.prettyLocation.toLowerCase().indexOf(event.target.value.toLowerCase()) > -1'
       }, {
-        sort: {prettyLocation: 1}
+        sort: {
+          prettyLocation: 1
+        }
       }).fetch());
     }
     return false;
@@ -188,7 +229,7 @@ Template.otherInfo.events({
       q: template.$('#homeGroundSearch').val(),
       format: 'json',
       countrycode: 'gb',
-      limit:1
+      limit: 1
     }
     $.getJSON(App.mapSearchURI + $.param(params), function(data, res) {
       var location = data && data.length && data[0];
@@ -203,16 +244,17 @@ Template.otherInfo.events({
     setHomeGround(this);
     map.setView(L.latLng(this.location), 14, {
       animate: true,
-      pan: {duration: 2}
+      pan: {
+        duration: 2
+      }
     });
   }
 
 });
 
 Template.pitchMapSmall.helpers({
-  pitchSync: function() {
-    _this = Template.instance();
-    return Pitches.find().count() > 100 && !_this.mapDetails.getKey('isLoading');
+  ifReady: function() {
+    return Pitches.find().count() > 100 ? "hide" : "show";
   }
 });
 
@@ -220,21 +262,17 @@ Template.pitchMapSmall.helpers({
 /* Team: Lifecycle Hooks */
 /*****************************************************************************/
 
-Template.Team.created = function () {
-};
+Template.Team.created = function() {};
 
-Template.Team.rendered = function () {
+Template.Team.rendered = function() {
 
   var _this = this,
-      currentTeam = formData.currentTeam;
+    currentTeam = formData.currentTeam;
 
   // SET UP FLIPBOX AND DROPDOWNS  
-  this.$('.ui.flipbox').flipbox();
-  this.$('.ui.dropdown').dropdown();
-
   this.$('#friendlyCompetitive').flipbox({
-    onChange: function(val) {
-      currentTeam.setKey('competitive', parseInt(val, 10));
+    onChange: function(value) {
+      formData.currentTeam.setKey('competitive', value);
     }
   });
 
@@ -253,6 +291,7 @@ Template.Team.rendered = function () {
   });
 
   // UPDATE FIELDS ON CHANGE OF DATA
+
   this.autorun(function(c) {
     _this.$('#friendlyCompetitive').flipbox('set choice', currentTeam.getKey('competitive'));
   });
@@ -277,17 +316,45 @@ Template.Team.rendered = function () {
     }
   });
 
+  this.autorun(function(c) {
+    var team = formData.currentTeam.get();
+    if (team) {
+      _this.$('#teamChoice').dropdown('set value', team._id);
+      _this.$('#teamChoice').dropdown('set selected', team._id);
+      _this.$('#teamChoice').dropdown('hide');
+    }
+  });
+
 };
 
-Template.Team.destroyed = function () {
+Template.Team.destroyed = function() {
 
   this.$('.ui.flipbox').flipbox('destroy');
-  this.$('.ui.dropdown').dropdown('destroy');  
+  this.$('.ui.dropdown').dropdown('destroy');
 
 };
 
 Template.teamDropDown.rendered = function() {
-    this.$('.ui.dropdown').dropdown();
+
+  var _this = this,
+    currentTeam = formData.currentTeam;
+  
+  this.$('#teamChoice').dropdown({
+    onChange: function(value, text) {
+      var index;
+      _.find(formData.teamsArray.get(), function(team, teamIndex) {
+        if (team._id === value) {
+          index = teamIndex;
+          return true;
+        };
+      });
+      formData.teamIndex.set(index);
+    }
+  });
+
+  this.autorun(function(c) {
+    _this.$('#teamChoice').dropdown('set selected', currentTeam.getKey('_id'));
+  });
 }
 
 Template.pitchMapSmall.created = function() {
@@ -297,7 +364,7 @@ Template.pitchMapSmall.created = function() {
   // DATA-BINDING AND MARKER UPDATE
   this.autorun(function(c) {
     var newTimer = new Date().getTime(),
-        mapDetails;
+      mapDetails;
 
     if (c.firstRun) {
       _this.mapDetails = new SuprSubDep({
@@ -322,7 +389,9 @@ Template.pitchMapSmall.rendered = function() {
   mapRender(this.mapDetails);
   map.locate();
   map.on('locationfound', function(data) {
-    map.panTo(data.latlng);
+    App.currentLocation = data.latlng;
+    zoomPitch(App.currentLocation);
+    map.off('locationfound');
   });
 
 };
@@ -345,13 +414,21 @@ Meteor.startup(function() {
 
     if (user) {
 
-      var teams = Teams.myTeams();
+      var teams = _.indexBy(Teams.myTeams(), '_id');
       formData.teamsArray.set(teams);
-      if (!formData.teamIndex.get() || formData.teamIndex.get() >  teams.length -1) formData.teamIndex.set(0);
-      if (teams.length) formData.currentTeam.set(teams[formData.teamIndex.get()]);
-      else formData.currentTeam.set(defaultTeam());
-      if (teams.length < 2) formData.teamInput.set(true);
 
+      // TEST IF TEAM INDEX IS UNSET, OR FAILS TO MATCH AN EXISTING TEAM
+      if (!formData.teamIndex.get() || !teams[formData.teamIndex.get()]) {
+        formData.teamIndex.set(user.profile.team.default);
+      }
+      // NOW SET CURRENT TEAM USING INDEX
+      if (teams[formData.teamIndex.get()]) {
+        formData.currentTeam.set(teams[formData.teamIndex.get()]);
+      }
+      else {
+        formData.currentTeam.set(defaultTeam());
+      }
+      
     }
 
     // SYNCHRONISE CURRENT TEAM
@@ -359,25 +436,29 @@ Meteor.startup(function() {
     Tracker.autorun(function(c) {
       var currentTeam = formData.currentTeam.get();
 
-      if (currentTeam.id) {
-        Teams.update(currentTeam._id, {$set: _.omit(currentTeam, 'invalid')});
+      if (currentTeam._id) {
+        Teams.update(currentTeam._id, {
+          $set: _.omit(currentTeam, 'invalid')
+        });
       }
     });
 
     // UPDATE HOME GROUND
 
     Tracker.autorun(function(c) {
-      homeGround = Pitches.findOne(formData.currentTeam.getKey('homeGround'));
-      formData.homeGround.set(homeGround);
-      setHomeGround(homeGround);
+      if (Pitches.populated()) {
+        homeGround = Pitches.findOne(formData.currentTeam.getKey('homeGround'));
+        formData.homeGround.set(homeGround);
+        setHomeGround(homeGround);
+      }
     });
 
     // VALIDATE FORM
     Tracker.autorun(function(c) {
 
       var team = formData.currentTeam.get(),
-          invalid = [],
-          nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
+        invalid = [],
+        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
 
       if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
       if (!team.format) invalid.push('format');
@@ -409,13 +490,15 @@ function setHomeGround(pitch) {
   if (!window.map) return false;
 
   var readyDep = new SuprSubDep({
-        move: false,
-        tiles: false
-      }),
-      thisPitchId = pitch && pitch._id;
+      move: false,
+      tiles: false
+    }),
+    thisPitchId = pitch && pitch._id;
 
   map.homeGroundMarker && map.homeGroundMarker.closePopup();
-  if (typeof pitch === 'string') pitch = Pitches.findOne({_id: pitch});
+  if (typeof pitch === 'string') pitch = Pitches.findOne({
+    _id: pitch
+  });
   if (pitch) formData.currentTeam.setKey('homeGround', pitch._id);
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
   map.homeGroundMarker = _.find(map.markerArray, function(marker) {
@@ -424,18 +507,18 @@ function setHomeGround(pitch) {
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
   if (pitch) map.panTo(pitch.location);
 
-    map.on('moveend', function() {
-      readyDep.setKey('move', true);
-      map.off('moveend');
-    });
-    map.tileLayer.on('load', function() {
-      readyDep.setKey('tiles', true);
-      map.tileLayer.off('load');
-    });    
+  map.on('moveend', function() {
+    readyDep.setKey('move', true);
+    map.off('moveend');
+  });
+  map.tileLayer.on('load', function() {
+    readyDep.setKey('tiles', true);
+    map.tileLayer.off('load');
+  });
 
   Tracker.autorun(function(comp) {
     if (readyDep.getKey('move') && readyDep.getKey('tiles')) {
-      map.homeGroundMarker.openPopup();
+      map.homeGroundMarker && map.homeGroundMarker.openPopup();
       comp.stop();
     }
   });
@@ -448,20 +531,18 @@ function homeGroundWrapper(event) {
 
 mapRender = function(mapDetails) {
   var mapCenter = mapDetails.value.mapCenter,
-      mapZoom = mapDetails.value.mapZoom;
+    mapZoom = mapDetails.value.mapZoom;
 
   L.Icon.Default.imagePath = 'packages/leaflet/images';
 
   window.map = L.map('map', {
-      doubleClickZoom: false
+    doubleClickZoom: false
   }).setView(mapCenter, mapZoom);
 
   map.tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
-        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
-      });
+    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
+  });
   map.tileLayer.addTo(map);
-  // map.tileLayer.on('loading', appearFunc.bind(this, $('#mapCover')));
-  // map.tileLayer.on('load', disappearFunc.bind(this, $('#mapCover')));
 
   // ATTACH CALLBACKS
 
@@ -473,11 +554,16 @@ mapRender = function(mapDetails) {
   });
   map.markers = new L.MarkerClusterGroup({
     maxClusterRadius: 40,
-    showCoverageOnHover: false
+    showCoverageOnHover: false,
+    disableClusteringAtZoom: 13
   });
 
   map.updateMarkers = function() {
-    map.markerArray = _.map(Pitches.find({location: {$exists: true}}).fetch(), function(pitch) {
+    map.markerArray = _.map(Pitches.find({
+      location: {
+        $exists: true
+      }
+    }).fetch(), function(pitch) {
       var newMarker = new L.Marker(pitch.location, {
         icon: pitchIcon,
         title: pitch.prettyLocation,
@@ -491,7 +577,7 @@ mapRender = function(mapDetails) {
       return newMarker;
     });
     map.markers.clearLayers();
-    map.markers.addLayers(map.markerArray);  
+    map.markers.addLayers(map.markerArray);
   };
   map.addLayer(map.markers);
   map.updateMarkers();
@@ -499,12 +585,28 @@ mapRender = function(mapDetails) {
   // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
     if (Pitches && Pitches.ready()) {
-      if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) map.updateMarkers();
+      if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) {
+        map.updateMarkers();
+        zoomPitch(App.currentLocation);
+      }
       comp.stop();
     }
   });
 
 };
+
+function zoomPitch(defaultLocation) {
+
+  if (!formData.homeGround.getKey('_id')) {
+    defaultLocation && map.panTo(defaultLocation);
+  } else {
+    map.panTo(formData.homeGround.getKey('location'))
+    map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
+      map.homeGroundMarker.openPopup()
+    });
+  }
+
+}
 
 getFormData = function() {
   return formData;

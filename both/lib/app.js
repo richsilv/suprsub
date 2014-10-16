@@ -2,7 +2,12 @@ App = {};
 
 _.extend(App, {
 
-	remote: DDP.connect('http://suprsub-20880.onmodulus.net')
+	remote: DDP.connect('http://suprsub-20880.onmodulus.net'),
+
+	countKeys: function(object) {
+		return Object.keys(object).length;
+	}
+
 
 });
 

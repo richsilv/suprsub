@@ -1,6 +1,7 @@
-// KEEP CLOSE LINKS BETWEEN PLAYERS/RINGERS LIST IN TEAM DOCS AND THOSE IN USER DOCS
+/*// KEEP CLOSE LINKS BETWEEN PLAYERS/RINGERS LIST IN TEAM DOCS AND THOSE IN USER DOCS
 
 Teams.hookOptions.after.update = {fetchPrevious: false};
+Meteor.users.hookOptions.after.update = {fetchPrevious: false};
 
 Teams.after.update(function(userId, doc, fieldNames, modifier) {
 
@@ -121,3 +122,13 @@ Meteor.users.before.update(function(userId, doc, fieldNames, modifier) {
 	}
 
 });
+
+Meteor.users.after.update(function(userId, doc, fieldNames, modifier) {
+
+	if (doc.profile.team.default && doc.profile.team._ids.indexOf(doc.profile.team.default) === -1) {
+
+		Meteor.users.update(doc._id, {$set: { 'profile.team.default': null }});
+
+	}
+
+});*/

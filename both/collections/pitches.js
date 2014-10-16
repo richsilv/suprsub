@@ -8,6 +8,11 @@ Pitches.withinBounds = function(bounds) {
 		'location.lng': {$lte: bounds.getEast()}
 	}).fetch();
 }
+
+Pitches.populated = function(n) {
+	return Pitches.find().count() > (n || 100);
+};
+
 /*
  * Add query methods like this:
  *  Pitches.findPublic = function () {
