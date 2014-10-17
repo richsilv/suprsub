@@ -2,7 +2,7 @@ Teams = new Meteor.Collection('teams');
 
 // SCHEMA
 
-/*Schemas.Teams = new SimpleSchema({
+Schemas.Teams = new SimpleSchema({
 	time: {
 		type: Date,
 		label: 'Regular Day/Time'
@@ -42,7 +42,7 @@ Teams = new Meteor.Collection('teams');
 	}
 });
 
-Teams.attachSchema(Schemas.Teams);*/
+Teams.attachSchema(Schemas.Teams);
 
 // ALLOW/DENY
 
@@ -82,6 +82,8 @@ Teams.myTeams = function() {
 
 	var user = Meteor.user(),
 		teams = [];
+
+	if (!user) return [];
 
 	Teams.find({_id: {$in: user.profile.team._ids || []}}).forEach(function(team) {
 		teams.push(_.extend(team, {player: true}));

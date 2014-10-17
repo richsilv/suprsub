@@ -1,7 +1,11 @@
-/*// KEEP CLOSE LINKS BETWEEN PLAYERS/RINGERS LIST IN TEAM DOCS AND THOSE IN USER DOCS
+// KEEP CLOSE LINKS BETWEEN PLAYERS/RINGERS LIST IN TEAM DOCS AND THOSE IN USER DOCS
 
-Teams.hookOptions.after.update = {fetchPrevious: false};
-Meteor.users.hookOptions.after.update = {fetchPrevious: false};
+Teams.hookOptions.after.update = {
+	fetchPrevious: false
+};
+Meteor.users.hookOptions.after.update = {
+	fetchPrevious: false
+};
 
 Teams.after.update(function(userId, doc, fieldNames, modifier) {
 
@@ -27,9 +31,14 @@ Teams.after.update(function(userId, doc, fieldNames, modifier) {
 
 					var id = mod[typeArray],
 						updater = {},
-						query = {_id: id};
+						query = {
+							_id: id
+						};
 
-					if (id instanceof Array) throw new Meteor.Error(500, "Team updated with multiple user ids!", {teamId: teamId, ids: id});
+					if (id instanceof Array) throw new Meteor.Error(500, "Team updated with multiple user ids!", {
+						teamId: teamId,
+						ids: id
+					});
 
 					switch (typeArray) {
 
@@ -37,14 +46,18 @@ Teams.after.update(function(userId, doc, fieldNames, modifier) {
 							updater[op] = {
 								'profile.team._ids': teamId
 							};
-							query['profile.team._ids'] = (op === '$push') ? {$ne: teamId} : teamId;
+							query['profile.team._ids'] = (op === '$push') ? {
+								$ne: teamId
+							} : teamId;
 							break;
 
 						case 'ringers':
 							updater[op] = {
 								'profile.team._ids_ringer': teamId
 							};
-							query['profile.team._ids_ringer'] = (op === '$push') ? {$ne: teamId} : teamId;
+							query['profile.team._ids_ringer'] = (op === '$push') ? {
+								$ne: teamId
+							} : teamId;
 							break;
 
 						default:
@@ -54,19 +67,43 @@ Teams.after.update(function(userId, doc, fieldNames, modifier) {
 
 				}
 
-			break;
+				break;
 
 			default:
 		}
 
 	}
 
+	if (!doc.players.length) Teams.remove(doc);
+
 });
 
-Teams.after.remove(function (userId, doc) {
+Teams.after.remove(function(userId, doc) {
 
-	Meteor.users.update({'profile.team._ids': doc._id}, {$pull: {'profile.team._ids': doc._id}});
-	Meteor.users.update({'profile.team._ids_ringer': doc._id}, {$pull: {'profile.team._ids_ringer': doc._id}});	
+	Meteor.users.update({
+		'profile.team._ids': doc._id
+	}, {
+		$pull: {
+			'profile.team._ids': doc._id
+		}
+	});
+	Meteor.users.update({
+		'profile.team._ids_ringer': doc._id
+	}, {
+		$pull: {
+			'profile.team._ids_ringer': doc._id
+		}
+	});
+	Meteor.users.find({
+		'profile.team.default': doc._id,
+		'profile.team._ids': {
+			$not: {
+				$size: 0
+			}
+		}
+	}).forEach(function(user) {
+		Meteor.users.update(user, {$set: {'profile.team.default': user.profile.team._ids[0]}});
+	})
 
 });
 
@@ -87,9 +124,14 @@ Meteor.users.before.update(function(userId, doc, fieldNames, modifier) {
 
 					var id = mod[typeArray],
 						updater = {},
-						query = {_id: id};
+						query = {
+							_id: id
+						};
 
-					if (id instanceof Array) throw new Meteor.Error(500, "User updated with multiple team ids!", {userId: playerId, ids: id});
+					if (id instanceof Array) throw new Meteor.Error(500, "User updated with multiple team ids!", {
+						userId: playerId,
+						ids: id
+					});
 
 					switch (typeArray) {
 
@@ -97,14 +139,18 @@ Meteor.users.before.update(function(userId, doc, fieldNames, modifier) {
 							updater[op] = {
 								'players': playerId
 							};
-							query.players = (op === '$push') ? {$ne: playerId} : playerId;
+							query.players = (op === '$push') ? {
+								$ne: playerId
+							} : playerId;
 							break;
 
 						case 'profile.team._ids_ringer':
 							updater[op] = {
 								'ringers': playerId
 							};
-							query.ringers = (op === '$push') ? {$ne: playerId} : playerId;
+							query.ringers = (op === '$push') ? {
+								$ne: playerId
+							} : playerId;
 							break;
 
 						default:
@@ -114,7 +160,7 @@ Meteor.users.before.update(function(userId, doc, fieldNames, modifier) {
 
 				}
 
-			break;
+				break;
 
 			default:
 		}
@@ -127,8 +173,12 @@ Meteor.users.after.update(function(userId, doc, fieldNames, modifier) {
 
 	if (doc.profile.team.default && doc.profile.team._ids.indexOf(doc.profile.team.default) === -1) {
 
-		Meteor.users.update(doc._id, {$set: { 'profile.team.default': null }});
+		Meteor.users.update(doc._id, {
+			$set: {
+				'profile.team.default': null
+			}
+		});
 
 	}
 
-});*/
+});

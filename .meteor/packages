@@ -16,7 +16,6 @@ reactive-dict
 iron:router
 mrt:leaflet
 mrt:leaflet-markercluster
-richsilv:polledcollection
 andruschka:tinycon
 fourseven:scss
 richsilv:semantic-ui-sass
@@ -25,3 +24,6 @@ sewdn:velocityjs
 aldeed:collection2
 matb33:collection-hooks
 richsilv:semantic-ui-modal
+gandev:server-eval
+richsilv:dumb-collections
+

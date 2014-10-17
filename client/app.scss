@@ -5,6 +5,7 @@
 // GLOBAL SCSS
 
 $suprsub-green: hsl(120, 75%, 43%);
+$suprsub-washed-out: desaturate($suprsub-green, 0.5);
 $white-translucent: rgba(255, 255, 255, 0.85) !important;
 $background-color: rgb(148, 153, 148);
 $rem-base: 14px;
@@ -114,4 +115,42 @@ body {
 	margin-top: 1.5em;
 	height: 2.75em;
 	height: calc(2.6em + 2px);
+}
+
+// ACCEPTED FORM STATES
+
+.ui.form .fields.accepted .field label,
+.ui.form .field.accepted label,
+.ui.form .fields.accepted .field .input,
+.ui.form .field.accepted .input,
+.ui.form .field.accepted .selection {
+  color: transparentize($suprsub-green, 0.4);
+}
+
+.ui.form .fields.accepted .field .corner.label,
+.ui.form .field.accepted .corner.label {
+  border-color: transparentize($suprsub-green, 0.4);
+  color: #FFFFFF;
+}
+
+.ui.form .fields.accepted .field textarea,
+.ui.form .fields.accepted .field input,
+.ui.form .field.accepted textarea,
+.ui.form .field.accepted input,
+.ui.form .field.accepted .selection {
+  background-color: #FAFAFA;
+  border-color: transparentize($suprsub-green, 0.8);
+  border-left: none;
+  color: $suprsub-green;
+  padding-left: 1.2em;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-box-shadow: 0.3em 0em 0em 0em $suprsub-green inset;
+  box-shadow: 0.3em 0em 0em 0em $suprsub-green inset;
+
+  &:focus {
+	  -webkit-appearance: none;
+	  -webkit-box-shadow: 0.3em 0em 0em 0em #FF5050 inset;
+	  box-shadow: 0.3em 0em 0em 0em #FF5050 inset;  	
+  }
 }

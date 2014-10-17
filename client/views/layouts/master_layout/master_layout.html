@@ -16,6 +16,8 @@
 	<div class="ui darkgreen fixed inverted main menu" id="topbar">
 		<span class="item" href="{{pathFor 'home'}}">
 			<i class="suprsub icon"></i>
+			{{#if ready}}READY - {{ready}} pitches{{/if}} 
+			{{#if synced}}SYNCED{{/if}}
 		</span>
 		{{#if currentUser}}
 		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">

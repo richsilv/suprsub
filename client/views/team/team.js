@@ -62,14 +62,20 @@ Template.teamTopLevel.events({
     formData.currentTeam.setKey('time', newTime);
   },
 
-  'click #saveTeam': function() {
+  'click #saveTeam': function(event, template) {
     if (formData.currentTeam.get().invalid.length) {
       formData.showErrors.set(true);
       Meteor.setTimeout(function() {
         formData.showErrors.set(false);
       }, 1000);
     } else {
-      var newId = Teams.insert(_.omit(formData.currentTeam.get(), 'invalid'));
+      var fields = template.$('.field');
+      fields.addClass('accepted');
+      var newId = Teams.insert(_.omit(formData.currentTeam.get(), 'invalid'), function() {
+        Meteor.setTimeout(function() {
+          fields.removeClass('accepted');
+        }, 500);
+      });
       Meteor.users.update(Meteor.userId(), {
         $push: {
           'profile.team._ids': newId
@@ -77,60 +83,76 @@ Template.teamTopLevel.events({
         $set: {
           'profile.team.default': newId
         }
+      },
+      function() {
+        if (App.countKeys(formData.teamsArray)) formData.teamInput.set(false);
       });
     }
   },
 
   'click #setDefault': function() {
 
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        'profile.team.default': formData.currentTeam.getKey('_id')
+      }
+    });
+
   },
 
   'click #addNewTeam': function() {
 
-    SemanticModal.confirmModal({
-      header: 'Create New Team',
-      message: "This will create a new team with you as the sole player.  You'll need to hit the <strong>save</strong> button when you've enter the details, and then you'll be able to invite your teammates and preferred SuprSubs to join",
-      callback: function() {
-        formData.currentTeam.set(defaultTeam());
-        formData.teamInput.set(true);
-      }
-    });
+    if (formData.currentTeam.getKey('_id')) {
+      SemanticModal.confirmModal({
+        header: 'Create New Team',
+        message: "This will create a new team with you as the sole player.  You'll need to hit the <strong>save</strong> button when you've enter the details, and then you'll be able to invite your teammates and preferred SuprSubs to join",
+        callback: function() {
+          formData.currentTeam.set(defaultTeam());
+          formData.teamInput.set(true);
+        }
+      });
+    }
 
   },
 
   'click #leaveTeam': function() {
 
     var solePlayer = (formData.currentTeam.getKey('players').length < 2) && (formData.currentTeam.getKey('players').indexOf(Meteor.userId()));
-    SemanticModal.confirmModal({
-      header: 'Are you sure?',
-      message: 'Are you sure you want to leave this team?' + (solePlayer ? '  <strong>The team will be deleted as you are the only registered player!</strong>' : ''),
-      callback: function() {
-        Meteor.users.update(Meteor.userId(), {
-          $pull: {
-            'profile.teams._ids': formData.currentTeam.getKey('_id')
-          }
-        });
-        Meteor.users.update(Meteor.userId(), {
-          $pull: {
-            'profile.teams._ids_ringers': formData.currentTeam.getKey('_id')
-          }
-        });
-      }
-    });
+
+    if (formData.currentTeam.getKey('_id')) {
+      SemanticModal.confirmModal({
+        header: 'Are you sure?',
+        message: 'Are you sure you want to leave this team?' + (solePlayer ? '  <strong>The team will be deleted as you are the only registered player!</strong>' : ''),
+        callback: function() {
+          Meteor.users.update(Meteor.userId(), {
+            $pull: {
+              'profile.team._ids': formData.currentTeam.getKey('_id')
+            }
+          });
+          Meteor.users.update(Meteor.userId(), {
+            $pull: {
+              'profile.team._ids_ringers': formData.currentTeam.getKey('_id')
+            }
+          });
+        }
+      });
+    }
 
   },
 
   'click #deleteTeam': function() {
 
-    SemanticModal.confirmModal({
-      header: 'Are you sure?',
-      message: 'Deleting a team is permanent, and will remove it for <strong>all</strong> team members, not just you.',
-      callback: function() {
-        Teams.remove({
-          _id: formData.currentTeam.getKey('_id')
-        });
-      }
-    });
+    if (formData.currentTeam.getKey('_id')) {
+      SemanticModal.confirmModal({
+        header: 'Are you sure?',
+        message: 'Deleting a team is permanent, and will remove it for <strong>all</strong> team members, not just you.',
+        callback: function() {
+          Teams.remove({
+            _id: formData.currentTeam.getKey('_id')
+          });
+        }
+      });
+    }
 
   }
 
@@ -139,7 +161,7 @@ Template.teamTopLevel.events({
 Template.teamTopLevel.helpers({
 
   teamDropdown: function() {
-    return !formData.teamInput.get() && formData.teamsArray.get().length > 1;
+    return !formData.teamInput.get() && App.countKeys(formData.teamsArray.get()) > 1;
   },
 
   teamName: function() {
@@ -147,7 +169,11 @@ Template.teamTopLevel.helpers({
   },
 
   teams: function() {
-    return formData.teamsArray.get();
+    return _.values(formData.teamsArray.get());
+  },
+
+  default: function() {
+    return Meteor.user().profile.team.default === formData.currentTeam.getKey('_id');
   },
 
   hour: function() {
@@ -175,10 +201,6 @@ Template.teamTopLevel.helpers({
 
   homeGroundName: function() {
     return formData.homeGround.getKey('prettyLocation');
-  },
-
-  'submit': function() {
-    return false;
   }
 
 });
@@ -338,7 +360,7 @@ Template.teamDropDown.rendered = function() {
 
   var _this = this,
     currentTeam = formData.currentTeam;
-  
+
   this.$('#teamChoice').dropdown({
     onChange: function(value, text) {
       var index;
@@ -411,6 +433,7 @@ Meteor.startup(function() {
   // KEEP TEAM LIST UP TO DATE
   Tracker.autorun(function(c) {
     var user = Meteor.user();
+    formData.teamsArray.dep.depend();
 
     if (user) {
 
@@ -424,8 +447,7 @@ Meteor.startup(function() {
       // NOW SET CURRENT TEAM USING INDEX
       if (teams[formData.teamIndex.get()]) {
         formData.currentTeam.set(teams[formData.teamIndex.get()]);
-      }
-      else {
+      } else {
         formData.currentTeam.set(defaultTeam());
       }
 
@@ -458,13 +480,13 @@ Meteor.startup(function() {
 
       var team = formData.currentTeam.get(),
         invalid = [],
-        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-]+/.exec(team.name);
+        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-\']+/.exec(team.name);
 
       if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
       if (!team.format) invalid.push('format');
       if ($.isEmptyObject(formData.homeGround.get())) invalid.push('homeGround');
 
-      formData.currentTeam.value.invalid = invalid;
+      formData.currentTeam.setKey('invalid', invalid);
 
     });
 
@@ -489,17 +511,21 @@ function defaultTeam() {
 function setHomeGround(pitch) {
   if (!window.map) return false;
 
-  var readyDep = new SuprSubDep({
-      move: false,
-      tiles: false
-    }),
-    thisPitchId = pitch && pitch._id;
-
-  map.homeGroundMarker && map.homeGroundMarker.closePopup();
+  if (!pitch || formData.currentTeam.value.homeGround === pitch) return false;
   if (typeof pitch === 'string') pitch = Pitches.findOne({
     _id: pitch
   });
-  if (pitch) formData.currentTeam.setKey('homeGround', pitch._id);
+  var thisPitchId = pitch && pitch._id;
+  if (!pitch || formData.currentTeam.value.homeGround === thisPitchId) return false;
+  formData.currentTeam.setKey('homeGround', pitch._id);
+  formData.currentTeam.dep.changed();
+
+  var readyDep = new SuprSubDep({
+    move: false,
+    tiles: false
+  });
+
+  map.homeGroundMarker && map.homeGroundMarker.closePopup();
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
   map.homeGroundMarker = _.find(map.markerArray, function(marker) {
     return marker.options.pitchId === thisPitchId;
@@ -584,7 +610,7 @@ mapRender = function(mapDetails) {
 
   // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
-    if (Pitches && Pitches.synced()) {
+    if (Pitches && Pitches.synced() && App.pitchSync) {
       if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) {
         map.updateMarkers();
         zoomPitch(App.currentLocation);

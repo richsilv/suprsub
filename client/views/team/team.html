@@ -35,10 +35,10 @@
 			<div class="small-6 columns">
 				{{#unless newTeam}}
 					<div class="ui four buttons withLabel">
-						<div class="ui fluid attached icon button {{#if defaultTeam}} teal{{/if}}{{#unless multiTeams}} disabled{{/unless}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
-						<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
-						<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
-						<div class="ui fluid attached icon button {{#unless teamId}} disabled{{/unless}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
+						<div class="ui fluid attached icon button {{#if default}} teal{{/if}}{{#if newTeam}} disabled{{/if}}" id="setDefault" title="Set as your default team"><i class="pin icon"></i></div>
+						<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" id="addNewTeam" title="Add a new team"><i class="add icon"></i></div>
+						<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" id="leaveTeam" title="Leave this team"><i class="minus icon"></i></div>
+						<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" id="deleteTeam" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
 					</div>
 				{{else}}
 					<div class="ui fluid attached icon button withLabel {{#unless formValid}} disabled{{/unless}}" id="saveTeam" title="Save as new team"><i class="save icon"></i></div>

@@ -1,4 +1,4 @@
-Pitches = new PolledCollection('pitches');
+Pitches = new DumbCollection('pitches');
 
 Pitches.withinBounds = function(bounds) {
 	return Pitches.find({

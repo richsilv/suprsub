@@ -14,7 +14,7 @@ SuprSubDep.prototype.get = function() {
 };
 
 SuprSubDep.prototype.set = function(newValue){
-    if (this.value !== newValue) {
+    if (!_.isEqual(this.value, newValue)) {
         this.value = newValue;
         if (this.count < this.maxInvalidate || !this.maxInvalidate)
             this.dep.changed();
@@ -34,7 +34,7 @@ SuprSubDep.prototype.getKey = function(key) {
 };
 
 SuprSubDep.prototype.setKey = function(key, newValue) {
-    if (key in this.value && this.value[key] !== newValue) {
+    if (key in this.value && !_.isEqual(this.value[key], newValue)) {
         this.value[key] = newValue;
         this.dep.changed();
         this.count++;
