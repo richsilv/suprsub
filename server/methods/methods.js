@@ -299,11 +299,11 @@ Meteor.methods({
 		});
 		return "done";
 	},
-	sendTeamCode: function(code) {
+	sendTeamCode: function(teamId) {
 		var console = appConfig.sendToLogger;
 		var thisUser = Meteor.user();
 			contacts = thisUser.profile.contact,
-			team = Teams.findOne(code),
+			team = Teams.findOne({_id: teamId, players: thisUser._id}),
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your teammates - " + 
@@ -338,11 +338,11 @@ Meteor.methods({
 			});			
 		}
 	},
-	sendRingerCode: function(teamId, name) {
+	sendRingerCode: function(teamId) {
 		var console = appConfig.sendToLogger;
 		var thisUser = Meteor.user();
 			contacts = thisUser.profile.contact,
-			team = Teams.findOne(teamId),
+			team = Teams.findOne({_id: teamId, players: thisUser._id}),
 			code = team.ringerCode
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
@@ -359,7 +359,7 @@ Meteor.methods({
 						teamName: team.name,
 						suprsubRoot: suprsubRoot,
 						code: code,
-						inviter: name
+						inviter: thisUser.profile.name
 					})
 				});
 			});

@@ -5,17 +5,13 @@
 
 standard-app-packages
 
-semantic-ui
 accounts-base
 accounts-password
 accounts-facebook
 accounts-twitter
 
-twit
 
-moment
 http
-npm
 
 htmljs
 
@@ -23,30 +19,38 @@ htmljs
 handlebars-server
 email
 
-Pikaday
 
 
 
 
 
 
-fast-render
-Dropzonejs
 
 
 
-iron-router-tour
-accounts-meld
-kadira
-collection-hooks
 moment-timezone
-velocityjs
 find-faster
 amplify
 aws-sdk
 modernizr
-stellar
-owl-carousel
 jquery-transit
 meteor-jquery-transit
 iron-router
+Dropzonejs
+Pikaday
+moment
+npm
+fast-render
+iron-router-tour
+accounts-meld
+collection-hooks
+kadira
+less
+zurb-foundation
+velocityjs
+twit
+stylus
+stellar
+scss
+semantic-ui
+owl-carousel
