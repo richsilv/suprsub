@@ -7,7 +7,8 @@ var formData = {
     teamInput: new SuprSubDep(),
     homeGround: new SuprSubDep({}),
     pitchMatches: new SuprSubDep([]),
-    showErrors: new SuprSubDep(false)
+    showErrors: new SuprSubDep(false),
+    playersRingers: new SuprSubDep('players')
   },
 
   pitchIcon = L.AwesomeMarkers.icon({
@@ -112,6 +113,13 @@ Template.teamTopLevel.events({
         }
       });
     }
+
+  },
+
+  'click [data-function="home-ground"]': function() {
+
+    var currentTeam = formData.currentTeam.get();
+    zoomPitch();
 
   },
 
@@ -222,6 +230,12 @@ Template.teamDropDown.events({
 
 });
 
+Template.teamSecondLevel.helpers({
+  teamId: function () {
+    return formData.currentTeam.getKey('_id');
+  }
+});
+
 Template.otherInfo.helpers({
 
   pitchMatches: function() {
@@ -280,6 +294,25 @@ Template.pitchMapSmall.helpers({
   }
 });
 
+Template.playerTable.helpers({
+  tableHeader: function() {
+    return formData.playersRingers.get().capitalize();
+  },
+
+  tableInfo: function () {
+    var users;
+    switch (formData.playersRingers.get()) {
+      case 'players':
+        users = Meteor.users.find({'profile.team._ids': formData.currentTeam.getKey('_id')});
+      break;
+      case 'ringers':
+        users = Meteor.users.find({'profile.team._ids_ringers': formData.currentTeam.getKey('_id')});
+      default:
+    }
+    return users;
+  }
+});
+
 /*****************************************************************************/
 /* Team: Lifecycle Hooks */
 /*****************************************************************************/
@@ -294,7 +327,7 @@ Template.Team.rendered = function() {
   // SET UP FLIPBOX AND DROPDOWNS  
   this.$('#friendlyCompetitive').flipbox({
     onChange: function(value) {
-      formData.currentTeam.setKey('competitive', value);
+      currentTeam.setKey('competitive', value);
     }
   });
 
@@ -345,6 +378,12 @@ Template.Team.rendered = function() {
       _this.$('#teamChoice').dropdown('set selected', team._id);
       _this.$('#teamChoice').dropdown('hide');
     }
+  });
+
+  // RESUBSCRIBE TO PLAYER LIST
+
+  this.autorun(function(c) {
+    Meteor.subscribe('teammates', formData.teamsArray.get());
   });
 
 };
@@ -511,12 +550,12 @@ function defaultTeam() {
 function setHomeGround(pitch) {
   if (!window.map) return false;
 
-  if (!pitch || formData.currentTeam.value.homeGround === pitch) return false;
+  if (!pitch || (formData.currentTeam.value.homeGround === pitch && map.homeGroundMarker)) return false;
   if (typeof pitch === 'string') pitch = Pitches.findOne({
     _id: pitch
   });
   var thisPitchId = pitch && pitch._id;
-  if (!pitch || formData.currentTeam.value.homeGround === thisPitchId) return false;
+  if (!pitch || (formData.currentTeam.value.homeGround === thisPitchId && map.homeGroundMarker)) return false;
   formData.currentTeam.setKey('homeGround', pitch._id);
   formData.currentTeam.dep.changed();
 
@@ -544,7 +583,9 @@ function setHomeGround(pitch) {
 
   Tracker.autorun(function(comp) {
     if (readyDep.getKey('move') && readyDep.getKey('tiles')) {
-      map.homeGroundMarker && map.homeGroundMarker.openPopup();
+      console.log("Zooming to Pitch");
+      zoomPitch();
+      // map.homeGroundMarker && map.homeGroundMarker.openPopup();
       comp.stop();
     }
   });
@@ -608,6 +649,10 @@ mapRender = function(mapDetails) {
   map.addLayer(map.markers);
   map.updateMarkers();
 
+  // NEED TO "SET" HOME GROUND AGAIN TO ATTACH IT TO MAP
+  var homeGround = formData.homeGround.get();
+  homeGround && setHomeGround(homeGround);
+
   // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
   Tracker.autorun(function(comp) {
     if (Pitches && Pitches.synced() && App.pitchSync) {
@@ -623,14 +668,13 @@ mapRender = function(mapDetails) {
 
 function zoomPitch(defaultLocation) {
 
-  if (!formData.homeGround.getKey('_id')) {
-    defaultLocation && map.panTo(defaultLocation);
-  } else {
-    map.panTo(formData.homeGround.getKey('location'))
-    map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
-      map.homeGroundMarker.openPopup()
-    });
-  }
+  var location = defaultLocation ? defaultLocation : formData.homeGround.getKey('_id'),
+      pitch = Pitches.findOne({_id: location});
+  if (!pitch) return false;
+  map.panTo(pitch.location);
+  map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
+    map.homeGroundMarker.openPopup()
+  });
 
 }
 

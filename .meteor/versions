@@ -26,7 +26,7 @@ email@1.0.4
 facebook@1.1.1
 fastclick@1.0.1
 follower-livedata@1.0.2
-fourseven:scss@0.9.6
+fourseven:scss@1.0.0
 gandev:server-eval@0.6.5
 geojson-utils@1.0.1
 html-tools@1.0.2
@@ -68,7 +68,7 @@ richsilv:dumb-collections@1.0.3
 richsilv:leaflet-awesome-markers@1.0.0
 richsilv:semantic-flipbox@1.0.4
 richsilv:semantic-ui-modal@1.0.2
-richsilv:semantic-ui-sass@1.0.0
+richsilv:semantic-ui-sass@1.0.9
 routepolicy@1.0.2
 service-configuration@1.0.2
 session@1.0.3

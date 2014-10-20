@@ -41,3 +41,9 @@ App.helpers = {
 _.each(App.helpers, function (helper, key) {
   	Handlebars.registerHelper(key, helper);
 });
+
+String.prototype.capitalize = function() {
+	return this.split(' ').map(function(subString) {
+		return subString.slice(0,1).toUpperCase() + subString.slice(1);
+	}).join(' ');
+}
