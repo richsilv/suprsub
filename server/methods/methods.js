@@ -307,7 +307,7 @@ Meteor.methods({
 			suprsubRoot = Meteor.absoluteUrl();
 		if (contacts.indexOf(0) > -1) {
 			Meteor.call('twitterSendMessage', "Here's the link you need to send to your teammates - " + 
-				suprsubRoot + "team/" + code, thisUser.services.twitter.id);
+				suprsubRoot + "team/" + teamId, thisUser.services.twitter.id);
 		}
 		if (contacts.indexOf(2) > -1) {
 			Meteor.defer(function() {
@@ -318,7 +318,7 @@ Meteor.methods({
 					html: Handlebars.templates['sendcode']({
 						teamName: team.name,
 						suprsubRoot: suprsubRoot,
-						code: code
+						code: teamId
 					})
 				});
 			});
@@ -332,11 +332,12 @@ Meteor.methods({
 					html: Handlebars.templates['sendcode']({
 						teamName: team.name,
 						suprsubRoot: suprsubRoot,
-						code: code
+						code: teamId
 					})
 				});
 			});			
 		}
+		return contacts;
 	},
 	sendRingerCode: function(teamId) {
 		var console = appConfig.sendToLogger;
@@ -379,6 +380,7 @@ Meteor.methods({
 				});
 			});			
 		}
+		return contacts;
 	},
 	getTeamMembers: function(teamId) {
 		return teamId ? Meteor.users.find({'profile.team._ids': teamId}, {fields: {'profile.name': true}}).fetch() : [];
