@@ -301,7 +301,7 @@ Meteor.methods({
 	},
 	sendTeamCode: function(teamId) {
 		var console = appConfig.sendToLogger;
-		var thisUser = Meteor.user();
+		var thisUser = Meteor.users.find(this.userId),
 			contacts = thisUser.profile.contact,
 			team = Teams.findOne({_id: teamId, players: thisUser._id}),
 			suprsubRoot = Meteor.absoluteUrl();
@@ -341,7 +341,7 @@ Meteor.methods({
 	},
 	sendRingerCode: function(teamId) {
 		var console = appConfig.sendToLogger;
-		var thisUser = Meteor.user();
+		var thisUser = Meteor.users.find(this.userId),
 			contacts = thisUser.profile.contact,
 			team = Teams.findOne({_id: teamId, players: thisUser._id}),
 			code = team.ringerCode
