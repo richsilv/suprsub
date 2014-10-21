@@ -15,11 +15,19 @@ Router.map(function () {
       this.route('home', {path: '/'});
   */
   this.route('home', {
-  	path: '/',
+  	path: '/home',
   	controller: 'HomeController'
   });
   this.route('team', {
   	path: '/team',
   	controller: 'TeamController'
+  });
+  this.route('player', {
+    path: '/player',
+    controller: 'PlayerController'
+  });
+  this.route('login', {
+    path: '/login',
+    controller: 'LoginController'
   });
 });

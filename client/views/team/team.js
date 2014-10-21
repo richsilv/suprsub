@@ -7,8 +7,7 @@ var formData = {
     teamInput: new SuprSubDep(),
     homeGround: new SuprSubDep({}),
     pitchMatches: new SuprSubDep([]),
-    showErrors: new SuprSubDep(false),
-    playersRingers: new SuprSubDep('players')
+    showErrors: new SuprSubDep(false)
   },
 
   pitchIcon = L.AwesomeMarkers.icon({
@@ -41,29 +40,29 @@ var formData = {
 /*****************************************************************************/
 Template.teamTopLevel.events({
 
-  'keyup #teamName': function(event) {
+  'keyup [data-field="team-name"]': function(event) {
     formData.currentTeam.setKey('name', event.currentTarget.value);
   },
 
-  'submit #teamForm': function(event) {
+  'submit': function(event) {
     return false;
   },
 
-  'change #timePickerHour': function(event) {
+  'change [data-field="hour"]': function(event) {
     var newTime = formData.currentTeam.getKey('time');
     newTime.setHours(event.currentTarget.valueAsNumber);
     event.currentTarget.value = App.padZeros(event.currentTarget.value, 2);
     formData.currentTeam.setKey('time', newTime);
   },
 
-  'change #timePickerMinute': function(event) {
+  'change [data-field="minute"]': function(event) {
     var newTime = formData.currentTeam.getKey('time');
     newTime.setMinutes(event.currentTarget.valueAsNumber);
     event.currentTarget.value = App.padZeros(event.currentTarget.value, 2);
     formData.currentTeam.setKey('time', newTime);
   },
 
-  'click #saveTeam': function(event, template) {
+  'click [data-action="save-team"]': function(event, template) {
     if (formData.currentTeam.get().invalid.length) {
       formData.showErrors.set(true);
       Meteor.setTimeout(function() {
@@ -78,20 +77,20 @@ Template.teamTopLevel.events({
         }, 500);
       });
       Meteor.users.update(Meteor.userId(), {
-        $push: {
-          'profile.team._ids': newId
+          $push: {
+            'profile.team._ids': newId
+          },
+          $set: {
+            'profile.team.default': newId
+          }
         },
-        $set: {
-          'profile.team.default': newId
-        }
-      },
-      function() {
-        if (App.countKeys(formData.teamsArray)) formData.teamInput.set(false);
-      });
+        function() {
+          if (App.countKeys(formData.teamsArray)) formData.teamInput.set(false);
+        });
     }
   },
 
-  'click #setDefault': function() {
+  'click [data-action="set-default"]': function() {
 
     Meteor.users.update(Meteor.userId(), {
       $set: {
@@ -101,7 +100,7 @@ Template.teamTopLevel.events({
 
   },
 
-  'click #addNewTeam': function() {
+  'click [data-action="add-team"]': function() {
 
     if (formData.currentTeam.getKey('_id')) {
       SemanticModal.confirmModal({
@@ -123,7 +122,7 @@ Template.teamTopLevel.events({
 
   },
 
-  'click #leaveTeam': function() {
+  'click [data-action="leave-team"]': function() {
 
     var solePlayer = (formData.currentTeam.getKey('players').length < 2) && (formData.currentTeam.getKey('players').indexOf(Meteor.userId()));
 
@@ -148,7 +147,7 @@ Template.teamTopLevel.events({
 
   },
 
-  'click #deleteTeam': function() {
+  'click [data-action="delete-team"]': function() {
 
     if (formData.currentTeam.getKey('_id')) {
       SemanticModal.confirmModal({
@@ -215,13 +214,13 @@ Template.teamTopLevel.helpers({
 
 Template.teamDropDown.events({
 
-  'dblclick #teamChoice': function() {
+  'dblclick [data-field="team-choice"]': function() {
     formData.teamInput.set(true);
     Tracker.flush();
     $('#teamName').focus();
   },
 
-  'blur #teamChoice, keydown #teamChoice': function(event) {
+  'blur [data-field="team-choice"], keydown [data-field="team-choice"]': function(event) {
     if (event.keyCode === 13 || event.type === 'blur') {
       formData.teamInput.set(false);
     }
@@ -231,8 +230,48 @@ Template.teamDropDown.events({
 });
 
 Template.teamSecondLevel.helpers({
-  teamId: function () {
+  teamId: function() {
     return formData.currentTeam.getKey('_id');
+  }
+});
+
+
+Template.playerTable.helpers({
+  tableHeader: function() {
+    return App.tabChoices.getKey('playersRingers').capitalize();
+  },
+
+  tableInfo: function() {
+    var users,
+        selection = App.tabChoices.getKey('playersRingers');
+    switch (selection) {
+      case 'players':
+        users = Meteor.users.find({
+          'profile.team._ids': formData.currentTeam.getKey('_id')
+        });
+        break;
+      case 'ringers':
+        users = Meteor.users.find({
+          'profile.team._ids_ringers': formData.currentTeam.getKey('_id')
+        });
+      default:
+    }
+    return users;
+  }
+});
+
+Template.playerButtons.events({
+  'click [data-tab="playersRingers"]': function(event, template) {
+    var target = $(event.currentTarget);
+    App.tabChoices.setKey(target.data('tab'), target.data('tab-selection'));
+  },
+
+  'click [data-action="send-code"]': function(event, template) {
+    SemanticModal.generalModal('chooseCodeTypeModal');
+  },
+
+  'click [data-action="join-team"]': function(event, template) {
+    SemanticModal.generalModal('joinTeamModal');
   }
 });
 
@@ -246,7 +285,7 @@ Template.otherInfo.helpers({
 
 Template.otherInfo.events({
 
-  'keyup #homeGroundSearch': function(event) {
+  'keyup [data-field="home-ground-search"]': function(event) {
     var searchString = event.currentTarget.value;
     if (searchString.length > 3) {
       formData.pitchMatches.set(Pitches.find({
@@ -260,9 +299,9 @@ Template.otherInfo.events({
     return false;
   },
 
-  'click #mapSearchButton, submit': function(event, template) {
+  'click [data-action="search"], submit': function(event, template) {
     var params = {
-      q: template.$('#homeGroundSearch').val(),
+      q: template.$('[data-field="home-ground-search"]').val(),
       format: 'json',
       countrycode: 'gb',
       limit: 1
@@ -294,22 +333,39 @@ Template.pitchMapSmall.helpers({
   }
 });
 
-Template.playerTable.helpers({
-  tableHeader: function() {
-    return formData.playersRingers.get().capitalize();
+Template.chooseCodeTypeModal.events({
+
+  'click [data-action="invite-teammates"]': function () {
+    var teamCode = formData.currentTeam.getKey('_id');
+    $('.ui.modal').modal('hide');
+    Meteor.call('comms/sendTeamCode', teamCode, function(err, res) {
+      if (!err && res  && res.length) {
+        SemanticModal.generalModal("teammateInvitationModal", {
+          contacts: res.join(' and '),
+          teamCode: teamCode
+        });
+      }
+    });
   },
 
-  tableInfo: function () {
-    var users;
-    switch (formData.playersRingers.get()) {
-      case 'players':
-        users = Meteor.users.find({'profile.team._ids': formData.currentTeam.getKey('_id')});
-      break;
-      case 'ringers':
-        users = Meteor.users.find({'profile.team._ids_ringers': formData.currentTeam.getKey('_id')});
-      default:
-    }
-    return users;
+  'click [data-action="invite-suprsubs"]': function () { 
+    var ringerCode = formData.currentTeam.getKey('ringerCode');
+    $('.ui.modal').modal('hide');
+    Meteor.call('comms/sendRingerCode', ringerCode, function(err, res) {
+      if (!err && res  && res.length) {
+        SemanticModal.generalModal("teammateInvitationModal", {
+          contacts: res.join(' and '),
+          teamCode: ringerCode
+        });
+      }
+    });
+  }
+
+});
+
+Template.joinTeamModal.events({
+  'submit': function (event, template) {
+    App.team.join(template.$('[data-field="team-code"]').val());
   }
 });
 
@@ -325,19 +381,19 @@ Template.Team.rendered = function() {
     currentTeam = formData.currentTeam;
 
   // SET UP FLIPBOX AND DROPDOWNS  
-  this.$('#friendlyCompetitive').flipbox({
+  this.$('[data-field="friendly-competitive"]').flipbox({
     onChange: function(value) {
       currentTeam.setKey('competitive', value);
     }
   });
 
-  this.$('#gameFormat').dropdown({
+  this.$('[data-field="game-format"]').dropdown({
     onChange: function(val) {
       currentTeam.setKey('format', val);
     }
   });
 
-  this.$('#dayChoiceSection>.ui.dropdown').dropdown({
+  this.$('[data-field="day-choice"]').dropdown({
     onChange: function(val) {
       var newTime = currentTeam.getKey('time');
       newTime.setDate(val + 1);
@@ -348,17 +404,17 @@ Template.Team.rendered = function() {
   // UPDATE FIELDS ON CHANGE OF DATA
 
   this.autorun(function(c) {
-    _this.$('#friendlyCompetitive').flipbox('set choice', currentTeam.getKey('competitive'));
+    _this.$('[data-field="friendly-competitive"]').flipbox('set choice', currentTeam.getKey('competitive'));
   });
 
   this.autorun(function(c) {
     var format = currentTeam.getKey('format');
 
     if (format) {
-      _this.$('#gameFormat').dropdown('set value', format);
-      _this.$('#gameFormat').dropdown('set selected', format);
+      _this.$('[data-field="game-format"]').dropdown('set value', format);
+      _this.$('[data-field="game-format"]').dropdown('set selected', format);
     } else {
-      _this.$('#gameFormat').dropdown('restore defaults');
+      _this.$('[data-field="game-format"]').dropdown('restore defaults');
     }
   });
 
@@ -366,17 +422,17 @@ Template.Team.rendered = function() {
     var time = currentTeam.getKey('time');
 
     if (time) {
-      _this.$('#dayChoiceSection>.ui.dropdown').dropdown('set value', time.getDay() - 1);
-      _this.$('#dayChoiceSection>.ui.dropdown').dropdown('set selected', time.getDay() - 1);
+      _this.$('[data-field="day-choice"]').dropdown('set value', time.getDay() - 1);
+      _this.$('[data-field="day-choice"]').dropdown('set selected', time.getDay() - 1);
     }
   });
 
   this.autorun(function(c) {
     var team = formData.currentTeam.get();
     if (team) {
-      _this.$('#teamChoice').dropdown('set value', team._id);
-      _this.$('#teamChoice').dropdown('set selected', team._id);
-      _this.$('#teamChoice').dropdown('hide');
+      _this.$('[data-field="team-choice"]').dropdown('set value', team._id);
+      _this.$('[data-field="team-choice"]').dropdown('set selected', team._id);
+      _this.$('[data-field="team-choice"]').dropdown('hide');
     }
   });
 
@@ -400,7 +456,7 @@ Template.teamDropDown.rendered = function() {
   var _this = this,
     currentTeam = formData.currentTeam;
 
-  this.$('#teamChoice').dropdown({
+  this.$('[data-field="team-choice"]').dropdown({
     onChange: function(value, text) {
       var index;
       _.find(formData.teamsArray.get(), function(team, teamIndex) {
@@ -414,7 +470,7 @@ Template.teamDropDown.rendered = function() {
   });
 
   this.autorun(function(c) {
-    _this.$('#teamChoice').dropdown('set selected', currentTeam.getKey('_id'));
+    _this.$('[data-field="team-choice"]').dropdown('set selected', currentTeam.getKey('_id'));
   });
 }
 
@@ -583,9 +639,7 @@ function setHomeGround(pitch) {
 
   Tracker.autorun(function(comp) {
     if (readyDep.getKey('move') && readyDep.getKey('tiles')) {
-      console.log("Zooming to Pitch");
       zoomPitch();
-      // map.homeGroundMarker && map.homeGroundMarker.openPopup();
       comp.stop();
     }
   });
@@ -669,7 +723,9 @@ mapRender = function(mapDetails) {
 function zoomPitch(defaultLocation) {
 
   var location = defaultLocation ? defaultLocation : formData.homeGround.getKey('_id'),
-      pitch = Pitches.findOne({_id: location});
+    pitch = Pitches.findOne({
+      _id: location
+    });
   if (!pitch) return false;
   map.panTo(pitch.location);
   map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
@@ -678,6 +734,25 @@ function zoomPitch(defaultLocation) {
 
 }
 
-getFormData = function() {
-  return formData;
+// GLOBAL NAMESPACE
+
+App.team = {
+  join: function(code) {
+    Meteor.call('team/join', code, function(err, res) {
+      if (err) {
+        SemanticModal.confirmModal({
+          header: 'Could not join team',
+          message: err.details,
+          noButtons: true
+        })
+      }
+      else {
+        SemanticModal.confirmModal({
+          header: 'Congratulations!',
+          message: 'You have joined the team <strong>' + res.team + '</strong> as a ' + res.type + '.',
+          noButtons: true
+        })
+      }
+    });
+  }
 }

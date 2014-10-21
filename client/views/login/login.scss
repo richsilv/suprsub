@@ -1,0 +1,102 @@
+/*****************************************************************************/
+/* Login: Style */
+/*****************************************************************************/
+#login-background-image {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	height:100vh;
+	width:100vw;
+	background: url('http://suprsub.s3.amazonaws.com/images/footygoal2.jpeg') no-repeat center center fixed;
+	background-size: cover;
+	-o-background-size: cover;
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+}
+
+.quote {
+	font-size: 1.75em;
+	padding-left: 5em;
+	text-indent: -5em;
+}
+
+.quotee {
+	text-align: right;
+	margin-right: 2em;
+}
+
+.disclaimer {
+	font-size: 0.8em;
+	color: #ccc;
+}
+
+.disclaimer a:link, .disclaimer a:hover, .disclaimer a:visited {
+	color: #22d;
+	text-decoration: none;
+	text-shadow: 0 0 1px #775;
+}
+
+#loginBox {
+	position: absolute;
+    width: 100%;
+    height: 500px;
+    margin-top: -250px;
+}
+
+#loginSubBox>div {
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#resetBox {
+	position: absolute;
+    width: 100%;
+    height: 500px;
+    margin-top: -250px;
+}
+
+#loggedInBox {
+	padding-top: 50px;
+	width: 100%;
+	height: auto;
+}
+
+#phoneLogin>div {
+	vertical-align: super;
+}
+
+#socialbuttons .button {
+	text-transform: none;
+}
+
+#mfBox {
+	text-align: center;
+}
+
+#mfBox .checkboxLabel {
+	margin-top: 0.875em !important;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+#mfSubBox {
+	position: absolute;
+	left: 5em;
+	bottom: 1.5em;
+}
+
+#errorBox {
+	display: block;
+}
+
+/*For small width screens only*/
+@media only screen and (max-width: 40em) {
+
+	#login-background-image {
+		background: url('https://s3-eu-west-1.amazonaws.com/suprsub/images/footygoalsmall.jpeg') no-repeat center center fixed;
+	}
+
+}

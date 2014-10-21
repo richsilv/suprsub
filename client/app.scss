@@ -20,6 +20,39 @@ $alert-color: #f04124;
 $success-color: #43AC6A;
 $warning-color: #f08a24;
 $info-color: #a0d3e8;
+$white-text: rgb(245, 245, 245); 
+
+// CUSTOM COLOURS
+
+.ui.segment.semitranslucent,
+.ui.segment.inverted.semitranslucent {
+	background-color: rgba(0, 0, 0, 0.7);
+	color: $white-text;
+
+	* {
+		color: $white-text;
+	}
+}
+
+.ui.segment.translucent,
+.ui.segment.inverted.translucent {
+	background-color: rgba(0, 0, 0, 0.4);
+	color: $white-text;
+
+	* {
+		color: $white-text;
+	}
+}
+
+// CUSTOM PROPERTY HELPERS
+
+.bold {
+	font-weight: bold;
+}
+
+.centered {
+	text-align: center;
+}
 
 // TOPBAR SCSS
 $topbar-bg-color: $suprsub-green;
@@ -48,6 +81,41 @@ body {
 	-webkit-backface-visibility: hidden;
 	-webkit-transition: translate3d(0,0,0);
     background-color: $background-color;
+}
+
+// SEMANTIC ELEMENTS
+
+.checkbox.field {
+	>* {
+		display: inline-block;	
+	}
+}
+
+.ui.toggle.checkbox.neutral {
+	width: 3em;
+	margin-left: 0.5em;
+	margin-right: 0.5em;
+}
+
+.ui.toggle.checkbox.neutral .box:after, .ui.toggle.checkbox.neutral label:after ,
+.ui.toggle.checkbox.neutral input:checked + .box:after, .ui.toggle.checkbox.neutral input:checked + label:after {
+	background-color: rgb(45, 131, 131);
+}
+
+.checkboxLabel {
+	cursor: pointer;
+}
+
+.ui.form.tight .field {
+	margin-bottom: 0.5em;
+	line-height: 1.3em;
+}
+
+.ui.tight {
+	line-height: 1.2;
+	>* {
+		line-height: 1.2;
+	}
 }
 
 // MAP MARKERS

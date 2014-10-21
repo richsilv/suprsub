@@ -1,3 +1,148 @@
 <template name="Login">
-  client/views/login/login.html
+	<div id="login-background-image">
+	</div>
+	<div class="ui page center aligned gridF" id="loginBox">
+		<div class="row">
+			<div class="large-7 large-centered medium-11 medium-centered column" id="loginSubBox">
+				<div class="ui tight inverted segment semitranslucent">
+					<h2 class="bold">Become a SuprSub for free today</h2>
+				</div>
+				<div class="ui tight form segment translucent">
+					<div class="field">
+						<div class="2 fluid ui buttons" id="socialbuttons">
+							<div class="ui facebook button" data-action="facebook">
+								<i class="facebook icon"></i>
+								Facebook
+							</div>
+							<div class="ui twitter button" data-action="twitter">
+								<i class="twitter icon"></i>
+								Twitter
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="First Name" data-field="first-name" name="fname" autocomplete="on">
+							<i class="user icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui icon input">
+							<input type="text" placeholder="Last Name" data-field="last-name" name="lname" autocomplete="on">
+							<i class="user icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					<div class="centered checkbox field">
+						<div class="ui checkboxLabel">Male</div>
+						<div class="ui toggle checkbox neutral">
+							<input type="checkbox" data-field="gender">
+							<label></label>
+						</div>
+						<div class="ui checkboxLabel">Female</div>
+					</div>
+					<div class="field">
+						<div class="ui icon input">
+							<input type="email" placeholder="E-Mail" data-field="email" name="email" autocomplete="on">
+							<i class="inbox icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui icon input">
+							<input type="password" placeholder="Password" data-field="password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui icon input">
+							<input type="password" placeholder="Confirm Password" data-field="password-confirm">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					{{#if accountError}}
+						<div class="ui error message" id="errorBox">
+							<div class="header">{{accountError}}</div>
+						</div>
+					{{/if}}
+					{{#unless forgottenPassword}}
+					<div class="disclaimer small-11 columns">By clicking "Sign Up" you agree to our <a href="website-terms-and-conditions-suprsub.doc">Terms and Conditions</a>. View our <a href="website-privacy-policy-suprsub.doc">Privacy Policy</a></div>
+					<div class="ui rightF blue submit button" data-action="sign-up">Sign Up</div>
+					{{else}}
+					<div class="ui rightF orange submit button" data-action="reset-password">Reset Password</div>
+					{{/unless}}
+				</div>
+				<div class="ui inverted tight segment semitranslucent">
+					<h2 class="quote">"Inspirational quote from<br class="hide-for-small">high-profile user"</h2>
+					<h3 class="bold quotee">-Random Bloke</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="resetBox">
+	<div id="login-background-image">
+	</div>
+	<div class="ui page center aligned gridF" id="resetBox">
+		<div class="row">
+			<div class="large-7 large-centered medium-11 medium-centered column">
+				<div class="ui inverted segment semitranslucent">
+					<h1>Please enter a new password</h1>
+				</div>
+				<div class="ui form segment translucent">
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="password" placeholder="Password" id="signup-password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					<div class="field">
+						<div class="ui left labeled icon input">
+							<input type="password" placeholder="Confirm Password" id="confirm-password">
+							<i class="lock icon"></i>
+							<div class="ui corner label">
+								<i class="icon asterisk"></i>
+							</div>
+						</div>
+					</div>
+					{{#if accountError}}
+						<div class="ui error message" id="errorBox">
+							<div class="header">{{accountError}}</div>
+						</div>
+					{{/if}}
+					<div class="ui rightF orange submit button" id="reset-button">Reset Password</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="twitterGenderModal">
+	<div class="ui segment"><p>In order to comply with Football Association regulations, we can only match players with teams of the same gender - please confirm your gender below.</p></div>
+	<div class="field" id="mfSubBox">
+		<div class="checkboxLabel">Male</div>
+		<div class="ui toggle checkbox neutral">
+			<input type="checkbox" id="maleFemaleModal">
+			<label></label>
+		</div>
+		<div class="checkboxLabel">Female</div>
+	</div>
+	<div class="ui rightF blue submit button" id="genderConfirmButton">Confirm</div>
 </template>

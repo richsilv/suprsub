@@ -23,7 +23,13 @@ richsilv:leaflet-awesome-markers
 sewdn:velocityjs
 aldeed:collection2
 matb33:collection-hooks
-richsilv:semantic-ui-modal
 gandev:server-eval
 richsilv:dumb-collections
+richsilv:semantic-ui-modal
+meteorhacks:npm
+
+
+npm-container
+cmather:handlebars-server
+email
 
