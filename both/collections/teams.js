@@ -1,5 +1,17 @@
 Teams = new Meteor.Collection('teams');
 
+Teams.allow({
+	insert: function (userId, doc) {
+		return doc.players.indexOf(userId) > -1;
+	},
+	update: function (userId, doc, fields, modifier) {
+		return doc.players.indexOf(userId) > -1;
+	},
+	remove: function (userId, doc) {
+		return doc.players.indexOf(userId) > -1;
+	}
+});
+
 // SCHEMA
 
 Schemas.Teams = new SimpleSchema({

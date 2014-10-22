@@ -175,7 +175,7 @@ Meteor.users.after.update(function(userId, doc, fieldNames, modifier) {
 
 		Meteor.users.update(doc._id, {
 			$set: {
-				'profile.team.default': null
+				'profile.team.default': ''
 			}
 		});
 

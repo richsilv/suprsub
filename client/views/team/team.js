@@ -180,7 +180,7 @@ Template.teamTopLevel.helpers({
   },
 
   default: function() {
-    return Meteor.user().profile.team.default === formData.currentTeam.getKey('_id');
+    return Meteor.user() && Meteor.user().profile.team.default === formData.currentTeam.getKey('_id');
   },
 
   hour: function() {
@@ -604,7 +604,7 @@ function defaultTeam() {
 }
 
 function setHomeGround(pitch) {
-  if (!window.map) return false;
+  if (!window.map || map instanceof HTMLElement) return false;
 
   if (!pitch || (formData.currentTeam.value.homeGround === pitch && map.homeGroundMarker)) return false;
   if (typeof pitch === 'string') pitch = Pitches.findOne({

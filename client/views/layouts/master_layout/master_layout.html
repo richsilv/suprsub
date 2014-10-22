@@ -45,26 +45,26 @@
 				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>
 			</div>
   			<div class="item" id="logout-holder">
-    			<div class="ui button" id="logout-button">Log Out</div>
+    			<div class="ui button" data-action="log-out">Log Out</div>
   			</div>
 			{{else}}
-			{{#unless option "/"}}
+			<form>
 			<div class="item">
 				<div class="ui icon input">
-					<input type="email" placeholder="Email" id="login-email" name="email" autocomplete="on">
+					<input type="email" placeholder="Email" data-field="email" name="email" autocomplete="on">
 					<i class="user link icon"></i>
 				</div>
-				</div>
-				<div class="item">
+			</div>
+			<div class="item">
 				<div class="ui icon input">
-					<input type="password" placeholder="Password" id="login-password">
+					<input type="password" placeholder="Password" data-field="password">
 					<i class="lock link icon"></i>
 				</div>
 			</div>
-			{{/unless}}
   			<div class="item">
-    			<div class="ui button" id="login-button">Log In</div>
+    			<div class="ui button" data-action="log-in">Log In</div>
   			</div>
+  			</form>
   			{{/if}}
 		</div>
 	</div>

@@ -39,23 +39,25 @@ Template.topbar.helpers({
 
 Template.topbar.events({
 
-  'click #login-button, keyup #login-email, keyup #login-password': function(event) {
+  'click [data-action="log-in"], submit': function(event, template) {
 
-    _this = Template.instance();
+    Meteor.loginWithPassword(template.email.get(), template.password.get(), function(err) {
+      console.log(err);
+      return false;
+    });
 
-    if (event.keyCode === 13 || event.type === 'click') {
+  },
 
-      Meteor.loginWithPassword(_this.email.get(), _this.password.get(), function(err) {
-        console.log(err);
-        return false;
-      });
+  'keyup [data-field="email"], keyup [data-field="password"]': function(event, template) {
 
-    } else {
+    template.email.set(template.$('[data-field="email"]').val());
+    template.password.set(template.$('[data-field="password"]').val());
 
-      _this.email.set($('#login-email').val());
-      _this.password.set($('#login-password').val());
+  },
 
-    }
+  'click [data-action="log-out"]': function() {
+
+    Meteor.logout();
 
   }
 
