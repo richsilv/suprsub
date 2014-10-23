@@ -185,6 +185,36 @@ body {
 	height: calc(2.6em + 2px);
 }
 
+.no-padding {
+	padding: 0 !important;
+}
+
+.full-height {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.25em; /* Adjusts for spacing */	
+}
+
+.vertical-center:before {
+    @extend .full-height;	
+}
+
+.vertical-center>* {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.webicon {
+	margin: 0 0.25em 0 0.25em !important;
+}
+
+.float-right {
+	float: right;
+}
+
 // ACCEPTED FORM STATES
 
 .ui.form .fields.accepted .field label,

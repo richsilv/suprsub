@@ -652,7 +652,8 @@ function homeGroundWrapper(event) {
 
 mapRender = function(mapDetails) {
   var mapCenter = mapDetails.value.mapCenter,
-    mapZoom = mapDetails.value.mapZoom;
+    mapZoom = mapDetails.value.mapZoom,
+    markersAdded = new ReactiveVar(false);
 
   L.Icon.Default.imagePath = 'packages/leaflet/images';
 
@@ -680,25 +681,45 @@ mapRender = function(mapDetails) {
   });
 
   map.updateMarkers = function() {
-    map.markerArray = _.map(Pitches.find({
-      location: {
-        $exists: true
+    var pitches = Pitches.find({
+          location: {
+            $exists: true
+          }
+        }).fetch(),
+        pitchCount = pitches.length;
+    map.markerArray = [];
+
+    addMarker = function(i) {
+      if (i < pitchCount) {
+        var pitch = pitches[i];
+        Meteor.defer(function() {
+          var newMarker = new L.Marker(pitch.location, {
+            icon: pitchIcon,
+            title: pitch.prettyLocation,
+            riseOnHover: true,
+            pitchId: pitch._id
+          }).on('click', homeGroundWrapper).bindPopup(pitch.prettyLocation);
+          if (pitch._id === formData.currentTeam.getKey('_id')) {
+            newMarker.options.icon = pitchIconSpinning;
+            map.homeGroundMarker = newMarker;
+          }
+          map.markerArray.push(newMarker);
+          addMarker(i + 1);
+        });
+      } else {
+        markersAdded.set(true);
       }
-    }).fetch(), function(pitch) {
-      var newMarker = new L.Marker(pitch.location, {
-        icon: pitchIcon,
-        title: pitch.prettyLocation,
-        riseOnHover: true,
-        pitchId: pitch._id
-      }).on('click', homeGroundWrapper).bindPopup(pitch.prettyLocation);
-      if (pitch._id === formData.currentTeam.getKey('_id')) {
-        newMarker.options.icon = pitchIconSpinning;
-        map.homeGroundMarker = newMarker;
-      }
-      return newMarker;
-    });
+    }
+
+    markersAdded.set(false);
+    addMarker(0);
+
     map.markers.clearLayers();
-    map.markers.addLayers(map.markerArray);
+    Tracker.autorun(function(c) {
+      if (markersAdded.get()) {
+        map.markers.addLayers(map.markerArray);
+      }
+    });
   };
   map.addLayer(map.markers);
   map.updateMarkers();

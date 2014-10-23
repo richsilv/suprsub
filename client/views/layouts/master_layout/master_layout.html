@@ -36,36 +36,38 @@
 			<i class="settings icon"></i> Settings
 		</a>
 		{{/if}}
-		<div id="toplogo-image-temp" style="display: none;">SuprSub</div>
-		<div class="right menu">
+		<div class="no-padding item float-right">
 			{{#if currentUser}}
-			<div class="svg item" id="socialItem">
-				<span><a target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Check+out+this+brilliant+new+footy+platform+-+you+can+sign+up+in+seconds!+@suprsub&url=http://suprsub.com" class="webicon twitter" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a></span>
-				<span><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" class="webicon facebook" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a></span>
-				<span><a  class="webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a></span>
-			</div>
-  			<div class="item" id="logout-holder">
-    			<div class="ui button" data-action="log-out">Log Out</div>
-  			</div>
+			<form class="full-height">
+	  			<div class="item" style="margin-top: 0.25em;">
+	    			<div class="ui button" data-action="log-out">Log Out</div>
+	  			</div>
+  			</form>
 			{{else}}
 			<form>
-			<div class="item">
-				<div class="ui icon input">
-					<input type="email" placeholder="Email" data-field="email" name="email" autocomplete="on">
-					<i class="user link icon"></i>
+				<div class="item">
+					<div class="ui icon input">
+						<input type="email" placeholder="Email" data-field="email" name="email" autocomplete="on">
+						<i class="user link icon"></i>
+					</div>
 				</div>
-			</div>
-			<div class="item">
-				<div class="ui icon input">
-					<input type="password" placeholder="Password" data-field="password">
-					<i class="lock link icon"></i>
+				<div class="item">
+					<div class="ui icon input">
+						<input type="password" placeholder="Password" data-field="password">
+						<i class="lock link icon"></i>
+					</div>
 				</div>
-			</div>
-  			<div class="item">
-    			<div class="ui button" data-action="log-in">Log In</div>
-  			</div>
+	  			<div class="item">
+	    			<div class="ui button" data-action="log-in">Log In</div>
+	  			</div>
   			</form>
   			{{/if}}
+		</div>
+		<div id="toplogo-image-temp" style="display: none;">SuprSub</div>
+		<div class="no-padding item svg vertical-center float-right">
+			<a class="vertical-item webicon twitter" target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Check+out+this+brilliant+new+footy+platform+-+you+can+sign+up+in+seconds!+@suprsub&url=http://suprsub.com" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a>
+			<a class="vertical-item webicon facebook" target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a>
+			<a class="vertical-item webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a>
 		</div>
 	</div>
 </template>

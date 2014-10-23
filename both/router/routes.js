@@ -16,17 +16,17 @@ Router.onBeforeAction(function() {
     this.next();
   }
 }, {
-  except: ['login']
+  except: ['login', 'splash']
 });
 
 Router.onBeforeAction(function() {
   if (Meteor.userId()) {
-    this.redirect('team');
+    this.redirect('home');
   } else {
     this.next();
   }
 }, {
-  only: ['login']
+  only: ['login', 'splash']
 });
 
 Router.map(function() {
@@ -34,6 +34,12 @@ Router.map(function() {
     Example:
       this.route('home', {path: '/'});
   */
+  this.route('root', {
+    path: '/',
+    onBeforeAction: function() {
+      this.redirect('home');
+    }
+  });
   this.route('home', {
     path: '/home',
     controller: 'HomeController'
@@ -57,5 +63,9 @@ Router.map(function() {
   this.route('settings', {
     path: '/settings',
     controller: 'SettingsController'
+  });
+  this.route('splash', {
+    path: '/splash',
+    controller: 'SplashController'
   });
 });

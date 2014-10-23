@@ -32,4 +32,5 @@ matb33:collection-hooks
 iron:router@1.0.0-pre4
 gandev:server-eval
 service-configuration
+sacha:spin
 
