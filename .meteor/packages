@@ -20,7 +20,6 @@ richsilv:semantic-ui-sass
 richsilv:leaflet-awesome-markers
 sewdn:velocityjs
 aldeed:collection2
-gandev:server-eval
 richsilv:dumb-collections
 richsilv:semantic-ui-modal
 meteorhacks:npm
@@ -31,4 +30,6 @@ cmather:handlebars-server
 email
 matb33:collection-hooks
 iron:router@1.0.0-pre4
+gandev:server-eval
+service-configuration
 
