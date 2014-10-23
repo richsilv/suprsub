@@ -626,7 +626,7 @@ function setHomeGround(pitch) {
     return marker.options.pitchId === thisPitchId;
   });
   map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
-  if (pitch) map.panTo(pitch.location);
+  if (!_.isEmpty(pitch)) map.panTo(pitch.location);
 
   map.on('moveend', function() {
     readyDep.setKey('move', true);

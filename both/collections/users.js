@@ -42,7 +42,11 @@ Schemas.PlayerProfile = new SimpleSchema({
     },
     center: {
         type: Schemas.LatLng,
-        label: "Availability Area Center"
+        label: "Availability Area Center",
+        defaultValue: {
+            lat: 51.5560210,
+            lng: -0.2795190
+        }
     },
     footed: {
         type: Number,
@@ -80,7 +84,6 @@ Schemas.TeamProfile = new SimpleSchema({
     },
     default: {
         type: String,
-        regEx: SimpleSchema.RegEx.Id,
         defaultValue: ''
     }
 });
