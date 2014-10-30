@@ -401,6 +401,69 @@ Template.Team.rendered = function() {
     }
   });
 
+  // DATA BINDING (INSIDE TEMPLATE SO THAT IT'S TORN DOWN AUTOMATICALLY)
+  // KEEP TEAM LIST UP TO DATE
+  this.autorun(function(c) {
+    var user = Meteor.user();
+    formData.teamsArray.dep.depend();
+
+    if (user) {
+
+      var teams = _.indexBy(Teams.myTeams(), '_id');
+      formData.teamsArray.set(teams);
+
+      // TEST IF TEAM INDEX IS UNSET, OR FAILS TO MATCH AN EXISTING TEAM
+      if (!formData.teamIndex.get() || !teams[formData.teamIndex.get()]) {
+        formData.teamIndex.set(user.profile.team.default);
+      }
+      // NOW SET CURRENT TEAM USING INDEX
+      if (teams[formData.teamIndex.get()]) {
+        formData.currentTeam.set(teams[formData.teamIndex.get()]);
+      } else {
+        formData.currentTeam.set(defaultTeam());
+      }
+
+    }
+
+    // SYNCHRONISE CURRENT TEAM
+
+    Tracker.autorun(function(c) {
+      var currentTeam = formData.currentTeam.get();
+
+      if (currentTeam._id) {
+        Teams.update(currentTeam._id, {
+          $set: _.omit(currentTeam, 'invalid')
+        });
+      }
+    });
+
+    // UPDATE HOME GROUND
+
+    Tracker.autorun(function(c) {
+      if (Pitches.populated()) {
+        homeGround = Pitches.findOne(formData.currentTeam.getKey('homeGround'));
+        formData.homeGround.set(homeGround);
+        setHomeGround(homeGround);
+      }
+    });
+
+    // VALIDATE FORM
+    Tracker.autorun(function(c) {
+
+      var team = formData.currentTeam.get(),
+        invalid = [],
+        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-\']+/.exec(team.name);
+
+      if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
+      if (!team.format) invalid.push('format');
+      if ($.isEmptyObject(formData.homeGround.get())) invalid.push('homeGround');
+
+      formData.currentTeam.setKey('invalid', invalid);
+
+    });
+
+  });
+
   // UPDATE FIELDS ON CHANGE OF DATA
 
   this.autorun(function(c) {
@@ -518,76 +581,6 @@ Template.pitchMapSmall.destroyed = function() {
   map.remove();
 
 };
-
-/*****************************************************************************/
-/* Team: Data Binding */
-/*****************************************************************************/
-
-Meteor.startup(function() {
-
-  // KEEP TEAM LIST UP TO DATE
-  Tracker.autorun(function(c) {
-    var user = Meteor.user();
-    formData.teamsArray.dep.depend();
-
-    if (user) {
-
-      var teams = _.indexBy(Teams.myTeams(), '_id');
-      formData.teamsArray.set(teams);
-
-      // TEST IF TEAM INDEX IS UNSET, OR FAILS TO MATCH AN EXISTING TEAM
-      if (!formData.teamIndex.get() || !teams[formData.teamIndex.get()]) {
-        formData.teamIndex.set(user.profile.team.default);
-      }
-      // NOW SET CURRENT TEAM USING INDEX
-      if (teams[formData.teamIndex.get()]) {
-        formData.currentTeam.set(teams[formData.teamIndex.get()]);
-      } else {
-        formData.currentTeam.set(defaultTeam());
-      }
-
-    }
-
-    // SYNCHRONISE CURRENT TEAM
-
-    Tracker.autorun(function(c) {
-      var currentTeam = formData.currentTeam.get();
-
-      if (currentTeam._id) {
-        Teams.update(currentTeam._id, {
-          $set: _.omit(currentTeam, 'invalid')
-        });
-      }
-    });
-
-    // UPDATE HOME GROUND
-
-    Tracker.autorun(function(c) {
-      if (Pitches.populated()) {
-        homeGround = Pitches.findOne(formData.currentTeam.getKey('homeGround'));
-        formData.homeGround.set(homeGround);
-        setHomeGround(homeGround);
-      }
-    });
-
-    // VALIDATE FORM
-    Tracker.autorun(function(c) {
-
-      var team = formData.currentTeam.get(),
-        invalid = [],
-        nameMatch = /[ A-Za-z0-9;#\.\\\+\*\?\[\]\(\)\{\}\=\!\<\>\:\-\']+/.exec(team.name);
-
-      if (!(nameMatch && nameMatch[0] === team.name)) invalid.push('name');
-      if (!team.format) invalid.push('format');
-      if ($.isEmptyObject(formData.homeGround.get())) invalid.push('homeGround');
-
-      formData.currentTeam.setKey('invalid', invalid);
-
-    });
-
-  });
-
-});
 
 function defaultTeam() {
   return {

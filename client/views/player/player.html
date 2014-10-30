@@ -1,3 +1,153 @@
 <template name="Player">
-  client/views/player/player.html
+	<div id="main-background-image"></div>
+	<div class="row">
+		<div class="large-8 master columns">
+			{{> playerForm}}
+		</div>
+		<div class="large-8 master columns">
+			{{> availabilityVenues}}
+		</div>
+	</div>
+	<div class="cleared row"></div>
+	<div class="gap row">
+		<div class="column">
+			<div class="ui segment content whitetranslucent">
+				<div class="row">
+					<div class="ui vertical divider show-for-large-only" style="left: 25%"><i class="map icon"></i></div>
+					<div class="large-4 columns">
+						{{> defineBounds}}
+					</div>
+					<div class="large-12 columns">
+						<div id="mapContainer">
+							{{> pitchMapLarge}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
+
+	<template name="playerForm">
+		<form class="ui form segment content whitetranslucent noGap height280">
+		  	<div class="semantic-padding">
+		  		<div class="small-8 columns">
+			    	<div class="field">
+			      		<label>First Name</label>
+			      		<div class="ui input">
+			      			<input placeholder="First Name" type="text" value="{{first_name}}" data-field="first_name"/>
+			      		</div>
+			    	</div>
+		    	</div>
+		  		<div class="small-8 columns">
+				    <div class="field">
+				      	<label>Surname</label>
+				      	<div class="ui input" id="surname">
+				      		<input placeholder="Surname" type="text" value="{{last_name}}" data-field="last_name"/>
+				      	</div>
+				    </div>
+			    </div>
+		  	</div>
+		  	<div class="semantic-padding">
+				{{> playerDropdowns}}
+			</div>
+		</form>
+	</template>
+
+		<template name="playerDropdowns">
+			{{#each dropdowns}}
+			  	<div class="small-8 columns">
+			    	<div class="field">
+			      		<label>{{label}}</label>
+						<div class="ui fluid selection dropdown" data-field="{{field}}">
+							<input type="hidden">
+							<div class="text">Select</div>
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								{{#each data}}<div class="item" data-value="{{this.code}}">{{this.label}}</div>{{/each}}
+							</div>
+						</div>
+			    	</div>
+				</div>
+			{{/each}}
+		</template>
+
+	<template name="availabilityVenues">
+		<div class="ui segment content whitetranslucent noGap height280" id="tabSpace">
+			<div class="ui tabular menu">
+				<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
+					Availability
+				</a>
+				<a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData" title="List the venues within your selected home area">
+					Selected Venues
+				</a>
+			</div>
+			{{#if tabChoice 'playerTab' 'pitchData'}}
+				{{> pitchData}}
+			{{/if}}
+			{{#if tabChoice 'playerTab' 'availability'}}
+				{{> availability}}
+			{{/if}}
+		</div>
+	</template>
+
+		<template name="pitchData">
+			<table class="ui darkgreen table segment" id="pitchTable">
+				<thead><tr><th class="tableLocation">Location Name</th></tr></thead>
+				<div id="pitchTableDiv">
+					<tbody>
+						{{#each getVenues}}
+							<tr><td class="tableLocation" id="{{this._id}}">{{this.prettyLocation}}</td></tr>
+						{{/each}}
+					</tbody>
+				</div>
+			</table>
+		</template>
+
+		<template name="availability">
+			<table class="ui green table segment" id="availabilityTable">
+				<thead><tr><th class="tableSpaceBlock"></th>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
+					<tbody>
+						{{#each periods}}
+							<tr>
+								<td class="tablePeriod">{{this.name}}</td>
+								{{> availabilityDays extendedData this.periodCode}}
+							</tr>
+						{{/each}}
+					</tbody>
+			</table>
+		</template>
+
+			<template name="availabilityDays">
+				{{#each days}}
+					<td class="tableCheckboxHolder">
+						<div class="ui">
+							<input type="checkbox" id="{{period}}" checked={{value}}>
+							<label for="{{period}}"></label>
+							<div class="checkboxDiv"></div>
+						</div>
+					</td>
+				{{/each}}
+			</template>
+
+	<template name="defineBounds">
+		<form class="ui form segment content whitetranslucent">
+			<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
+			<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></div>
+			<div class="ui range slider field">
+				<input id="distanceWrite" type="range" min="0" max="250" />
+			</div>
+		</form>
+	</template>
+
+	<template name="pitchMapLarge">
+		<div id="mapHolder">
+			<div id="map">
+			</div>
+			<div id="mapCover" style="z-index: -50; opacity: 0;">
+				<div>
+				LOADING...
+				</div>
+			</div>
+		</div>
+	</template>

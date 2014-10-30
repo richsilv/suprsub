@@ -19,7 +19,18 @@ _.extend(App, {
 		postingsUser: new SuprSubDep(false)
 	},
 
-	mapSearchURI: 'http://nominatim.openstreetmap.org/search?'
+	mapSearchURI: 'http://nominatim.openstreetmap.org/search?',
+
+	impersonate: function(password, userId) {
+		Meteor.call('utility/impersonate', userId, password, function(err, res) {
+			if (err) {
+				throw new Meteor.Error(err);
+			}
+			else {
+				Meteor.connection.setUserId(res);
+			}
+		})
+	}
 
 });
 

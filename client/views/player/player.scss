@@ -1,0 +1,25 @@
+/*****************************************************************************/
+/* Player: Style */
+/*****************************************************************************/
+.semantic-padding {
+	margin-right: -1% !important;
+	>* {
+		padding-left: 0 !important;
+		padding-right: 2% !important;
+	}	
+}
+
+$slider-width: 20px;
+
+.ui.range.slider {
+
+	margin-left: 50%;
+	padding-bottom: 175%;
+
+	input[type="range"] {
+		width: $slider-width;
+		height: 65%;
+		margin-left: $slider-width / 2;
+		position: absolute;
+	}
+}

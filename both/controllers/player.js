@@ -3,6 +3,7 @@ PlayerController = RouteController.extend({
   },
 
   data: function () {
+  	return Meteor.user() && Meteor.user().profile;
   },
 
   action: function () {
