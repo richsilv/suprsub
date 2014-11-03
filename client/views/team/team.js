@@ -643,7 +643,7 @@ function homeGroundWrapper(event) {
   setHomeGround(event.target.options.pitchId);
 }
 
-mapRender = function(mapDetails) {
+function mapRender(mapDetails) {
   var mapCenter = mapDetails.value.mapCenter,
     mapZoom = mapDetails.value.mapZoom,
     markersAdded = new ReactiveVar(false);
@@ -682,7 +682,7 @@ mapRender = function(mapDetails) {
         pitchCount = pitches.length;
     map.markerArray = [];
 
-    addMarker = function(i) {
+    var addMarker = function(i) {
       if (i < pitchCount) {
         var pitch = pitches[i];
         Meteor.defer(function() {
