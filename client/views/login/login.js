@@ -114,7 +114,16 @@ Meteor.startup(function() {
         syncCallback: function(results) {
           App.pitchSync = results;
           c.stop();
-        }
+        },
+        options: {
+          fields: {
+            'location.city': 1,
+            'location.lat': 1,
+            'location.lng': 1,
+            'address': 1,
+            'prettyLocation': 1
+          }
+        } 
       });
     }
   });

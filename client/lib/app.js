@@ -49,6 +49,12 @@ App.helpers = {
 				name: d
 			};
 		});
+	},
+	toKm: function(m) {
+		return Math.round(m / 100) / 10;
+	},
+	stringify: function(object) {
+		return JSON.stringify(object);
 	}
 };
 

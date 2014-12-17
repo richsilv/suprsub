@@ -75,10 +75,10 @@
 	<template name="availabilityVenues">
 		<div class="ui segment content whitetranslucent noGap height280" id="tabSpace">
 			<div class="ui tabular menu">
-				<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" name="availability" title="Set your availability throughout the week">
+				<a class="{{#if tabChoice 'playerTab' 'availability'}}active {{/if}}item" data-tab="availability" title="Set your availability throughout the week">
 					Availability
 				</a>
-				<a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" name="pitchData" title="List the venues within your selected home area">
+				<a class="{{#if tabChoice 'playerTab' 'pitchData'}}active {{/if}}item" data-tab="pitchData" title="List the venues within your selected home area">
 					Selected Venues
 				</a>
 			</div>
@@ -96,7 +96,7 @@
 				<thead><tr><th class="tableLocation">Location Name</th></tr></thead>
 				<div id="pitchTableDiv">
 					<tbody>
-						{{#each getVenues}}
+						{{#each getPitches}}
 							<tr><td class="tableLocation" id="{{this._id}}">{{this.prettyLocation}}</td></tr>
 						{{/each}}
 					</tbody>
@@ -110,32 +110,26 @@
 					<tbody>
 						{{#each periods}}
 							<tr>
-								<td class="tablePeriod">{{this.name}}</td>
-								{{> availabilityDays extendedData this.periodCode}}
+								<td class="tablePeriod">{{name}}</td>
+								{{#each days ind}}
+									<td class="tableCheckboxHolder">
+										<div class="ui">
+											<div class="checkboxDiv {{#if this.value}}checked{{/if}}" data-period="{{this.code}}" data-checked={{this.value}}></div>
+										</div>
+									</td>
+								{{/each}}
 							</tr>
 						{{/each}}
 					</tbody>
 			</table>
 		</template>
 
-			<template name="availabilityDays">
-				{{#each days}}
-					<td class="tableCheckboxHolder">
-						<div class="ui">
-							<input type="checkbox" id="{{period}}" checked={{value}}>
-							<label for="{{period}}"></label>
-							<div class="checkboxDiv"></div>
-						</div>
-					</td>
-				{{/each}}
-			</template>
-
 	<template name="defineBounds">
 		<form class="ui form segment content whitetranslucent">
 			<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
-			<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><output for="distanceWrite" id="distanceRead"></output></h3></div>
-			<div class="ui range slider field">
-				<input id="distanceWrite" type="range" min="0" max="250" />
+			<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><div data-info="radius" class="radius">{{toKm player.radius}} km</div></h3></div>
+			<div class="slider-holder">
+				<div data-field="radius" class="slider" data-content="This is a slider"></div>
 			</div>
 		</form>
 	</template>

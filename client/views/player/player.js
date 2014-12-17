@@ -2,10 +2,7 @@ var MARKER_DELAY = 1000;
 
 var formData = {
     homeGround: new SuprSubDep(),
-    userData: new SuprSubDep(),
-    mapCircle: new SuprSubDep(),
-    venues: new SuprSubDep([]),
-    showErrors: new SuprSubDep(false)
+    pitches: new SuprSubDep([])
   },
 
   pitchIcon = L.AwesomeMarkers.icon({
@@ -19,6 +16,9 @@ var formData = {
     markerColor: 'suprsub-green',
     prefix: 'icon'
   }),
+
+  periods = ['06:00-12:00', '12:00-18:00', '18:00-00:00'],
+  days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 
   disappearFunc = function(elements) {
     elements.velocity({
@@ -71,15 +71,81 @@ Template.playerDropdowns.helpers({
   }
 });
 
+Template.availabilityVenues.events({
+  'click [data-tab]': function(event, template) {
+    App.tabChoices.setKey('playerTab', template.$(event.currentTarget).data('tab'));
+  }
+});
+
+Template.availability.helpers({
+  days: function(periodInd) {
+    var userDays = Meteor.user().profile.player
+    return _.map(days, function(day, ind) {
+      var code = periodInd + '/' + ind.toString();
+      return {
+        name: day,
+        code: code,
+        value: userDays.availability[code]
+      };
+    });
+  },
+  periods: function() {
+    return _.map(periods, function(period, ind) {
+      return {
+        name: period,
+        ind: ind
+      };
+    });
+  }
+});
+
+Template.availability.events({
+  'click [data-period]': function(event, template) {
+    var checkbox = template.$(event.currentTarget),
+        checked = checkbox.data('checked'),
+        period = checkbox.data('period'),
+        set = {}
+    set['profile.player.availability.' + period.toString()] = !checked;
+    console.log(period, checked, set);
+    Meteor.users.update({
+      _id: Meteor.userId()
+    }, {
+      $set: set
+    });
+  }
+});
+
+Template.pitchData.helpers({
+  'getPitches': function() {
+    return formData.pitches.get();
+  }
+})
+
+Template.defineBounds.events({
+  'slide .slider': function(event, template) {
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        'profile.player.radius': template.$(event.currentTarget).val()
+      }
+    }, console.log.bind(console));
+  }
+});
+
 Template.pitchMapLarge.events({
   'drag .pitchCircle': function(event, template, extra) {
     var currentLatLng = map.circle.getLatLng(),
-        newLatLng = {
-          lat: currentLatLng.lat + extra.lat,
-          lng: currentLatLng.lng + extra.lng
-        };
+        lat = currentLatLng.lat + extra.lat,
+        lng = currentLatLng.lng + extra.lng;
+      newLatLng = {
+        lat: lat,
+        lng: lng
+      };
     map.circle.setLatLng(newLatLng);
-    Meteor.users.update(Meteor.userId(), {$set: {'profile.player.center': newLatLng}});
+    Meteor.users.update(Meteor.userId(), {
+      $set: {
+        'profile.player.center': newLatLng
+      }
+    });
     event.stopPropagation();
   },
   'mouseover .pitchCircle': function() {
@@ -122,8 +188,6 @@ Template.Player.rendered = function() {
           },
           field = $el.data('field');
         update['$set']['profile.player.' + field] = value;
-        console.log(field, value);
-        console.log(update);
         Meteor.users.update(Meteor.userId(), update);
       }
     });
@@ -135,6 +199,18 @@ Template.Player.destroyed = function() {
 
   this.$('.ui.dropdown').dropdown('destroy');
 
+};
+
+Template.defineBounds.rendered = function() {
+  $('.slider').noUiSlider({
+    start: [8000],
+    range: {
+      'min': [1000],
+      'max': [15000]
+    },
+    orientation: 'vertical',
+    direction: 'rtl'
+  });
 };
 
 Template.pitchMapLarge.created = function() {
@@ -174,17 +250,40 @@ Template.pitchMapLarge.rendered = function() {
     map.off('locationfound');
   });
 
+  // REDRAW CIRCLE WHEN BOUNDS ARE CHANGED
   this.autorun(function() {
     var user = Meteor.user();
     if (!user || !map.circle) return false;
     var center = map.circle.getLatLng(),
-      size = map.circle.getRadius();
+      radius = map.circle.getRadius();
     if (user.profile.player.center.lat !== center.lat || user.profile.player.center.lng !== center.lng) {
-      map.circle.setLatLng(user.profile.player.center);
+      map.circle.setLatLng(new L.latLng(user.profile.player.center));
     }
-    if (user.profile.player.size !== size) {
-      map.circle.setRadius(user.profile.player.size);
+    if (user.profile.player.radius !== radius) {
+      map.circle.setRadius(user.profile.player.radius);
     }
+  });
+
+  // PERIODICALLY UPDATE PITCHES LIST
+  this.autorun(function() {
+    var user = Meteor.user();
+    if (this.timeOut) {
+      Meteor.clearTimeout(this.timeOut);
+      delete this.timeOut;
+    }
+    this.timeOut = Meteor.setTimeout(function(t) {
+      Tracker.nonreactive(function() {
+        var pitches = pitchesWithin(user.profile);
+        Meteor.users.update(user._id, {
+            $set: {
+              'profile.player.pitches': _.pluck(pitches, '_id')
+            }
+          },
+          function() {
+            formData.pitches.set(pitches);
+          });
+      });
+    }, 1000);
   });
 
 };
@@ -307,18 +406,14 @@ function mapRender(mapDetails) {
         map.updateMarkers();
       }
       // ADD CIRCLE
-      if (user) map.circle = L.circle(user.profile.player.center, user.profile.player.size, {
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.5,
+      var center = user ? L.latLng(user.profile.player.center) : L.latLng(51.5073509, -0.12775829999998223),
+          size = user ? user.profile.player.radius : 8000;
+      map.circle = L.circle(center, size, {
+        color: '#6D1AC0',
+        fillColor: '#6D1AC0',
+        fillOpacity: 0.4,
         className: 'pitchCircle'
       }).addTo(map);
-      else map.circle = L.circle(L.latLng(51.5073509, -0.12775829999998223, {
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.5,
-        className: 'pitchCircle'
-      }), 8000).addTo(map);
       zoomPitch(App.currentLocation);
       comp.stop();
     }
@@ -377,4 +472,26 @@ function setHomeGround(pitch) {
       comp.stop();
     }
   });
+}
+
+getFormData = function() {
+  return formData;
+}
+
+function pitchesWithin(profile) {
+  var pitches = [],
+    lngFactor = 1 / 71470,
+    latFactor = 1 / 111200,
+    center = profile.player.center,
+    radius = profile.player.radius;
+  allPitches = Pitches.withinBounds(new L.latLngBounds(
+    new L.latLng(center.lat - (radius * latFactor), center.lng - (radius * lngFactor)),
+    new L.latLng(center.lat + (radius * latFactor), center.lng + (radius * lngFactor))
+  ));
+  allPitches.forEach(function(pitch) {
+    if (new L.latLng(center).distanceTo(new L.latLng(pitch.location.lat, pitch.location.lng))) {
+      pitches.push(pitch);
+    }
+  });
+  return pitches;
 }

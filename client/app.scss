@@ -2,9 +2,14 @@
 /* Global CSS Styles */
 /*****************************************************************************/
 
+// BOURBON
+
+@import ".meteor/local/build/programs/server/assets/packages/wolves_bourbon/bourbon";
+
 // GLOBAL SCSS
 
 $suprsub-green: hsl(120, 75%, 43%);
+$suprsub-complement: complement($suprsub-green);
 $suprsub-washed-out: desaturate($suprsub-green, 0.5);
 $white-translucent: rgba(255, 255, 255, 0.85) !important;
 $background-color: rgb(148, 153, 148);
@@ -58,7 +63,6 @@ $white-text: rgb(245, 245, 245);
 $topbar-bg-color: $suprsub-green;
 $topbar-bg: $topbar-bg-color;
 
-@import "packages/richsilv:semantic-ui-sass/assets/stylesheets/semantic-ui";
 @import "./third-party/foundation-scss/foundation";
 
 @font-face {
@@ -253,34 +257,30 @@ body {
   }
 }
 
-// SEMANTIC RANGE SLIDER
+// PLAYER PAGE SPECIFICS
 
-.ui.slider.range input[type="range"] {
-	-webkit-appearance: none;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 50rem;
-	border-color: rgba(0, 0, 0, 0.1);
-	padding: 3px 5px;
+.semantic-padding {
+	margin-right: -1% !important;
+	>* {
+		padding-left: 0 !important;
+		padding-right: 2% !important;
+	}	
 }
 
-.ui.slider.range input[type="range"]::-moz-range-track {
-	background: none;
-	border: none;
-}
+.slider-holder {
 
-.ui.slider.range input[type="range"]::-webkit-slider-thumb {
-	-webkit-appearance: none;
-	background: $suprsub-green;
-	border-radius: 50rem;
-	height: 0.7em;
-	width: 0.7em;
-}
+	padding-bottom: 175%;
 
-.ui.slider.range input[type="range"]::-moz-range-thumb {
-	background: $suprsub-green;
-	border-color: $suprsub-green;
-	border-radius: 50rem;
-	height: 0.7em;
-	width: 0.7em;
+	.slider {
+
+		position: absolute;
+		height: 65%;
+		margin-left: 25%;
+
+		.noUi-handle {
+			background-color: $suprsub-green
+		}
+		
+	}
+
 }

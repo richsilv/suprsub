@@ -2,10 +2,14 @@ Pitches = new DumbCollection('pitches');
 
 Pitches.withinBounds = function(bounds) {
 	return Pitches.find({
-		'location.lat': {$gte: bounds.getSouth()},
-		'location.lat': {$lte: bounds.getNorth()},
-		'location.lng': {$gte: bounds.getWest()},
-		'location.lng': {$lte: bounds.getEast()}
+		'location.lat': {
+			$gte: bounds.getSouth(),
+			$lte: bounds.getNorth()
+		},
+		'location.lng': {
+			$gte: bounds.getWest(),
+			$lte: bounds.getEast()
+		}
 	}).fetch();
 }
 
