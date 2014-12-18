@@ -29,6 +29,26 @@ Router.onBeforeAction(function() {
   only: ['login', 'splash']
 });
 
+// SYNC PITCHES ON LOGIN
+Router.onAfterAction(function() {
+  if (!Pitches.synced()) {
+    Pitches.sync({
+      syncCallback: function(results) {
+        App.pitchSync = results;
+      },
+      options: {
+        fields: {
+          'location.city': 1,
+          'location.lat': 1,
+          'location.lng': 1,
+          'address': 1,
+          'prettyLocation': 1
+        }
+      } 
+    });
+  }
+})
+
 Router.map(function() {
   /*
     Example:

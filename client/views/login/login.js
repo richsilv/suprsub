@@ -105,26 +105,3 @@ Template.Login.destroyed = function() {
   $('.ui.checkbox').checkbox('destroy');
   $('.checkboxLabel').checkboxLabel('destroy');
 };
-
-// SYNC PITCHES ON LOGIN
-Meteor.startup(function() {
-  Tracker.autorun(function(c) {
-    if (!!Meteor.userId()) {
-      Pitches.sync({
-        syncCallback: function(results) {
-          App.pitchSync = results;
-          c.stop();
-        },
-        options: {
-          fields: {
-            'location.city': 1,
-            'location.lat': 1,
-            'location.lng': 1,
-            'address': 1,
-            'prettyLocation': 1
-          }
-        } 
-      });
-    }
-  });
-});
