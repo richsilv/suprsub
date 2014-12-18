@@ -57,6 +57,7 @@ Template.topbar.events({
 
   'click [data-action="log-out"]': function() {
 
+    Router.go('login');
     Meteor.logout();
 
   }

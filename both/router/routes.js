@@ -47,6 +47,8 @@ Router.onAfterAction(function() {
       } 
     });
   }
+}, {
+  only: ['home', 'team', 'player']
 })
 
 Router.map(function() {

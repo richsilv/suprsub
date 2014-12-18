@@ -1,5 +1,5 @@
 Deps.autorun(function() {
-    App.subs.events = App.remote.subscribe('events', App.subs.postingsChoice.get(), App.subs.postingsUser.get());
+    App.subs.events = Meteor.subscribe('events', App.subs.postingsChoice.get(), App.subs.postingsUser.get());
 });
 
 /*
