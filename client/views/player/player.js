@@ -79,13 +79,13 @@ Template.availabilityVenues.events({
 
 Template.availability.helpers({
   days: function(periodInd) {
-    var userDays = Meteor.user().profile.player
+    var userDays = Meteor.user() ? Meteor.user().profile.player.availability : {};
     return _.map(days, function(day, ind) {
       var code = periodInd + '/' + ind.toString();
       return {
         name: day,
         code: code,
-        value: userDays.availability[code]
+        value: userDays[code]
       };
     });
   },
@@ -178,7 +178,7 @@ Template.Player.rendered = function() {
       field = $(this).data('field');
 
     _this.autorun(function(c) {
-      $el.dropdown('set value', user.profile.player[field]).dropdown('set selected', user.profile.player[field]);
+      $el.dropdown('set value', user && user.profile.player[field]).dropdown('set selected', user && user.profile.player[field]);
     });
 
     $el.dropdown({
@@ -358,24 +358,30 @@ function mapRender(mapDetails) {
         }
       }).fetch(),
       pitchCount = pitches.length;
-    map.markerArray = [];
+    map.markerArray = [],
+    homeGroundId = formData.homeGround.getKey('_id'),
+    baseMarker = new L.Marker(new L.LatLng(0, 0), {
+            icon: pitchIcon,
+//            title: pitch.prettyLocation,
+            riseOnHover: true,
+//            pitchId: pitch._id
+          }).on('click', homeGroundWrapper);//.bindPopup(pitch.prettyLocation);
 
     var addMarker = function(i) {
       if (i < pitchCount) {
+        // if (i % 500 === 0) map.markers.addLayers(map.markerArray);
         var pitch = pitches[i];
         Meteor.defer(function() {
-          var newMarker = new L.Marker(pitch.location, {
-            icon: pitchIcon,
-            title: pitch.prettyLocation,
-            riseOnHover: true,
-            pitchId: pitch._id
-          }).on('click', homeGroundWrapper).bindPopup(pitch.prettyLocation);
-          if (pitch._id === formData.homeGround.getKey('_id')) {
+          var newMarker = _.clone(baseMarker);
+          newMarker._latLng = new L.LatLng(pitch.location.lat, pitch.location.lng);
+          newMarker.options.pitchId = pitch._id;
+          newMarker.options.title = pitch.prettyLocation;
+          if (pitch._id === homeGroundId) {
             newMarker.options.icon = pitchIconSpinning;
             map.homeGroundMarker = newMarker;
           }
           map.markerArray.push(newMarker);
-          addMarker(i + 1);
+          Meteor.defer(addMarker.bind(null, i + 1));
         });
       } else {
         markersAdded.set(true);
