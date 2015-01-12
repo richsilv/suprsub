@@ -1,16 +1,16 @@
 <template name="Team">
 	<div id="main-background-image"></div>
-	<div class="row teamHeight">
-		<div class="medium-8 master columns">
-				{{> teamTopLevel}}
-		</div>
-		<div class="medium-8 master columns">
-				{{> teamSecondLevel}}		
-		</div>
-	</div>
-	<div class="gap row">
-		<div class="small-16 master columns">
-			{{> otherInfo}}
+	<div class="container">
+		<div class="flexbox v-stretch wrap equal-height">
+			<div class="size-1 w-1-2">
+					{{> teamTopLevel}}
+			</div>
+			<div class="size-1 w-1-2">
+					{{> teamSecondLevel}}		
+			</div>
+			<div class="size-2 w-1-1">
+				{{> otherInfo}}
+			</div>
 		</div>
 	</div>
 	{{#if codeEntered}}
