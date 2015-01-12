@@ -14,7 +14,6 @@ reactive-var
 reactive-dict
 andruschka:tinycon
 fourseven:scss
-richsilv:leaflet-awesome-markers
 sewdn:velocityjs
 aldeed:collection2
 richsilv:semantic-ui-modal
@@ -32,3 +31,4 @@ rcy:nouislider
 richsilv:dumb-collections
 richsilv:stampit
 wolves:bourbon
+dburles:google-maps

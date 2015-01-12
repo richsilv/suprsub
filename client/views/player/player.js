@@ -5,7 +5,7 @@ var formData = {
     pitches: new SuprSubDep([])
   },
 
-  pitchIcon = L.AwesomeMarkers.icon({
+/*  pitchIcon = L.AwesomeMarkers.icon({
     icon: 'football',
     markerColor: 'suprsub-green',
     prefix: 'icon'
@@ -15,7 +15,7 @@ var formData = {
     icon: 'football-spinning',
     markerColor: 'suprsub-green',
     prefix: 'icon'
-  }),
+  }),*/
 
   periods = ['06:00-12:00', '12:00-18:00', '18:00-00:00'],
   days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],

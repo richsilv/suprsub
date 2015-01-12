@@ -29,6 +29,10 @@ Router.onBeforeAction(function() {
   only: ['login', 'splash']
 });
 
+Router.waitOn(function() {
+  return readyIfGMapsLoaded();
+}, { only: ['team', 'player'] });
+
 // SYNC PITCHES ON LOGIN
 Router.onAfterAction(function() {
   if (!Pitches.synced()) {
@@ -91,3 +95,12 @@ Router.map(function() {
     controller: 'SplashController'
   });
 });
+
+function readyIfGMapsLoaded() {
+  if (!GoogleMaps.loaded()) GoogleMaps.load();
+  return {
+    ready: function() {
+      return GoogleMaps.loaded();
+    }
+  }
+}

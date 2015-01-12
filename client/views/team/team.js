@@ -10,7 +10,7 @@ var formData = {
     showErrors: new SuprSubDep(false)
   },
 
-  pitchIcon = L.AwesomeMarkers.icon({
+/*  pitchIcon = L.AwesomeMarkers.icon({
     icon: 'football',
     markerColor: 'suprsub-green',
     prefix: 'icon'
@@ -20,7 +20,7 @@ var formData = {
     icon: 'football-spinning',
     markerColor: 'suprsub-green',
     prefix: 'icon'
-  }),
+  }),*/
 
   disappearFunc = function(elements) {
     elements.velocity({
@@ -309,7 +309,7 @@ Template.otherInfo.events({
     $.getJSON(App.mapSearchURI + $.param(params), function(data, res) {
       var location = data && data.length && data[0];
       if (res === 'success' && location) {
-        map.panTo(L.latLng(location.lat, location.lon));
+        map.panTo(M.latLng(location.lat, location.lon));
       }
     });
     return false;
@@ -317,7 +317,7 @@ Template.otherInfo.events({
 
   'click #pitchMatches .item': function(event) {
     setHomeGround(this);
-    map.setView(L.latLng(this.location), 14, {
+    map.setView(M.latLng(this.location), 14, {
       animate: true,
       pan: {
         duration: 2
@@ -548,7 +548,7 @@ Template.pitchMapSmall.created = function() {
 
     if (c.firstRun) {
       _this.mapDetails = new SuprSubDep({
-        mapCenter: L.latLng(51.5073509, -0.12775829999998223),
+        mapCenter: google.maps.LatLng(51.5073509, -0.12775829999998223),
         mapZoom: 11,
         isLoading: true
       });
@@ -566,13 +566,13 @@ Template.pitchMapSmall.created = function() {
 Template.pitchMapSmall.rendered = function() {
 
   // PASS OBJECT RATHER THAN GET() SO THAT OBJECT REF CAN BE USED BY MAP CALLBACKS ATTACHED BY mapRender
-  mapRender(this.mapDetails);
+/*  mapRender(this.mapDetails);
   map.locate();
   map.on('locationfound', function(data) {
     App.currentLocation = data.latlng;
     zoomPitch(App.currentLocation);
     map.off('locationfound');
-  });
+  });*/
 
 };
 
@@ -597,7 +597,7 @@ function defaultTeam() {
 }
 
 function setHomeGround(pitch) {
-  if (!window.map || map instanceof HTMLElement) return false;
+/*  if (!window.map || map instanceof HTMLElement) return false;
 
   if (!pitch || (formData.currentTeam.value.homeGround === pitch && map.homeGroundMarker)) return false;
   if (typeof pitch === 'string') pitch = Pitches.findOne({
@@ -635,16 +635,16 @@ function setHomeGround(pitch) {
       zoomPitch();
       comp.stop();
     }
-  });
+  });*/
 }
 
 
 function homeGroundWrapper(event) {
-  setHomeGround(event.target.options.pitchId);
+/*  setHomeGround(event.target.options.pitchId);*/
 }
 
 function mapRender(mapDetails) {
-  var mapCenter = mapDetails.value.mapCenter,
+/*  var mapCenter = mapDetails.value.mapCenter,
     mapZoom = mapDetails.value.mapZoom,
     markersAdded = new ReactiveVar(false);
 
@@ -730,13 +730,13 @@ function mapRender(mapDetails) {
       }
       comp.stop();
     }
-  });
+  });*/
 
 };
 
 function zoomPitch(defaultLocation) {
 
-  var location = defaultLocation ? defaultLocation : formData.homeGround.getKey('_id'),
+/*  var location = defaultLocation ? defaultLocation : formData.homeGround.getKey('_id'),
     pitch = Pitches.findOne({
       _id: location
     });
@@ -744,7 +744,7 @@ function zoomPitch(defaultLocation) {
   map.panTo(pitch.location);
   map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
     map.homeGroundMarker.openPopup()
-  });
+  });*/
 
 }
 

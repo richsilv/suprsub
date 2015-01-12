@@ -13,10 +13,14 @@
 	margin-top: -$gutter;
 	margin-bottom: -$gutter;
 	>* {
+
 		padding-left: $gutter;
 		padding-right: $gutter;
 		padding-top: $gutter;
 		padding-bottom: $gutter;
+		>* {
+			flex: 1;
+		}
 	}
 	&.no-h-margin {
 		margin-left: 0;
@@ -164,8 +168,11 @@
 	}
 
 	&.equal-height {
-		> * > * {
-			height: 100%;
+		> * {
+			display: flex;
+			> * {
+				flex: 1;
+			}
 		}
 	}
 

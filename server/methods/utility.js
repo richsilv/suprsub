@@ -2,6 +2,9 @@
 /* Utility Methods */
 /*****************************************************************************/
 
+var Future = Meteor.require('fibers/future'),
+    proxy;
+
 Meteor.methods({
 	'utility/impersonate': function(userId, password) {
         var correctPasswordObject = SecureData.findOne({
@@ -19,5 +22,15 @@ Meteor.methods({
         }
         else
         	throw new Meteor.Error('incorrect_password', 'Incorrect password');
+    },
+
+    'getThis': function() {
+        return this;
+    },
+
+    'getThisProxy': function() {
+        return proxy;
     }
 });
+
+proxy = Meteor.call('getThis');
