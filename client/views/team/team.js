@@ -9,19 +9,6 @@ var formData = {
     pitchMatches: new SuprSubDep([]),
     showErrors: new SuprSubDep(false)
   },
-
-/*  pitchIcon = L.AwesomeMarkers.icon({
-    icon: 'football',
-    markerColor: 'suprsub-green',
-    prefix: 'icon'
-  }),
-
-  pitchIconSpinning = L.AwesomeMarkers.icon({
-    icon: 'football-spinning',
-    markerColor: 'suprsub-green',
-    prefix: 'icon'
-  }),*/
-
   disappearFunc = function(elements) {
     elements.velocity({
       opacity: 0,
@@ -45,7 +32,9 @@ Template.teamTopLevel.events({
   },
 
   'submit': function(event) {
-    return false;
+    formData.teamInput.set(null);
+    event.preventDefault();
+
   },
 
   'change [data-field="hour"]': function(event) {
@@ -300,36 +289,37 @@ Template.otherInfo.events({
   },
 
   'click [data-action="search"], submit': function(event, template) {
+    if (!App.geocoder) return false;
+    event.preventDefault();
+
     var params = {
-      q: template.$('[data-field="home-ground-search"]').val(),
-      format: 'json',
-      countrycode: 'gb',
-      limit: 1
+      address: template.$('[data-field="home-ground-search"]').val(),
+      componentRestrictions: {
+        country: 'gb'
+      }
     }
-    $.getJSON(App.mapSearchURI + $.param(params), function(data, res) {
-      var location = data && data.length && data[0];
-      if (res === 'success' && location) {
-        map.panTo(M.latLng(location.lat, location.lon));
+    App.geocoder.geocode(params, function(res, status) {
+      if (res && res.length) {
+        GoogleMaps.maps.pitchMap.instance.panTo(res[0].geometry.location);
+        GoogleMaps.maps.pitchMap.instance.setZoom(15);
       }
     });
-    return false;
   },
 
   'click #pitchMatches .item': function(event) {
     setHomeGround(this);
-    map.setView(M.latLng(this.location), 14, {
-      animate: true,
-      pan: {
-        duration: 2
-      }
-    });
+    GoogleMaps.maps.pitchMap.instance.panTo(new google.maps.LatLng(this.location.lat, this.location.lng));
+    GoogleMaps.maps.pitchMap.instance.setZoom(15);
   }
 
 });
 
-Template.pitchMapSmall.helpers({
-  ifReady: function() {
-    return Pitches.find().count() > 100 ? "hide" : "show";
+Template.pitchMap.helpers({
+  mapOptions: function() {
+    return {
+      center: new google.maps.LatLng(51.508039, -0.128069),
+      zoom: 10
+    };
   }
 });
 
@@ -537,46 +527,62 @@ Template.teamDropDown.rendered = function() {
   });
 }
 
-Template.pitchMapSmall.created = function() {
+Template.pitchMap.created = function() {
 
   var _this = this;
 
-  // DATA-BINDING AND MARKER UPDATE
-  this.autorun(function(c) {
-    var newTimer = new Date().getTime(),
-      mapDetails;
+  if (!App.geocoder) App.geocoder = new google.maps.Geocoder();
 
-    if (c.firstRun) {
-      _this.mapDetails = new SuprSubDep({
-        mapCenter: google.maps.LatLng(51.5073509, -0.12775829999998223),
-        mapZoom: 11,
-        isLoading: true
+  GoogleMaps.ready('pitchMap', function(map) {
+    var markers = [],
+        waitForGeo = Tracker.autorun(function(c) {
+          var location = Geolocation.latLng(),
+              homeGround = formData.homeGround.get();
+          if (!_.isEmpty(homeGround)) {
+            map.instance.panTo(new google.maps.LatLng(homeGround.location.lat, homeGround.location.lng));
+            map.instance.setZoom(15);
+            c.stop();
+          }
+          else if (location) {
+            map.instance.panTo(location);
+            App.currentLocation = location;
+          }
+        });
+
+    map.markers = {};
+    map.iw = new google.maps.InfoWindow();
+
+    var setAndShowInfoWindow = function(content) {
+      map.iw.setContent('<div class="info-window">' + content + '</div>');
+      map.iw.open(map.instance, this);
+    }
+
+    Meteor.setTimeout(waitForGeo.stop.bind(waitForGeo), 10000);
+
+    Pitches.find().forEach(function(pitch) {
+      var thisMarker = new google.maps.Marker({
+        position: pitch.location,
+        cursor: 'pointer',
+        title: pitch.prettyLocation
       });
-    }
-
-    mapDetails = _this.mapDetails.get();
-
-    if (!_this.timer || _this.timer + MARKER_DELAY < newTimer) {
-      _this.timer = newTimer;
-    }
+      google.maps.event.addListener(thisMarker, 'mouseover', setAndShowInfoWindow.bind(thisMarker, pitch.prettyLocation));
+      google.maps.event.addListener(thisMarker, 'click', setHomeGround.bind(map, pitch));
+      map.markers[pitch._id] = thisMarker;
+      markers.push(thisMarker);
+    });
+    map.markerClusterer = new MarkerClusterer(map.instance, markers, {maxZoom: 14});
   });
 
 };
 
-Template.pitchMapSmall.rendered = function() {
+Template.pitchMap.rendered = function() {
 
-  // PASS OBJECT RATHER THAN GET() SO THAT OBJECT REF CAN BE USED BY MAP CALLBACKS ATTACHED BY mapRender
-/*  mapRender(this.mapDetails);
-  map.locate();
-  map.on('locationfound', function(data) {
-    App.currentLocation = data.latlng;
-    zoomPitch(App.currentLocation);
-    map.off('locationfound');
-  });*/
+  var _this = this;
+  this.map = GoogleMaps.maps.pitchMap;
 
 };
 
-Template.pitchMapSmall.destroyed = function() {
+Template.pitchMap.destroyed = function() {
 
   map.remove();
 
@@ -597,154 +603,24 @@ function defaultTeam() {
 }
 
 function setHomeGround(pitch) {
-/*  if (!window.map || map instanceof HTMLElement) return false;
-
-  if (!pitch || (formData.currentTeam.value.homeGround === pitch && map.homeGroundMarker)) return false;
   if (typeof pitch === 'string') pitch = Pitches.findOne({
     _id: pitch
   });
   var thisPitchId = pitch && pitch._id;
-  if (!pitch || (formData.currentTeam.value.homeGround === thisPitchId && map.homeGroundMarker)) return false;
+  if (!pitch || (formData.currentTeam.value.homeGround === thisPitchId)) return false;
   formData.currentTeam.setKey('homeGround', pitch._id);
   formData.currentTeam.dep.changed();
-
-  var readyDep = new SuprSubDep({
-    move: false,
-    tiles: false
-  });
-
-  map.homeGroundMarker && map.homeGroundMarker.closePopup();
-  map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
-  map.homeGroundMarker = _.find(map.markerArray, function(marker) {
-    return marker.options.pitchId === thisPitchId;
-  });
-  map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
-  if (!_.isEmpty(pitch)) map.panTo(pitch.location);
-
-  map.on('moveend', function() {
-    readyDep.setKey('move', true);
-    map.off('moveend');
-  });
-  map.tileLayer.on('load', function() {
-    readyDep.setKey('tiles', true);
-    map.tileLayer.off('load');
-  });
-
-  Tracker.autorun(function(comp) {
-    if (readyDep.getKey('move') && readyDep.getKey('tiles')) {
-      zoomPitch();
-      comp.stop();
-    }
-  });*/
 }
 
-
-function homeGroundWrapper(event) {
-/*  setHomeGround(event.target.options.pitchId);*/
-}
-
-function mapRender(mapDetails) {
-/*  var mapCenter = mapDetails.value.mapCenter,
-    mapZoom = mapDetails.value.mapZoom,
-    markersAdded = new ReactiveVar(false);
-
-  L.Icon.Default.imagePath = 'packages/leaflet/images';
-
-  window.map = L.map('map', {
-    doubleClickZoom: false
-  }).setView(mapCenter, mapZoom);
-
-  map.tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
-    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
-  });
-  map.tileLayer.addTo(map);
-
-  // ATTACH CALLBACKS
-
-  map.on('moveend', function(e) {
-    mapDetails.setKey('mapCenter', map.getCenter());
-  });
-  map.on('zoomend', function(e) {
-    mapDetails.setKey('mapZoom', map.getZoom());
-  });
-  map.markers = new L.MarkerClusterGroup({
-    maxClusterRadius: 40,
-    showCoverageOnHover: false,
-    disableClusteringAtZoom: 13
-  });
-
-  map.updateMarkers = function() {
-    var pitches = Pitches.find({
-          location: {
-            $exists: true
-          }
-        }).fetch(),
-        pitchCount = pitches.length;
-    map.markerArray = [];
-
-    var addMarker = function(i) {
-      if (i < pitchCount) {
-        var pitch = pitches[i];
-        Meteor.defer(function() {
-          var newMarker = new L.Marker(pitch.location, {
-            icon: pitchIcon,
-            title: pitch.prettyLocation,
-            riseOnHover: true,
-            pitchId: pitch._id
-          }).on('click', homeGroundWrapper).bindPopup(pitch.prettyLocation);
-          if (pitch._id === formData.currentTeam.getKey('_id')) {
-            newMarker.options.icon = pitchIconSpinning;
-            map.homeGroundMarker = newMarker;
-          }
-          map.markerArray.push(newMarker);
-          addMarker(i + 1);
-        });
-      } else {
-        markersAdded.set(true);
-      }
-    }
-
-    markersAdded.set(false);
-    addMarker(0);
-
-    map.markers.clearLayers();
-    Tracker.autorun(function(c) {
-      if (markersAdded.get()) {
-        map.markers.addLayers(map.markerArray);
-      }
-    });
-  };
-  map.addLayer(map.markers);
-  map.updateMarkers();
-
-  // NEED TO "SET" HOME GROUND AGAIN TO ATTACH IT TO MAP
-  var homeGround = formData.homeGround.get();
-  homeGround && setHomeGround(homeGround);
-
-  // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
-  Tracker.autorun(function(comp) {
-    if (Pitches && Pitches.synced() && App.pitchSync) {
-      if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) {
-        map.updateMarkers();
-        zoomPitch(App.currentLocation);
-      }
-      comp.stop();
-    }
-  });*/
-
-};
-
-function zoomPitch(defaultLocation) {
-
-/*  var location = defaultLocation ? defaultLocation : formData.homeGround.getKey('_id'),
-    pitch = Pitches.findOne({
-      _id: location
-    });
+function zoomPitch(pitch) {
+  if (typeof pitch === 'string') pitch = Pitches.findOne(pitch);
+  if (!pitch) pitch = formData.homeGround.get();
   if (!pitch) return false;
-  map.panTo(pitch.location);
-  map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
-    map.homeGroundMarker.openPopup()
-  });*/
+
+  var map = GoogleMaps.maps.pitchMap.instance;
+
+  map.panTo(new google.maps.LatLng(pitch.location.lat, pitch.location.lng));
+  map.setZoom(15);
 
 }
 

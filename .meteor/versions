@@ -48,6 +48,7 @@ livedata@1.0.12
 localstorage@1.0.2
 logging@1.0.6
 matb33:collection-hooks@0.7.7
+mdg:geolocation@1.0.2
 meteor@1.1.4
 meteor-platform@1.2.1
 meteorhacks:async@1.0.0
@@ -92,4 +93,4 @@ underscore@1.0.2
 url@1.0.3
 webapp@1.1.5
 webapp-hashing@1.0.2
-wolves:bourbon@0.8.0
+wolves:bourbon@0.7.0

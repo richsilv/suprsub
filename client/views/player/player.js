@@ -288,7 +288,7 @@ Template.pitchMapLarge.rendered = function() {
 
 };
 
-Template.pitchMapSmall.destroyed = function() {
+Template.pitchMapLarge.destroyed = function() {
 
   map.remove();
 

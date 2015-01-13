@@ -19,12 +19,12 @@
 </template>
 
 	<template name="teamTopLevel">
-		<form class="ui form segment whitetranslucent teamForm">
-			<div class="small-10 columns">
+		<form class="ui form segment whitetranslucent flexbox wrap">
+			<div class="w-5-8">
 				<div class="{{invalid 'name'}} field" id="teamNameHolder">
 					<label>Team/Game Name</label>
 					{{#if teamDropdown}}
-						{{> teamDropDown teams}}
+					{{> teamDropDown teams}}
 					{{else}}
 					<div class="ui input">
 						<input placeholder="Team Name" type="text" data-field="team-name" title="This is the name that will appear on your team postings" value={{teamName}}>
@@ -32,91 +32,97 @@
 					{{/if}}
 				</div>
 			</div>
-			<div class="small-6 columns">
+			<div class="w-3-8">
 				{{#unless newTeam}}
-					<div class="ui four buttons withLabel">
-						<div class="ui fluid attached icon button {{#if default}} teal{{/if}}{{#if newTeam}} disabled{{/if}}" data-action="set-default" title="Set as your default team"><i class="pin icon"></i></div>
-						<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" data-action="add-team" title="Add a new team"><i class="add icon"></i></div>
-						<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" data-action="leave-team" title="Leave this team"><i class="minus icon"></i></div>
-						<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" data-action="delete-team" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
-					</div>
+				<div class="ui four buttons withLabel">
+					<div class="ui fluid attached icon button {{#if default}} teal{{/if}}{{#if newTeam}} disabled{{/if}}" data-action="set-default" title="Set as your default team"><i class="pin icon"></i></div>
+					<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" data-action="add-team" title="Add a new team"><i class="add icon"></i></div>
+					<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" data-action="leave-team" title="Leave this team"><i class="minus icon"></i></div>
+					<div class="ui fluid attached icon button {{#if newTeam}} disabled{{/if}}" data-action="delete-team" title="Delete this team (this will delete it for ALL team members)"><i class="remove icon"></i></div>
+				</div>
 				{{else}}
-					<div class="ui fluid attached icon button withLabel {{#unless formValid}} disabled{{/unless}}" data-action="save-team" title="Save as new team"><i class="save icon"></i></div>
+				<div class="ui fluid attached icon button withLabel {{#unless formValid}} disabled{{/unless}}" data-action="save-team" title="Save as new team"><i class="save icon"></i></div>
 				{{/unless}}
 			</div>
-			<div class="small-16 columns ui content segment">
-				<form class="ui form whitetranslucent height225 teamForm">
-					<div class="row">
-					<div class="large-10 medium-14 small-9 medium-centered large-uncentered columns">
-						<div class="field">
-							<label>Friendly / Competitive</label>
-							<div class="ui fluid selection flipbox" data-field="friendly-competitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
-								<input type="hidden">
-								<div class="displayed text">Select</div>
-								<i class="right exchange icon"></i>
-								<div class="choices">
-									<div class="item" data-value="0">Friendly</div>
-									<div class="item" data-value="1">Competitive</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="large-6 medium-14 small-7 medium-centered large-uncentered columns">
-						<div class="{{invalid 'format'}} field">
-							<label>Game Format</label>
-							<div class="ui fluid selection dropdown" data-field="game-format" title="How many players will there be on each side (optional)?">
-								<input type="hidden" data-field="format">
-								<div class="default text">Select</div>
-								<i class="dropdown icon"></i>
-								<div class="menu">
-									<div class="item" data-value="5">5-a-side</div>
-									<div class="item" data-value="6">6-a-side</div>
-									<div class="item" data-value="7">7-a-side</div>
-									<div class="item" data-value="8">8-a-side</div>
-									<div class="item" data-value="9">9-a-side</div>
-									<div class="item" data-value="10">10-a-side</div>
-									<div class="item" data-value="11">11-a-side</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					</div>
-					<div class="{{invalid 'homeGround'}} field">
-						<label>Home Ground</label>
-						<div class="ui input" data-field="home-ground">
-							<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?" value="{{homeGroundName}}" data-function="home-ground">
-						</div>
-					</div>
-					<div class="fields">
-						<div class="small-7 columns field opacity">
-							<label>Day</label>
-							<div class="ui selection dropdown" data-field="day-choice">
-								<input type="hidden" data-field="day">
-								<div class="default text">Select</div>
-								<i class="dropdown icon"></i>
-								<div class="menu">
-									{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
-								</div>
-							</div>
-						</div>
-						<div class="small-9 columns field opacity" data-field="time-choice">
-							<label>Kick-off</label>
-							<div class="row">
-								<div class="small-9 columns" style="margin: 0;">
-									<div class="ui left icon input">
-										<input data-field="hour" type="number" value={{hour}} min="0" max="23" step="1" class="input-small">
-										<i class="time icon"></i>
-									</div>
-								</div>
-								<div class="small-7 columns" style="margin: 0;">
-									<div class="ui input">
-										<input data-field="minute" type="number" value={{minute}} min="00" max="59" step="5" class="input-small">
+			<div class="w-1-1 ui content segment">
+				<form class="ui form whitetranslucent">
+					<div class="flexbox wrap">
+						<div class="w-5-8">
+							<div class="field">
+								<label>Friendly / Competitive</label>
+								<div class="ui fluid selection flipbox" data-field="friendly-competitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
+									<input type="hidden">
+									<div class="displayed text">Select</div>
+									<i class="right exchange icon"></i>
+									<div class="choices">
+										<div class="item" data-value="0">Friendly</div>
+										<div class="item" data-value="1">Competitive</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="fields">
+						<div class="w-3-8">
+							<div class="{{invalid 'format'}} field">
+								<label>Game Format</label>
+								<div class="ui fluid selection dropdown" data-field="game-format" title="How many players will there be on each side (optional)?">
+									<input type="hidden" data-field="format">
+									<div class="default text">Select</div>
+									<i class="dropdown icon"></i>
+									<div class="menu">
+										<div class="item" data-value="5">5-a-side</div>
+										<div class="item" data-value="6">6-a-side</div>
+										<div class="item" data-value="7">7-a-side</div>
+										<div class="item" data-value="8">8-a-side</div>
+										<div class="item" data-value="9">9-a-side</div>
+										<div class="item" data-value="10">10-a-side</div>
+										<div class="item" data-value="11">11-a-side</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="w-1-1">
+							<div class="{{invalid 'homeGround'}} field ">
+								<label>Home Ground</label>
+								<div class="ui input" data-field="home-ground">
+									<input placeholder="Use the dialogue box below to select" type="text" readonly title="Where does your team usually play its matches?" value="{{homeGroundName}}" data-function="home-ground">
+								</div>
+							</div>
+						</div>
+						<div class="w-1-1">
+							<div class="flexbox fields">
+								<div class="w-5-12">
+									<div class="field opacity">
+										<label>Day</label>
+										<div class="ui selection dropdown" data-field="day-choice">
+											<input type="hidden" data-field="day">
+											<div class="default text">Select</div>
+											<i class="dropdown icon"></i>
+											<div class="menu">
+												{{#each days}}<div class="item" data-value="{{this.dayCode}}">{{this.name}}</div>{{/each}}
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="w-7-12 columns">
+									<div class="field opacity" data-field="time-choice">
+										<label>Kick-off</label>
+										<div class="flexbox">
+											<div class="w-7-12" style="margin: 0;">
+												<div class="ui left icon input">
+													<input data-field="hour" type="number" value={{hour}} min="0" max="23" step="1" class="input-small">
+													<i class="time icon"></i>
+												</div>
+											</div>
+											<div class="w-5-12" style="margin: 0;">
+												<div class="ui input">
+													<input data-field="minute" type="number" value={{minute}} min="00" max="59" step="5" class="input-small">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -185,18 +191,18 @@
 
 	<template name="otherInfo">
 		<div class="ui segment content whitetranslucent" id="otherInfo">
-			<div class="row">
-				<div class="large-8 columns">
+			<div class="flexbox">
+				<div class="w-1-2">
 					<form class="ui form segment content">
-						<div class="ui grid">
-							<div class="field fourteen wide column">
+						<div class="ui form flexbox">
+							<div class="field w-7-8">
 								<label>Home Ground</label>
-								<div class="ui left labeled icon input">
+								<div class="ui icon input">
 									<input type="text" placeholder="Type a description or address" data-field="home-ground-search" title="You can find a venue either using its name (e.g. Powerleague Wembley), or by typing an address or place and hitting the search icon">
 									<i class="globe icon"></i>
 								</div>
 							</div>
-							<div class="two wide column">
+							<div class="field w-1-8">
 								<div class="ui right attached button withLabel" data-action="search" title="Pan to this location">
 									<div class="content"><i class="search icon"></i></div>
 								</div>
@@ -204,25 +210,25 @@
 						</div>
 					</form>
 					{{#if pitchMatches}}
-						<div class="ui segment">
-							<div id="pitchMatches" class="ui link list">
-								{{#each pitchMatches}}
-									<a class="item">
-										{{this.prettyLocation}}
-									</a>
-								{{/each}}
-							</div>
+					<div class="ui segment">
+						<div id="pitchMatches" class="ui link list">
+							{{#each pitchMatches}}
+							<a class="item">
+								{{this.prettyLocation}}
+							</a>
+							{{/each}}
 						</div>
+					</div>
 					{{/if}}
 					<div class="mini purple ui button bottomRight" data-action="add-venue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 				</div>
 				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
-				<div class="large-8 master columns">
+				<div class="w-1-2">
 					<div id="mapContainer">
 <!-- 						{{#if tabChoices 'newVenue'}}
 						{{> newVenueBox}}
 						{{else}} -->
-						{{> pitchMapSmall}}
+						{{> pitchMap}}
 						<!-- {{/if}} -->
 					</div>
 				</div>
@@ -230,15 +236,9 @@
 		</div>
 	</template>
 
-		<template name="pitchMapSmall">
+		<template name="pitchMap">
 			<div id="mapHolder">
-				<div id="map">
-				</div>
-				<div id="mapCover" style="z-index: -50; opacity: 0;">
-					<div>
-					LOADING...
-					</div>
-				</div>
+				{{> googleMap name="pitchMap" options=mapOptions}}
 			</div>
 		</template>
 
