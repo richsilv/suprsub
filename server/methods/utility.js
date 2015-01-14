@@ -2,7 +2,7 @@
 /* Utility Methods */
 /*****************************************************************************/
 
-var Future = Meteor.require('fibers/future'),
+var Future = Meteor.npmRequire('fibers/future'),
     proxy;
 
 Meteor.methods({
@@ -22,15 +22,5 @@ Meteor.methods({
         }
         else
         	throw new Meteor.Error('incorrect_password', 'Incorrect password');
-    },
-
-    'getThis': function() {
-        return this;
-    },
-
-    'getThisProxy': function() {
-        return proxy;
     }
 });
-
-proxy = Meteor.call('getThis');

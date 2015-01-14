@@ -1,25 +1,24 @@
 <template name="Player">
 	<div id="main-background-image"></div>
-	<div class="row">
-		<div class="large-8 master columns">
-			{{> playerForm}}
-		</div>
-		<div class="large-8 master columns">
-			{{> availabilityVenues}}
-		</div>
-	</div>
-	<div class="cleared row"></div>
-	<div class="gap row">
-		<div class="column">
-			<div class="ui segment content whitetranslucent">
-				<div class="row">
-					<div class="ui vertical divider show-for-large-only" style="left: 25%"><i class="map icon"></i></div>
-					<div class="large-4 columns">
-						{{> defineBounds}}
-					</div>
-					<div class="large-12 columns">
-						<div id="mapContainer">
-							{{> pitchMapLarge}}
+	<div class="container">
+		<div class="flexbox v-stretch wrap equal-height">
+			<div class="size-1 w-1-2">
+				{{> playerForm}}
+			</div>
+			<div class="size-1 w-1-2">
+				{{> availabilityVenues}}
+			</div>
+			<div class="size-2 w-1-1">
+				<div class="ui segment content whitetranslucent">
+					<div class="flexbox">
+						<div class="size-1 w-1-4">
+							{{> defineBounds}}
+						</div>
+						<div class="ui vertical divider show-for-large-only" style="left: 25%"><i class="map icon"></i></div>
+						<div class="size-3 w-3-4">
+							<div id="mapContainer">
+								{{> pitchMap}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -29,9 +28,8 @@
 </template>
 
 	<template name="playerForm">
-		<form class="ui form segment content whitetranslucent noGap height280">
-		  	<div class="semantic-padding">
-		  		<div class="small-8 columns">
+		<form class="ui form segment content whitetranslucent flexbox wrap v-space-between">
+		  		<div class="size-1 w-1-2">
 			    	<div class="field">
 			      		<label>First Name</label>
 			      		<div class="ui input">
@@ -39,7 +37,7 @@
 			      		</div>
 			    	</div>
 		    	</div>
-		  		<div class="small-8 columns">
+		  		<div class="size-1 w-1-2">
 				    <div class="field">
 				      	<label>Surname</label>
 				      	<div class="ui input" id="surname">
@@ -47,16 +45,13 @@
 				      	</div>
 				    </div>
 			    </div>
-		  	</div>
-		  	<div class="semantic-padding">
 				{{> playerDropdowns}}
-			</div>
 		</form>
 	</template>
 
 		<template name="playerDropdowns">
 			{{#each dropdowns}}
-			  	<div class="small-8 columns">
+			  	<div class="size-1 w-1-2">
 			    	<div class="field">
 			      		<label>{{label}}</label>
 						<div class="ui fluid selection dropdown" data-field="{{field}}">

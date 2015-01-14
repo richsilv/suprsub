@@ -534,8 +534,7 @@ Template.pitchMap.created = function() {
   if (!App.geocoder) App.geocoder = new google.maps.Geocoder();
 
   GoogleMaps.ready('pitchMap', function(map) {
-    var markers = [],
-        waitForGeo = Tracker.autorun(function(c) {
+    var waitForGeo = Tracker.autorun(function(c) {
           var location = Geolocation.latLng(),
               homeGround = formData.homeGround.get();
           if (!_.isEmpty(homeGround)) {
@@ -559,18 +558,34 @@ Template.pitchMap.created = function() {
 
     Meteor.setTimeout(waitForGeo.stop.bind(waitForGeo), 10000);
 
-    Pitches.find().forEach(function(pitch) {
-      var thisMarker = new google.maps.Marker({
-        position: pitch.location,
-        cursor: 'pointer',
-        title: pitch.prettyLocation
+    var iconProto = {
+          path: GoogleMaps.Marker.markerShapes['MAP_PIN'],
+          fillColor: '#1bc01b',
+          fillOpacity: 1,
+          strokeColor: '#444',
+          strokeWeight: 1,
+          scale: 0.5
+        }
+
+    if (!App.markers || !App.markers.length) {
+      App.markers = [];
+      Pitches.find().forEach(function(pitch) {
+
+        var thisMarker = new GoogleMaps.Marker({
+          cursor: 'pointer',
+          zIndex: 9,
+          icon: iconProto,
+          title: pitch.prettyLocation,
+          position: pitch.location,
+          label: '<i class="icon-football"></i>'
+        });      
+        google.maps.event.addListener(thisMarker, 'mouseover', setAndShowInfoWindow.bind(thisMarker, pitch.prettyLocation));
+        google.maps.event.addListener(thisMarker, 'click', setHomeGround.bind(map, pitch));
+        map.markers[pitch._id] = thisMarker;
+        App.markers.push(thisMarker);
       });
-      google.maps.event.addListener(thisMarker, 'mouseover', setAndShowInfoWindow.bind(thisMarker, pitch.prettyLocation));
-      google.maps.event.addListener(thisMarker, 'click', setHomeGround.bind(map, pitch));
-      map.markers[pitch._id] = thisMarker;
-      markers.push(thisMarker);
-    });
-    map.markerClusterer = new MarkerClusterer(map.instance, markers, {maxZoom: 14});
+    }
+    map.markerClusterer = new GoogleMaps.MarkerClusterer(map.instance, App.markers, {maxZoom: 14});
   });
 
 };
@@ -579,12 +594,6 @@ Template.pitchMap.rendered = function() {
 
   var _this = this;
   this.map = GoogleMaps.maps.pitchMap;
-
-};
-
-Template.pitchMap.destroyed = function() {
-
-  map.remove();
 
 };
 
@@ -644,5 +653,8 @@ App.team = {
         })
       }
     });
+  },
+  getHomeGround: function() {
+    return formData.homeGround.get();
   }
 }

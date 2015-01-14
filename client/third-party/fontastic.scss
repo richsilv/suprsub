@@ -68,7 +68,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-football:before {
+.icon-football2:before {
   content: "a";
 }
 .icon-female-symbol:before {
@@ -77,8 +77,11 @@
 .icon-male-symbol:before {
   content: "c";
 }
+.icon-football:before {
+  content: "d";
+}
 
 .icon-football-spinning:before {
-  content: "a";
+  content: "d";
   @include spinning(5s);
 }

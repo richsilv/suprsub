@@ -1,0 +1,16 @@
+$marker-size: 25px;
+
+.marker-label,
+.marker-icon {
+    z-index: 99;
+    position: absolute;
+    display: block;
+    margin-top: - $marker-size * 1.7;
+    margin-left: ($marker-size / -2);
+    width: $marker-size;
+    height: $marker-size;
+    font-size: $marker-size !important;
+    text-align: center;
+    white-space: nowrap;
+    color: #444;
+}
