@@ -3,7 +3,6 @@ PlayerController = RouteController.extend({
   },
 
   data: function () {
-  	return null;
   },
 
   action: function () {

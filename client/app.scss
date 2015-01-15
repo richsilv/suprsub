@@ -66,6 +66,36 @@ $white-text: rgb(245, 245, 245);
 // TOPBAR SCSS
 $topbar-bg-color: $suprsub-green;
 $topbar-bg: $topbar-bg-color;
+$topbar-height: 45px;
+
+#topbar {
+	top: 0;
+    -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
+    height: 45px;
+
+    i.big {
+		font-size: $topbar-height * 0.8;
+		color: $white-translucent;
+		cursor: pointer;
+		&:hover {
+			color: white;
+		}
+	}
+}
+
+#topbar .item {
+	height: 100%;
+}
+
+#topbar+div+div {
+	margin-top: 50px;
+}
+
+#miniTopbar+div+div {
+	margin-top: 60px;
+}
 
 // @import "./third-party/foundation-scss/foundation";
 
@@ -145,26 +175,7 @@ body {
 #wrapper {
 	-webkit-transition: opacity 2s; /* For Safari 3.1 to 6.0 */
     transition: opacity 2s;
-}
-
-#topbar {
-	top: 0;
-    -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
-    -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
-    box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
-    height: 45px;
-}
-
-#topbar .item {
-	height: 100%;
-}
-
-#topbar+div+div {
-	margin-top: 50px;
-}
-
-#miniTopbar+div+div {
-	margin-top: 60px;
+    height: 100%;
 }
 
 .ui.input>[type="number"] {
@@ -197,13 +208,13 @@ body {
 	padding: 0 !important;
 }
 
-.full-height {
+/* .full-height {
     content: '';
     display: inline-block;
     height: 100%;
     vertical-align: middle;
-    margin-right: -0.25em; /* Adjusts for spacing */	
-}
+    margin-right: -0.25em;	
+} */
 
 .vertical-center:before {
     @extend .full-height;	

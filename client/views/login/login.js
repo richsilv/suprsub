@@ -3,28 +3,28 @@
 /*****************************************************************************/
 var accountError = new ReactiveVar(null);
 
+Template.topbar.events({
+
+  'click [data-action="log-in"], submit form': function(event, template) {
+
+    Meteor.loginWithPassword(template.email.get(), template.password.get(), loginCallback.bind(this, 'that username/password'));
+
+  }
+
+})
+
 Template.Login.events({
 
   'click [data-action="facebook"]': function() {
     Meteor.loginWithFacebook({
-        requestPermissions: ['email']
-      },
-      function(error) {
-        if (error) {
-          console.log(error);
-          accountError.set('Cannot login with Facebook');
-        }
-      });
-
+      requestPermissions: ['email']
+    },
+      loginCallback.bind(this, 'Facebook')
+    );
   },
 
   'click [data-action="twitter"]': function() {
-    Meteor.loginWithTwitter({}, function(error) {
-      if (error) {
-        console.log(error);
-        accountError.set('Cannot login with Twitter');
-      }
-    });
+    Meteor.loginWithTwitter({}, loginCallback.bind(this, 'Twitter'));
   },
 
   'click [data-action="sign-up"], submit': function(event, template) {
@@ -105,3 +105,12 @@ Template.Login.destroyed = function() {
   $('.ui.checkbox').checkbox('destroy');
   $('.checkboxLabel').checkboxLabel('destroy');
 };
+
+function loginCallback(serviceName, error) {
+  if (error) {
+    console.log(error);
+    accountError.set('Cannot login with ' + serviceName + ': ' + error.reason);
+  } else {
+    App.subs.user = Meteor.subscribe('user');
+  }
+}

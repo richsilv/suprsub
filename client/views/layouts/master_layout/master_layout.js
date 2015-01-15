@@ -39,15 +39,6 @@ Template.topbar.helpers({
 
 Template.topbar.events({
 
-  'click [data-action="log-in"], submit': function(event, template) {
-
-    Meteor.loginWithPassword(template.email.get(), template.password.get(), function(err) {
-      console.log(err);
-      return false;
-    });
-
-  },
-
   'keyup [data-field="email"], keyup [data-field="password"]': function(event, template) {
 
     template.email.set(template.$('[data-field="email"]').val());

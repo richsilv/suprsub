@@ -31,6 +31,16 @@ _.extend(App, {
 				Meteor.connection.setUserId(res);
 			}
 		})
+	},
+
+	contactString: function(profile) {
+		var cString = '',
+			contactArray = profile && profile.contact;
+		if (!contactArray || !contactArray.length) return "None";
+		else {
+			for (var i = 0; i < contactArray.length; i++) cString += App.contactNames[contactArray[i]] + ", ";
+		}
+		return cString.substr(0, cString.length - 2);
 	}
 
 });
@@ -59,6 +69,16 @@ App.helpers = {
 	},
 	profile: function() {
 		return Meteor.user() && Meteor.user().profile;
+	},
+	email: function(arg) {
+		var user = Meteor.user();
+		if (!user) return false;
+		else if (!arg && user.emails) return true;
+		else if (arg === 'verified') return Meteor.user().emails[0].verified;
+		else if (arg === 'unverified') return !Meteor.user().emails[0].verified;
+	},
+	service: function(serviceName) {
+		return Meteor.user() && Meteor.user().services && _.has(Meteor.user().services, serviceName);
 	}
 };
 

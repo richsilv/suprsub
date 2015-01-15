@@ -50,16 +50,8 @@ _.extend(App, {
           {code: 4, label: 'Excellent'},
         ]
       }
-    ]
+    ],
 
+  contactNames: ['Twitter', 'Facebook', 'Email']
 
 });
-
-/*Accounts.connection = Client.remote;
-
-Meteor.users = new Meteor.Collection("users", {
-  _preventAutopublish: true,
-  connection: Meteor.isClient ? Accounts.connection : Meteor.connection
-});
-
-Accounts.connection.subscribe(null);*/

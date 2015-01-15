@@ -1,85 +1,72 @@
 <template name="Settings">
 	<div id="main-background-image"></div>
 	<div class="container">
-		<div class="flexbox">
+		<div class="flexbox v-stretch wrap equal-height">
 			<div class="w-1-2">
-					{{> settingsBox}}
+					{{> settingsBox profile}}
 			</div>
 			<div class="w-1-2">
 					{{> otherSettingsBox}}		
 			</div>
-		</div><!-- 
-		<div class="gap row">
-			{{> settingsMainButtons}}
-		</div> -->
+		</div>
 	</div>
 </template>
 
 <template name="settingsBox">
-		<form class="ui form segment content whitetranslucent">
-		  	<div class="row">
-		  		<ul class="small-block-grid-1 medium-block-grid-1 large-block-grid-1" id="linkTriple">
-			  		<li>
-<!-- 				  		<div class="small ui fluid {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
-				  			<i class="facebook icon"></i>
-				  			{{#if service 'facebook'}}
-					  			Facebook Account Linked
-					  		{{else}}
-					  			Link Facebook Account
-					  		{{/if}}
-				  		</div> -->
-			  		</li>
-			  		<li>
-<!-- 				  		<div class="small ui fluid {{#if service 'twitter'}}twitter {{/if}}button" id="twitterButton">
-				  			<i class="twitter icon"></i>
-				  			{{#if service 'twitter'}}
-					  			Twitter Account Linked
-				  			{{else}}
-					  			Link Twitter Account
-				  			{{/if}}
-				  		</div> -->
-		  			</li>
-			  		<li>
-<!-- 			  			{{#if email 'verified'}}
-				  		<div class="small ui fluid orange button" title={{email}} id="emailButton">
-				  			<i class="mail icon"></i>
-					  		Email address verified
-				  		</div>
-			  			{{else}}
-			  				{{#if email 'unverified'}}
-					  		<div class="small ui fluid button" title={{email}} id="waitingButton">
-					  			<i class="mail icon"></i>
-						  		Waiting for email verification
-					  		</div>
-			  				{{else}}
-			  				<div class="small ui fluid button" id="linkButton">
-					  			<i class="mail icon"></i>
-						  		Link Email Account
-					  		</div>
-			  				{{/if}}
-			  			{{/if}} -->
-			  		</li>
-			  	</ul>
+		<form class="ui flexbox wrap full-width form segment content whitetranslucent">
+	  		<div id="linkTriple">
+		  		<div class="small ui fluid {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
+		  			<i class="facebook icon"></i>
+		  			{{#if service 'facebook'}}
+			  			Facebook Account Linked
+			  		{{else}}
+			  			Link Facebook Account
+			  		{{/if}}
+		  		</div>
+		  		<div class="small ui fluid {{#if service 'twitter'}}twitter {{/if}}button" id="twitterButton">
+		  			<i class="twitter icon"></i>
+		  			{{#if service 'twitter'}}
+			  			Twitter Account Linked
+		  			{{else}}
+			  			Link Twitter Account
+		  			{{/if}}
+		  		</div>
+	  			{{#if email 'verified'}}
+		  		<div class="small ui fluid orange button" title={{email}} id="emailButton">
+		  			<i class="mail icon"></i>
+			  		Email address verified
+		  		</div>
+	  			{{else}}
+	  				{{#if email 'unverified'}}
+			  		<div class="small ui fluid button" title={{email}} id="waitingButton">
+			  			<i class="mail icon"></i>
+				  		Waiting for email verification
+			  		</div>
+	  				{{else}}
+	  				<div class="small ui fluid button" id="linkButton">
+			  			<i class="mail icon"></i>
+				  		Link Email Account
+			  		</div>
+	  				{{/if}}
+	  			{{/if}}
 		  	</div>
-		  	<div class="gap row">
-			  	<div class="small-11 small-centered columns">
-				    <div class="ui field">
-				      	<label>Preferred Contact</label>
-						<div class="ui fluid selection dropdown" title="This is how we'll send you messages and make you aware of relevant postings - you can select more than one">
-							<input type="hidden" name="contact">
-							<div class="text" id="selectedContact">None</div>
-							<i class="dropdown icon"></i>
-						  	<div class="menu">
-<!-- 						  		{{#if email}}<div class="item active" data-value="2">Email{{#if contactActive 2}} (selected){{/if}}</div>{{/if}}
-						    	{{#if service 'facebook'}}<div class="item" data-value="1">Facebook{{#if contactActive 1}} (selected){{/if}}</div>{{/if}}
-						    	{{#if service 'twitter'}}<div class="item" data-value="0">Twitter{{#if contactActive 0}} (selected){{/if}}</div>{{/if}} -->
-						  	</div>
-						</div>
-			    	</div>
-			    </div>
+		  	<div class="small-11 small-centered columns">
+			    <div class="ui field">
+			      	<label>Preferred Contact</label>
+					<div class="ui fluid selection dropdown" title="This is how we'll send you messages and make you aware of relevant postings - you can select more than one">
+						<input type="hidden" name="contact">
+						<div class="text" id="selectedContact">None</div>
+						<i class="dropdown icon"></i>
+					  	<div class="menu">
+					  		{{#if email}}<div class="item active" data-value="2">Email{{#if contactActive 2}} (selected){{/if}}</div>{{/if}}
+					    	{{#if service 'facebook'}}<div class="item" data-value="1">Facebook{{#if contactActive 1}} (selected){{/if}}</div>{{/if}}
+					    	{{#if service 'twitter'}}<div class="item" data-value="0">Twitter{{#if contactActive 0}} (selected){{/if}}</div>{{/if}}
+					  	</div>
+					</div>
+		    	</div>
 		    </div>
 			<div class="small-16 medium-14 small-centered columns">
-				<div class="text-center field">
+				<div class="flexbox h-center v-center field">
 					<div class="checkboxLabel">Don't send<br class="hide-for-medium-up"> me postings</div>
 					<div class="ui toggle checkbox" id="postUser" title="Do you want us to tweet or e-mail you whenever there is a posting that matches your profile?">
 						<input type="checkbox">
@@ -89,8 +76,6 @@
 				</div>
 			</div>
 		</form>
-	<div id="linkModalHolder">
-	</div>
 </template>
 
 <template name="settingsMainButtons">
@@ -110,18 +95,12 @@
 	</div>	
 </template>
 
-<template name="linkModalWrapper">
-	<div class="ui small modal" id="linkModal">
-	{{> linkModal}}
-	</div>
-</template>
-
 <template name="otherSettingsBox">
-	<form class="ui form segment content whitetranslucent">
+	<form class="ui flexbox form segment content whitetranslucent">
 		<div class="row">
 			<div class="small-16 columns">
 				<div class="ui small fluid negative button" id="deleteAccount">DELETE ACCOUNT</div>
-				<p class="small-14 columns small-centered text-center label">By clicking this link all your player information will be deleted.  Any team for which you are the only registered player will also be deleted.</p>
+				<h5 class="small-14 columns small-centered text-center label">By clicking this link all your player information will be deleted.  Any team for which you are the only registered player will also be deleted.</h5>
 			</div>
 		</div>
 	</form>

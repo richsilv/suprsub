@@ -68,6 +68,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-suprsub:before {
+  content: "\73";
+}
+
 .icon-football2:before {
   content: "a";
 }
