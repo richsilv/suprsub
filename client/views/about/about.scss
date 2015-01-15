@@ -1,0 +1,41 @@
+/*****************************************************************************/
+/* About: Style */
+/*****************************************************************************/
+#instructionsMenu {
+	transition: top 0.5s;
+	a {
+	    color: inherit;
+	    text-decoration: none;
+	}
+}
+
+.instructionsRow .attached.header {
+	position: relative;
+}
+
+.instructionsRow .attached.segment {
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.instructionsRow a, .instructionsRow a:visited {
+    color: rgb(0, 181, 173);
+    text-decoration: none;
+}
+
+.instructionsRow a:hover {
+    color: rgb(0, 153, 145);
+    cursor: pointer;	
+}
+
+#instructionsMenu {
+	margin-bottom: 0.9375em;
+}
+
+#instructionsMenu .label {
+	width: 40px;
+}
+
+#instructionsMenu .label .icon {
+	width: 100%;
+}

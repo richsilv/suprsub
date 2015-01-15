@@ -569,7 +569,7 @@ Template.pitchMap.created = function() {
 
     if (!App.markers || !App.markers.length) {
       App.markers = [];
-      Pitches.find().forEach(function(pitch) {
+      Pitches.find({}, {limit: 500}).forEach(function(pitch) {
 
         var thisMarker = new GoogleMaps.Marker({
           cursor: 'pointer',

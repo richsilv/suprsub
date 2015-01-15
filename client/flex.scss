@@ -12,6 +12,9 @@
 	margin-right: -$gutter;
 	margin-top: -$gutter;
 	margin-bottom: -$gutter;
+	&.pad-top {
+		margin-top: 0;
+	}
 	> * {
 
 		padding-left: $gutter;
@@ -69,6 +72,12 @@
 	}
 	&.h-space-around {
 		justify-content: space-around;
+	}
+
+	&.full-width {
+		> * {
+			width: 100%;
+		}
 	}
 
 	align-items: flex-start;

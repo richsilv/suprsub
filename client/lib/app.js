@@ -5,7 +5,8 @@ _.extend(App, {
 
 	tabChoices: new SuprSubDep({
 		playerTab: 'availability',
-		playersRingers: 'players'
+		playersRingers: 'players',
+		aboutTab: null
 	}),
 
 	padZeros: function(string, len) {
@@ -55,6 +56,9 @@ App.helpers = {
 	},
 	stringify: function(object) {
 		return JSON.stringify(object);
+	},
+	profile: function() {
+		return Meteor.user() && Meteor.user().profile;
 	}
 };
 

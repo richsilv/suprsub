@@ -5,17 +5,6 @@ var formData = {
     pitches: new SuprSubDep([])
   },
 
-/*  pitchIcon = L.AwesomeMarkers.icon({
-    icon: 'football',
-    markerColor: 'suprsub-green',
-    prefix: 'icon'
-  }),
-
-  pitchIconSpinning = L.AwesomeMarkers.icon({
-    icon: 'football-spinning',
-    markerColor: 'suprsub-green',
-    prefix: 'icon'
-  }),*/
 
   periods = ['06:00-12:00', '12:00-18:00', '18:00-00:00'],
   days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -61,7 +50,7 @@ Template.playerForm.events({
         $set: {}
       };
     update['$set']['profile.' + target.data('field')] = target.val();
-    Meteor.users.update(Meteor.userId(), update);
+    if (target.val()) Meteor.users.update(Meteor.userId(), update);
   }
 });
 
@@ -213,32 +202,6 @@ Template.defineBounds.rendered = function() {
   });
 };
 
-Template.pitchMapLarge.created = function() {
-
-  var _this = this;
-
-  // DATA-BINDING AND MARKER UPDATE
-  this.autorun(function(c) {
-    var newTimer = new Date().getTime(),
-      mapDetails;
-
-    if (c.firstRun) {
-      _this.mapDetails = new SuprSubDep({
-        mapCenter: L.latLng(51.5073509, -0.12775829999998223),
-        mapZoom: 11,
-        isLoading: true
-      });
-    }
-
-    mapDetails = _this.mapDetails.get();
-
-    if (!_this.timer || _this.timer + MARKER_DELAY < newTimer) {
-      _this.timer = newTimer;
-    }
-  });
-
-}
-
 Template.pitchMapLarge.rendered = function() {
 
   // PASS OBJECT RATHER THAN GET() SO THAT OBJECT REF CAN BE USED BY MAP CALLBACKS ATTACHED BY mapRender
@@ -293,192 +256,6 @@ Template.pitchMapLarge.destroyed = function() {
   map.remove();
 
 };
-
-function homeGroundWrapper(event) {
-  setHomeGround(event.target.options.pitchId);
-}
-
-function mapRender(mapDetails) {
-  var mapCenter = mapDetails.value.mapCenter,
-    mapZoom = mapDetails.value.mapZoom,
-    markersAdded = new ReactiveVar(false),
-    user = Meteor.user();
-
-  L.Icon.Default.imagePath = 'packages/leaflet/images';
-
-  window.map = L.map('map', {
-    doubleClickZoom: false,
-    touchZoom: false
-  }).setView(mapCenter, mapZoom);
-
-  map.tileLayer = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpg', {
-    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">'
-  });
-  map.tileLayer.addTo(map);
-
-  // ATTACH CALLBACKS
-
-  map.on('moveend', function(e) {
-    mapDetails.setKey('mapCenter', map.getCenter());
-  });
-  map.on('zoomend', function(e) {
-    mapDetails.setKey('mapZoom', map.getZoom());
-  });
-  map.on('mousedown', function(e) {
-    map.dragElem = e.originalEvent.target;
-    map.dragRoot = e.latlng;
-  });
-  map.on('mousemove', function(e) {
-    if (map.dragElem && e.latlng) {
-      var latlng = e.latlng;
-      $(map.dragElem).trigger('drag', {
-        lat: latlng.lat - map.dragRoot.lat,
-        lng: latlng.lng - map.dragRoot.lng
-      });
-      map.dragRoot = latlng;
-    }
-  });
-  map.on('mouseup', function(e) {
-    delete map.dragElem;
-    delete map.dragRoot;
-  });
-
-
-
-  map.markers = new L.MarkerClusterGroup({
-    maxClusterRadius: 60,
-    showCoverageOnHover: false,
-    disableClusteringAtZoom: 13
-  });
-
-  map.updateMarkers = function() {
-    var pitches = Pitches.find({
-        location: {
-          $exists: true
-        }
-      }).fetch(),
-      pitchCount = pitches.length;
-    map.markerArray = [],
-    homeGroundId = formData.homeGround.getKey('_id'),
-    baseMarker = new L.Marker(new L.LatLng(0, 0), {
-            icon: pitchIcon,
-//            title: pitch.prettyLocation,
-            riseOnHover: true,
-//            pitchId: pitch._id
-          }).on('click', homeGroundWrapper);//.bindPopup(pitch.prettyLocation);
-
-    var addMarker = function(i) {
-      if (i < pitchCount) {
-        // if (i % 500 === 0) map.markers.addLayers(map.markerArray);
-        var pitch = pitches[i];
-        Meteor.defer(function() {
-          var newMarker = _.clone(baseMarker);
-          newMarker._latLng = new L.LatLng(pitch.location.lat, pitch.location.lng);
-          newMarker.options.pitchId = pitch._id;
-          newMarker.options.title = pitch.prettyLocation;
-          if (pitch._id === homeGroundId) {
-            newMarker.options.icon = pitchIconSpinning;
-            map.homeGroundMarker = newMarker;
-          }
-          map.markerArray.push(newMarker);
-          Meteor.defer(addMarker.bind(null, i + 1));
-        });
-      } else {
-        markersAdded.set(true);
-      }
-    }
-
-    markersAdded.set(false);
-    addMarker(0);
-
-    map.markers.clearLayers();
-    Tracker.autorun(function(c) {
-      if (markersAdded.get()) {
-        map.markers.addLayers(map.markerArray);
-      }
-    });
-  };
-  map.addLayer(map.markers);
-  map.updateMarkers();
-
-  // NEED TO "SET" HOME GROUND AGAIN TO ATTACH IT TO MAP
-  var homeGround = formData.homeGround.get();
-  homeGround && setHomeGround(homeGround);
-
-  // ADD MARKERS WHEN PITCHES ARE READY (CAN'T USE CALLBACK AS WE DON'T KNOW WHEN SYNC WAS CALLED)
-  Tracker.autorun(function(comp) {
-    if (Pitches && Pitches.synced() && App.pitchSync) {
-      if (App.pitchSync.removed.length + App.pitchSync.inserted.length > 0) {
-        map.updateMarkers();
-      }
-      // ADD CIRCLE
-      var center = user ? L.latLng(user.profile.player.center) : L.latLng(51.5073509, -0.12775829999998223),
-          size = user ? user.profile.player.radius : 8000;
-      map.circle = L.circle(center, size, {
-        color: '#6D1AC0',
-        fillColor: '#6D1AC0',
-        fillOpacity: 0.4,
-        className: 'pitchCircle'
-      }).addTo(map);
-      zoomPitch(App.currentLocation);
-      comp.stop();
-    }
-  });
-
-};
-
-function zoomPitch(defaultLocation) {
-
-  var location = defaultLocation ? defaultLocation : formData.homeGround.getKey('_id'),
-    pitch = Pitches.findOne({
-      _id: location
-    });
-  if (!pitch) return false;
-  map.panTo(pitch.location);
-  map.homeGroundMarker && map.markers.zoomToShowLayer(map.homeGroundMarker, function() {
-    map.homeGroundMarker.openPopup()
-  });
-
-}
-
-function setHomeGround(pitch) {
-  if (!window.map || map instanceof HTMLElement) return false;
-
-  if (typeof pitch === 'string') pitch = Pitches.findOne({
-    _id: pitch
-  });
-  var thisPitchId = pitch && pitch._id;
-  if (!pitch || (formData.homeGround.value._id === thisPitchId && map.homeGroundMarker)) return false;
-
-  var readyDep = new SuprSubDep({
-    move: false,
-    tiles: false
-  });
-
-  map.homeGroundMarker && map.homeGroundMarker.closePopup();
-  map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIcon));
-  map.homeGroundMarker = _.find(map.markerArray, function(marker) {
-    return marker.options.pitchId === thisPitchId;
-  });
-  map.homeGroundMarker && (map.homeGroundMarker.setIcon(pitchIconSpinning));
-  if (!_.isEmpty(pitch)) map.panTo(pitch.location);
-
-  map.on('moveend', function() {
-    readyDep.setKey('move', true);
-    map.off('moveend');
-  });
-  map.tileLayer.on('load', function() {
-    readyDep.setKey('tiles', true);
-    map.tileLayer.off('load');
-  });
-
-  Tracker.autorun(function(comp) {
-    if (readyDep.getKey('move') && readyDep.getKey('tiles')) {
-      zoomPitch();
-      comp.stop();
-    }
-  });
-}
 
 getFormData = function() {
   return formData;
