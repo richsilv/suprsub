@@ -23,6 +23,93 @@ Schemas.LatLng = new SimpleSchema({
     }
 });
 
+Schemas.Availability = new SimpleSchema({
+    p0d0: {
+        type: Boolean,
+        defaultValue: false
+    },
+    p0d1: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p0d2: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p0d3: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p0d4: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p0d5: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p0d6: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d0: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d1: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d2: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d3: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d4: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d5: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p1d6: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d0: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d1: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d2: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d3: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d4: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d5: {
+        type: Boolean,
+        defaultValue: false
+    },    
+    p2d6: {
+        type: Boolean,
+        defaultValue: false
+    }
+});
+
 Schemas.PlayerProfile = new SimpleSchema({
     ability: {
         type: Number,
@@ -35,32 +122,7 @@ Schemas.PlayerProfile = new SimpleSchema({
         defaultValue: 0
     },
     availability: {
-        type: Object,
-        label: "Availability Matrix",
-        blackbox: true,
-        defaultValue: {
-            "0/0": false,
-            "0/1": false,
-            "0/2": false,
-            "0/3": false,
-            "0/4": false,
-            "0/5": false,
-            "0/6": false,
-            "1/0": false,
-            "1/1": false,
-            "1/2": false,
-            "1/3": false,
-            "1/4": false,
-            "1/5": false,
-            "1/6": false,
-            "2/0": false,
-            "2/1": false,
-            "2/2": false,
-            "2/3": false,
-            "2/4": false,
-            "2/5": false,
-            "2/6": false
-        }
+        type: Schemas.Availability,
     },
     center: {
         type: Schemas.LatLng,

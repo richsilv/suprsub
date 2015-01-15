@@ -70,7 +70,7 @@ Template.availability.helpers({
   days: function(periodInd) {
     var userDays = Meteor.user() ? Meteor.user().profile.player.availability : {};
     return _.map(days, function(day, ind) {
-      var code = periodInd + '/' + ind.toString();
+      var code = 'p' + periodInd + 'd' + ind.toString();
       return {
         name: day,
         code: code,
@@ -95,7 +95,6 @@ Template.availability.events({
         period = checkbox.data('period'),
         set = {}
     set['profile.player.availability.' + period.toString()] = !checked;
-    console.log(period, checked, set);
     Meteor.users.update({
       _id: Meteor.userId()
     }, {
