@@ -1,3 +1,198 @@
 <template name="Settings">
-  client/views/settings/settings.html
+	<div id="main-background-image"></div>
+	<div class="container">
+		<div class="flexbox">
+			<div class="w-1-2">
+					{{> settingsBox}}
+			</div>
+			<div class="w-1-2">
+					{{> otherSettingsBox}}		
+			</div>
+		</div><!-- 
+		<div class="gap row">
+			{{> settingsMainButtons}}
+		</div> -->
+	</div>
+</template>
+
+<template name="settingsBox">
+		<form class="ui form segment content whitetranslucent">
+		  	<div class="row">
+		  		<ul class="small-block-grid-1 medium-block-grid-1 large-block-grid-1" id="linkTriple">
+			  		<li>
+<!-- 				  		<div class="small ui fluid {{#if service 'facebook'}}facebook {{/if}}button" id="facebookButton">
+				  			<i class="facebook icon"></i>
+				  			{{#if service 'facebook'}}
+					  			Facebook Account Linked
+					  		{{else}}
+					  			Link Facebook Account
+					  		{{/if}}
+				  		</div> -->
+			  		</li>
+			  		<li>
+<!-- 				  		<div class="small ui fluid {{#if service 'twitter'}}twitter {{/if}}button" id="twitterButton">
+				  			<i class="twitter icon"></i>
+				  			{{#if service 'twitter'}}
+					  			Twitter Account Linked
+				  			{{else}}
+					  			Link Twitter Account
+				  			{{/if}}
+				  		</div> -->
+		  			</li>
+			  		<li>
+<!-- 			  			{{#if email 'verified'}}
+				  		<div class="small ui fluid orange button" title={{email}} id="emailButton">
+				  			<i class="mail icon"></i>
+					  		Email address verified
+				  		</div>
+			  			{{else}}
+			  				{{#if email 'unverified'}}
+					  		<div class="small ui fluid button" title={{email}} id="waitingButton">
+					  			<i class="mail icon"></i>
+						  		Waiting for email verification
+					  		</div>
+			  				{{else}}
+			  				<div class="small ui fluid button" id="linkButton">
+					  			<i class="mail icon"></i>
+						  		Link Email Account
+					  		</div>
+			  				{{/if}}
+			  			{{/if}} -->
+			  		</li>
+			  	</ul>
+		  	</div>
+		  	<div class="gap row">
+			  	<div class="small-11 small-centered columns">
+				    <div class="ui field">
+				      	<label>Preferred Contact</label>
+						<div class="ui fluid selection dropdown" title="This is how we'll send you messages and make you aware of relevant postings - you can select more than one">
+							<input type="hidden" name="contact">
+							<div class="text" id="selectedContact">None</div>
+							<i class="dropdown icon"></i>
+						  	<div class="menu">
+<!-- 						  		{{#if email}}<div class="item active" data-value="2">Email{{#if contactActive 2}} (selected){{/if}}</div>{{/if}}
+						    	{{#if service 'facebook'}}<div class="item" data-value="1">Facebook{{#if contactActive 1}} (selected){{/if}}</div>{{/if}}
+						    	{{#if service 'twitter'}}<div class="item" data-value="0">Twitter{{#if contactActive 0}} (selected){{/if}}</div>{{/if}} -->
+						  	</div>
+						</div>
+			    	</div>
+			    </div>
+		    </div>
+			<div class="small-16 medium-14 small-centered columns">
+				<div class="text-center field">
+					<div class="checkboxLabel">Don't send<br class="hide-for-medium-up"> me postings</div>
+					<div class="ui toggle checkbox" id="postUser" title="Do you want us to tweet or e-mail you whenever there is a posting that matches your profile?">
+						<input type="checkbox">
+						<label></label>
+					</div>
+					<div class="checkboxLabel">Send me<br class="hide-for-medium-up"> postings</div>
+				</div>
+			</div>
+		</form>
+	<div id="linkModalHolder">
+	</div>
+</template>
+
+<template name="settingsMainButtons">
+	<div class="medium-4 medium-centered columns">
+		<div class="ui segment content whitetranslucent">
+			<div class="ui two fluid large buttons" id="cancelOrSave">
+				<div class="ui negative animated button" id="resetButton" title="Reset any changes you've made">
+					<div class="visible content">Reset</div>
+					<div class="hidden content"><i class="backward icon"></i></div>
+				</div>
+				<div class="ui positive animated{{#if disableSave}} disabled{{/if}} button" id="saveButton" title="Save these changes">
+					<div class="visible content">Save</div>
+					<div class="hidden content"><i class="save icon"></i></div>
+				</div>	
+			</div>
+		</div>
+	</div>	
+</template>
+
+<template name="linkModalWrapper">
+	<div class="ui small modal" id="linkModal">
+	{{> linkModal}}
+	</div>
+</template>
+
+<template name="otherSettingsBox">
+	<form class="ui form segment content whitetranslucent">
+		<div class="row">
+			<div class="small-16 columns">
+				<div class="ui small fluid negative button" id="deleteAccount">DELETE ACCOUNT</div>
+				<p class="small-14 columns small-centered text-center label">By clicking this link all your player information will be deleted.  Any team for which you are the only registered player will also be deleted.</p>
+			</div>
+		</div>
+	</form>
+</template>
+
+<template name="linkModal">
+	{{#if duplicate}}
+		{{> duplicateEmail}}
+	{{else}}
+		{{> attachEmail}}
+	{{/if}}
+</template>
+
+<template name="attachEmail">
+	<div class="ui row">
+		<div class="ui column">
+			<form class="ui form">
+		  		<div class="ui two fields">
+			  		<div class="field">
+			      		<div class="ui input" id="email">
+			      			<input placeholder="Email Address" type="email" id="emailEntry" />
+			      		</div>
+			    	</div>
+					<div class="field">
+			      		<div class="ui input" id="password">
+			      			<input placeholder="Password" type="password" id="passwordEntry" />
+			      		</div>
+			    	</div>
+		    	</div>
+		    	<div class="two fluid ui buttons">
+    		  		<div class="ui negative button" id="emailCancel">
+			  			<i class="remove icon"></i>
+			  			Cancel
+			  		</div>
+    		  		<div class="ui orange button" id="emailSubmit">
+			  			<i class="mail icon"></i>
+			  			Submit
+			  		</div>
+			  	</div>
+	    	</form>
+		</div>    			
+	</div>
+</template>
+
+<template name="duplicateEmail">
+	<div class="ui row">
+		<div class="ui column">
+			<h3 class="ui dividing header">
+				E-mail already registered
+			</h3>
+			<p>That e-mail address is already registered on the system as a separate user.</p>
+			<p>If you would like to link it to this profile, you will need to do the following:</p>
+			<ul>
+				<li>Log out of this account.</li>
+				<li>Log back in using the e-mail <em>{{email}}</em>.</li>
+				<li>Select <strong>Delete Account</strong> on the Settings Page.</li>
+				<li>Log back into this account, from which you will now be able to link that e-mail address.</li>
+			</ul>
+			<p>Sorry about that, but this is necessary to prevent accounts being hijacked.</p>
+		</div>
+	</div>
+</template>
+
+<template name="deleteAccount">
+	<div class="ui row">
+		<div class="ui column">
+			<h3 class="ui dividing header">
+				Delete Account
+			</h3>
+			<p>Are you sure you want to delete this account?  All your player information will be deleted, and any team for which you are the only registered player will also be deleted.</p>
+			
+		</div>
+	</div>
 </template>
