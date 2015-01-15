@@ -106,17 +106,19 @@ Template.availability.events({
 
 Template.pitchData.helpers({
   'getPitches': function() {
-    return formData.pitches.get();
+    return _.sortBy(formData.pitches.get(), 'prettyLocation');
   }
 })
 
 Template.defineBounds.events({
   'slide .slider': function(event, template) {
+    var radius = parseInt(template.$(event.currentTarget).val());
+    GoogleMaps.maps.pitchMap.circle.setRadius(radius);
     Meteor.users.update(Meteor.userId(), {
       $set: {
-        'profile.player.radius': template.$(event.currentTarget).val()
+        'profile.player.radius': radius
       }
-    }, console.log.bind(console));
+    });
   }
 });
 
@@ -192,7 +194,7 @@ Template.Player.destroyed = function() {
 
 Template.defineBounds.rendered = function() {
   $('.slider').noUiSlider({
-    start: [8000],
+    start: [this.data.player.radius],
     range: {
       'min': [1000],
       'max': [15000]
@@ -201,6 +203,34 @@ Template.defineBounds.rendered = function() {
     direction: 'rtl'
   });
 };
+
+Template.pitchData.created = function() {
+
+  var _this = this;
+
+  // PERIODICALLY UPDATE PITCHES LIST
+  this.autorun(function() {
+    var user = Meteor.user();
+    if (_this.timeOut) {
+      Meteor.clearTimeout(_this.timeOut);
+      delete _this.timeOut;
+    }
+    _this.timeOut = Meteor.setTimeout(function(t) {
+      Tracker.nonreactive(function() {
+        var pitches = pitchesWithin(user.profile);
+        Meteor.users.update(user._id, {
+            $set: {
+              'profile.player.pitches': _.pluck(pitches, '_id')
+            }
+          },
+          function() {
+            formData.pitches.set(pitches);
+          });
+      });
+    }, 1000);
+  });
+
+}
 
 Template.pitchMapLarge.rendered = function() {
 
@@ -251,12 +281,6 @@ Template.pitchMapLarge.rendered = function() {
 
 };
 
-Template.pitchMapLarge.destroyed = function() {
-
-  map.remove();
-
-};
-
 getFormData = function() {
   return formData;
 }
@@ -267,12 +291,15 @@ function pitchesWithin(profile) {
     latFactor = 1 / 111200,
     center = profile.player.center,
     radius = profile.player.radius;
-  allPitches = Pitches.withinBounds(new L.latLngBounds(
-    new L.latLng(center.lat - (radius * latFactor), center.lng - (radius * lngFactor)),
-    new L.latLng(center.lat + (radius * latFactor), center.lng + (radius * lngFactor))
+  allPitches = Pitches.withinBounds(new google.maps.LatLngBounds(
+    new google.maps.LatLng(center.lat - (radius * latFactor), center.lng - (radius * lngFactor)),
+    new google.maps.LatLng(center.lat + (radius * latFactor), center.lng + (radius * lngFactor))
   ));
   allPitches.forEach(function(pitch) {
-    if (new L.latLng(center).distanceTo(new L.latLng(pitch.location.lat, pitch.location.lng))) {
+    if (google.maps.geometry.spherical.computeDistanceBetween(
+        new google.maps.LatLng(center.lat, center.lng), 
+        new google.maps.LatLng(pitch.location.lat, pitch.location.lng)
+      ) < radius) {
       pitches.push(pitch);
     }
   });

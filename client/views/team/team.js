@@ -7,7 +7,8 @@ var formData = {
     teamInput: new SuprSubDep(),
     homeGround: new SuprSubDep({}),
     pitchMatches: new SuprSubDep([]),
-    showErrors: new SuprSubDep(false)
+    showErrors: new SuprSubDep(false),
+    circle: new SuprSubDep(false)
   },
   disappearFunc = function(elements) {
     elements.velocity({
@@ -535,18 +536,34 @@ Template.pitchMap.created = function() {
 
   GoogleMaps.ready('pitchMap', function(map) {
     var waitForGeo = Tracker.autorun(function(c) {
-          var location = Geolocation.latLng(),
-              homeGround = formData.homeGround.get();
-          if (!_.isEmpty(homeGround)) {
-            map.instance.panTo(new google.maps.LatLng(homeGround.location.lat, homeGround.location.lng));
-            map.instance.setZoom(15);
-            c.stop();
-          }
-          else if (location) {
-            map.instance.panTo(location);
-            App.currentLocation = location;
-          }
-        });
+      var location = Geolocation.latLng();
+
+      if (_this.data && _this.data.circle) {
+        var player = Meteor.user() && Meteor.user().profile.player,
+            center = player.center,
+            radius = player.radius;
+        if (!_.isEmpty(center)) {
+          map.instance.panTo(new google.maps.LatLng(center.lat, center.lng));
+          map.instance.setZoom(Math.floor(9 + (15000 / radius)));
+          c.stop();
+        }
+        else if (location) {
+          map.instance.panTo(location);
+          App.currentLocation = location;
+        }
+      } else {
+        var homeGround = formData.homeGround.get();
+        if (!_.isEmpty(homeGround)) {
+          map.instance.panTo(new google.maps.LatLng(homeGround.location.lat, homeGround.location.lng));
+          map.instance.setZoom(15);
+          c.stop();
+        }
+        else if (location) {
+          map.instance.panTo(location);
+          App.currentLocation = location;
+        }
+      }
+    });
 
     map.markers = {};
     map.iw = new google.maps.InfoWindow();
@@ -595,6 +612,27 @@ Template.pitchMap.rendered = function() {
   var _this = this;
   this.map = GoogleMaps.maps.pitchMap;
 
+  formData.circle.set(this.data && this.data.circle);
+  if (this.data && this.data.circle) {
+    var player = Meteor.user() && Meteor.user().profile.player,
+        center = player.center,
+        radius = player.radius;    
+    this.map.circle = new google.maps.Circle({
+      center: new google.maps.LatLng(center.lat, center.lng),
+      draggable: true,
+      fillColor: 'purple',
+      fillOpacity: 0.4,
+      strokeColor: 'purple',
+      strokeOpacity: 0.8,
+      radius: radius,
+      zIndex: 1,
+      map: this.map.instance
+    });
+    google.maps.event.addListener(this.map.circle, 'dragend', function(event) {
+      var center = this.getCenter();
+      center && Meteor.users.update(Meteor.userId(), {$set: {'profile.player.center': center.toLiteral()}});
+    });
+  }
 };
 
 function defaultTeam() {
@@ -612,6 +650,7 @@ function defaultTeam() {
 }
 
 function setHomeGround(pitch) {
+  if (!formData.circle.get()) return null;
   if (typeof pitch === 'string') pitch = Pitches.findOne({
     _id: pitch
   });

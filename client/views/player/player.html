@@ -12,12 +12,12 @@
 				<div class="ui segment content whitetranslucent">
 					<div class="flexbox">
 						<div class="size-1 w-1-4">
-							{{> defineBounds}}
+							{{> defineBounds profile}}
 						</div>
 						<div class="ui vertical divider show-for-large-only" style="left: 25%"><i class="map icon"></i></div>
 						<div class="size-3 w-3-4">
 							<div id="mapContainer">
-								{{> pitchMap}}
+								{{> pitchMap circle=true}}
 							</div>
 						</div>
 					</div>
@@ -124,7 +124,7 @@
 			<h3 class="ui header"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
 			<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><div data-info="radius" class="radius">{{toKm player.radius}} km</div></h3></div>
 			<div class="slider-holder">
-				<div data-field="radius" class="slider" data-content="This is a slider"></div>
+				<div data-field="radius" class="slider"></div>
 			</div>
 		</form>
 	</template>
