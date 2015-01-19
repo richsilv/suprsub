@@ -237,8 +237,9 @@
 	</template>
 
 		<template name="pitchMap">
-			<div id="mapHolder">
+			<div id="mapHolder" class="with-spinner">
 				{{> googleMap name="pitchMap" options=mapOptions}}
+				{{> spinner}}
 			</div>
 		</template>
 

@@ -84,6 +84,7 @@ sewdn:velocityjs@0.8.0
 sha@1.0.2
 spacebars@1.0.4
 spacebars-compiler@1.0.4
+splendido:accounts-meld@1.2.0
 srp@1.0.2
 standard-app-packages@1.0.4
 templating@1.0.10
@@ -94,4 +95,4 @@ underscore@1.0.2
 url@1.0.3
 webapp@1.1.5
 webapp-hashing@1.0.2
-wolves:bourbon@0.7.0
+wolves:bourbon@0.8.0

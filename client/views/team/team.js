@@ -1,4 +1,5 @@
-var MARKER_DELAY = 1000;
+var MARKER_DELAY = 1000,
+    MARKER_BATCH_SIZE = 250;
 
 var formData = {
     teamsArray: new SuprSubDep([]),
@@ -9,18 +10,6 @@ var formData = {
     pitchMatches: new SuprSubDep([]),
     showErrors: new SuprSubDep(false),
     circle: new SuprSubDep(false)
-  },
-  disappearFunc = function(elements) {
-    elements.velocity({
-      opacity: 0,
-      'z-index': -50
-    })
-  },
-  appearFunc = function(elements) {
-    elements.velocity({
-      opacity: 0.6,
-      'z-index': 0
-    });
   };
 
 /*****************************************************************************/
@@ -582,35 +571,57 @@ Template.pitchMap.created = function() {
           strokeColor: '#444',
           strokeWeight: 1,
           scale: 0.5
-        }
+        };
 
     if (!App.markers || !App.markers.length) {
       App.markers = [];
-      Pitches.find({}, {limit: 500}).forEach(function(pitch) {
 
-        var thisMarker = new GoogleMaps.Marker({
-          cursor: 'pointer',
-          zIndex: 9,
-          icon: iconProto,
-          title: pitch.prettyLocation,
-          position: pitch.location,
-          label: '<i class="icon-football"></i>'
-        });      
-        google.maps.event.addListener(thisMarker, 'mouseover', setAndShowInfoWindow.bind(thisMarker, pitch.prettyLocation));
-        google.maps.event.addListener(thisMarker, 'click', setHomeGround.bind(map, pitch));
-        map.markers[pitch._id] = thisMarker;
-        App.markers.push(thisMarker);
-      });
+      _this.makeMarkers = function(batchSize, skip, total, delay, callback) {
+        if (skip < total) {
+          Pitches.find({}, {limit: batchSize, skip: skip}).forEach(function(pitch) {
+            var thisMarker = new GoogleMaps.Marker({
+              cursor: 'pointer',
+              zIndex: 9,
+              icon: iconProto,
+              title: pitch.prettyLocation,
+              position: pitch.location,
+              label: '<i class="icon-football"></i>'
+            });      
+            google.maps.event.addListener(thisMarker, 'mouseover', setAndShowInfoWindow.bind(thisMarker, pitch.prettyLocation));
+            google.maps.event.addListener(thisMarker, 'click', setHomeGround.bind(map, pitch));
+            map.markers[pitch._id] = thisMarker;
+            App.markers.push(thisMarker);
+          });
+          Meteor.setTimeout(function() {
+            _this.makeMarkers(batchSize, skip + batchSize, total, delay, callback);
+          }, delay);
+        } else {
+          callback && callback.apply(this, arguments);
+        }
+      }
     }
-    map.markerClusterer = new GoogleMaps.MarkerClusterer(map.instance, App.markers, {maxZoom: 14});
   });
 
 };
 
 Template.pitchMap.rendered = function() {
 
-  var _this = this;
+  var _this = this,
+        markerCount = Pitches.find().count(),
+        template = Template.instance();
   this.map = GoogleMaps.maps.pitchMap;
+
+  google.maps.event.addListener(this.map.instance, 'tilesloaded', function() {
+    if (!App.markers.length) {
+      _this.makeMarkers(MARKER_BATCH_SIZE, 0, markerCount, 20, function() {
+        _this.map.markerClusterer = new GoogleMaps.MarkerClusterer(_this.map.instance, App.markers, {maxZoom: 14});
+        template.$('#mapHolder').removeClass('with-spinner');   
+      });
+    } else {
+      _this.map.markerClusterer = new GoogleMaps.MarkerClusterer(_this.map.instance, App.markers, {maxZoom: 14});
+      template.$('#mapHolder').removeClass('with-spinner');   
+    }
+  });
 
   formData.circle.set(this.data && this.data.circle);
   if (this.data && this.data.circle) {

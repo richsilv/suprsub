@@ -17,7 +17,8 @@ _.extend(App, {
 
 	subs: {
 		postingsChoice: new SuprSubDep(''),
-		postingsUser: new SuprSubDep(false)
+		postingsUser: new SuprSubDep(false),
+		user: Meteor.subscribe('user')
 	},
 
 	mapSearchURI: 'http://nominatim.openstreetmap.org/search?',
@@ -74,8 +75,8 @@ App.helpers = {
 		var user = Meteor.user();
 		if (!user) return false;
 		else if (!arg && user.emails) return true;
-		else if (arg === 'verified') return Meteor.user().emails[0].verified;
-		else if (arg === 'unverified') return !Meteor.user().emails[0].verified;
+		else if (arg === 'verified') return Meteor.user().emails && Meteor.user().emails[0].verified;
+		else if (arg === 'unverified') return Meteor.user().emails && !Meteor.user().emails[0].verified;
 	},
 	service: function(serviceName) {
 		return Meteor.user() && Meteor.user().services && _.has(Meteor.user().services, serviceName);

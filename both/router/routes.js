@@ -33,6 +33,10 @@ Router.waitOn(function() {
   return readyIfGMapsLoaded();
 }, { only: ['team', 'player'] });
 
+Router.waitOn(function() {
+  return App.subs.user;
+}, { except: ['login', 'splash', 'about'] })
+
 // SYNC PITCHES ON LOGIN
 Router.onAfterAction(function() {
   if (!Pitches.synced()) {

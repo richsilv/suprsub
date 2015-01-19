@@ -1,6 +1,7 @@
 /*****************************************************************************/
 /* Team: Style */
 /*****************************************************************************/
+$suprsub-green: hsl(120, 75%, 43%);
 
 #pitchMatches {
 	max-height: 8em;
@@ -24,7 +25,33 @@
 
 #mapHolder {
     position: absolute;
-    top: 0; bottom: 0; left: 0; right: 0
+    top: 0; bottom: 0; left: 0; right: 0;
+
+    .spinner-container {
+    	position: absolute;
+    	top: 0;
+    	background-color: rgba(0, 0, 0, 0.75);
+    	opacity: 0;
+    	z-index: -1;
+    }
+
+	&.with-spinner {
+		.spinner-container {
+			opacity: 1;
+			z-index: auto;
+
+			&::after {
+				content: 'LOADING MARKERS';
+				color: $suprsub-green;
+				text-align: center;
+				font-size: 1.5em;
+				display: block;
+				margin-top: 15%;
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+	}
 }
 
 #map {
