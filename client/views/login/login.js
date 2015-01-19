@@ -110,7 +110,5 @@ function loginCallback(serviceName, error) {
   if (error) {
     console.log(error);
     accountError.set('Cannot login with ' + serviceName + ': ' + error.reason);
-  } else {
-    App.subs.user = Meteor.subscribe('user');
   }
 }
