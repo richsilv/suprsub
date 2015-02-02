@@ -275,6 +275,10 @@ body {
 
 // PLAYER PAGE SPECIFICS
 
+.flex-display {
+	display: flex;
+}
+
 .semantic-padding {
 	margin-right: -1% !important;
 	>* {

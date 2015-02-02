@@ -11,7 +11,7 @@
 			<div class="size-2 w-1-1">
 				<div class="ui segment content whitetranslucent">
 					<div class="flexbox wrap v-stretch">
-						<div class="size-1 w-1-4 m-1-5">
+						<div class="flex-display size-1 w-1-4 m-1-5">
 							{{> defineBounds profile}}
 						</div>
 						<div class="ui vertical divider show-for-tablet-up" style="left: 26%"><i class="map icon"></i></div>
@@ -120,8 +120,8 @@
 		</template>
 
 	<template name="defineBounds">
-		<form class="ui form segment content whitetranslucent flexbox column">
-				<h3 class="ui header w-1-4 m-1-4 grow-1"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
+		<form class="ui form segment content whitetranslucent flexbox h-space-between column">
+				<h3 class="ui header w-1-4 m-1-4 grow-1 flexbox"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
 				<div class="w-3-4 grow-3"><div class="flexbox">
 					<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><div data-info="radius" class="radius">{{toKm player.radius}} km</div></h3></div>
 					<div class="slider-holder w-3-4 grow-1">
