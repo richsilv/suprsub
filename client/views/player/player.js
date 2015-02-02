@@ -192,15 +192,34 @@ Template.Player.destroyed = function() {
 };
 
 Template.defineBounds.rendered = function() {
+  var width = $(window).width(),
+      _this = this;
+  console.log(width);
   $('.slider').noUiSlider({
     start: [this.data.player.radius],
     range: {
       'min': [1000],
       'max': [15000]
     },
-    orientation: 'vertical',
+    orientation: width > 1000 ? 'vertical' : 'horizontal',
     direction: 'rtl'
   });
+  $(window).on('resize', function() {
+    var width = $(window).width();
+    $('.slider').noUiSlider({
+      start: [_this.data.player.radius],
+      range: {
+        'min': [1000],
+        'max': [15000]
+      },
+      orientation: width > 1000 ? 'vertical' : 'horizontal',
+      direction: width > 1000 ? 'rtl' : 'ltr'
+    }, true);
+  });
+};
+
+Template.destroyed = function () {
+  $(window).off('resize');
 };
 
 Template.pitchData.created = function() {

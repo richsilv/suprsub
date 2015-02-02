@@ -21,27 +21,27 @@
 				</span>
 				{{#if currentUser}}
 				<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
-					<i class="home icon"></i> Home
+					<i class="home icon"></i> <span class="show-for-tablet-up">Home</span>
 				</a>
 				<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'player'}}">
-					<i class="user icon"></i> Player
+					<i class="user icon"></i> <span class="show-for-tablet-up">Player</span>
 				</a>
 				<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'team'}}">
-					<i class="users icon"></i> Team
+					<i class="users icon"></i> <span class="show-for-tablet-up">Team</span>
 				</a>
 				<a class="{{#if option "/about"}}active {{/if}}item" href="{{pathFor 'about'}}">
-					<i class="book icon"></i> About
+					<i class="book icon"></i> <span class="show-for-tablet-up">About</span>
 				</a>
 				<a class="{{#if option "/settings"}}active {{/if}}item" href="{{pathFor 'settings'}}">
-					<i class="settings icon"></i> Settings
+					<i class="settings icon"></i> <span class="show-for-tablet-up">Settings</span>
 				</a>
 				{{/if}}
 			</div>
 			<div>
 				<div class="svg flexbox v-center">
-					<a class="vertical-item webicon twitter" target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Check+out+this+brilliant+new+footy+platform+-+you+can+sign+up+in+seconds!+@suprsub&url=http://suprsub.com" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a>
-					<a class="vertical-item webicon facebook" target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a>
-					<a class="vertical-item webicon googleplus" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a>
+					<a class="vertical-item webicon twitter hide-for-small-screen" target="_blank" href="https://twitter.com/intent/tweet?source=tweetbutton&text=Check+out+this+brilliant+new+footy+platform+-+you+can+sign+up+in+seconds!+@suprsub&url=http://suprsub.com" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-250)+',top='+(window.screen.availHeight/2-130)+',width=500,height=260,toolbar=0,resizable=0'); return false;">Share on Twitter</a>
+					<a class="vertical-item webicon facebook hide-for-small-screen" target="_blank" href="http://www.facebook.com/sharer/sharer.php?u=www.facebook.com/suprsub" onclick="window.open(this.href, 'mywin', 'left='+(window.screen.availWidth/2-193)+',top='+(window.screen.availHeight/2-184)+',width=386,height=368,toolbar=0,resizable=0'); return false;">Like us on Facebook</a>
+					<a class="vertical-item webicon googleplus hide-for-small-screen" href="https://plus.google.com/101364442543045043399/about?prsrc=3" rel="publisher" target="_blank">Add us on Google+</a>
 					{{#if currentUser}}
 					<form>
 			    		<div class="ui button" data-action="log-out">Log Out</div>

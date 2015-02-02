@@ -2,13 +2,13 @@
 	<div id="main-background-image"></div>
 	<div class="container">
 		<div class="flexbox v-stretch wrap equal-height">
-			<div class="size-1 w-1-2">
+			<div class="m-1-2 w-1-2 size-1">
 					{{> teamTopLevel}}
 			</div>
-			<div class="size-1 w-1-2">
+			<div class="m-1-2 w-1-2 size-1">
 					{{> teamSecondLevel}}		
 			</div>
-			<div class="size-2 w-1-1">
+			<div class="w-1-1 size-2">
 				{{> otherInfo}}
 			</div>
 		</div>
@@ -191,8 +191,8 @@
 
 	<template name="otherInfo">
 		<div class="ui segment content whitetranslucent" id="otherInfo">
-			<div class="flexbox">
-				<div class="w-1-2">
+			<div class="flexbox wrap">
+				<div class="m-1-2-- w-1-2 size-1">
 					<form class="ui form segment content">
 						<div class="ui form flexbox">
 							<div class="field w-7-8">
@@ -222,8 +222,8 @@
 					{{/if}}
 					<div class="mini purple ui button bottomRight" data-action="add-venue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 				</div>
-				<div class="ui vertical divider show-for-large-up"><i class="map icon"></i></div>
-				<div class="w-1-2">
+				<div class="ui vertical divider show-for-tablet-up"><i class="map icon"></i></div>
+				<div class="m-1-2-- w-1-2 size-1">
 					<div id="mapContainer">
 <!-- 						{{#if tabChoices 'newVenue'}}
 						{{> newVenueBox}}

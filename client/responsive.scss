@@ -1,0 +1,181 @@
+$container-width: 1015px;
+$tablet-width: $container-width;
+$desktop-width: 1240px;
+$small-width: 640px;
+
+@mixin small-screen {
+	@media only screen and (max-width: $small-width) {
+		@content;
+	} 	
+}
+
+@mixin phone {
+	@media only screen and (max-width: $tablet-width) {
+		@content;
+	}
+}
+
+@mixin phone-up {
+	@media only screen {
+		@content;
+	}
+}
+
+@mixin tablet {
+	@media only screen and (min-width: $tablet-width) and (max-width: $desktop-width) {
+		@content;
+	}
+}
+
+@mixin tablet-up {
+	@media only screen and (min-width: $tablet-width) {
+		@content;
+	}
+}
+
+@mixin desktop {
+	@media only screen and (min-width: $desktop-width) {
+		@content;
+	}
+}
+
+@mixin pixany {
+	@media (orientation : portrait) { 
+		@content
+	}
+}
+
+@mixin pix150 {
+	@media (min-resolution: 150dppx) and (orientation : portrait) { 
+		@content
+	}
+}
+
+@mixin pix200 {
+	@media (min-resolution: 200dppx) and (orientation : portrait) { 
+		@content
+	}
+}
+
+@mixin pix250 {
+	@media (min-resolution: 250dppx) and (orientation : portrait) {
+		@content
+	}
+}
+
+@mixin pix300 {
+	@media (min-resolution: 300dppx) and (orientation : portrait) {
+		@content
+	}
+}
+
+.show-for-small-screen {
+	display: none;
+	@include small-screen {
+		display: initial;
+	}
+}
+.show-for-phone-up {
+	display: none;
+	@include phone-up {
+		display: initial;
+	}
+}
+.show-for-tablet-up {
+	display: none;
+	@include tablet-up {
+		display: initial;
+	}
+}
+.show-for-desktop-up {
+	display: none;
+	@include desktop {
+		display: initial;
+	}
+}
+.show-for-pixany-up {
+	display: none;
+	@include pixany {
+		display: initial;
+	}
+}
+.show-for-pix150-up {
+	display: none;
+	@include pix150 {
+		display: initial;
+	}
+}
+.show-for-pix200-up {
+	display: none;
+	@include pix200 {
+		display: initial;
+	}
+}
+.show-for-pix250-up {
+	display: none;
+	@include pix250 {
+		display: initial;
+	}
+}
+.show-for-pix300-up {
+	display: none;
+	@include pix300 {
+		display: initial;
+	}
+}
+
+.hide-for-small-screen {
+	display: initial;
+	@include small-screen {
+		display: none;
+	}
+}
+.hide-for-phone-up {
+	display: initial;
+	@include phone-up {
+		display: none;
+	}
+}
+.hide-for-tablet-up {
+	display: initial;
+	@include tablet-up {
+		display: none;
+	}
+}
+.hide-for-desktop-up {
+	display: initial;
+	@include desktop {
+		display: none;
+	}
+}
+.hide-for-pixany-up {
+	display: initial;
+	@include pixany {
+		display: none;
+	}
+}
+.hide-for-pix150-up {
+	display: initial;
+	@include pix150 {
+		display: none;
+	}
+}
+.hide-for-pix200-up {
+	display: initial;
+	@include pix200 {
+		display: none;
+	}
+}
+.hide-for-pix250-up {
+	display: initial;
+	@include pix250 {
+		display: none;
+	}
+}
+.hide-for-pix300-up {
+	display: initial;
+	@include pix300 {
+		display: none;
+	}
+}
+
