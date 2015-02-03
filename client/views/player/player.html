@@ -2,20 +2,20 @@
 	<div id="main-background-image"></div>
 	<div class="container">
 		<div class="flexbox v-stretch wrap equal-height">
-			<div class="size-1 w-1-2 m-1-2">
+			<div class="size-1 w-1-2 grow-1 shrink-1">
 				{{> playerForm profile}}
 			</div>
-			<div class="size-1 w-1-2 m-1-2">
+			<div class="size-1 w-1-2 m-1-2 collapse-for-small grow-1 shrink-1">
 				{{> availabilityVenues}}
 			</div>
 			<div class="size-2 w-1-1">
 				<div class="ui segment content whitetranslucent">
-					<div class="flexbox wrap v-stretch">
+					<div class="flexbox reverse-for-phone v-stretch">
 						<div class="flex-display size-1 w-1-4 m-1-5">
 							{{> defineBounds profile}}
 						</div>
 						<div class="ui vertical divider show-for-tablet-up" style="left: 26%"><i class="map icon"></i></div>
-						<div class="size-3 w-3-4 m-2-3">
+						<div class="size-3 w-3-4 m-2-3 collapse-for-small ">
 							<div id="mapContainer">
 								{{> pitchMap circle=true}}
 							</div>
@@ -29,7 +29,7 @@
 
 	<template name="playerForm">
 		<form class="ui form segment content whitetranslucent flexbox wrap v-space-between">
-		  		<div class="size-1 w-1-2">
+		  		<div class="size-1 w-auto m-1-5 grow-1">
 			    	<div class="field">
 			      		<label>First Name</label>
 			      		<div class="ui input">
@@ -37,7 +37,7 @@
 			      		</div>
 			    	</div>
 		    	</div>
-		  		<div class="size-1 w-1-2">
+		  		<div class="size-1 w-auto m-1-5 grow-1">
 				    <div class="field">
 				      	<label>Surname</label>
 				      	<div class="ui input" id="surname">
@@ -51,7 +51,7 @@
 
 		<template name="playerDropdowns">
 			{{#each dropdowns}}
-			  	<div class="size-1 w-1-2">
+			  	<div class="size-1 w-auto m-1-5 grow-1">
 			    	<div class="field">
 			      		<label>{{label}}</label>
 						<div class="ui fluid selection dropdown" data-field="{{field}}">
@@ -100,8 +100,18 @@
 		</template>
 
 		<template name="availability">
-			<table class="ui green table segment" id="availabilityTable">
-				<thead><tr><th class="tableSpaceBlock"></th>{{#each days}}<th class="dayHeader rotated_cell"><div class="rotate">{{this.name}}</div></th>{{/each}}</tr></thead>
+			<div  id="availabilityTable">
+				<table class="ui green unstackable table segment">
+					<thead>
+						<tr>
+							<th class="tableSpaceBlock"></th>
+							{{#each days}}
+								<th class="dayHeader rotated_cell">
+									<div class="rotate">{{this.name}}</div>
+								</th>
+							{{/each}}
+						</tr>
+					</thead>
 					<tbody>
 						{{#each periods}}
 							<tr>
@@ -116,18 +126,24 @@
 							</tr>
 						{{/each}}
 					</tbody>
-			</table>
+				</table>
+			</div>
 		</template>
 
 	<template name="defineBounds">
-		<form class="ui form segment content whitetranslucent flexbox h-space-between column">
-				<h3 class="ui header w-1-4 m-1-4 grow-1 flexbox"><i class="resize full icon"></i><div class="content">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
-				<div class="w-3-4 grow-3"><div class="flexbox">
-					<div id="distanceWriteLabel"><h4 class="ui header show-for-medium-up">Area size</h4><h3 class="ui header"><div data-info="radius" class="radius">{{toKm player.radius}} km</div></h3></div>
-					<div class="slider-holder w-3-4 grow-1">
+		<form class="ui form segment content whitetranslucent flexbox h-space-between v-stretch column">
+				<h3 class="ui header w-1-4 shrink-1 grow-1 flexbox v-center">
+					<i class="maximize icon w-1-4"></i>
+					<div class="content w-3-4">Neighbourhood Size<div class="sub header">use the slider to change the size of the area</div></div></h3>
+				<div class="w-3-4 grow-3 flexbox reverse-for-phone v-stretch">
+					<div class="slider-holder w-1-3 grow-0 shrink-0 flexbox v-stretch h-center">
 						<div data-field="radius" class="slider"></div>
 					</div>
-				</div></div>
+					<div id="distanceWriteLabel" class="w-2-3 grow-1 shrink-1 flexbox column reverse-for-phone h-center">
+						<div class="grow-0 w-auto">Area size</div>
+						<div class="grow-0 w-auto" data-info="radius">{{toKm player.radius}} km</div>
+					</div>
+				</div>
 		</form>
 	</template>
 

@@ -13,7 +13,6 @@ richsilv:semantic-flipbox
 reactive-var
 reactive-dict
 andruschka:tinycon
-fourseven:scss
 sewdn:velocityjs
 aldeed:collection2
 richsilv:semantic-ui-modal
@@ -24,7 +23,7 @@ npm-container
 cmather:handlebars-server
 email
 matb33:collection-hooks
-iron:router@1.0.0-pre4
+iron:router
 service-configuration
 sacha:spin
 rcy:nouislider
@@ -35,3 +34,6 @@ dburles:google-maps
 mdg:geolocation
 richsilv:google-maps-icons
 splendido:accounts-meld
+fourseven:scss@0.9.6
+nooitaf:semantic-ui
+fastclick

@@ -11,22 +11,26 @@ Template.MasterLayout.events({
 });
 
 Template.MasterLayout.helpers({
-  /*
-   * Example:
-   *  items: function () {
-   *    return Items.find();
-   *  }
-   */
+  smallScreen: function() {
+    return Template.instance().smallScreen.get();
+  }
 });
 
 /*****************************************************************************/
 /* MasterLayout: Lifecycle Hooks */
 /*****************************************************************************/
-Template.MasterLayout.created = function() {};
+Template.MasterLayout.created = function() {
+  this.smallScreen = new ReactiveVar($(window).width() < 500);
+  $(window).on('resize', function() {
+    this.smallScreen = new ReactiveVar($(window).width() < 500);
+  });
+};
 
 Template.MasterLayout.rendered = function() {};
 
-Template.MasterLayout.destroyed = function() {};
+Template.MasterLayout.destroyed = function() {
+  $(window).off('resize');
+};
 
 Template.topbar.helpers({
   ready: function() {

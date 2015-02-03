@@ -202,7 +202,7 @@ Template.defineBounds.rendered = function() {
       'max': [15000]
     },
     orientation: width > 1000 ? 'vertical' : 'horizontal',
-    direction: 'rtl'
+    direction: width > 1000 ? 'rtl' : 'ltr'
   });
   $(window).on('resize', function() {
     var width = $(window).width();

@@ -2,16 +2,8 @@
 /* Player: Style */
 /*****************************************************************************/
 @import "../../app";
-
-.radius {
-	position: absolute;
-	right: 2em;
-	top: 55%;
-}
-/* 
-.height280 {
-	height: 280px;
-} */
+@import "../../responsive";
+@import "bourbon/bourbon";
 
 #pitchTableDiv {
 	height: 131px;
@@ -29,4 +21,76 @@
 		background-color: $suprsub-green;
 	}
 
+}
+
+.flex-display {
+	display: flex;
+}
+
+.semantic-padding {
+	margin-right: -1% !important;
+	>* {
+		padding-left: 0 !important;
+		padding-right: 2% !important;
+	}	
+}
+
+.slider-holder {
+
+	position: relative;
+
+	.slider {
+
+		position: absolute;
+		height: 100%;
+
+		.noUi-handle {
+			background-color: $suprsub-green;
+			left: 2px;
+			top: 50%;
+			@include transform(translate(-50%, -50%));
+		}	
+	}
+}
+
+#distanceWriteLabel {
+	margin-top: 1.285em;
+	font-size: 1.285em;
+	font-weight: bold;
+}
+
+
+@media only screen and (max-width: $tablet-width) { 
+	.flexbox.reverse-for-phone {
+		@include flex-direction(column);
+
+		&.column {
+			@include flex-direction(row);
+		}
+	}
+
+	.slider-holder {
+		.slider {
+			width: 100%;
+			left: 0;
+
+			margin-bottom: 1em;
+		}
+	}
+
+	.flexbox > .collapse-for-small {
+		min-width: 100% !important;
+	}
+}
+
+#availabilityTable {
+
+	max-width: 95vw;
+
+	table {
+		th, td {
+			padding-left: calc(1em - 11px);
+			padding-right: calc(1em - 11px);
+		}
+	}
 }
