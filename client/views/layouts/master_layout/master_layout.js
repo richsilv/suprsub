@@ -1,18 +1,10 @@
 /*****************************************************************************/
 /* MasterLayout: Event Handlers and Helpers */
 /*****************************************************************************/
-Template.MasterLayout.events({
-  /*
-   * Example:
-   *  'click .selector': function (e, tmpl) {
-   *
-   *  }
-   */
-});
 
 Template.MasterLayout.helpers({
   smallScreen: function() {
-    return Template.instance().smallScreen.get();
+    return App.smallScreen.get();
   }
 });
 
@@ -36,9 +28,11 @@ Template.sidebar.events({
 /* MasterLayout: Lifecycle Hooks */
 /*****************************************************************************/
 Template.MasterLayout.created = function() {
-  this.smallScreen = new ReactiveVar($(window).width() < 500);
+  App.smallScreen = new ReactiveVar($(window).width() < 500);
+  App.mediumScreen = new ReactiveVar($(window).width() < 1000);  
   $(window).on('resize', function() {
-    this.smallScreen = new ReactiveVar($(window).width() < 500);
+    App.smallScreen = new ReactiveVar($(window).width() < 500);
+    App.mediumScreen = new ReactiveVar($(window).width() < 1000);
   });
 };
 

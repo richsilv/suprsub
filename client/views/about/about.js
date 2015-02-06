@@ -2,14 +2,16 @@ var sectionInfo;
 App.tabChoices.value.aboutTab = 'aboutSuprSub';
 
 Template.About.created = function() {
-  window.onscroll = function(event) {
-    $('#instructionsMenu').css('top', window.scrollY + 'px');
-    sectionInfo.forEach(function(s) {
-      if (s.y - 100 < window.scrollY)
-        App.tabChoices.setKey('aboutTab', s.id);
-    });
-    if (window.scrollY > $(document).height() - window.innerHeight - 20) {
-      App.tabChoices.setKey('aboutTab', sectionInfo[sectionInfo.length - 1].id);
+  if (!App.mediumScreen.get()) {
+    window.onscroll = function(event) {
+      $('#instructionsMenu').css('top', window.scrollY + 'px');
+      sectionInfo.forEach(function(s) {
+        if (s.y - 100 < window.scrollY)
+          App.tabChoices.setKey('aboutTab', s.id);
+      });
+      if (window.scrollY > $(document).height() - window.innerHeight - 20) {
+        App.tabChoices.setKey('aboutTab', sectionInfo[sectionInfo.length - 1].id);
+      }
     }
   }
 };

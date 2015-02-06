@@ -46,15 +46,15 @@ $gutter: 0.5em;
 	&.no-h-margin {
 		margin-left: 0;
 		margin-right: 0;
-		>* {
+		> * {
 			padding-left: 0;
 			padding-right: 0;
 		}
 	}
-	&.no-v-margin >* {
+	&.no-v-margin {
 		margin-top: 0;
 		margin-bottom: 0;
-		>* {
+		> * {
 			padding-top: 0;
 			padding-bottom: 0;
 		}

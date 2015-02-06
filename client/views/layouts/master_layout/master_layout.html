@@ -4,13 +4,13 @@
 			{{> sidebar}}
 		{{/if}}
 	{{/if}}
-	<div id="wrapper">
-		{{#unless smallScreen}}
-			{{> topbar}}
-		{{else}}
-			{{> miniTopbar}}
-		{{/unless}}
-		<div class="pusher">
+	<div class="pusher">
+		<div id="wrapper">
+			{{#unless smallScreen}}
+				{{> topbar}}
+			{{else}}
+				{{> miniTopbar}}
+			{{/unless}}
 			{{> yield}}
 		</div>
 	</div>

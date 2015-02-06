@@ -68,13 +68,14 @@ $white-text: rgb(245, 245, 245);
 $topbar-bg-color: $suprsub-green;
 $topbar-bg: $topbar-bg-color;
 $topbar-height: 45px;
+$miniTopbar-height: 35px;
 
 #topbar {
 	top: 0;
     -moz-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
     -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
     box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2) inset;
-    height: 45px;
+    height: $topbar-height;
 
     i.big {
 		font-size: $topbar-height * 0.8;
@@ -90,15 +91,17 @@ $topbar-height: 45px;
 	height: 100%;
 }
 
-#topbar+div+div {
-	margin-top: 50px;
+#miniTopbar {
+	height: $miniTopbar-height;
 }
 
-#miniTopbar+div+div {
-	margin-top: 60px;
+#miniTopbar ~ .container {
+	margin-top: $miniTopbar-height * 1.2;
 }
 
-// @import "./third-party/foundation-scss/foundation";
+#topbar ~ .container {
+	margin-top: $topbar-height * 1.2;
+}
 
 @font-face {
     font-family: 'Collegiate';
