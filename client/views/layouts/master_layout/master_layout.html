@@ -1,14 +1,18 @@
 <template name="MasterLayout">
+	{{#if smallScreen}}
+		{{#if currentUser}}
+			{{> sidebar}}
+		{{/if}}
+	{{/if}}
 	<div id="wrapper">
 		{{#unless smallScreen}}
 			{{> topbar}}
 		{{else}}
-			{{#if currentUser}}
-				{{> sidebar}}
-			{{/if}}
 			{{> miniTopbar}}
 		{{/unless}}
-		{{> yield}}
+		<div class="pusher">
+			{{> yield}}
+		</div>
 	</div>
 </template>
 
@@ -69,7 +73,7 @@
 	<div class="ui darkgreen fixed inverted main menu" id="miniTopbar">
 		{{#if currentUser}}
 		<span class="item leftItem">
-			<i class="reorder icon"></i>
+			<i class="content icon" data-action="show-sidebar"></i>
 			<i class="suprsub icon"></i>
 		</span>
 <!-- 		<div class="right small-5 columns item">
@@ -107,7 +111,7 @@
 </template>
 
 <template name="sidebar">
-	<div class="ui inverted darkgreen overlay thin sidebar menu" id="sidebar">
+	<div class="ui inverted darkgreen thin sidebar menu" id="sidebar">
 		<div class="item" href="{{pathFor 'home'}}">
 			<i class="suprsub icon"></i>
 		</div><hr>
@@ -115,10 +119,10 @@
 		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
-		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'playerDetails'}}">
+		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'player'}}">
 			<i class="user icon"></i> Player
 		</a>
-		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'teamDetails'}}">
+		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'team'}}">
 			<i class="users icon"></i> Team
 		</a>
 		<a class="{{#if option "/about"}}active {{/if}}item" href="{{pathFor 'about'}}">

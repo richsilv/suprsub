@@ -2,13 +2,13 @@
 	<div id="main-background-image"></div>
 	<div class="container">
 		<div class="flexbox v-stretch wrap equal-height">
-			<div class="m-1-2 w-1-2 size-1">
+			<div class="m-1-2 w-1-2 size-1 grow-1">
 					{{> teamTopLevel}}
 			</div>
-			<div class="m-1-2 w-1-2 size-1">
+			<div class="m-1-2 w-1-2 size-1 grow-1">
 					{{> teamSecondLevel}}		
 			</div>
-			<div class="w-1-1 size-2">
+			<div class="w-1-1 size-2 grow-2">
 				{{> otherInfo}}
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 
 	<template name="teamTopLevel">
 		<form class="ui form segment whitetranslucent flexbox wrap">
-			<div class="w-5-8">
+			<div class="w-5-8 shrink-1">
 				<div class="{{invalid 'name'}} field" id="teamNameHolder">
 					<label>Team/Game Name</label>
 					{{#if teamDropdown}}
@@ -32,7 +32,7 @@
 					{{/if}}
 				</div>
 			</div>
-			<div class="w-3-8">
+			<div class="w-3-8 shrink-0">
 				{{#unless newTeam}}
 				<div class="ui four buttons withLabel">
 					<div class="ui fluid attached icon button {{#if default}} teal{{/if}}{{#if newTeam}} disabled{{/if}}" data-action="set-default" title="Set as your default team"><i class="pin icon"></i></div>
@@ -44,10 +44,10 @@
 				<div class="ui fluid attached icon button withLabel {{#unless formValid}} disabled{{/unless}}" data-action="save-team" title="Save as new team"><i class="save icon"></i></div>
 				{{/unless}}
 			</div>
-			<div class="w-1-1 ui content segment">
+			<div class="w-1-1 shrink-1 ui content segment">
 				<form class="ui form whitetranslucent">
 					<div class="flexbox wrap">
-						<div class="w-5-8">
+						<div class="w-5-8 shrink-2">
 							<div class="field">
 								<label>Friendly / Competitive</label>
 								<div class="ui fluid selection flipbox" data-field="friendly-competitive" title="Is the game competitive (e.g. part of a league) or just for fun?">
@@ -61,7 +61,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="w-3-8">
+						<div class="w-3-8 shrink-1">
 							<div class="{{invalid 'format'}} field">
 								<label>Game Format</label>
 								<div class="ui fluid selection dropdown" data-field="game-format" title="How many players will there be on each side (optional)?">
@@ -80,7 +80,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="w-1-1">
+						<div class="w-1-1 shrink-1">
 							<div class="{{invalid 'homeGround'}} field ">
 								<label>Home Ground</label>
 								<div class="ui input" data-field="home-ground">
@@ -88,9 +88,9 @@
 								</div>
 							</div>
 						</div>
-						<div class="w-1-1">
+						<div class="w-1-1 shrink-2">
 							<div class="flexbox fields">
-								<div class="w-5-12">
+								<div class="w-5-12 shrink-2">
 									<div class="field opacity">
 										<label>Day</label>
 										<div class="ui selection dropdown" data-field="day-choice">
@@ -103,7 +103,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="w-7-12 columns">
+								<div class="w-7-12 columns shrink-2">
 									<div class="field opacity" data-field="time-choice">
 										<label>Kick-off</label>
 										<div class="flexbox">
@@ -192,7 +192,7 @@
 	<template name="otherInfo">
 		<div class="ui segment content whitetranslucent" id="otherInfo">
 			<div class="flexbox wrap">
-				<div class="m-1-2-- w-1-2 size-1">
+				<div class="m-1-2-- w-1-2 size-1 grow-1">
 					<form class="ui form segment content">
 						<div class="ui form flexbox">
 							<div class="field w-7-8">
@@ -223,7 +223,7 @@
 					<div class="mini purple ui button bottomRight" data-action="add-venue" title="Click here to add a venue if you can't find it on the map">Add a venue</div>
 				</div>
 				<div class="ui vertical divider show-for-tablet-up"><i class="map icon"></i></div>
-				<div class="m-1-2-- w-1-2 size-1">
+				<div class="m-1-2-- w-1-2 size-1 grow-1">
 					<div id="mapContainer">
 <!-- 						{{#if tabChoices 'newVenue'}}
 						{{> newVenueBox}}

@@ -16,6 +16,22 @@ Template.MasterLayout.helpers({
   }
 });
 
+Template.miniTopbar.events({
+  'click [data-action="show-sidebar"]': function () {
+    $('#sidebar').sidebar('show');
+  }
+});
+
+Template.sidebar.events({
+  'click .item': function() {
+    $('#sidebar').sidebar('hide');
+  },
+    'click #logout-button' : function() {
+        Meteor.logout();
+        Router.go('/login');
+    }
+});
+
 /*****************************************************************************/
 /* MasterLayout: Lifecycle Hooks */
 /*****************************************************************************/
@@ -64,4 +80,12 @@ Template.topbar.created = function() {
   this.email = new ReactiveVar();
   this.password = new ReactiveVar();
 
-}
+};
+
+
+Template.sidebar.rendered = function() {
+  $('#sidebar')
+      .sidebar({
+        transition: 'overlay'
+      })
+};
