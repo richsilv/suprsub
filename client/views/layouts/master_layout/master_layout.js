@@ -11,7 +11,10 @@ Template.MasterLayout.helpers({
 Template.miniTopbar.events({
   'click [data-action="show-sidebar"]': function () {
     $('#sidebar').sidebar('show');
-  }
+  },
+  'click [data-action="show-login"]': function () {
+    SemanticModal.generalModal('loginModal');
+  },
 });
 
 Template.sidebar.events({
@@ -22,6 +25,17 @@ Template.sidebar.events({
         Meteor.logout();
         Router.go('/login');
     }
+});
+
+Template.loginModal.events({
+  'click [data-action="login"], submit': function (evt, tp) {
+    var email = tp.$('[data-field="email"]').val(),
+        password = tp.$('[data-field="password"]').val();
+
+    Meteor.loginWithPassword(email, password, function(err, res) {
+      if (err) App.accountError.set('Cannot recognise email / password'); 
+    });
+  }
 });
 
 /*****************************************************************************/

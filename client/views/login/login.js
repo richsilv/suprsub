@@ -1,7 +1,9 @@
 /*****************************************************************************/
 /* Login: Event Handlers and Helpers */
 /*****************************************************************************/
-var accountError = new ReactiveVar(null);
+App.accountError = new ReactiveVar(null);
+
+var accountError = App.accountError;
 
 Template.topbar.events({
 

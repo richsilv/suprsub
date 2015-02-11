@@ -72,39 +72,17 @@
 <template name="miniTopbar">
 	<div class="ui darkgreen fixed inverted main menu" id="miniTopbar">
 		{{#if currentUser}}
-		<span class="item leftItem">
-			<i class="content icon" data-action="show-sidebar"></i>
-			<i class="suprsub icon"></i>
-		</span>
-<!-- 		<div class="right small-5 columns item">
-  			<div class="item" id="logout-holder">
-    			<div class="ui tiny button" id="logout-button">Log Out</div>
-  			</div>
-  		</div> -->
+		<div class="flexbox full-height h-space-between v-center pad-top">
+			<div class="item"><i class="content icon" data-action="show-sidebar"></i></div>
+			<div class="item"><i class="big icon-suprsub icon"></i></div>
+		</div>
 		{{else}}
 			<span class="left item">
-				<i class="suprsub icon"></i>
 			</span>
 			<span class="right menu">
-				<span class="item" id="phoneLogin">
-					{{#unless option "/"}}
-					<span class="">
-							<span class="ui icon input item">
-								<input type="email" placeholder="Email" id="login-email">
-								<i class="user link icon"></i>
-							</span>
-							<span class="ui icon input item">
-								<input type="password" placeholder="Password" id="login-password">
-								<i class="lock link icon"></i>
-							</span>
-					</span>
-					{{/unless}}
-					<span class="">
-			  			<span class="item">
-			    			<div class="ui tiny button" id="login-button">Log In</div>
-			  			</span>
-		  			</span>
-				</span>
+	  			<span class="item">
+	    			<div class="ui tiny button" data-action="show-login">Log In</div>
+	  			</span>
 			</span>
 		{{/if}}
 	</div>
@@ -119,7 +97,7 @@
 		<a class="{{#if option "/home"}}active {{/if}}{{#if option "/home"}}active {{/if}}item" href="{{pathFor 'home'}}">
 			<i class="home icon"></i> Home
 		</a>
-		<a class="{{#if option "/player"}}active {{/if}}item" href = "{{pathFor 'player'}}">
+		<a class="{{#if option "/player"}}active {{/if}}item" href="{{pathFor 'player'}}">
 			<i class="user icon"></i> Player
 		</a>
 		<a class="{{#if option "/team"}}active {{/if}}item" href="{{pathFor 'team'}}">
@@ -135,5 +113,26 @@
     			<span><div class="ui tiny button" id="logout-button">Log Out</div></span>
   		</div>
 		{{/if}}
+	</div>
+</template>
+
+<template name="loginModal">
+  	<div class="content">
+      	<div class="ui header">Please enter your email and password</div>
+      	<div class="ui form">
+			<div class="ui icon input field">
+				<input type="email" placeholder="Email" id="login-email" data-field="email">
+				<i class="user link icon"></i>
+			</div>
+			<div class="ui icon input field">
+				<input type="password" placeholder="Password" id="login-password" data-field="password">
+				<i class="lock link icon"></i>
+			</div>
+		</div>
+  	</div>
+	<div class="actions">
+		<div class="item">
+			<div class="ui tiny button" data-action="login">Log In</div>
+		</div>
 	</div>
 </template>

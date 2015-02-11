@@ -46,7 +46,7 @@ $gutter: 0.5em;
 	&.no-h-margin {
 		margin-left: 0;
 		margin-right: 0;
-		> * {
+		>* {
 			padding-left: 0;
 			padding-right: 0;
 		}
@@ -54,7 +54,7 @@ $gutter: 0.5em;
 	&.no-v-margin {
 		margin-top: 0;
 		margin-bottom: 0;
-		> * {
+		>* {
 			padding-top: 0;
 			padding-bottom: 0;
 		}
@@ -436,6 +436,100 @@ $gutter: 0.5em;
 	}
 	> .m-11-12 {
 		min-width: 0.9166 * $container-width;
+	}
+
+	> .x-1-1 {
+		max-width: $container-width;
+	}
+	> .x-1-2 {
+		max-width: 0.5 * $container-width;
+	}
+	> .x-1-2-- {
+		max-width: 0.475 * $container-width;
+	}
+	> .x-1-3 {
+		max-width: 0.333 * $container-width;
+	}
+	> .x-2-3 {
+		max-width: 0.666 * $container-width;
+	}
+	> .x-1-4 {
+		max-width: 0.25 * $container-width;
+	}
+	> .x-3-4 {
+		max-width: 0.75 * $container-width;
+	}	
+	> .x-1-5 {
+		max-width: 0.2 * $container-width;
+	}
+	> .x-2-5 {
+		max-width: 0.4 * $container-width;
+	}
+	> .x-3-5 {
+		max-width: 0.6 * $container-width;
+	}
+	> .x-4-5 {
+		max-width: 0.8 * $container-width;
+	}
+	> .x-1-6 {
+		max-width: 0.166 * $container-width;
+	}
+	> .x-5-6 {
+		max-width: 0.833 * $container-width;
+	}
+	> .x-1-8 {
+		max-width: 0.125 * $container-width;
+	}
+	> .x-3-8 {
+		max-width: 0.375 * $container-width;
+	}
+	> .x-5-8 {
+		max-width: 0.625 * $container-width;
+	}
+	> .x-7-8 {
+		max-width: 0.875 * $container-width;
+	}
+	> .x-1-9 {
+		max-width: 0.111 * $container-width;
+	}
+	> .x-2-9 {
+		max-width: 0.222 * $container-width;
+	}
+	> .x-4-9 {
+		max-width: 0.444 * $container-width;
+	}
+	> .x-5-9 {
+		max-width: 0.555 * $container-width;
+	}
+	> .x-7-9 {
+		max-width: 0.777 * $container-width;
+	}
+	> .x-8-9 {
+		max-width: 0.888 * $container-width;
+	}
+	> .x-1-10 {
+		max-width: 0.1 * $container-width;
+	}
+	> .x-3-10 {
+		max-width: 0.3 * $container-width;
+	}
+	> .x-7-10 {
+		max-width: 0.7 * $container-width;
+	}
+	> .x-9-10 {
+		max-width: 0.9 * $container-width;
+	}
+	> .x-1-12 {
+		max-width: 0.833 * $container-width;
+	}
+	> .x-5-12 {
+		max-width: 0.4166 * $container-width;
+	}
+	> .x-7-12 {
+		max-width: 0.5833 * $container-width;
+	}
+	> .x-11-12 {
+		max-width: 0.9166 * $container-width;
 	}
 
 	&.equal-height {

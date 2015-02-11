@@ -2,10 +2,10 @@
 	<div id="main-background-image"></div>
 	<div class="container">
 		<div class="flexbox v-stretch wrap equal-height">
-			<div class="m-1-3 w-1-2 size-1">
+			<div class="m-1-3 w-1-2 size-1 collapse-for-small">
 					{{> settingsBox profile}}
 			</div>
-			<div class="m-1-3 w-1-2 size-1">
+			<div class="m-1-3 w-1-2 size-1 collapse-for-small">
 					{{> otherSettingsBox}}		
 			</div>
 		</div>
@@ -55,7 +55,7 @@
 			      	<label>Preferred Contact</label>
 					<div class="ui fluid selection dropdown" title="This is how we'll send you messages and make you aware of relevant postings - you can select more than one">
 						<input type="hidden" name="contact">
-						<div class="text" id="selectedContact">None</div>
+						<div class="text" id="selectedContact">{{contactString}}</div>
 						<i class="dropdown icon"></i>
 					  	<div class="menu">
 					  		{{#if email}}<div class="item active" data-value="2">Email{{#if contactActive 2}} (selected){{/if}}</div>{{/if}}
@@ -67,12 +67,10 @@
 		    </div>
 			<div class="small-16 medium-14 small-centered columns">
 				<div class="flexbox h-center v-center field">
-					<div class="checkboxLabel">Don't send<br class="hide-for-medium-up"> me postings</div>
-					<div class="ui toggle checkbox" id="postUser" title="Do you want us to tweet or e-mail you whenever there is a posting that matches your profile?">
-						<input type="checkbox">
-						<label></label>
+					<div class="switch flexbox v-center">
+						<div class="shrink-1 w-1-2">Don't send me postings</div>
+						<div class="shrink-1 w-1-2">Send me postings</div>
 					</div>
-					<div class="checkboxLabel">Send me<br class="hide-for-medium-up"> postings</div>
 				</div>
 			</div>
 		</form>

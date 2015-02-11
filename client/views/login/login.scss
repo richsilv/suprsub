@@ -1,6 +1,8 @@
 /*****************************************************************************/
 /* Login: Style */
 /*****************************************************************************/
+@import "../../app.scss";
+
 #login-background-image {
 	position: fixed;
 	top: 0;
@@ -39,7 +41,7 @@
 }
 
 #loginBox {
-
+	margin-top: $topbar-height * 1.25;
 }
 
 #loginSubBox>div {

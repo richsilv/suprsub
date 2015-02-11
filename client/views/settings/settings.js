@@ -66,17 +66,21 @@ Template.settingsBox.events({
     else if (thisUser.profile.contact.length > 1) 
       Meteor.users.update(thisUser._id, {$pull: {'profile.contact': clickedChoice}});
     $('.dropdown').dropdown('set text', App.contactString(thisUser.profile)).dropdown('hide');
+  },
+  'change .switch input[type="checkbox"]': function(event, template) {
+    var thisUser = Meteor.user();
+    Meteor.users.update(thisUser._id, {$set: {'profile.postMe': event.currentTarget.checked}});
   }
 });
 
 Template.settingsBox.rendered = function() {
   var thisUser = Meteor.user();
-  $(this.findAll('.ui.checkbox')).checkbox({verbose: false, debug: false, performance: false});
+  $(this.findAll('.switch')).switch({title: 'Do you want us to tweet or e-mail you whenever there is a posting that matches your profile?'});
   // clientFunctions.suprsubPlugins('checkboxLabel', '.checkboxLabel');
   $(this.findAll('.ui.dropdown')).dropdown({verbose: false, debug: false, performance: false, action: 'nothing'});
   $(this.findAll('.ui.dropdown')).dropdown('set text', App.contactString(thisUser && thisUser.profile));
   $(this.findAll('.ui.dropdown')).find('.item').each(function(i, elem) {
-    if (thisUser.profile.contact && thisUser.profile.contact.indexOf(parseInt(elem.attributes['data-value'].nodeValue, 10)) > -1)
+    if (thisUser.profile.contact && thisUser.profile.contact.indexOf(parseInt(elem.attributes['data-value'].value, 10)) > -1)
       $(elem).addClass('active');
     else
       $(elem).removeClass('active');
