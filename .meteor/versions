@@ -3,8 +3,8 @@ accounts-facebook@1.0.3
 accounts-oauth@1.1.3
 accounts-password@1.0.6
 accounts-twitter@1.0.3
-aldeed:collection2@2.3.1
-aldeed:simple-schema@1.0.3
+aldeed:collection2@2.3.2
+aldeed:simple-schema@1.3.0
 amplify@1.0.0
 andruschka:tinycon@0.0.1
 application-configuration@1.0.4
@@ -18,7 +18,7 @@ callback-hook@1.0.2
 check@1.0.4
 cmather:handlebars-server@2.0.0
 dburles:collection-helpers@1.0.2
-dburles:google-maps@1.0.6
+dburles:google-maps@1.0.7
 ddp@1.0.14
 deps@1.0.6
 ejson@1.0.5

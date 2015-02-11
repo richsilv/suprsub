@@ -80,6 +80,9 @@ App.helpers = {
 	},
 	service: function(serviceName) {
 		return Meteor.user() && Meteor.user().services && _.has(Meteor.user().services, serviceName);
+	},
+	smallScreen: function(serviceName) {
+		return App.smallScreen.get();
 	}
 };
 

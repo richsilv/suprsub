@@ -1,0 +1,90 @@
+/*****************************************************************************/
+/* Home: Style */
+/*****************************************************************************/
+@import "../../responsive.scss";
+
+.suprsubFont {
+	vertical-align: text-bottom;
+	font-weight: normal;
+	font-family: "Collegiate";
+}
+
+.suprsubHeader {
+	position: relative;
+	font-size: 100px;
+	top: 0px;
+	padding-top: 0.1em;
+	margin-bottom: -0.5em;
+
+	@include small-screen {
+		font-size: 22.5vw;
+	} 
+}
+
+.backgroundShadowBig {
+	color: ghostwhite;
+	text-shadow: rgba(0, 0, 0, 0.9) 0.01em 0.01em 0.01em, rgba(0, 0, 0, 0.7) -0.01em -0.01em 0.01em;	
+	@include small-screen {
+		color: grey;
+		text-shadow: none;
+	} 
+}
+
+.backgroundShadowSmall {
+	color: ghostwhite;
+	text-shadow: rgba(0, 0, 0, 0.9) 0.05em 0.05em 0.05em, rgba(0, 0, 0, 0.7) -0.05em -0.05em 0.05em;	
+}
+
+.shortDivider {
+	position: relative;
+	margin: 1rem 0rem;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+	height: 0;
+	padding: 0 !important;
+	width: 25%;
+	margin-left: 75%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.rightList {
+	text-align: right;
+	font-size: 1.5em;
+	list-style: none;
+	list-style-type: none;
+	margin-bottom: 0px;
+	margin-left: 1.5em;
+	margin-right: 0px;
+	margin-top: 1em;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0.5em;
+	padding-top: 0px;
+}
+
+.rightList li {
+	display: list-item;
+	position: relative;
+	line-height: 1.25em;
+	padding: 0.3em 0;
+}
+
+#benefitsList li {
+	line-height: 0.8em;
+	padding-top: 0;
+	padding-bottom: 0;
+	font-size: 0.8em;
+}
+
+.titleSection .suprsubHeader {
+	margin-bottom: -0.1em;
+	margin-top: 0.05em;
+}

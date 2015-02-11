@@ -180,6 +180,7 @@ body {
 	-webkit-transition: opacity 2s; /* For Safari 3.1 to 6.0 */
     transition: opacity 2s;
     height: 100%;
+    overflow-y: auto;
 }
 
 .ui.input>[type="number"] {
